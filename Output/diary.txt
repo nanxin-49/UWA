@@ -1,0 +1,135 @@
+ host:
+LAPTOP-DNUH2N56 
+ 
+ 
+ 
+ans =
+    'script executed : 08-Apr-2026'
+ 
+ny =
+        2048
+nz =
+        1024
+Envfile =
+    'Wedge003'
+outfile =
+    'layered302RangeDep_Wedge003500'
+{在当前文件夹或 MATLAB 路径中未找到 CARPE3D，但它存在于:
+ E:\MISC\CARPE3D_matlab
+
+<a href = "matlab:internal.matlab.desktop.commandwindow.executeCommandForUser('cd ''E:\MISC\CARPE3D_matlab''')">更改 MATLAB 当前文件夹</a> 或 <a href = "matlab:internal.matlab.desktop.commandwindow.executeCommandForUser('addpath ''E:\MISC\CARPE3D_matlab''')">将其文件夹添加到 MATLAB 路径</a>
+出错 <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('explain_main', 'E:\MISC\CARPE3D_matlab\Explain\explain_main.m', 234)" style="font-weight:bold">explain_main</a> (<a href="matlab: opentoline('E:\MISC\CARPE3D_matlab\Explain\explain_main.m',234,0)">第 234 行</a>)
+  simulata= CARPE3D(params);
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^} 
+explain_main
+ host:
+LAPTOP-DNUH2N56 
+ 
+ 
+ 
+ans =
+    'script executed : 08-Apr-2026'
+ 
+ny =
+        2048
+nz =
+        1024
+Envfile =
+    'Wedge003'
+outfile =
+    'layered302RangeDep_Wedge003500'
+{在当前文件夹或 MATLAB 路径中未找到 CARPE3D，但它存在于:
+ E:\MISC\CARPE3D_matlab
+
+<a href = "matlab:internal.matlab.desktop.commandwindow.executeCommandForUser('cd ''E:\MISC\CARPE3D_matlab''')">更改 MATLAB 当前文件夹</a> 或 <a href = "matlab:internal.matlab.desktop.commandwindow.executeCommandForUser('addpath ''E:\MISC\CARPE3D_matlab''')">将其文件夹添加到 MATLAB 路径</a>
+出错 <a href="matlab:matlab.lang.internal.introspective.errorDocCallback('explain_main', 'E:\MISC\CARPE3D_matlab\Explain\explain_main.m', 234)" style="font-weight:bold">explain_main</a> (<a href="matlab: opentoline('E:\MISC\CARPE3D_matlab\Explain\explain_main.m',234,0)">第 234 行</a>)
+  simulata= CARPE3D(params);
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^} 
+explain_main
+ host:
+LAPTOP-DNUH2N56 
+ 
+ 
+ 
+ans =
+    'script executed : 08-Apr-2026'
+ 
+ny =
+        2048
+nz =
+        1024
+Envfile =
+    'Wedge003'
+outfile =
+    'layered302RangeDep_Wedge003500'
+numstep =
+        2667
+x final range (km) :  20.0025
+freq =
+   200
+nnout =
+         667        1334        2000        2667
+yso =
+        1253
+cputime to grid cw at 0 = 0.015625
+____________ WAPE rev 10 _________________
+Environment update interval 4 steps
+Environment update interval 30 meters
+to 405 m ; percent 2.0247;  time: 11.4415 sec
+to 810 m ; percent 4.0495;  time: 19.6795 sec
+to 1215 m ; percent 6.0742;  time: 27.3854 sec
+to 1620 m ; percent 8.099;  time: 34.8008 sec
+to 2025 m ; percent 10.1237;  time: 41.6109 sec
+to 2430 m ; percent 12.1485;  time: 47.6399 sec
+to 2835 m ; percent 14.1732;  time: 54.1986 sec
+to 3240 m ; percent 16.198;  time: 61.6614 sec
+to 3645 m ; percent 18.2227;  time: 68.5399 sec
+to 4050 m ; percent 20.2475;  time: 75.6366 sec
+to 4455 m ; percent 22.2722;  time: 82.4956 sec
+to 4860 m ; percent 24.297;  time: 89.6307 sec
+nuu =
+     1
+to 5265 m ; percent 26.3217;  time: 96.851 sec
+to 5670 m ; percent 28.3465;  time: 103.8698 sec
+to 6075 m ; percent 30.3712;  time: 111.0391 sec
+to 6480 m ; percent 32.396;  time: 118.1881 sec
+to 6885 m ; percent 34.4207;  time: 125.7314 sec
+to 7290 m ; percent 36.4454;  time: 132.9797 sec
+to 7695 m ; percent 38.4702;  time: 140.3511 sec
+to 8100 m ; percent 40.4949;  time: 147.7414 sec
+to 8505 m ; percent 42.5197;  time: 154.5007 sec
+to 8910 m ; percent 44.5444;  time: 161.8237 sec
+to 9315 m ; percent 46.5692;  time: 169.4048 sec
+to 9720 m ; percent 48.5939;  time: 176.5638 sec
+nuu =
+     2
+to 10125 m ; percent 50.6187;  time: 183.9908 sec
+to 10530 m ; percent 52.6434;  time: 191.3 sec
+to 10935 m ; percent 54.6682;  time: 198.8865 sec
+to 11340 m ; percent 56.6929;  time: 206.0091 sec
+to 11745 m ; percent 58.7177;  time: 213.4227 sec
+to 12150 m ; percent 60.7424;  time: 220.3472 sec
+to 12555 m ; percent 62.7672;  time: 226.8759 sec
+to 12960 m ; percent 64.7919;  time: 233.8308 sec
+to 13365 m ; percent 66.8166;  time: 240.887 sec
+to 13770 m ; percent 68.8414;  time: 247.996 sec
+to 14175 m ; percent 70.8661;  time: 255.5554 sec
+to 14580 m ; percent 72.8909;  time: 263.6537 sec
+to 14985 m ; percent 74.9156;  time: 271.2286 sec
+nuu =
+     3
+to 15390 m ; percent 76.9404;  time: 278.6085 sec
+to 15795 m ; percent 78.9651;  time: 286.2355 sec
+to 16200 m ; percent 80.9899;  time: 293.3879 sec
+to 16605 m ; percent 83.0146;  time: 300.2867 sec
+to 17010 m ; percent 85.0394;  time: 307.4345 sec
+to 17415 m ; percent 87.0641;  time: 314.729 sec
+to 17820 m ; percent 89.0889;  time: 321.8979 sec
+to 18225 m ; percent 91.1136;  time: 329.3804 sec
+to 18630 m ; percent 93.1384;  time: 336.49 sec
+to 19035 m ; percent 95.1631;  time: 343.7815 sec
+to 19440 m ; percent 97.1879;  time: 351.0043 sec
+to 19845 m ; percent 99.2126;  time: 358.264 sec
+nuu =
+     4
+历时 365.468480 秒。
