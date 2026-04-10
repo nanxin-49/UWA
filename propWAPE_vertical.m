@@ -1,27 +1,70 @@
 function [psiout, psifinal_xy, x, y, z_track, Axz, Ayz, ...
           A_center, R_center, fit_slope, fit_err_rms, pass_1_over_R, fit_mask, ...
-          surface_elevation, delta_phi, psi_ref, roughness_meta] = ...
+          surface_elevation, delta_phi, psi_ref, roughness_meta, ...
+          h_direct, h_reflect, h_total, rx_state_used, fd_hz_used] = ...
           propWAPE_vertical(cfg)
 %PROP WAPE VERTICAL
 % Upward marching PE in z (z axis is positive downward).
-% Starts at z=z_max and marches to z=0 using negative dz_step.
+% Starts at z=z_tx and marches to z=z_rx using negative dz_step.
 
 k0 = 2*pi*cfg.f0/cfg.c0;
-% z coordinate marches upward with negative dz_step, while ds is the
-% positive path-length increment used in the propagator.
-ds = abs(cfg.dz_step);
 
 % --- transverse grid (x-y plane) ---
 x = (-0.5*cfg.xw) : cfg.dx : (0.5*cfg.xw - cfg.dx);
 y = (-0.5*cfg.yw) : cfg.dy : (0.5*cfg.yw - cfg.dy);
 [X, Y] = meshgrid(x, y); % size: ny x nx
 
-[~, ix0] = min(abs(x - cfg.xs));
-[~, iy0] = min(abs(y - cfg.ys));
+[~, ix_tx] = min(abs(x - cfg.x_tx));
+[~, iy_tx] = min(abs(y - cfg.y_tx));
 
-% --- initial Gaussian source at z=z_max ---
-psi_space = exp(-((X - cfg.xs).^2 + (Y - cfg.ys).^2) / (2*cfg.sigma_src_m^2));
+rx_state_used = struct('x_rx', cfg.x_rx, 'y_rx', cfg.y_rx, ...
+                       'z_rx', cfg.z_rx, 't_s', 0, 'source', 'fixed');
+if ~isempty(cfg.rx_position_fn)
+    rx_state = struct('x_tx', cfg.x_tx, 'y_tx', cfg.y_tx, 'z_tx', cfg.z_tx, ...
+                      'x_rx_nominal', cfg.x_rx, 'y_rx_nominal', cfg.y_rx, 'z_rx_nominal', cfg.z_rx, ...
+                      'x', x, 'y', y);
+    rx_xyz = cfg.rx_position_fn(0, rx_state);
+    if ~(isnumeric(rx_xyz) && numel(rx_xyz) == 3 && all(isfinite(rx_xyz(:))))
+        error('rx_position_fn must return a finite numeric [x_rx, y_rx, z_rx].');
+    end
+    rx_state_used.x_rx = rx_xyz(1);
+    rx_state_used.y_rx = rx_xyz(2);
+    rx_state_used.z_rx = rx_xyz(3);
+    rx_state_used.source = 'rx_position_fn';
+end
+
+if abs(rx_state_used.x_rx) > 0.5*cfg.xw || abs(rx_state_used.y_rx) > 0.5*cfg.yw
+    error('Resolved Rx position must lie inside the transverse domain.');
+end
+if rx_state_used.z_rx < 0 || rx_state_used.z_rx >= cfg.z_tx
+    error('Resolved z_rx must satisfy 0 <= z_rx < z_tx.');
+end
+
+[~, ix_rx] = min(abs(x - rx_state_used.x_rx));
+[~, iy_rx] = min(abs(y - rx_state_used.y_rx));
+rx_state_used.ix_rx = ix_rx;
+rx_state_used.iy_rx = iy_rx;
+
+path_span_used = cfg.z_tx - rx_state_used.z_rx;
+numstep = ceil(path_span_used / cfg.dz_abs);
+numstep = max(1, numstep);
+dz_step_used = -path_span_used / numstep;
+ds = abs(dz_step_used);
+
+fd_hz_used = 0;
+if ~isempty(cfg.doppler_fn)
+    tx_state = struct('x_tx', cfg.x_tx, 'y_tx', cfg.y_tx, 'z_tx', cfg.z_tx);
+    env_state = struct('z_max', cfg.z_max, 'enable_surface_reflection', cfg.enable_surface_reflection);
+    fd_hz_used = cfg.doppler_fn(0, tx_state, rx_state_used, env_state);
+    if ~(isscalar(fd_hz_used) && isnumeric(fd_hz_used) && isfinite(fd_hz_used))
+        error('doppler_fn must return a finite scalar fd_hz.');
+    end
+end
+
+% --- initial Gaussian source at z=z_tx ---
+psi_space = exp(-((X - cfg.x_tx).^2 + (Y - cfg.y_tx).^2) / (2*cfg.sigma_src_m^2));
 psi_space = complex(psi_space, 0);
+psi_init = psi_space;
 
 % --- lateral sponge/taper window ---
 wx = local_edge_taper(cfg.nx, cfg.taper_ratio);
@@ -37,28 +80,28 @@ denom = sqrt(complex(k0^2 - kappa2, 0)) + k0;
 fr0 = exp(-1i * 0.5 * ds * kappa2 ./ denom);
 
 % --- output allocation ---
-nout = cfg.nout;
-nnout = round(cfg.numstep * (1:nout) / nout);
+nout = min(cfg.nout, numstep);
+nnout = round(numstep * (1:nout) / nout);
 psiout = complex(zeros(nout, cfg.ny, cfg.nx));
 
-z_track = zeros(cfg.numstep + 1, 1);
-z_track(1) = cfg.z_max;
+z_track = zeros(numstep + 1, 1);
+z_track(1) = cfg.z_tx;
 
-A_center = zeros(cfg.numstep + 1, 1);
-A_center(1) = abs(psi_space(iy0, ix0));
+A_center = zeros(numstep + 1, 1);
+A_center(1) = abs(psi_space(iy_tx, ix_tx));
 
-R_center = zeros(cfg.numstep + 1, 1);
+R_center = zeros(numstep + 1, 1);
 R_center(1) = 0;
 
-Axz = complex(zeros(cfg.nx, cfg.numstep + 1)); % x-z slice at y=ys
-Ayz = complex(zeros(cfg.ny, cfg.numstep + 1)); % y-z slice at x=xs
-Axz(:, 1) = psi_space(iy0, :).';
-Ayz(:, 1) = psi_space(:, ix0);
+Axz = complex(zeros(cfg.nx, numstep + 1)); % x-z slice at y=y_tx
+Ayz = complex(zeros(cfg.ny, numstep + 1)); % y-z slice at x=x_tx
+Axz(:, 1) = psi_space(iy_tx, :).';
+Ayz(:, 1) = psi_space(:, ix_tx);
 
 % --- upward marching ---
 psi_k = fft2(psi_space);
-for jj = 1:cfg.numstep
-    z_curr = cfg.z_max + jj * cfg.dz_step;
+for jj = 1:numstep
+    z_curr = cfg.z_tx + jj * dz_step_used;
     c_local = local_sound_speed(z_curr, cfg);
     if ~isfinite(c_local) || c_local <= 0
         error('Invalid local sound speed at z=%g m.', z_curr);
@@ -71,11 +114,11 @@ for jj = 1:cfg.numstep
     psi_space = ifft2(psi_k);
 
     z_track(jj + 1) = z_curr;
-    R_center(jj + 1) = cfg.z_max - z_curr;
-    A_center(jj + 1) = abs(psi_space(iy0, ix0));
+    R_center(jj + 1) = cfg.z_tx - z_curr;
+    A_center(jj + 1) = abs(psi_space(iy_tx, ix_tx));
 
-    Axz(:, jj + 1) = psi_space(iy0, :).';
-    Ayz(:, jj + 1) = psi_space(:, ix0);
+    Axz(:, jj + 1) = psi_space(iy_tx, :).';
+    Ayz(:, jj + 1) = psi_space(:, ix_tx);
 
     hit_idx = find(nnout == jj);
     for kk = 1:numel(hit_idx)
@@ -84,12 +127,36 @@ for jj = 1:cfg.numstep
 end
 
 psifinal_xy = psi_space;
+h_direct = psifinal_xy(iy_rx, ix_rx);
+h_reflect = complex(0, 0);
+h_total = h_direct;
 
-[surface_elevation, delta_phi, psi_ref, roughness_meta] = ...
-    pm_surface_kirchhoff_module(psifinal_xy, KX, KY, x, y, cfg.xw, cfg.yw, cfg.lambda0);
+if cfg.enable_surface_reflection
+    pm_cfg = struct();
+    pm_cfg.U = cfg.sea_wind_speed;
+    pm_cfg.Hs_target = cfg.sea_hs_target;
+    pm_cfg.seed = cfg.sea_seed;
+    pm_cfg.show_figure = cfg.show_figures;
+
+    psi_surface_inc = local_march_field(psi_init, cfg.z_tx, 0, cfg, Wxy, kappa2, k0);
+
+    [surface_elevation, delta_phi, psi_ref, roughness_meta] = ...
+        pm_surface_kirchhoff_module(psi_surface_inc, KX, KY, x, y, cfg.xw, cfg.yw, cfg.lambda0, pm_cfg);
+
+    psi_ref_at_rx = local_march_field(psi_ref, 0, rx_state_used.z_rx, cfg, Wxy, kappa2, k0);
+    h_reflect = psi_ref_at_rx(iy_rx, ix_rx);
+    h_total = h_direct + h_reflect;
+
+    roughness_meta.reflection_model = 'two_segment_tx_surface_rx';
+else
+    surface_elevation = zeros(size(psifinal_xy));
+    delta_phi = zeros(size(psifinal_xy));
+    psi_ref = complex(zeros(size(psifinal_xy)));
+    roughness_meta = struct('enabled', false);
+end
 
 [fit_slope, fit_err_rms, pass_1_over_R, fit_mask] = ...
-    local_validate_one_over_R(A_center, R_center, cfg.lambda0, cfg.z_max);
+    local_validate_one_over_R(A_center, R_center, cfg.lambda0, path_span_used);
 
 end
 
@@ -162,4 +229,37 @@ A_model = C_fit ./ R_fit;
 fit_err_rms = sqrt(mean(((A_fit - A_model) ./ A_model).^2));
 
 pass_flag = (fit_slope >= -1.05) && (fit_slope <= -0.95) && (fit_err_rms <= 0.10);
+end
+
+function psi_end = local_march_field(psi_start, z_start, z_end, cfg, Wxy, kappa2, k0)
+%LOCAL_MARCH_FIELD March one complex field between two depths.
+
+if abs(z_end - z_start) <= eps
+    psi_end = psi_start;
+    return
+end
+
+n_step = ceil(abs(z_end - z_start) / cfg.dz_abs);
+n_step = max(1, n_step);
+dz_step_local = (z_end - z_start) / n_step;
+ds_local = abs(dz_step_local);
+
+denom = sqrt(complex(k0^2 - kappa2, 0)) + k0;
+fr_local = exp(-1i * 0.5 * ds_local * kappa2 ./ denom);
+
+psi_k = fft2(psi_start);
+for jj = 1:n_step
+    z_curr = z_start + jj * dz_step_local;
+    c_local = local_sound_speed(z_curr, cfg);
+    if ~isfinite(c_local) || c_local <= 0
+        error('Invalid local sound speed at z=%g m.', z_curr);
+    end
+
+    U = (c_local - cfg.c0) / c_local;
+    screen_scalar = exp(-1i * k0 * ds_local * U);
+
+    psi_k = fr_local .* fft2(Wxy .* (screen_scalar .* ifft2(fr_local .* psi_k)));
+end
+
+psi_end = ifft2(psi_k);
 end

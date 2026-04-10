@@ -6,14 +6,18 @@ cfg = local_prepare_config(paramsV);
 
 disp('--- CARPE3D_vertical ---')
 disp(['f0 (Hz): ', num2str(cfg.f0)])
-disp(['z march: ', num2str(cfg.z_max), ' -> 0 m, dz_step=', num2str(cfg.dz_step), ' m'])
+disp(['z march: ', num2str(cfg.z_tx), ' -> ', num2str(cfg.z_rx), ' m, dz_step=', num2str(cfg.dz_step), ' m'])
 disp(['grid: nx=', num2str(cfg.nx), ', ny=', num2str(cfg.ny), ...
       ', xw=', num2str(cfg.xw), ' m, yw=', num2str(cfg.yw), ' m'])
 disp(['sigma_src_m=', num2str(cfg.sigma_src_m), ', taper_ratio=', num2str(cfg.taper_ratio)])
+disp(['tx(x,y,z)=(', num2str(cfg.x_tx), ',', num2str(cfg.y_tx), ',', num2str(cfg.z_tx), ') m'])
+disp(['rx(x,y,z)=(', num2str(cfg.x_rx), ',', num2str(cfg.y_rx), ',', num2str(cfg.z_rx), ') m'])
+disp(['surface reflection enabled=', num2str(cfg.enable_surface_reflection)])
 
 [psiout, psifinal_xy, x, y, z_track, Axz, Ayz, ...
  A_center, R_center, fit_slope, fit_err_rms, pass_1_over_R, fit_mask, ...
- surface_elevation, delta_phi, psi_ref, roughness_meta] = ...
+ surface_elevation, delta_phi, psi_ref, roughness_meta, ...
+ h_direct, h_reflect, h_total, rx_state_used, fd_hz_used] = ...
     propWAPE_vertical(cfg);
 
 if cfg.enforce_1_over_R
@@ -40,6 +44,20 @@ output.surface_elevation = surface_elevation;
 output.delta_phi = delta_phi;
 output.psi_ref = psi_ref;
 output.roughness_meta = roughness_meta;
+output.h_direct = h_direct;
+output.h_reflect = h_reflect;
+output.h_total = h_total;
+output.rx_state_used = rx_state_used;
+output.fd_hz_used = fd_hz_used;
+output.rx_amplitude = abs(h_total);
+output.rx_phase_rad = angle(h_total);
+output.path_loss_db = -20*log10(max(abs(h_total), eps));
+output.direct_to_reflect_db = 20*log10(max(abs(h_direct), eps) / max(abs(h_reflect), eps));
+if abs(h_reflect) > 0
+    output.phase_diff_rad = angle(h_direct) - angle(h_reflect);
+else
+    output.phase_diff_rad = NaN;
+end
 output.config = cfg;
 
 if cfg.show_figures
@@ -58,14 +76,24 @@ defaults = struct( ...
     'yw', 50, ...
     'nx', 1024, ...
     'ny', 1024, ...
-    'xs', 0, ...
-    'ys', 0, ...
+    'x_tx', 0, ...
+    'y_tx', 0, ...
+    'z_tx', 100, ...
+    'x_rx', 0, ...
+    'y_rx', 0, ...
+    'z_rx', 3, ...
+    'rx_position_fn', [], ...
+    'doppler_fn', [], ...
     'nout', 6, ...
     'sigma_src_m', 0.3, ...
     'taper_ratio', 0.12, ...
     'env_mode', 'uniform', ...
     'show_figures', true, ...
-    'enforce_1_over_R', true);
+    'enforce_1_over_R', true, ...
+    'enable_surface_reflection', true, ...
+    'sea_wind_speed', 5.0, ...
+    'sea_hs_target', 0.5, ...
+    'sea_seed', 12345);
 
 cfg = defaults;
 if nargin > 0 && ~isempty(paramsV)
@@ -73,11 +101,29 @@ if nargin > 0 && ~isempty(paramsV)
     for k = 1:numel(fields)
         cfg.(fields{k}) = paramsV.(fields{k});
     end
+
+    % Backward compatibility for legacy field names.
+    if ~isfield(paramsV, 'x_tx') && isfield(paramsV, 'xs')
+        cfg.x_tx = paramsV.xs;
+    end
+    if ~isfield(paramsV, 'y_tx') && isfield(paramsV, 'ys')
+        cfg.y_tx = paramsV.ys;
+    end
+    if ~isfield(paramsV, 'z_tx')
+        cfg.z_tx = cfg.z_max;
+    end
+    if ~isfield(paramsV, 'x_rx')
+        cfg.x_rx = cfg.x_tx;
+    end
+    if ~isfield(paramsV, 'y_rx')
+        cfg.y_rx = cfg.y_tx;
+    end
 end
 
 cfg.nx = local_force_int(cfg.nx, 'nx');
 cfg.ny = local_force_int(cfg.ny, 'ny');
 cfg.nout = local_force_int(cfg.nout, 'nout');
+cfg.sea_seed = local_force_int(cfg.sea_seed, 'sea_seed');
 
 if cfg.nx <= 0 || cfg.ny <= 0
     error('nx and ny must be positive.');
@@ -105,6 +151,12 @@ end
 if cfg.stepz_lamb <= 0
     error('stepz_lamb must be positive.');
 end
+if cfg.z_tx <= 0 || cfg.z_tx > cfg.z_max
+    error('z_tx must satisfy 0 < z_tx <= z_max.');
+end
+if cfg.z_rx < 0 || cfg.z_rx >= cfg.z_tx
+    error('z_rx must satisfy 0 <= z_rx < z_tx.');
+end
 
 if isstring(cfg.env_mode)
     cfg.env_mode = char(cfg.env_mode);
@@ -120,6 +172,23 @@ if ~isscalar(cfg.enforce_1_over_R)
     error('enforce_1_over_R must be a scalar logical flag.');
 end
 cfg.enforce_1_over_R = logical(cfg.enforce_1_over_R);
+if ~isscalar(cfg.enable_surface_reflection)
+    error('enable_surface_reflection must be a scalar logical flag.');
+end
+cfg.enable_surface_reflection = logical(cfg.enable_surface_reflection);
+if ~(isempty(cfg.rx_position_fn) || isa(cfg.rx_position_fn, 'function_handle'))
+    error('rx_position_fn must be empty or a function handle.');
+end
+if ~(isempty(cfg.doppler_fn) || isa(cfg.doppler_fn, 'function_handle'))
+    error('doppler_fn must be empty or a function handle.');
+end
+
+if cfg.sea_wind_speed <= 0
+    error('sea_wind_speed must be positive.');
+end
+if cfg.sea_hs_target < 0
+    error('sea_hs_target must be non-negative.');
+end
 
 if cfg.sigma_src_m > 2
     error('sigma_src_m > 2 m is not allowed: beam divergence becomes too small for this 100 m upward test.');
@@ -136,8 +205,11 @@ cfg.lambda0 = cfg.c0 / cfg.f0;
 cfg.dx = cfg.xw / cfg.nx;
 cfg.dy = cfg.yw / cfg.ny;
 
-if abs(cfg.xs) > 0.5*cfg.xw || abs(cfg.ys) > 0.5*cfg.yw
-    error('Source location (xs,ys) must lie inside the transverse domain.');
+if abs(cfg.x_tx) > 0.5*cfg.xw || abs(cfg.y_tx) > 0.5*cfg.yw
+    error('Tx location (x_tx,y_tx) must lie inside the transverse domain.');
+end
+if abs(cfg.x_rx) > 0.5*cfg.xw || abs(cfg.y_rx) > 0.5*cfg.yw
+    error('Rx location (x_rx,y_rx) must lie inside the transverse domain.');
 end
 
 if cfg.sigma_src_m < max(cfg.dx, cfg.dy)
@@ -149,8 +221,9 @@ if cfg.dz_abs <= 0
     error('Computed dz_abs must be positive.');
 end
 
-cfg.numstep = ceil(cfg.z_max / cfg.dz_abs);
-cfg.dz_step = -cfg.z_max / cfg.numstep;
+cfg.path_span = cfg.z_tx - cfg.z_rx;
+cfg.numstep = ceil(cfg.path_span / cfg.dz_abs);
+cfg.dz_step = -cfg.path_span / cfg.numstep;
 
 if cfg.nout < 1
     error('nout must be >= 1.');
@@ -197,7 +270,7 @@ figure(12); clf
 pcolor(output.x, output.z_track, axz_db.'); shading flat
 xlabel('x (m)')
 ylabel('z (m, positive downward)')
-title('|psi(x,z)| at y=ys (dB)')
+title('|psi(x,z)| at y=y_{tx} (dB)')
 caxis([-40 0])
 colorbar
 set(gca, 'YDir', 'reverse')
@@ -210,7 +283,7 @@ figure(13); clf
 pcolor(output.y, output.z_track, ayz_db.'); shading flat
 xlabel('y (m)')
 ylabel('z (m, positive downward)')
-title('|psi(y,z)| at x=xs (dB)')
+title('|psi(y,z)| at x=x_{tx} (dB)')
 caxis([-40 0])
 colorbar
 set(gca, 'YDir', 'reverse')

@@ -1,14 +1,30 @@
 function [surface_elevation, delta_phi, psi_ref, meta] = ...
-    pm_surface_kirchhoff_module(psi_inc, KX, KY, x, y, xw, yw, lambda0)
+    pm_surface_kirchhoff_module(psi_inc, KX, KY, x, y, xw, yw, lambda0, pm_cfg)
 %PM_SURFACE_KIRCHHOFF_MODULE
 % Task 1: 2D Pierson-Moskowitz rough surface synthesis on (x,y) grid.
 % Task 2: Kirchhoff phase distortion on incident field psi_inc.
 % Task 3: Sanity-check visualization.
 
+if nargin < 9 || isempty(pm_cfg)
+    pm_cfg = struct();
+end
+if ~isfield(pm_cfg, 'U') || isempty(pm_cfg.U)
+    pm_cfg.U = 5.0;
+end
+if ~isfield(pm_cfg, 'Hs_target') || isempty(pm_cfg.Hs_target)
+    pm_cfg.Hs_target = 0.5;
+end
+if ~isfield(pm_cfg, 'seed') || isempty(pm_cfg.seed)
+    pm_cfg.seed = 12345;
+end
+if ~isfield(pm_cfg, 'show_figure') || isempty(pm_cfg.show_figure)
+    pm_cfg.show_figure = true;
+end
+
 % -----------------------------
 % 1) PM rough surface generation
 % -----------------------------
-U = 5.0;               % m/s
+U = pm_cfg.U;          % m/s
 g = 9.81;              % m/s^2
 alpha_PM = 8.10e-3;
 beta_PM = 0.74;
@@ -25,6 +41,7 @@ dkx = 2*pi / xw;
 dky = 2*pi / yw;
 
 A = sqrt(W .* dkx .* dky);
+rng(pm_cfg.seed, 'twister')
 N = (randn(size(K)) + 1i*randn(size(K))) / sqrt(2);
 Zk = A .* N;
 
@@ -32,7 +49,7 @@ eta_raw = real(ifft2(Zk));
 eta_raw = eta_raw * numel(eta_raw); % compensate MATLAB ifft2 normalization
 
 % Calibrate to realistic PM sea-state scale (~0.5 m significant wave height at U=5 m/s).
-Hs_target = 0.5; % m
+Hs_target = pm_cfg.Hs_target; % m
 Hs_raw = 4 * std(eta_raw(:));
 if Hs_raw > 0
     scale_factor = Hs_target / Hs_raw;
@@ -50,26 +67,28 @@ psi_ref = psi_inc .* exp(1i * delta_phi);
 % -----------------------------
 % 3) Sanity-check visualization
 % -----------------------------
-[X, Y] = meshgrid(x, y);
+if pm_cfg.show_figure
+    [X, Y] = meshgrid(x, y);
 
-figure(15); clf
-subplot(1,2,1)
-surf(X, Y, surface_elevation, 'EdgeColor', 'none')
-view(40, 35)
-axis tight
-xlabel('x (m)')
-ylabel('y (m)')
-zlabel('\xi(x,y) (m)')
-title('PM rough sea surface elevation')
-colorbar
+    figure(15); clf
+    subplot(1,2,1)
+    surf(X, Y, surface_elevation, 'EdgeColor', 'none')
+    view(40, 35)
+    axis tight
+    xlabel('x (m)')
+    ylabel('y (m)')
+    zlabel('\xi(x,y) (m)')
+    title('PM rough sea surface elevation')
+    colorbar
 
-subplot(1,2,2)
-imagesc(x, y, angle(psi_ref))
-axis xy tight
-xlabel('x (m)')
-ylabel('y (m)')
-title('Phase of reflected field angle(\psi_{ref})')
-colorbar
+    subplot(1,2,2)
+    imagesc(x, y, angle(psi_ref))
+    axis xy tight
+    xlabel('x (m)')
+    ylabel('y (m)')
+    title('Phase of reflected field angle(\psi_{ref})')
+    colorbar
+end
 
 meta = struct();
 meta.U = U;
@@ -82,6 +101,9 @@ meta.Hs_target = Hs_target;
 meta.Hs_raw = Hs_raw;
 meta.Hs_scaled = 4 * std(surface_elevation(:));
 meta.scale_factor = scale_factor;
+meta.seed = pm_cfg.seed;
+meta.show_figure = logical(pm_cfg.show_figure);
+meta.enabled = true;
 
 end
 
