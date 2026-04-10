@@ -13,6 +13,10 @@ disp(['sigma_src_m=', num2str(cfg.sigma_src_m), ', taper_ratio=', num2str(cfg.ta
 disp(['tx(x,y,z)=(', num2str(cfg.x_tx), ',', num2str(cfg.y_tx), ',', num2str(cfg.z_tx), ') m'])
 disp(['rx(x,y,z)=(', num2str(cfg.x_rx), ',', num2str(cfg.y_rx), ',', num2str(cfg.z_rx), ') m'])
 disp(['surface reflection enabled=', num2str(cfg.enable_surface_reflection)])
+disp(['surface_reflect_coeff=', num2str(cfg.surface_reflect_coeff), ...
+      ', surface_phase_mode=', cfg.surface_phase_mode, ...
+      ', surface_oblique_clip=[', num2str(cfg.surface_oblique_clip(1)), ',', ...
+      num2str(cfg.surface_oblique_clip(2)), ']'])
 
 [psiout, psifinal_xy, x, y, z_track, Axz, Ayz, ...
  A_center, R_center, fit_slope, fit_err_rms, pass_1_over_R, fit_mask, ...
@@ -93,7 +97,10 @@ defaults = struct( ...
     'enable_surface_reflection', true, ...
     'sea_wind_speed', 5.0, ...
     'sea_hs_target', 0.5, ...
-    'sea_seed', 12345);
+    'sea_seed', 12345, ...
+    'surface_reflect_coeff', -1, ...
+    'surface_phase_mode', 'normal', ...
+    'surface_oblique_clip', [0, 1]);
 
 cfg = defaults;
 if nargin > 0 && ~isempty(paramsV)
@@ -188,6 +195,27 @@ if cfg.sea_wind_speed <= 0
 end
 if cfg.sea_hs_target < 0
     error('sea_hs_target must be non-negative.');
+end
+if ~(isscalar(cfg.surface_reflect_coeff) && isnumeric(cfg.surface_reflect_coeff) && isfinite(cfg.surface_reflect_coeff))
+    error('surface_reflect_coeff must be a finite scalar (real or complex).');
+end
+if isstring(cfg.surface_phase_mode)
+    cfg.surface_phase_mode = char(cfg.surface_phase_mode);
+end
+if ~ischar(cfg.surface_phase_mode)
+    error('surface_phase_mode must be ''normal'' or ''oblique''.');
+end
+cfg.surface_phase_mode = lower(cfg.surface_phase_mode);
+if ~strcmp(cfg.surface_phase_mode, 'normal') && ~strcmp(cfg.surface_phase_mode, 'oblique')
+    error('surface_phase_mode must be ''normal'' or ''oblique''.');
+end
+if ~(isnumeric(cfg.surface_oblique_clip) && numel(cfg.surface_oblique_clip) == 2 && ...
+     all(isfinite(cfg.surface_oblique_clip(:))))
+    error('surface_oblique_clip must be a finite 1x2 numeric range.');
+end
+cfg.surface_oblique_clip = sort(cfg.surface_oblique_clip(:).');
+if cfg.surface_oblique_clip(1) < 0 || cfg.surface_oblique_clip(2) > 1
+    error('surface_oblique_clip must satisfy 0 <= min <= max <= 1.');
 end
 
 if cfg.sigma_src_m > 2

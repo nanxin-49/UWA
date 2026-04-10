@@ -212,4 +212,64 @@ comm_main_vertical_psk
 - 通过 `doppler_fn` 注入时变频偏
 - `custom_noise_fn` 接入海洋环境噪声模型
 - 扩展到更高阶 MPSK 与帧同步/导频估计
+## 2026-04-10 Formula Update (Readable Addendum)
+
+This addendum supersedes formula-related content if any old text is garbled by encoding.
+
+### PM 2D spectrum used with `ifft2`
+
+\[
+E_{1D}(K)=\frac{\alpha_{PM}}{2K^3}\exp\left(-\beta_{PM}\frac{g^2}{U^4K^2}\right),\ K>0
+\]
+\[
+\Phi_{2D}(K_x,K_y)=\frac{E_{1D}(K)}{2\pi K},\ K=\sqrt{K_x^2+K_y^2},\ K>0
+\]
+\[
+A=\sqrt{\Phi_{2D}\Delta k_x\Delta k_y}
+\]
+
+Set `K=0` bin to zero energy.
+
+### Surface reflection model
+
+\[
+\psi_{ref}=R_{smooth}\,\psi_{inc}\,\exp(j\Delta\phi),\quad R_{smooth}=-1\ \text{(default)}
+\]
+\[
+\Delta\phi=2k_0\xi(x,y)\Gamma,\quad k_0=\frac{2\pi}{\lambda_0}
+\]
+
+- `normal` mode: `\Gamma=2` (reduces to `4\pi\xi/\lambda_0`)
+- `oblique` mode: `\Gamma=\cos\theta_i+\cos\theta_r`
+
+### New parameters
+
+- `surface_reflect_coeff` (default `-1`)
+- `surface_phase_mode` (`'normal'|'oblique'`, default `'normal'`)
+- `surface_oblique_clip` (default `[0,1]`)
+
+### Added diagnostics in `roughness_meta`
+
+- `reflection_coeff_used`
+- `phase_mode_used`
+- `phase_factor_stats`
+- `phi2d_transform_error`
+- `spectrum_definition`
+
+### Updated structure diagram
+
+```mermaid
+flowchart TD
+    A["CARPE3D_vertical"] --> B["propWAPE_vertical"]
+    B --> C["Direct: z_tx -> z_rx"]
+    B --> D["Reflect path: z_tx -> surface"]
+    D --> E["pm_surface_kirchhoff_module"]
+    E --> E1["E1D -> Phi2D -> ifft2"]
+    E --> E2["R_smooth * exp(j*delta_phi)"]
+    E2 --> F["surface -> z_rx"]
+    C --> G["h_direct"]
+    F --> H["h_reflect"]
+    G --> I["h_total"]
+    H --> I
+```
 

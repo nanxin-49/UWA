@@ -137,6 +137,12 @@ if cfg.enable_surface_reflection
     pm_cfg.Hs_target = cfg.sea_hs_target;
     pm_cfg.seed = cfg.sea_seed;
     pm_cfg.show_figure = cfg.show_figures;
+    pm_cfg.reflect_coeff = cfg.surface_reflect_coeff;
+    pm_cfg.phase_mode = cfg.surface_phase_mode;
+    pm_cfg.oblique_clip = cfg.surface_oblique_clip;
+    pm_cfg.tx_xyz = [cfg.x_tx, cfg.y_tx, cfg.z_tx];
+    pm_cfg.rx_xyz = [rx_state_used.x_rx, rx_state_used.y_rx, rx_state_used.z_rx];
+    pm_cfg.z_surface = 0;
 
     psi_surface_inc = local_march_field(psi_init, cfg.z_tx, 0, cfg, Wxy, kappa2, k0);
 
@@ -152,7 +158,12 @@ else
     surface_elevation = zeros(size(psifinal_xy));
     delta_phi = zeros(size(psifinal_xy));
     psi_ref = complex(zeros(size(psifinal_xy)));
-    roughness_meta = struct('enabled', false);
+    roughness_meta = struct( ...
+        'enabled', false, ...
+        'reflection_coeff_used', cfg.surface_reflect_coeff, ...
+        'phase_mode_used', cfg.surface_phase_mode, ...
+        'phase_factor_stats', struct('min', NaN, 'max', NaN, 'mean', NaN), ...
+        'phi2d_transform_error', struct('max_rel', NaN, 'mean_rel', NaN));
 end
 
 [fit_slope, fit_err_rms, pass_1_over_R, fit_mask] = ...
