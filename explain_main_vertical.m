@@ -24,11 +24,14 @@ paramsV.z_rx = 4;         % rx depth under buoy (m), typically 3-5 m
 paramsV.nout = 6;         % number of snapshots along z march
 
 paramsV.sigma_src_m = 0.3;  % must stay in [0.2, 0.5] and >= max(dx,dy)
-paramsV.taper_ratio = 0.12; % per-side taper ratio in [0.10, 0.15]
+paramsV.sponge_ratio = 0.12; % per-side sponge ratio in [0.10, 0.15]
+paramsV.alpha_max_np_per_m = 0.15;
 
 paramsV.env_mode = 'uniform';  % 'uniform' or 'layered'
 paramsV.enforce_1_over_R = true;
 paramsV.enable_surface_reflection = true;
+paramsV.save_mode = 'slice';
+paramsV.use_gpu = false;
 paramsV.sea_wind_speed = 5.0;
 paramsV.sea_hs_target = 0.5;
 paramsV.sea_seed = 12345;

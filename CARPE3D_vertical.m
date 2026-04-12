@@ -5,14 +5,27 @@ function output = CARPE3D_vertical(paramsV)
 cfg = local_prepare_config(paramsV);
 
 disp('--- CARPE3D_vertical ---')
-disp(['f0 (Hz): ', num2str(cfg.f0)])
+if numel(cfg.f0) == 1
+    if cfg.enable_wideband
+        disp(['f0 band (Hz): [', num2str(cfg.f_band_hz(1)), ', ', num2str(cfg.f_band_hz(2)), ...
+              '], seed f0=', num2str(cfg.f0)])
+    else
+        disp(['f0 (Hz): ', num2str(cfg.f0)])
+    end
+else
+    disp(['f0 sweep (Hz): [', num2str(cfg.f0(1)), ', ', num2str(cfg.f0(end)), ...
+          '], Nf=', num2str(numel(cfg.f0))])
+end
 disp(['z march: ', num2str(cfg.z_tx), ' -> ', num2str(cfg.z_rx), ' m, dz_step=', num2str(cfg.dz_step), ' m'])
 disp(['grid: nx=', num2str(cfg.nx), ', ny=', num2str(cfg.ny), ...
       ', xw=', num2str(cfg.xw), ' m, yw=', num2str(cfg.yw), ' m'])
-disp(['sigma_src_m=', num2str(cfg.sigma_src_m), ', taper_ratio=', num2str(cfg.taper_ratio)])
+disp(['sigma_src_m=', num2str(cfg.sigma_src_m), ', sponge_ratio=', num2str(cfg.sponge_ratio), ...
+      ', alpha_max_np_per_m=', num2str(cfg.alpha_max_np_per_m)])
 disp(['tx(x,y,z)=(', num2str(cfg.x_tx), ',', num2str(cfg.y_tx), ',', num2str(cfg.z_tx), ') m'])
 disp(['rx(x,y,z)=(', num2str(cfg.x_rx), ',', num2str(cfg.y_rx), ',', num2str(cfg.z_rx), ') m'])
 disp(['surface reflection enabled=', num2str(cfg.enable_surface_reflection)])
+disp(['wideband=', num2str(cfg.enable_wideband), ', save_mode=', cfg.save_mode, ...
+      ', use_gpu=', num2str(cfg.use_gpu)])
 disp(['surface_reflect_coeff=', num2str(cfg.surface_reflect_coeff), ...
       ', surface_phase_mode=', cfg.surface_phase_mode, ...
       ', surface_oblique_clip=[', num2str(cfg.surface_oblique_clip(1)), ',', ...
@@ -21,7 +34,8 @@ disp(['surface_reflect_coeff=', num2str(cfg.surface_reflect_coeff), ...
 [psiout, psifinal_xy, x, y, z_track, Axz, Ayz, ...
  A_center, R_center, fit_slope, fit_err_rms, pass_1_over_R, fit_mask, ...
  surface_elevation, delta_phi, psi_ref, roughness_meta, ...
- h_direct, h_reflect, h_total, rx_state_used, fd_hz_used] = ...
+ h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
+ f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref] = ...
     propWAPE_vertical(cfg);
 
 if cfg.enforce_1_over_R
@@ -51,6 +65,12 @@ output.roughness_meta = roughness_meta;
 output.h_direct = h_direct;
 output.h_reflect = h_reflect;
 output.h_total = h_total;
+output.f_axis = f_axis;
+output.H_direct_f = H_direct_f;
+output.H_reflect_f = H_reflect_f;
+output.H_f = H_f;
+output.idx_f_ref = idx_f_ref;
+output.H_baseband = [];
 output.rx_state_used = rx_state_used;
 output.fd_hz_used = fd_hz_used;
 output.rx_amplitude = abs(h_total);
@@ -73,6 +93,11 @@ end
 function cfg = local_prepare_config(paramsV)
 defaults = struct( ...
     'f0', 4000, ...
+    'enable_wideband', false, ...
+    'f_band_hz', [4000, 8000], ...
+    'Nf_min', 32, ...
+    'Nf_max', 128, ...
+    'f_ref_hz', [], ...
     'c0', 1500, ...
     'z_max', 100, ...
     'stepz_lamb', 0.5, ...
@@ -91,10 +116,14 @@ defaults = struct( ...
     'nout', 6, ...
     'sigma_src_m', 0.3, ...
     'taper_ratio', 0.12, ...
+    'sponge_ratio', 0.12, ...
+    'alpha_max_np_per_m', 0.15, ...
     'env_mode', 'uniform', ...
     'show_figures', true, ...
     'enforce_1_over_R', true, ...
     'enable_surface_reflection', true, ...
+    'save_mode', 'rx_only', ...
+    'use_gpu', false, ...
     'sea_wind_speed', 5.0, ...
     'sea_hs_target', 0.5, ...
     'sea_seed', 12345, ...
@@ -125,6 +154,9 @@ if nargin > 0 && ~isempty(paramsV)
     if ~isfield(paramsV, 'y_rx')
         cfg.y_rx = cfg.y_tx;
     end
+    if ~isfield(paramsV, 'sponge_ratio') && isfield(paramsV, 'taper_ratio')
+        cfg.sponge_ratio = paramsV.taper_ratio;
+    end
 end
 
 cfg.nx = local_force_int(cfg.nx, 'nx');
@@ -152,8 +184,12 @@ end
 if cfg.z_max <= 0
     error('z_max must be positive.');
 end
-if cfg.f0 <= 0 || cfg.c0 <= 0
-    error('f0 and c0 must be positive.');
+if ~isnumeric(cfg.f0) || isempty(cfg.f0) || any(~isfinite(cfg.f0(:))) || any(cfg.f0(:) <= 0)
+    error('f0 must contain positive finite frequency values.');
+end
+cfg.f0 = cfg.f0(:).';
+if cfg.c0 <= 0
+    error('c0 must be positive.');
 end
 if cfg.stepz_lamb <= 0
     error('stepz_lamb must be positive.');
@@ -183,6 +219,37 @@ if ~isscalar(cfg.enable_surface_reflection)
     error('enable_surface_reflection must be a scalar logical flag.');
 end
 cfg.enable_surface_reflection = logical(cfg.enable_surface_reflection);
+if ~isscalar(cfg.enable_wideband)
+    error('enable_wideband must be a scalar logical flag.');
+end
+cfg.enable_wideband = logical(cfg.enable_wideband);
+if ~isscalar(cfg.use_gpu)
+    error('use_gpu must be a scalar logical flag.');
+end
+cfg.use_gpu = logical(cfg.use_gpu);
+if ~(isnumeric(cfg.f_band_hz) && numel(cfg.f_band_hz) == 2 && all(isfinite(cfg.f_band_hz(:))) && ...
+     cfg.f_band_hz(1) > 0 && cfg.f_band_hz(2) > cfg.f_band_hz(1))
+    error('f_band_hz must be [fmin,fmax] with 0<fmin<fmax.');
+end
+cfg.f_band_hz = cfg.f_band_hz(:).';
+cfg.Nf_min = local_force_int(cfg.Nf_min, 'Nf_min');
+cfg.Nf_max = local_force_int(cfg.Nf_max, 'Nf_max');
+if cfg.Nf_min < 2 || cfg.Nf_max < cfg.Nf_min
+    error('Require 2 <= Nf_min <= Nf_max.');
+end
+if ~(isempty(cfg.f_ref_hz) || (isscalar(cfg.f_ref_hz) && isnumeric(cfg.f_ref_hz) && isfinite(cfg.f_ref_hz) && cfg.f_ref_hz > 0))
+    error('f_ref_hz must be empty or a positive finite scalar.');
+end
+if isstring(cfg.save_mode)
+    cfg.save_mode = char(cfg.save_mode);
+end
+if ~ischar(cfg.save_mode)
+    error('save_mode must be ''rx_only'' or ''slice''.');
+end
+cfg.save_mode = lower(cfg.save_mode);
+if ~strcmp(cfg.save_mode, 'rx_only') && ~strcmp(cfg.save_mode, 'slice')
+    error('save_mode must be ''rx_only'' or ''slice''.');
+end
 if ~(isempty(cfg.rx_position_fn) || isa(cfg.rx_position_fn, 'function_handle'))
     error('rx_position_fn must be empty or a function handle.');
 end
@@ -225,11 +292,30 @@ if cfg.sigma_src_m < 0.2 || cfg.sigma_src_m > 0.5
     error('sigma_src_m must be in [0.2, 0.5] m for this v1 implementation.');
 end
 
-if cfg.taper_ratio < 0.10 || cfg.taper_ratio > 0.15
-    error('taper_ratio must be in [0.10, 0.15].');
+if cfg.sponge_ratio < 0.10 || cfg.sponge_ratio > 0.15
+    error('sponge_ratio must be in [0.10, 0.15].');
+end
+if ~(isscalar(cfg.alpha_max_np_per_m) && isfinite(cfg.alpha_max_np_per_m) && cfg.alpha_max_np_per_m > 0)
+    error('alpha_max_np_per_m must be a positive finite scalar.');
 end
 
-cfg.lambda0 = cfg.c0 / cfg.f0;
+f_for_grid = cfg.f0(1);
+if numel(cfg.f0) > 1
+    if isempty(cfg.f_ref_hz)
+        f_target = 0.5 * (min(cfg.f0) + max(cfg.f0));
+    else
+        f_target = cfg.f_ref_hz;
+    end
+    [~, idx_tmp] = min(abs(cfg.f0 - f_target));
+    f_for_grid = cfg.f0(idx_tmp);
+elseif cfg.enable_wideband
+    if isempty(cfg.f_ref_hz)
+        f_for_grid = 0.5 * (cfg.f_band_hz(1) + cfg.f_band_hz(2));
+    else
+        f_for_grid = cfg.f_ref_hz;
+    end
+end
+cfg.lambda0 = cfg.c0 / f_for_grid;
 cfg.dx = cfg.xw / cfg.nx;
 cfg.dy = cfg.yw / cfg.ny;
 
@@ -258,12 +344,6 @@ if cfg.nout < 1
 end
 cfg.nout = min(cfg.nout, cfg.numstep);
 
-n_taper_x = round(cfg.taper_ratio * cfg.nx);
-n_taper_y = round(cfg.taper_ratio * cfg.ny);
-if n_taper_x < 1 || n_taper_y < 1
-    error('taper points are too small, increase taper_ratio or grid size.');
-end
-
 end
 
 function out = local_force_int(v, name)
@@ -277,68 +357,76 @@ end
 end
 
 function local_plot_results(output)
-abs_final = abs(output.psifinal_xy);
-ref_final = max(abs_final(:));
-final_db = 20*log10(abs_final / max(ref_final, eps));
+if ~isempty(output.psifinal_xy)
+    abs_final = abs(output.psifinal_xy);
+    ref_final = max(abs_final(:));
+    final_db = 20*log10(abs_final / max(ref_final, eps));
 
-figure(11); clf
-pcolor(output.x, output.y, final_db); shading flat
-xlabel('x (m)')
-ylabel('y (m)')
-title('|psi| at z=0 (dB)')
-caxis([-40 0])
-colorbar
-axis equal tight
-
-abs_axz = abs(output.Axz);
-ref_axz = max(abs_axz(:));
-axz_db = 20*log10(abs_axz / max(ref_axz, eps));
-
-figure(12); clf
-pcolor(output.x, output.z_track, axz_db.'); shading flat
-xlabel('x (m)')
-ylabel('z (m, positive downward)')
-title('|psi(x,z)| at y=y_{tx} (dB)')
-caxis([-40 0])
-colorbar
-set(gca, 'YDir', 'reverse')
-
-abs_ayz = abs(output.Ayz);
-ref_ayz = max(abs_ayz(:));
-ayz_db = 20*log10(abs_ayz / max(ref_ayz, eps));
-
-figure(13); clf
-pcolor(output.y, output.z_track, ayz_db.'); shading flat
-xlabel('y (m)')
-ylabel('z (m, positive downward)')
-title('|psi(y,z)| at x=x_{tx} (dB)')
-caxis([-40 0])
-colorbar
-set(gca, 'YDir', 'reverse')
-
-valid = output.R_center > 0 & output.A_center > 0 & isfinite(output.A_center);
-figure(14); clf
-h = [];
-labels = {};
-if any(valid)
-    h(end+1) = loglog(output.R_center(valid), output.A_center(valid), 'b-', 'LineWidth', 1.2); %#ok<AGROW>
-    labels{end+1} = 'Measured center amplitude'; %#ok<AGROW>
-    hold on
+    figure(11); clf
+    pcolor(output.x, output.y, final_db); shading flat
+    xlabel('x (m)')
+    ylabel('y (m)')
+    title('|psi| at z=0 (dB)')
+    caxis([-40 0])
+    colorbar
+    axis equal tight
 end
-if any(output.fit_mask)
-    R_fit = output.R_center(output.fit_mask);
-    A_fit = output.A_center(output.fit_mask);
-    C_fit = mean(A_fit .* R_fit);
-    h(end+1) = loglog(R_fit, C_fit ./ R_fit, 'r--', 'LineWidth', 1.2); %#ok<AGROW>
-    labels{end+1} = 'C/R fit'; %#ok<AGROW>
+
+if ~isempty(output.Axz) && ~isempty(output.z_track)
+    abs_axz = abs(output.Axz);
+    ref_axz = max(abs_axz(:));
+    axz_db = 20*log10(abs_axz / max(ref_axz, eps));
+
+    figure(12); clf
+    pcolor(output.x, output.z_track, axz_db.'); shading flat
+    xlabel('x (m)')
+    ylabel('z (m, positive downward)')
+    title('|psi(x,z)| at y=y_{tx} (dB)')
+    caxis([-40 0])
+    colorbar
+    set(gca, 'YDir', 'reverse')
 end
-grid on
-xlabel('R (m)')
-ylabel('|psi_{center}|')
-title(sprintf('1/R check: slope=%.4f, relRMS=%.4f, pass=%d', ...
-      output.fit_slope, output.fit_err_rms, output.pass_1_over_R))
-if ~isempty(h)
-    legend(h, labels, 'Location', 'southwest')
+
+if ~isempty(output.Ayz) && ~isempty(output.z_track)
+    abs_ayz = abs(output.Ayz);
+    ref_ayz = max(abs_ayz(:));
+    ayz_db = 20*log10(abs_ayz / max(ref_ayz, eps));
+
+    figure(13); clf
+    pcolor(output.y, output.z_track, ayz_db.'); shading flat
+    xlabel('y (m)')
+    ylabel('z (m, positive downward)')
+    title('|psi(y,z)| at x=x_{tx} (dB)')
+    caxis([-40 0])
+    colorbar
+    set(gca, 'YDir', 'reverse')
+end
+
+if ~isempty(output.R_center) && ~isempty(output.A_center)
+    valid = output.R_center > 0 & output.A_center > 0 & isfinite(output.A_center);
+    figure(14); clf
+    h = [];
+    labels = {};
+    if any(valid)
+        h(end+1) = loglog(output.R_center(valid), output.A_center(valid), 'b-', 'LineWidth', 1.2); %#ok<AGROW>
+        labels{end+1} = 'Measured center amplitude'; %#ok<AGROW>
+        hold on
+    end
+    if any(output.fit_mask)
+        R_fit = output.R_center(output.fit_mask);
+        A_fit = output.A_center(output.fit_mask);
+        C_fit = mean(A_fit .* R_fit);
+        h(end+1) = loglog(R_fit, C_fit ./ R_fit, 'r--', 'LineWidth', 1.2); %#ok<AGROW>
+        labels{end+1} = 'C/R fit'; %#ok<AGROW>
+    end
+    grid on
+    xlabel('R (m)')
+    ylabel('|psi_{center}|')
+    title(sprintf('1/R check: slope=%.4f, relRMS=%.4f, pass=%d', ...
+          output.fit_slope, output.fit_err_rms, output.pass_1_over_R))
+    if ~isempty(h)
+        legend(h, labels, 'Location', 'southwest')
+    end
 end
 
 end

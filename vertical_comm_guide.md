@@ -273,3 +273,43 @@ flowchart TD
     H --> I
 ```
 
+## 2026-04-11 Broadband + AAL + GPU Addendum
+
+### 1) Broadband frequency-selective channel
+
+- `paramsV.f0` now supports scalar or vector.
+- If `enable_wideband=true` and `f0` is scalar, solver auto-builds `f_axis` from:
+  - `f_band_hz`, `Nf_min`, `Nf_max`
+  - delay-spread-based `Δf` target.
+- New outputs:
+  - `f_axis`, `H_f`, `H_direct_f`, `H_reflect_f`, `idx_f_ref`
+- Compatibility:
+  - `h_total/h_direct/h_reflect` are reference-frequency values (index `idx_f_ref`).
+
+### 2) Complex absorbing boundary (AAL)
+
+- Legacy amplitude taper path is removed from marching core.
+- New absorber parameters:
+  - `sponge_ratio` in `[0.10, 0.15]`
+  - `alpha_max_np_per_m` (positive scalar)
+- Absorption is injected by:
+  \[
+  U_{new}(x,y)=\frac{c_{local}-c_0}{c_{local}}-i\frac{\alpha(x,y)}{k_0}
+  \]
+  with cubic edge profile on both `x` and `y`.
+
+### 3) GPU and memory mode
+
+- `use_gpu=true` enables gpuArray path when GPU support is available.
+- `save_mode`:
+  - `rx_only` (default): keep only essential channel outputs.
+  - `slice`: store reference-frequency mid-plane slices and sparse snapshots.
+
+### 4) Communication coupling update
+
+- `comm_main_vertical_psk` uses broadband `H_f` to build baseband response:
+  - interpolate to symbol-rate FFT grid,
+  - `h_bb = ifft(ifftshift(H_baseband))`,
+  - truncate taps by energy threshold,
+  - inject ISI via `conv(tx_symbols, h_bb, 'same')`.
+- Receiver equalization switched to frequency-domain MMSE using `h_bb`.
