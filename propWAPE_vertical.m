@@ -449,6 +449,13 @@ meta_accum.alpha_bub_np_per_m = step_meta.alpha_bub_np_per_m;
 meta_accum.delta_c_bub_mps = step_meta.delta_c_bub_mps;
 meta_accum.c_eff_stats = local_merge_step_stats(meta_accum.c_eff_stats, step_meta.c_eff_stats, n_old);
 meta_accum.alpha_bub_stats = local_merge_step_stats(meta_accum.alpha_bub_stats, step_meta.alpha_bub_stats, n_old);
+if isfield(meta_accum, 'beta_stats') && isfield(step_meta, 'beta_stats')
+    meta_accum.beta_stats = local_merge_step_stats(meta_accum.beta_stats, step_meta.beta_stats, n_old);
+end
+if isfield(meta_accum, 'resonance_radius_stats') && isfield(step_meta, 'resonance_radius_stats')
+    meta_accum.resonance_radius_stats = local_merge_step_stats( ...
+        meta_accum.resonance_radius_stats, step_meta.resonance_radius_stats, n_old);
+end
 if ~isempty(step_meta.warning_flags)
     meta_accum.warning_flags = unique([meta_accum.warning_flags, step_meta.warning_flags]);
 end

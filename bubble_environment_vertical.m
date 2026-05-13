@@ -69,6 +69,10 @@ end
 alpha_bub = 0;
 delta_c_bub = 0;
 warning_flags = {};
+beta = NaN;
+resonance_radius_m = NaN;
+spec_meta = struct();
+em_meta = struct();
 
 if enabled
     switch model
@@ -96,6 +100,28 @@ if enabled
             end
             c_eff_xy = c_eff * ones(ny, nx);
             alpha_bub_xy = alpha_bub * ones(ny, nx);
+        case 'hall1d'
+            spatial_mode = '1d';
+            a_grid_m = cfg.bubble_radius_grid_m;
+            [n_a, beta, spec_meta] = bubble_hall_spectrum(a_grid_m, z_curr, cfg.sea_wind_speed, cfg);
+            [c_eff, alpha_bub, em_meta] = ...
+                bubble_effective_medium(a_grid_m, n_a, z_curr, f_hz, c_bg, cfg);
+            if ~apply_sound_speed
+                c_eff = c_bg;
+            end
+            if ~apply_attenuation
+                alpha_bub = 0;
+            end
+            if ~(isscalar(c_eff) && isnumeric(c_eff) && isfinite(c_eff) && c_eff > 0)
+                error('Hall1D bubble effective sound speed must be finite and positive.');
+            end
+            if ~(isscalar(alpha_bub) && isnumeric(alpha_bub) && isfinite(alpha_bub) && alpha_bub >= 0)
+                error('Hall1D bubble attenuation must be finite and nonnegative.');
+            end
+            c_eff_xy = c_eff * ones(ny, nx);
+            alpha_bub_xy = alpha_bub * ones(ny, nx);
+            resonance_radius_m = em_meta.resonance_radius_m;
+            warning_flags = unique([warning_flags, spec_meta.warning_flags, em_meta.warning_flags]);
         otherwise
             error('bubble_model=%s is not implemented in Priority 2.', model);
     end
@@ -119,8 +145,18 @@ meta.alpha_freq_exp = cfg.bubble_alpha_freq_exp;
 meta.sound_speed_freq_exp = cfg.bubble_sound_speed_freq_exp;
 meta.alpha_bub_np_per_m = alpha_bub;
 meta.delta_c_bub_mps = delta_c_bub;
+meta.radius_grid_m = cfg.bubble_radius_grid_m;
+meta.beta = beta;
+meta.beta_max = cfg.bubble_beta_max;
+meta.delta_const = cfg.bubble_delta_const;
+meta.damping_model = cfg.bubble_damping_model;
+meta.resonance_radius_m = resonance_radius_m;
 meta.c_eff_stats = local_field_stats(c_eff_xy);
 meta.alpha_bub_stats = local_field_stats(alpha_bub_xy);
+meta.beta_stats = local_scalar_stats(beta);
+meta.resonance_radius_stats = local_scalar_stats(resonance_radius_m);
+meta.spec_meta = spec_meta;
+meta.effective_medium_meta = em_meta;
 meta.warning_flags = warning_flags;
 
 end
@@ -142,4 +178,12 @@ stats = struct( ...
     'mean', mean(vf(:)), ...
     'std', std(vf(:)), ...
     'finite_count', nnz(finite_mask));
+end
+
+function stats = local_scalar_stats(v)
+if isempty(v) || ~isnumeric(v) || ~isfinite(v)
+    stats = struct('min', NaN, 'max', NaN, 'mean', NaN, 'std', NaN, 'finite_count', 0);
+    return
+end
+stats = struct('min', v, 'max', v, 'mean', v, 'std', 0, 'finite_count', 1);
 end
