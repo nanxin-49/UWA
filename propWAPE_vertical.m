@@ -2,7 +2,7 @@ function [psiout, psifinal_xy, x, y, z_track, Axz, Ayz, ...
           A_center, R_center, fit_slope, fit_err_rms, pass_1_over_R, fit_mask, ...
           surface_elevation, delta_phi, psi_ref, roughness_meta, ...
           h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
-          f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref] = ...
+          f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref, bubble_meta] = ...
           propWAPE_vertical(cfg)
 %PROP WAPE VERTICAL
 % Upward marching PE in z (z axis is positive downward).
@@ -107,6 +107,7 @@ surface_elevation = [];
 delta_phi = [];
 psi_ref = [];
 roughness_meta = struct('enabled', false);
+bubble_meta = struct('enabled', false, 'model', 'off');
 
 for ifq = 1:Nf
     f_hz = f_axis(ifq);
@@ -155,16 +156,15 @@ for ifq = 1:Nf
 
     for jj = 1:numstep_f
         z_curr = cfg.z_tx + jj * dz_step_f;
-        c_local = local_sound_speed(z_curr, cfg);
-        if ~isfinite(c_local) || c_local <= 0
-            error('Invalid local sound speed at z=%g m.', z_curr);
-        end
-
-        U_real = (c_local - cfg.c0) / c_local;
-        screen = exp(-1i * k0 * ds * (U_real - 1i * alpha_xy_work / k0));
+        [screen, bubble_step_meta] = local_phase_screen( ...
+            x, y, z_curr, f_hz, cfg, alpha_xy_work, k0, ds, use_gpu);
         psi_k = fr0 .* fft2(screen .* ifft2(fr0 .* psi_k));
 
         if capture_ref
+            if jj == 1
+                bubble_meta = bubble_step_meta;
+                bubble_meta.f_axis = f_axis;
+            end
             psi_step = ifft2(psi_k);
             if use_gpu
                 center_val = gather(psi_step(iy_tx, ix_tx));
@@ -212,11 +212,13 @@ for ifq = 1:Nf
         pm_cfg.rx_xyz = [rx_state_used.x_rx, rx_state_used.y_rx, rx_state_used.z_rx];
         pm_cfg.z_surface = 0;
 
-        psi_surface_inc = local_march_field(psi_init_cpu, cfg.z_tx, 0, cfg, alpha_xy_work, kappa2_work, k0, use_gpu);
+        [psi_surface_inc, bubble_surface_meta] = local_march_field( ...
+            psi_init_cpu, cfg.z_tx, 0, cfg, x, y, alpha_xy_work, kappa2_work, k0, f_hz, use_gpu);
         [surface_f, delta_f, psi_ref_f, rough_meta_f] = ...
             pm_surface_kirchhoff_module(psi_surface_inc, KX, KY, x, y, cfg.xw, cfg.yw, lambda_f, pm_cfg);
 
-        psi_ref_at_rx = local_march_field(psi_ref_f, 0, rx_state_used.z_rx, cfg, alpha_xy_work, kappa2_work, k0, use_gpu);
+        [psi_ref_at_rx, bubble_rx_meta] = local_march_field( ...
+            psi_ref_f, 0, rx_state_used.z_rx, cfg, x, y, alpha_xy_work, kappa2_work, k0, f_hz, use_gpu);
         h_reflect_fi = psi_ref_at_rx(iy_rx, ix_rx);
 
         if capture_ref
@@ -225,6 +227,8 @@ for ifq = 1:Nf
             psi_ref = psi_ref_f;
             roughness_meta = rough_meta_f;
             roughness_meta.reflection_model = 'two_segment_tx_surface_rx';
+            bubble_meta.reflection_tx_surface = bubble_surface_meta;
+            bubble_meta.reflection_surface_rx = bubble_rx_meta;
         end
     end
 
@@ -336,9 +340,11 @@ fit_err_rms = sqrt(mean(((A_fit - A_model) ./ A_model).^2));
 pass_flag = (fit_slope >= -1.05) && (fit_slope <= -0.95) && (fit_err_rms <= 0.10);
 end
 
-function psi_end = local_march_field(psi_start, z_start, z_end, cfg, alpha_xy, kappa2, k0, use_gpu)
+function [psi_end, march_meta] = local_march_field( ...
+    psi_start, z_start, z_end, cfg, x, y, alpha_xy, kappa2, k0, f_hz, use_gpu)
 %LOCAL_MARCH_FIELD March one complex field between two depths.
 
+march_meta = struct('enabled', false, 'model', 'off');
 if abs(z_end - z_start) <= eps
     psi_end = psi_start;
     return
@@ -370,13 +376,11 @@ end
 psi_k = fft2(psi_start);
 for jj = 1:n_step
     z_curr = z_start + jj * dz_step_local;
-    c_local = local_sound_speed(z_curr, cfg);
-    if ~isfinite(c_local) || c_local <= 0
-        error('Invalid local sound speed at z=%g m.', z_curr);
+    [screen, step_meta] = local_phase_screen( ...
+        x, y, z_curr, f_hz, cfg, alpha_xy, k0, ds_local, use_gpu);
+    if jj == 1
+        march_meta = step_meta;
     end
-
-    U_real = (c_local - cfg.c0) / c_local;
-    screen = exp(-1i * k0 * ds_local * (U_real - 1i * alpha_xy / k0));
     psi_k = fr_local .* fft2(screen .* ifft2(fr_local .* psi_k));
 end
 
@@ -384,6 +388,42 @@ psi_end = ifft2(psi_k);
 if use_gpu
     psi_end = gather(psi_end);
 end
+end
+
+function [screen, bubble_step_meta] = local_phase_screen( ...
+    x, y, z_curr, f_hz, cfg, alpha_xy, k0, ds, use_gpu)
+c_bg = local_sound_speed(z_curr, cfg);
+if ~isfinite(c_bg) || c_bg <= 0
+    error('Invalid local sound speed at z=%g m.', z_curr);
+end
+
+[c_eff_xy, alpha_bub_xy, bubble_step_meta] = ...
+    bubble_environment_vertical(x, y, z_curr, f_hz, c_bg, cfg);
+
+if ~(isnumeric(c_eff_xy) && all(isfinite(c_eff_xy(:))) && all(c_eff_xy(:) > 0))
+    error('bubble_environment_vertical returned invalid c_eff_xy at z=%g m.', z_curr);
+end
+if ~(isnumeric(alpha_bub_xy) && all(isfinite(alpha_bub_xy(:))) && all(alpha_bub_xy(:) >= 0))
+    error('bubble_environment_vertical returned invalid alpha_bub_xy at z=%g m.', z_curr);
+end
+if ~isequal(size(c_eff_xy), [numel(y), numel(x)])
+    error('c_eff_xy must have size [numel(y), numel(x)].');
+end
+if ~isequal(size(alpha_bub_xy), [numel(y), numel(x)])
+    error('alpha_bub_xy must have size [numel(y), numel(x)].');
+end
+
+if use_gpu
+    if ~isa(alpha_xy, 'gpuArray')
+        alpha_xy = gpuArray(alpha_xy);
+    end
+    c_eff_xy = gpuArray(c_eff_xy);
+    alpha_bub_xy = gpuArray(alpha_bub_xy);
+end
+
+alpha_total_xy = alpha_xy + alpha_bub_xy;
+U_real_xy = (c_eff_xy - cfg.c0) ./ c_eff_xy;
+screen = exp(-1i * k0 * ds * (U_real_xy - 1i * alpha_total_xy / k0));
 end
 
 function [f_axis, idx_f_ref] = local_resolve_frequency_axis(cfg, rx_state_used)

@@ -35,7 +35,7 @@ disp(['surface_reflect_coeff=', num2str(cfg.surface_reflect_coeff), ...
  A_center, R_center, fit_slope, fit_err_rms, pass_1_over_R, fit_mask, ...
  surface_elevation, delta_phi, psi_ref, roughness_meta, ...
  h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
- f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref] = ...
+ f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref, bubble_meta] = ...
     propWAPE_vertical(cfg);
 
 if cfg.enforce_1_over_R
@@ -82,6 +82,7 @@ if abs(h_reflect) > 0
 else
     output.phase_diff_rad = NaN;
 end
+output.bubble_meta = bubble_meta;
 output.config = cfg;
 
 if cfg.show_figures
@@ -129,7 +130,35 @@ defaults = struct( ...
     'sea_seed', 12345, ...
     'surface_reflect_coeff', -1, ...
     'surface_phase_mode', 'normal', ...
-    'surface_oblique_clip', [0, 1]);
+    'surface_oblique_clip', [0, 1], ...
+    'enable_bubbles', false, ...
+    'bubble_model', 'off', ...
+    'bubble_spatial_mode', 'none', ...
+    'bubble_apply_sound_speed', true, ...
+    'bubble_apply_attenuation', true, ...
+    'bubble_alpha0_np_per_m', 0, ...
+    'bubble_layer_decay_m', 0.4, ...
+    'bubble_f_ref_hz', 6000, ...
+    'bubble_alpha_freq_exp', 0, ...
+    'bubble_delta_c0_mps', 0, ...
+    'bubble_sound_speed_decay_m', 0.4, ...
+    'bubble_sound_speed_freq_exp', 0, ...
+    'bubble_radius_grid_m', logspace(-5, -3, 80), ...
+    'bubble_strength_scale', 1.0, ...
+    'bubble_beta_max', 1e-3, ...
+    'bubble_damping_model', 'constant', ...
+    'bubble_delta_const', 0.1, ...
+    'bubble_gamma', 1.4, ...
+    'bubble_rho_w_kg_m3', 1025, ...
+    'bubble_P_atm_pa', 101325, ...
+    'bubble_g_m_s2', 9.81, ...
+    'bubble_seed', 12345, ...
+    'bubble_save_diagnostics', false, ...
+    'bubble_plume_count', 0, ...
+    'bubble_plume_strength', [], ...
+    'bubble_plume_sigma_m', [], ...
+    'bubble_plume_decay_m', [], ...
+    'bubble_plume_centers_xy', []);
 
 cfg = defaults;
 if nargin > 0 && ~isempty(paramsV)
@@ -163,6 +192,8 @@ cfg.nx = local_force_int(cfg.nx, 'nx');
 cfg.ny = local_force_int(cfg.ny, 'ny');
 cfg.nout = local_force_int(cfg.nout, 'nout');
 cfg.sea_seed = local_force_int(cfg.sea_seed, 'sea_seed');
+cfg.bubble_seed = local_force_int(cfg.bubble_seed, 'bubble_seed');
+cfg.bubble_plume_count = local_force_int(cfg.bubble_plume_count, 'bubble_plume_count');
 
 if cfg.nx <= 0 || cfg.ny <= 0
     error('nx and ny must be positive.');
@@ -285,6 +316,8 @@ if cfg.surface_oblique_clip(1) < 0 || cfg.surface_oblique_clip(2) > 1
     error('surface_oblique_clip must satisfy 0 <= min <= max <= 1.');
 end
 
+cfg = local_validate_bubble_config(cfg);
+
 if cfg.sigma_src_m > 2
     error('sigma_src_m > 2 m is not allowed: beam divergence becomes too small for this 100 m upward test.');
 end
@@ -353,6 +386,120 @@ end
 out = round(v);
 if abs(out - v) > 1e-9
     error('%s must be an integer.', name);
+end
+end
+
+function cfg = local_validate_bubble_config(cfg)
+if ~isscalar(cfg.enable_bubbles)
+    error('enable_bubbles must be a scalar logical flag.');
+end
+cfg.enable_bubbles = logical(cfg.enable_bubbles);
+if ~isscalar(cfg.bubble_apply_sound_speed)
+    error('bubble_apply_sound_speed must be a scalar logical flag.');
+end
+cfg.bubble_apply_sound_speed = logical(cfg.bubble_apply_sound_speed);
+if ~isscalar(cfg.bubble_apply_attenuation)
+    error('bubble_apply_attenuation must be a scalar logical flag.');
+end
+cfg.bubble_apply_attenuation = logical(cfg.bubble_apply_attenuation);
+if ~isscalar(cfg.bubble_save_diagnostics)
+    error('bubble_save_diagnostics must be a scalar logical flag.');
+end
+cfg.bubble_save_diagnostics = logical(cfg.bubble_save_diagnostics);
+
+cfg.bubble_model = local_normalize_choice(cfg.bubble_model, 'bubble_model');
+cfg.bubble_spatial_mode = local_normalize_choice(cfg.bubble_spatial_mode, 'bubble_spatial_mode');
+cfg.bubble_damping_model = local_normalize_choice(cfg.bubble_damping_model, 'bubble_damping_model');
+
+if ~any(strcmp(cfg.bubble_model, {'off', 'level0_empirical', 'hall1d', 'plume'}))
+    error('bubble_model must be ''off'', ''level0_empirical'', ''hall1d'', or ''plume''.');
+end
+if ~any(strcmp(cfg.bubble_spatial_mode, {'none', '1d', 'plume'}))
+    error('bubble_spatial_mode must be ''none'', ''1d'', or ''plume''.');
+end
+if ~strcmp(cfg.bubble_damping_model, 'constant')
+    error('bubble_damping_model must be ''constant'' for the current framework.');
+end
+if ~cfg.enable_bubbles
+    cfg.bubble_model = 'off';
+    cfg.bubble_spatial_mode = 'none';
+end
+
+if ~(isnumeric(cfg.bubble_radius_grid_m) && isvector(cfg.bubble_radius_grid_m) && ...
+     numel(cfg.bubble_radius_grid_m) >= 2 && all(isfinite(cfg.bubble_radius_grid_m(:))) && ...
+     all(cfg.bubble_radius_grid_m(:) > 0) && all(diff(cfg.bubble_radius_grid_m(:)) > 0))
+    error('bubble_radius_grid_m must be a positive finite increasing vector.');
+end
+cfg.bubble_radius_grid_m = cfg.bubble_radius_grid_m(:).';
+
+local_require_nonnegative_scalar(cfg.bubble_alpha0_np_per_m, 'bubble_alpha0_np_per_m');
+local_require_positive_scalar(cfg.bubble_layer_decay_m, 'bubble_layer_decay_m');
+local_require_positive_scalar(cfg.bubble_f_ref_hz, 'bubble_f_ref_hz');
+local_require_finite_scalar(cfg.bubble_alpha_freq_exp, 'bubble_alpha_freq_exp');
+local_require_finite_scalar(cfg.bubble_delta_c0_mps, 'bubble_delta_c0_mps');
+local_require_positive_scalar(cfg.bubble_sound_speed_decay_m, 'bubble_sound_speed_decay_m');
+local_require_finite_scalar(cfg.bubble_sound_speed_freq_exp, 'bubble_sound_speed_freq_exp');
+local_require_positive_scalar(cfg.bubble_strength_scale, 'bubble_strength_scale');
+local_require_positive_scalar(cfg.bubble_beta_max, 'bubble_beta_max');
+local_require_positive_scalar(cfg.bubble_delta_const, 'bubble_delta_const');
+local_require_positive_scalar(cfg.bubble_gamma, 'bubble_gamma');
+local_require_positive_scalar(cfg.bubble_rho_w_kg_m3, 'bubble_rho_w_kg_m3');
+local_require_positive_scalar(cfg.bubble_P_atm_pa, 'bubble_P_atm_pa');
+local_require_positive_scalar(cfg.bubble_g_m_s2, 'bubble_g_m_s2');
+
+if cfg.bubble_plume_count < 0
+    error('bubble_plume_count must be nonnegative.');
+end
+if strcmp(cfg.bubble_spatial_mode, 'plume') || strcmp(cfg.bubble_model, 'plume')
+    if cfg.bubble_plume_count < 1
+        error('bubble_plume_count must be >= 1 when plume bubbles are enabled.');
+    end
+    local_validate_optional_plume_vector(cfg.bubble_plume_strength, cfg.bubble_plume_count, 'bubble_plume_strength');
+    local_validate_optional_plume_vector(cfg.bubble_plume_sigma_m, cfg.bubble_plume_count, 'bubble_plume_sigma_m');
+    local_validate_optional_plume_vector(cfg.bubble_plume_decay_m, cfg.bubble_plume_count, 'bubble_plume_decay_m');
+    if ~(isnumeric(cfg.bubble_plume_centers_xy) && isequal(size(cfg.bubble_plume_centers_xy), [cfg.bubble_plume_count, 2]) && ...
+         all(isfinite(cfg.bubble_plume_centers_xy(:))))
+        error('bubble_plume_centers_xy must be an Nx2 finite numeric array when plume bubbles are enabled.');
+    end
+end
+end
+
+function out = local_normalize_choice(v, name)
+if isstring(v)
+    v = char(v);
+end
+if ~ischar(v)
+    error('%s must be a string or char.', name);
+end
+out = lower(v);
+end
+
+function local_require_finite_scalar(v, name)
+if ~(isscalar(v) && isnumeric(v) && isfinite(v))
+    error('%s must be a finite numeric scalar.', name);
+end
+end
+
+function local_require_positive_scalar(v, name)
+local_require_finite_scalar(v, name);
+if v <= 0
+    error('%s must be positive.', name);
+end
+end
+
+function local_require_nonnegative_scalar(v, name)
+local_require_finite_scalar(v, name);
+if v < 0
+    error('%s must be nonnegative.', name);
+end
+end
+
+function local_validate_optional_plume_vector(v, n, name)
+if isempty(v)
+    return
+end
+if ~(isnumeric(v) && isvector(v) && numel(v) == n && all(isfinite(v(:))))
+    error('%s must be empty or a finite vector with bubble_plume_count elements.', name);
 end
 end
 
