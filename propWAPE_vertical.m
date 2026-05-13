@@ -138,6 +138,7 @@ for ifq = 1:Nf
         A_center_f = zeros(numstep_f + 1, 1);
         A_center_f(1) = abs(psi_init_cpu(iy_tx, ix_tx));
         R_center_f = zeros(numstep_f + 1, 1);
+        bubble_path_meta = struct([]);
         if save_slice
             nout_f = min(cfg.nout, numstep_f);
             nnout_f = round(numstep_f * (1:nout_f) / nout_f);
@@ -161,10 +162,7 @@ for ifq = 1:Nf
         psi_k = fr0 .* fft2(screen .* ifft2(fr0 .* psi_k));
 
         if capture_ref
-            if jj == 1
-                bubble_meta = bubble_step_meta;
-                bubble_meta.f_axis = f_axis;
-            end
+            bubble_path_meta = local_update_bubble_path_meta(bubble_path_meta, bubble_step_meta);
             psi_step = ifft2(psi_k);
             if use_gpu
                 center_val = gather(psi_step(iy_tx, ix_tx));
@@ -189,6 +187,12 @@ for ifq = 1:Nf
                 end
             end
         end
+    end
+
+    if capture_ref
+        bubble_meta = bubble_path_meta;
+        bubble_meta.f_axis = f_axis;
+        bubble_meta.path = 'direct_tx_rx';
     end
 
     psi_end = ifft2(psi_k);
@@ -374,13 +378,12 @@ if use_gpu
 end
 
 psi_k = fft2(psi_start);
+march_path_meta = struct([]);
 for jj = 1:n_step
     z_curr = z_start + jj * dz_step_local;
     [screen, step_meta] = local_phase_screen( ...
         x, y, z_curr, f_hz, cfg, alpha_xy, k0, ds_local, use_gpu);
-    if jj == 1
-        march_meta = step_meta;
-    end
+    march_path_meta = local_update_bubble_path_meta(march_path_meta, step_meta);
     psi_k = fr_local .* fft2(screen .* ifft2(fr_local .* psi_k));
 end
 
@@ -388,6 +391,7 @@ psi_end = ifft2(psi_k);
 if use_gpu
     psi_end = gather(psi_end);
 end
+march_meta = march_path_meta;
 end
 
 function [screen, bubble_step_meta] = local_phase_screen( ...
@@ -424,6 +428,38 @@ end
 alpha_total_xy = alpha_xy + alpha_bub_xy;
 U_real_xy = (c_eff_xy - cfg.c0) ./ c_eff_xy;
 screen = exp(-1i * k0 * ds * (U_real_xy - 1i * alpha_total_xy / k0));
+end
+
+function meta_accum = local_update_bubble_path_meta(meta_accum, step_meta)
+if isempty(meta_accum)
+    meta_accum = step_meta;
+    meta_accum.n_step = 1;
+    meta_accum.z_min_m = step_meta.z_m;
+    meta_accum.z_max_m = step_meta.z_m;
+    return
+end
+
+n_old = meta_accum.n_step;
+n_new = n_old + 1;
+meta_accum.n_step = n_new;
+meta_accum.z_min_m = min(meta_accum.z_min_m, step_meta.z_m);
+meta_accum.z_max_m = max(meta_accum.z_max_m, step_meta.z_m);
+meta_accum.z_m = step_meta.z_m;
+meta_accum.alpha_bub_np_per_m = step_meta.alpha_bub_np_per_m;
+meta_accum.delta_c_bub_mps = step_meta.delta_c_bub_mps;
+meta_accum.c_eff_stats = local_merge_step_stats(meta_accum.c_eff_stats, step_meta.c_eff_stats, n_old);
+meta_accum.alpha_bub_stats = local_merge_step_stats(meta_accum.alpha_bub_stats, step_meta.alpha_bub_stats, n_old);
+if ~isempty(step_meta.warning_flags)
+    meta_accum.warning_flags = unique([meta_accum.warning_flags, step_meta.warning_flags]);
+end
+end
+
+function stats = local_merge_step_stats(stats, step_stats, n_old)
+stats.min = min(stats.min, step_stats.min);
+stats.max = max(stats.max, step_stats.max);
+stats.mean = (stats.mean * n_old + step_stats.mean) / (n_old + 1);
+stats.std = NaN;
+stats.finite_count = stats.finite_count + step_stats.finite_count;
 end
 
 function [f_axis, idx_f_ref] = local_resolve_frequency_axis(cfg, rx_state_used)
