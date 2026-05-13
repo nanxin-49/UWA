@@ -1,1 +1,13 @@
-*.mat
+# Default: ignore everything in the repository tree.
+*
+
+# Keep directories traversable so nested allow-rules can work.
+!*/
+
+# Keep git control files.
+!.gitignore
+!.gitattributes
+
+# Keep MATLAB source and Markdown documentation.
+!*.m
+!*.md
