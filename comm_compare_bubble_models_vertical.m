@@ -11,22 +11,52 @@ if exist(result_file, 'file')
     warning('Result file %s already exists and will be overwritten.', result_file);
 end
 
+comm_mode = 'scalar_h_total';
+allowed_comm_modes = {'scalar_h_total', 'wideband_diagnostic'};
+if ~any(strcmpi(comm_mode, allowed_comm_modes))
+    error('Unsupported comm_mode: %s', comm_mode);
+end
+if strcmpi(comm_mode, 'wideband_diagnostic')
+    warning(['comm_mode=wideband_diagnostic uses the known long h_bb/conv(''same'') ', ...
+        'path and should be treated as diagnostic, not a validated BER/SER benchmark.']);
+end
+
+csi_mode = 'pilot_ls';
+csi_mode_override = getenv('COMM_COMPARE_CSI_MODE');
+if ~isempty(csi_mode_override)
+    csi_mode = csi_mode_override;
+end
+allowed_csi_modes = {'perfect', 'pilot_ls'};
+if ~any(strcmpi(csi_mode, allowed_csi_modes))
+    error('Unsupported csi_mode: %s', csi_mode);
+end
+if ~strcmpi(comm_mode, 'scalar_h_total') && strcmpi(csi_mode, 'pilot_ls')
+    error('csi_mode=pilot_ls is only implemented for comm_mode=scalar_h_total.');
+end
+
 M = 4;
 n_sym = 2000;
 EbN0_dB_list = 0:2:20;
 k = log2(M);
 symbol_rate_hz = 1000;
 isi_mode = 'linear_conv';
+pilot_len = 64;
 
 noise_control = struct();
 noise_control.enable_noise = true;
 noise_control.model = 'awgn';
 noise_control.seed_base = 7000;
 
+% Fairness: bits_tx is data only and is reused across all scenarios. The
+% pilot block is deterministic and identical for all scenarios. For each
+% Eb/N0 index, all scenarios reuse seed_base+index, so the random noise
+% realization is controlled and channel changes dominate the comparison.
 rng(20240514, 'twister');
 bits_tx = randi([0, 1], n_sym*k, 1);
 [tx_symbols, bits_used] = modem_psk('modulate', bits_tx, M);
 bits_tx = bits_used;
+% Deterministic QPSK pilot: symbol 1+0i is a valid unit-power PSK point.
+pilot_symbols = complex(ones(pilot_len, 1), zeros(pilot_len, 1));
 
 params_base = local_base_channel_params();
 scenarios = local_scenarios();
@@ -46,14 +76,44 @@ for ss = 1:numel(scenarios)
         error('Unsupported isi_mode: %s', isi_mode);
     end
 
-    [f_bb_axis, H_baseband] = local_build_baseband_response( ...
-        channel.f_axis, channel.H_f, channel.idx_f_ref, symbol_rate_hz, n_sym);
-    [h_bb, n_tap_eff, energy_kept] = local_build_channel_taps(H_baseband, 0.999);
-    rx_clean = conv(tx_symbols, h_bb, 'same');
+    f_bb_axis = [];
+    H_baseband = [];
+    h_bb = [];
+    n_tap_eff = NaN;
+    energy_kept = NaN;
+    h_scalar = channel.h_total;
+    h_true = channel.h_total;
+    mode_warning = '';
 
     BER = zeros(numel(EbN0_dB_list), 1);
     SER = zeros(numel(EbN0_dB_list), 1);
     effective_snr_db = zeros(numel(EbN0_dB_list), 1);
+    h_hat = complex(NaN(numel(EbN0_dB_list), 1), NaN(numel(EbN0_dB_list), 1));
+    channel_est_error_abs = NaN(numel(EbN0_dB_list), 1);
+    channel_est_error_rel = NaN(numel(EbN0_dB_list), 1);
+
+    if strcmpi(comm_mode, 'scalar_h_total')
+        if strcmpi(csi_mode, 'pilot_ls')
+            tx_frame = [pilot_symbols; tx_symbols];
+            rx_clean = tx_frame .* h_scalar;
+            noise_ref = tx_frame;
+        else
+            rx_clean = tx_symbols .* h_scalar;
+            noise_ref = tx_symbols;
+            h_hat(:) = h_true;
+            channel_est_error_abs(:) = 0;
+            channel_est_error_rel(:) = 0;
+        end
+    else
+        mode_warning = ['wideband_diagnostic uses the known long h_bb path; ', ...
+            'BER/SER are diagnostic only.'];
+        [f_bb_axis, H_baseband] = local_build_baseband_response( ...
+            channel.f_axis, channel.H_f, channel.idx_f_ref, symbol_rate_hz, n_sym);
+        [h_bb, n_tap_eff, energy_kept] = local_build_channel_taps(H_baseband, 0.999);
+        rx_clean = conv(tx_symbols, h_bb, 'same');
+        noise_ref = tx_symbols;
+    end
+
     for ii = 1:numel(EbN0_dB_list)
         noise_cfg = struct();
         noise_cfg.enable_noise = noise_control.enable_noise;
@@ -63,8 +123,21 @@ for ss = 1:numel(scenarios)
         noise_cfg.seed = noise_control.seed_base + ii;
         noise_cfg.custom_noise_fn = [];
 
-        [rx_noisy, ~, noise_meta] = noise_inject_vertical(rx_clean, noise_cfg, tx_symbols);
-        rx_eq = local_mmse_equalize(rx_noisy, h_bb, 1e-6);
+        [rx_noisy, ~, noise_meta] = noise_inject_vertical(rx_clean, noise_cfg, noise_ref);
+        if strcmpi(comm_mode, 'scalar_h_total')
+            if strcmpi(csi_mode, 'pilot_ls')
+                y_pilot = rx_noisy(1:pilot_len);
+                y_data = rx_noisy((pilot_len+1):end);
+                h_hat(ii) = local_ls_scalar_channel_estimate(pilot_symbols, y_pilot);
+                channel_est_error_abs(ii) = abs(h_hat(ii) - h_true);
+                channel_est_error_rel(ii) = channel_est_error_abs(ii) / max(abs(h_true), eps);
+                rx_eq = y_data ./ h_hat(ii);
+            else
+                rx_eq = rx_noisy ./ h_true;
+            end
+        else
+            rx_eq = local_mmse_equalize(rx_noisy, h_bb, 1e-6);
+        end
         bits_rx = modem_psk('demodulate', rx_eq, M);
         [BER(ii), SER(ii)] = modem_psk('error_rate', bits_tx, bits_rx, M);
         effective_snr_db(ii) = noise_meta.effective_snr_db;
@@ -75,6 +148,9 @@ for ss = 1:numel(scenarios)
     end
 
     results(ss).name = scenarios(ss).name; %#ok<SAGROW>
+    results(ss).comm_mode = comm_mode;
+    results(ss).csi_mode = csi_mode;
+    results(ss).warning = mode_warning;
     results(ss).paramsV = paramsV;
     results(ss).channel = channel;
     results(ss).f_axis = channel.f_axis;
@@ -82,6 +158,13 @@ for ss = 1:numel(scenarios)
     results(ss).H_direct_f = channel.H_direct_f;
     results(ss).H_reflect_f = channel.H_reflect_f;
     results(ss).h_total = channel.h_total;
+    results(ss).h_scalar = h_scalar;
+    results(ss).h_true = h_true;
+    results(ss).pilot_len = pilot_len;
+    results(ss).pilot_symbols = pilot_symbols;
+    results(ss).h_hat = h_hat;
+    results(ss).channel_est_error_abs = channel_est_error_abs;
+    results(ss).channel_est_error_rel = channel_est_error_rel;
     results(ss).f_bb_axis = f_bb_axis;
     results(ss).H_baseband = H_baseband;
     results(ss).h_bb = h_bb;
@@ -99,16 +182,22 @@ results = local_attach_channel_metrics(results);
 summary_table = local_summary_table(results, EbN0_dB_list);
 disp(summary_table)
 
-local_plot_ber(results, figure_prefix);
-local_plot_ser(results, figure_prefix);
-local_plot_channel_magnitude(results, figure_prefix);
-local_plot_channel_phase(results, figure_prefix);
-local_plot_taps(results, figure_prefix);
-local_plot_delta_tl(results, figure_prefix);
+local_plot_ber(results, figure_prefix, comm_mode, csi_mode);
+local_plot_ser(results, figure_prefix, comm_mode, csi_mode);
+if strcmpi(csi_mode, 'pilot_ls')
+    local_plot_channel_est_error(results, figure_prefix, comm_mode, csi_mode);
+end
+local_plot_channel_magnitude(results, figure_prefix, comm_mode, csi_mode);
+local_plot_channel_phase(results, figure_prefix, comm_mode, csi_mode);
+if strcmpi(comm_mode, 'wideband_diagnostic')
+    local_plot_taps(results, figure_prefix);
+end
+local_plot_delta_tl(results, figure_prefix, comm_mode, csi_mode);
 
 save(result_file, 'params_base', 'scenarios', 'results', ...
     'noise_control', 'EbN0_dB_list', 'M', 'n_sym', 'symbol_rate_hz', ...
-    'isi_mode', 'bits_tx', 'summary_table');
+    'isi_mode', 'comm_mode', 'csi_mode', 'pilot_len', 'pilot_symbols', ...
+    'bits_tx', 'summary_table');
 
 function paramsV = local_base_channel_params()
 paramsV = struct();
@@ -248,6 +337,16 @@ W = conj(H) ./ (abs(H).^2 + reg_eps);
 rx_eq = ifft(fft(rx_noisy) .* W);
 end
 
+function h_hat = local_ls_scalar_channel_estimate(x_pilot, y_pilot)
+x_pilot = x_pilot(:);
+y_pilot = y_pilot(:);
+den = sum(abs(x_pilot).^2);
+if den <= 0
+    error('Pilot energy must be positive for LS channel estimation.');
+end
+h_hat = sum(conj(x_pilot) .* y_pilot) / den;
+end
+
 function results = local_attach_channel_metrics(results)
 H0 = results(1).H_f(:);
 for ss = 1:numel(results)
@@ -269,8 +368,10 @@ idx20 = find(EbN0_dB_list == 20, 1);
 rows = struct([]);
 for ss = 1:numel(results)
     rows(ss).scenario = {results(ss).name}; %#ok<AGROW>
+    rows(ss).comm_mode = {results(ss).comm_mode};
+    rows(ss).csi_mode = {results(ss).csi_mode};
     rows(ss).h_total_abs = abs(results(ss).h_total);
-    rows(ss).h_bb_tap_count = results(ss).h_bb_tap_count;
+    rows(ss).h_true_abs = abs(results(ss).h_true);
     rows(ss).max_delta_TL_dB = results(ss).max_delta_TL_dB;
     rows(ss).max_abs_phase_diff_rad = results(ss).max_abs_phase_diff_rad;
     rows(ss).BER_0dB = results(ss).BER(idx0);
@@ -279,12 +380,18 @@ for ss = 1:numel(results)
     rows(ss).SER_0dB = results(ss).SER(idx0);
     rows(ss).SER_10dB = results(ss).SER(idx10);
     rows(ss).SER_20dB = results(ss).SER(idx20);
+    rows(ss).h_hat_relerr_0dB = results(ss).channel_est_error_rel(idx0);
+    rows(ss).h_hat_relerr_10dB = results(ss).channel_est_error_rel(idx10);
+    rows(ss).h_hat_relerr_20dB = results(ss).channel_est_error_rel(idx20);
+    rows(ss).effective_snr_0dB = results(ss).effective_snr_db(idx0);
+    rows(ss).effective_snr_10dB = results(ss).effective_snr_db(idx10);
+    rows(ss).effective_snr_20dB = results(ss).effective_snr_db(idx20);
     rows(ss).invariant_error = results(ss).invariant_error;
 end
 summary_table = struct2table(rows);
 end
 
-function local_plot_ber(results, figure_prefix)
+function local_plot_ber(results, figure_prefix, comm_mode, csi_mode)
 fig = figure('Visible', 'off');
 hold on
 for ss = 1:numel(results)
@@ -294,13 +401,13 @@ end
 grid on
 xlabel('Eb/N0 (dB)')
 ylabel('BER')
-title('QPSK BER across bubble channel scenarios')
+title(sprintf('BER vs Eb/N0, %s, %s', comm_mode, csi_mode), 'Interpreter', 'none')
 legend({results.name}, 'Interpreter', 'none', 'Location', 'southwest')
 print(fig, '-dpng', '-r200', [figure_prefix 'BER_vs_EbN0.png'])
 close(fig)
 end
 
-function local_plot_ser(results, figure_prefix)
+function local_plot_ser(results, figure_prefix, comm_mode, csi_mode)
 fig = figure('Visible', 'off');
 hold on
 for ss = 1:numel(results)
@@ -310,13 +417,29 @@ end
 grid on
 xlabel('Eb/N0 (dB)')
 ylabel('SER')
-title('QPSK SER across bubble channel scenarios')
+title(sprintf('SER vs Eb/N0, %s, %s', comm_mode, csi_mode), 'Interpreter', 'none')
 legend({results.name}, 'Interpreter', 'none', 'Location', 'southwest')
 print(fig, '-dpng', '-r200', [figure_prefix 'SER_vs_EbN0.png'])
 close(fig)
 end
 
-function local_plot_channel_magnitude(results, figure_prefix)
+function local_plot_channel_est_error(results, figure_prefix, comm_mode, csi_mode)
+fig = figure('Visible', 'off');
+hold on
+for ss = 1:numel(results)
+    semilogy(results(ss).EbN0_dB_list, max(results(ss).channel_est_error_rel, eps), ...
+        'o-', 'LineWidth', 1.2)
+end
+grid on
+xlabel('Eb/N0 (dB)')
+ylabel('Relative channel-estimation error')
+title(sprintf('Scalar LS channel error, %s, %s', comm_mode, csi_mode), 'Interpreter', 'none')
+legend({results.name}, 'Interpreter', 'none', 'Location', 'northeast')
+print(fig, '-dpng', '-r200', [figure_prefix 'channel_est_error_vs_EbN0.png'])
+close(fig)
+end
+
+function local_plot_channel_magnitude(results, figure_prefix, comm_mode, csi_mode)
 fig = figure('Visible', 'off');
 hold on
 for ss = 1:numel(results)
@@ -326,13 +449,13 @@ end
 grid on
 xlabel('Frequency (Hz)')
 ylabel('|H(f)| (dB)')
-title('Channel magnitude')
+title(sprintf('Channel magnitude, %s, %s', comm_mode, csi_mode), 'Interpreter', 'none')
 legend({results.name}, 'Interpreter', 'none', 'Location', 'best')
 print(fig, '-dpng', '-r200', [figure_prefix 'H_magnitude.png'])
 close(fig)
 end
 
-function local_plot_channel_phase(results, figure_prefix)
+function local_plot_channel_phase(results, figure_prefix, comm_mode, csi_mode)
 fig = figure('Visible', 'off');
 hold on
 for ss = 1:numel(results)
@@ -341,7 +464,7 @@ end
 grid on
 xlabel('Frequency (Hz)')
 ylabel('Unwrapped phase (rad)')
-title('Channel phase')
+title(sprintf('Channel phase, %s, %s', comm_mode, csi_mode), 'Interpreter', 'none')
 legend({results.name}, 'Interpreter', 'none', 'Location', 'best')
 print(fig, '-dpng', '-r200', [figure_prefix 'H_phase.png'])
 close(fig)
@@ -363,7 +486,7 @@ print(fig, '-dpng', '-r200', [figure_prefix 'h_bb_taps.png'])
 close(fig)
 end
 
-function local_plot_delta_tl(results, figure_prefix)
+function local_plot_delta_tl(results, figure_prefix, comm_mode, csi_mode)
 fig = figure('Visible', 'off');
 hold on
 for ss = 1:numel(results)
@@ -372,7 +495,7 @@ end
 grid on
 xlabel('Frequency (Hz)')
 ylabel('\DeltaTL relative to no bubble (dB)')
-title('Bubble excess TL')
+title(sprintf('Bubble excess TL, %s, %s', comm_mode, csi_mode), 'Interpreter', 'none')
 legend({results.name}, 'Interpreter', 'none', 'Location', 'best')
 print(fig, '-dpng', '-r200', [figure_prefix 'delta_TL.png'])
 close(fig)
