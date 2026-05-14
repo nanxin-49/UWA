@@ -73,6 +73,7 @@ beta = NaN;
 resonance_radius_m = NaN;
 spec_meta = struct();
 em_meta = struct();
+bubble_wind_speed = local_bubble_wind_speed(cfg);
 
 if enabled
     switch model
@@ -103,7 +104,7 @@ if enabled
         case 'hall1d'
             spatial_mode = '1d';
             a_grid_m = cfg.bubble_radius_grid_m;
-            [n_a, beta, spec_meta] = bubble_hall_spectrum(a_grid_m, z_curr, cfg.sea_wind_speed, cfg);
+            [n_a, beta, spec_meta] = bubble_hall_spectrum(a_grid_m, z_curr, bubble_wind_speed, cfg);
             [c_eff, alpha_bub, em_meta] = ...
                 bubble_effective_medium(a_grid_m, n_a, z_curr, f_hz, c_bg, cfg);
             if ~apply_sound_speed
@@ -138,6 +139,13 @@ end
 meta.spatial_mode = spatial_mode;
 meta.apply_sound_speed = apply_sound_speed;
 meta.apply_attenuation = apply_attenuation;
+meta.sea_wind_speed = cfg.sea_wind_speed;
+meta.bubble_wind_speed = bubble_wind_speed;
+if isfield(cfg, 'bubble_wind_speed') && ~isempty(cfg.bubble_wind_speed)
+    meta.bubble_wind_speed_source = 'bubble_wind_speed';
+else
+    meta.bubble_wind_speed_source = 'sea_wind_speed';
+end
 meta.layer_decay_m = cfg.bubble_layer_decay_m;
 meta.sound_speed_decay_m = cfg.bubble_sound_speed_decay_m;
 meta.f_ref_hz = cfg.bubble_f_ref_hz;
@@ -159,6 +167,16 @@ meta.spec_meta = spec_meta;
 meta.effective_medium_meta = em_meta;
 meta.warning_flags = warning_flags;
 
+end
+
+function U10 = local_bubble_wind_speed(cfg)
+U10 = cfg.sea_wind_speed;
+if isfield(cfg, 'bubble_wind_speed') && ~isempty(cfg.bubble_wind_speed)
+    U10 = cfg.bubble_wind_speed;
+end
+if ~(isscalar(U10) && isnumeric(U10) && isfinite(U10) && U10 > 0)
+    error('bubble_wind_speed must be empty or a positive finite scalar.');
+end
 end
 
 function stats = local_field_stats(v)
