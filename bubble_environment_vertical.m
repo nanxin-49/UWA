@@ -3,7 +3,7 @@ function [c_eff_xy, alpha_bub_xy, meta] = ...
 %BUBBLE_ENVIRONMENT_VERTICAL Bubble environment hook for vertical WAPE.
 % Level 0 implements a horizontally uniform empirical layer. More advanced
 % spectrum and plume models are intentionally left for later priorities.
-
+% 气泡统一接口，负责根据当前深度、频率和配置返回 c_eff 与 alpha_bub
 if nargin < 6
     error('bubble_environment_vertical requires x, y, z_curr, f_hz, c_bg, and cfg.');
 end
