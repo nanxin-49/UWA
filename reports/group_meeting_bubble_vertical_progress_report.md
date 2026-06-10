@@ -6,14 +6,14 @@
 目前项目已经在原有垂直 PE 水声信道框架上完成了风生气泡层建模和初步通信验证。当前已完成的功能包括：
 
 - 垂直 PE 信道主链路：保留原有高斯声源、垂直 WAPE 传播、直达路径、PM 粗糙海面、Kirchhoff 反射、`H_direct_f + H_reflect_f = H_f` 的信道输出结构。
-- 近海面气泡层接入：气泡层作为频率相关、深度相关的等效介质进入 PE 相位屏，最终表现为有效声速 `c_eff` 和物理衰减 `alpha_bub`，不是简单接收端噪声，也不是后处理固定损耗。
+- 近海面气泡层接入：气泡层作为频率相关、深度相关的等效介质进入 PE 相位屏，最终表现为有效声速 `c_eff` 和物理衰减 `alpha_bub`。
 - Level0 经验气泡层：实现了指数深度衰减的经验衰减项和可选声速扰动，用于验证符号约定、衰减方向、直达/反射路径一致性。
 - Hall1D 平均气泡层：实现了 Hall-Novarini-type 的一维平均气泡数密度谱、空化率 `beta` 计算和复等效介质转换。
 - 风速解耦与 Hall1D 校准：将控制 PM 粗糙海面的 `sea_wind_speed` 与控制 Hall1D 气泡数密度的 `bubble_wind_speed` 解耦，避免风速扫描时同时改变海面粗糙度和气泡浓度。
 - 信道频响对比：已有 no bubble、Level0、Hall1D default、Hall1D strong 等场景的频率响应、相位、相对传输损失变化和直达/反射分量对比。
 - 通信验证：已有独立通信比较脚本，当前正式使用 `scalar_h_total + pilot-LS` 模式比较 BER/SER；wideband `h_bb` 路径已诊断为 tap/delay mismatch，目前仅作为 diagnostic-only，不作为正式 BER/SER 结论。
 
-当前尚未完成的内容包括：非均匀 plume 气泡云、完整 wideband multipath 接收机、OFDM 或训练序列宽带 LS 信道估计、高分辨率生产仿真以及论文级最终图表。
+当前尚未完成的内容包括：非均匀 plume 气泡云、完整 wideband multipath 接收机、OFDM 或训练序列宽带 LS 信道估计、高分辨率仿真以及论文级最终图表。
 
 ## 2. 研究目标与当前模型框架
 

@@ -52,11 +52,13 @@ EbN0_dB_list = 0:2:20;
 k = log2(M);
 symbol_rate_hz = 1000;
 isi_mode = 'linear_conv';
+receive_window_mode = 'peak_sync';
 
 noise_control = struct();
 noise_control.enable_noise = true;
 noise_control.model = 'awgn';
 noise_control.seed_base = 7000;
+noise_control.ebn0_reference = 'rx_clean';
 
 bits_tx = randi([0, 1], n_sym*k, 1);
 [tx_symbols, bits_used] = modem_psk('modulate', bits_tx, M);
@@ -89,7 +91,8 @@ for ss = 1:numel(scenarios)
     [f_bb_axis, H_baseband_shifted] = local_build_baseband_response( ...
         channel.f_axis, channel.H_f, channel.idx_f_ref, symbol_rate_hz, n_sym);
     [h_bb, n_tap_eff, energy_kept] = local_build_channel_taps(H_baseband_shifted, 0.999);
-    rx_clean = conv(tx_symbols, h_bb, 'same');
+    [rx_clean, h_eq, receive_meta] = local_apply_channel_window(tx_symbols, h_bb, receive_window_mode);
+    noise_signal_ref = local_select_noise_reference(noise_control.ebn0_reference, tx_symbols, rx_clean);
 
     for ii = 1:numel(EbN0_dB_list)
         noise_cfg = struct();
@@ -100,10 +103,10 @@ for ss = 1:numel(scenarios)
         noise_cfg.seed = noise_control.seed_base + 1000*ss + ii;
         noise_cfg.custom_noise_fn = [];
 
-        [rx_noisy, ~, noise_meta] = noise_inject_vertical(rx_clean, noise_cfg, tx_symbols);
+        [rx_noisy, ~, noise_meta] = noise_inject_vertical(rx_clean, noise_cfg, noise_signal_ref);
 
         % Frequency-domain MMSE equalization with known effective channel taps.
-        rx_eq = local_mmse_equalize(rx_noisy, h_bb, 1e-6);
+        rx_eq = local_mmse_equalize(rx_noisy, h_eq, 1e-6);
         bits_rx = modem_psk('demodulate', rx_eq, M);
         [ber(ii), ser(ii)] = modem_psk('error_rate', bits_tx, bits_rx, M);
         effective_snr_db(ii) = noise_meta.effective_snr_db;
@@ -124,11 +127,15 @@ for ss = 1:numel(scenarios)
     results(ss).effective_snr_db = effective_snr_db;
     results(ss).symbol_rate_hz = symbol_rate_hz;
     results(ss).isi_mode = isi_mode;
+    results(ss).receive_window_mode = receive_window_mode;
+    results(ss).receive_meta = receive_meta;
+    results(ss).ebn0_reference = noise_control.ebn0_reference;
     results(ss).f_axis = channel.f_axis;
     results(ss).H_f = channel.H_f;
     results(ss).f_bb_axis = f_bb_axis;
     results(ss).H_baseband = H_baseband_shifted;
     results(ss).h_bb = h_bb;
+    results(ss).h_eq = h_eq;
     results(ss).h_bb_tap_count = n_tap_eff;
     results(ss).h_bb_energy_kept = energy_kept;
     results(ss).channel = channel;
@@ -138,7 +145,9 @@ for ss = 1:numel(scenarios)
     disp(['|h_total|=', num2str(abs(channel.h_total)), ', phase(rad)=', num2str(angle(channel.h_total)), ...
           ', fd_hz_used=', num2str(channel.fd_hz_used)])
     disp(['Nf=', num2str(numel(channel.f_axis)), ', f_ref=', num2str(channel.f_axis(channel.idx_f_ref)), ...
-          ' Hz, effective taps=', num2str(n_tap_eff), ', tap_energy=', num2str(energy_kept)])
+          ' Hz, effective taps=', num2str(n_tap_eff), ', tap_energy=', num2str(energy_kept), ...
+          ', rx_window=', receive_window_mode, ', peak_idx=', num2str(receive_meta.peak_index_original), ...
+          ', ebn0_ref=', noise_control.ebn0_reference])
     T = table(EbN0_dB_list(:), ber, ser, effective_snr_db, ...
               'VariableNames', {'EbN0_dB', 'BER', 'SER', 'EffectiveSNR_dB'});
     disp(T)
@@ -166,6 +175,71 @@ legend(results(1).name, results(2).name, 'Location', 'southwest')
 
 save('psk_comm_result.mat', ...
      'paramsV', 'scenarios', 'results', 'noise_control', 'EbN0_dB_list', 'M', 'n_sym')
+
+function [rx_clean, h_eq, meta] = local_apply_channel_window(tx_symbols, h_bb, receive_window_mode)
+tx_symbols = tx_symbols(:);
+h_bb = h_bb(:);
+if nargin < 3 || isempty(receive_window_mode)
+    receive_window_mode = 'peak_sync';
+end
+if isstring(receive_window_mode)
+    receive_window_mode = char(receive_window_mode);
+end
+
+tap_energy = abs(h_bb).^2;
+if all(tap_energy == 0)
+    peak_index = 1;
+else
+    [~, peak_index] = max(tap_energy);
+end
+
+switch lower(receive_window_mode)
+    case 'same_legacy'
+        rx_clean = conv(tx_symbols, h_bb, 'same');
+        h_eq = h_bb;
+        start_index = NaN;
+        discarded_energy_fraction = 0;
+    case 'causal_head'
+        rx_full = conv(tx_symbols, h_bb, 'full');
+        rx_clean = rx_full(1:numel(tx_symbols));
+        h_eq = h_bb;
+        start_index = 1;
+        discarded_energy_fraction = 0;
+    case 'peak_sync'
+        h_eq = h_bb(peak_index:end);
+        rx_full = conv(tx_symbols, h_eq, 'full');
+        rx_clean = rx_full(1:numel(tx_symbols));
+        start_index = peak_index;
+        discarded_energy_fraction = sum(tap_energy(1:max(peak_index - 1, 0))) / max(sum(tap_energy), eps);
+    otherwise
+        error('Unsupported receive_window_mode: %s', receive_window_mode);
+end
+
+meta = struct();
+meta.mode = lower(receive_window_mode);
+meta.peak_index_original = peak_index;
+meta.start_index_original = start_index;
+meta.original_tap_count = numel(h_bb);
+meta.equalizer_tap_count = numel(h_eq);
+meta.discarded_pre_peak_energy_fraction = discarded_energy_fraction;
+end
+
+function signal_ref = local_select_noise_reference(ebn0_reference, tx_symbols, rx_clean)
+if nargin < 1 || isempty(ebn0_reference)
+    ebn0_reference = 'rx_clean';
+end
+if isstring(ebn0_reference)
+    ebn0_reference = char(ebn0_reference);
+end
+switch lower(ebn0_reference)
+    case 'rx_clean'
+        signal_ref = rx_clean;
+    case 'tx_symbols'
+        signal_ref = tx_symbols;
+    otherwise
+        error('Unsupported Eb/N0 reference: %s', ebn0_reference);
+end
+end
 
 function [f_bb_axis, H_baseband_shifted] = local_build_baseband_response(f_axis, H_f, idx_f_ref, fs_hz, n_fft)
 f_axis = f_axis(:);
