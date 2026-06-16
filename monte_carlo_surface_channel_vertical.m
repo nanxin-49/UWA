@@ -1,4 +1,4 @@
-% Monte Carlo statistics for random Kirchhoff rough-surface realizations.
+﻿% Monte Carlo statistics for random Kirchhoff rough-surface realizations.
 % This script varies only sea_seed while keeping the sea-state and solver
 % parameters fixed. Outputs are empirical diagnostics for the implemented
 % phase-screen channel, not a new scattering model.
@@ -39,7 +39,7 @@ for ii = 1:mc_count
     paramsV = params_base;
     paramsV.sea_seed = seed_list(ii);
     fprintf('Monte Carlo surface case %d/%d, sea_seed=%d\n', ii, mc_count, seed_list(ii));
-    channel = CARPE3D_vertical(paramsV);
+    channel = vertical_channel_model(paramsV);
 
     invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
     if invariant_error > 1e-10

@@ -1,4 +1,4 @@
-# BUBBLE_EXTENSION_SPEC.md
+﻿# BUBBLE_EXTENSION_SPEC.md
 
 ## 1. Purpose
 
@@ -44,13 +44,13 @@ The existing numerical sponge absorption \(\alpha_{\rm sponge}(x,y)\) is a bound
 
 The current project contains these relevant MATLAB files:
 
-- `CARPE3D_vertical.m`
+- `vertical_channel_model.m`
   - Public channel API.
   - Builds validated runtime config `cfg` from user input `paramsV`.
-  - Calls `propWAPE_vertical(cfg)`.
+  - Calls `vertical_wape_propagator(cfg)`.
   - Packs channel outputs into `output`.
 
-- `propWAPE_vertical.m`
+- `vertical_wape_propagator.m`
   - Core vertical WAPE propagation.
   - Builds transverse grid, frequency axis, sponge boundary, direct path, and reflected path.
   - Computes:
@@ -64,14 +64,14 @@ The current project contains these relevant MATLAB files:
     - the main direct-path propagation loop;
     - `local_march_field`, used by the two reflection-path propagation segments.
 
-- `pm_surface_kirchhoff_module.m`
+- `pm_surface_boundary_model.m`
   - Generates Pierson--Moskowitz rough sea surface.
   - Applies Kirchhoff phase distortion to the incident surface field.
   - Should not be modified for bubble-layer work unless explicitly required later.
 
 - `comm_main_vertical_psk.m`
   - End-to-end communication demo.
-  - Calls `CARPE3D_vertical(paramsV)`.
+  - Calls `vertical_channel_model(paramsV)`.
   - Converts `H_f` to baseband response.
   - Builds baseband taps, applies MPSK, channel convolution, AWGN, MMSE equalization, BER/SER.
 
@@ -83,7 +83,7 @@ The current project contains these relevant MATLAB files:
   - AWGN or custom receiver-side noise injection.
   - Bubble effects must not be added here.
 
-The key integration point is the WAPE phase screen in `propWAPE_vertical.m`.
+The key integration point is the WAPE phase screen in `vertical_wape_propagator.m`.
 
 Current screen logic is equivalent to:
 
@@ -696,7 +696,7 @@ bubble_plume_centers_xy = []
 
 ## 10. Proposed new files
 
-Prefer adding new functions instead of inserting all bubble logic into `propWAPE_vertical.m`.
+Prefer adding new functions instead of inserting all bubble logic into `vertical_wape_propagator.m`.
 
 Recommended new files:
 
@@ -801,7 +801,7 @@ Responsibilities:
 
 ## 11. Required changes to existing files
 
-### 11.1 `CARPE3D_vertical.m`
+### 11.1 `vertical_channel_model.m`
 
 Add defaults to `local_prepare_config`.
 
@@ -869,11 +869,11 @@ If no bubble metadata is produced, return:
 output.bubble_meta = struct('enabled', false, 'model', 'off');
 ```
 
-### 11.2 `propWAPE_vertical.m`
+### 11.2 `vertical_wape_propagator.m`
 
 Required changes:
 
-1. Add `bubble_meta` to the output list from `propWAPE_vertical`, or pack it inside an existing returned structure only if interface impact is controlled.
+1. Add `bubble_meta` to the output list from `vertical_wape_propagator`, or pack it inside an existing returned structure only if interface impact is controlled.
 2. In the main direct-path propagation loop:
    - replace scalar `c_local/U_real/screen` logic with bubble-aware screen logic.
 3. Refactor or update `local_march_field` so it can also call `bubble_environment_vertical`.
@@ -910,7 +910,7 @@ Later, add optional scenarios:
 
 But this should be a later stage, after propagation integration is validated.
 
-### 11.4 `pm_surface_kirchhoff_module.m`
+### 11.4 `pm_surface_boundary_model.m`
 
 Do not modify for Level 0 or Level 1 unless explicitly necessary.
 
@@ -987,7 +987,7 @@ Acceptance:
 
 Task:
 
-- Add bubble config fields to `CARPE3D_vertical.m`.
+- Add bubble config fields to `vertical_channel_model.m`.
 - Add `bubble_environment_vertical.m`.
 - Add output `bubble_meta`.
 - Keep default behavior equivalent to old code:
@@ -1180,14 +1180,14 @@ paramsV.show_figures = false;
 paramsV.save_mode = 'rx_only';
 paramsV.enable_surface_reflection = false;
 paramsV.enable_bubbles = false;
-out = CARPE3D_vertical(paramsV);
+out = vertical_channel_model(paramsV);
 ```
 
 2. Run direct-plus-reflect with bubbles disabled:
 ```matlab
 paramsV.enable_surface_reflection = true;
 paramsV.enable_bubbles = false;
-out = CARPE3D_vertical(paramsV);
+out = vertical_channel_model(paramsV);
 ```
 
 3. Run direct-only Level 0 attenuation:
@@ -1197,13 +1197,13 @@ paramsV.enable_bubbles = true;
 paramsV.bubble_model = 'level0_empirical';
 paramsV.bubble_alpha0_np_per_m = 0.02;
 paramsV.bubble_delta_c0_mps = 0;
-out_bub = CARPE3D_vertical(paramsV);
+out_bub = vertical_channel_model(paramsV);
 ```
 
 4. Run direct-plus-reflect Level 0 attenuation:
 ```matlab
 paramsV.enable_surface_reflection = true;
-out_bub_ref = CARPE3D_vertical(paramsV);
+out_bub_ref = vertical_channel_model(paramsV);
 ```
 
 5. Run reduced wideband communication test only after channel tests pass.

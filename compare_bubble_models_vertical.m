@@ -1,4 +1,4 @@
-% Compare reduced-grid vertical channel responses across bubble models.
+﻿% Compare reduced-grid vertical channel responses across bubble models.
 
 clear
 format compact
@@ -92,7 +92,7 @@ for ss = 1:numel(scenarios)
     p.bubble_layer_decay_m = scenarios(ss).bubble_layer_decay_m;
     p.bubble_delta_c0_mps = scenarios(ss).bubble_delta_c0_mps;
 
-    channel = CARPE3D_vertical(p);
+    channel = vertical_channel_model(p);
     invariant_error = max(abs(channel.H_f - (channel.H_direct_f + channel.H_reflect_f)));
     if invariant_error > 1e-10
         error('compare_bubble_models_vertical:Invariant', ...

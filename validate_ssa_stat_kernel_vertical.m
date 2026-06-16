@@ -1,4 +1,4 @@
-% Quick reduced-grid validation for the SSA-like statistical surface kernel.
+﻿% Quick reduced-grid validation for the SSA-like statistical surface kernel.
 % This script checks interface invariants, Hs=0 flat-surface degeneration,
 % energy limiting, deterministic seeding, seed sensitivity, and the
 % metadata-only random_scatter=false path.
@@ -33,9 +33,9 @@ flat_kirchhoff.sea_hs_target = 0;
 flat_kirchhoff.sea_seed = 12345;
 
 fprintf('Running Hs=0 ssa_stat_kernel flat-degeneration case.\n');
-channel_flat_ssa = CARPE3D_vertical(flat_ssa);
+channel_flat_ssa = vertical_channel_model(flat_ssa);
 fprintf('Running Hs=0 kirchhoff_spatial flat-reference case.\n');
-channel_flat_kirchhoff = CARPE3D_vertical(flat_kirchhoff);
+channel_flat_kirchhoff = vertical_channel_model(flat_kirchhoff);
 meta_flat = channel_flat_ssa.roughness_meta.ssa_stat_kernel_meta;
 case_results.flat_ssa = local_compact_channel_result(channel_flat_ssa);
 case_results.flat_kirchhoff = local_compact_channel_result(channel_flat_kirchhoff);
@@ -61,7 +61,7 @@ flat_ssa1.surface_ssa_kernel_mode = 'ssa1_geometry';
 flat_ssa1.surface_ssa_geometry_source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
     'Dirichlet SSA first-order / perturbation-limit geometry'];
 fprintf('Running Hs=0 ssa1_geometry flat-degeneration case.\n');
-channel_flat_ssa1 = CARPE3D_vertical(flat_ssa1);
+channel_flat_ssa1 = vertical_channel_model(flat_ssa1);
 meta_flat_ssa1 = channel_flat_ssa1.roughness_meta.ssa_stat_kernel_meta;
 case_results.flat_ssa1 = local_compact_channel_result(channel_flat_ssa1);
 case_results.flat_ssa1_diff_max_abs = max(abs(channel_flat_ssa1.H_f(:) - channel_flat_kirchhoff.H_f(:)));
@@ -75,7 +75,7 @@ checks = local_add_check(checks, 'Hs0_ssa1_flat_model_diff', ...
 direct_only = flat_ssa;
 direct_only.enable_surface_reflection = false;
 fprintf('Running ssa_stat_kernel direct-only interface case.\n');
-channel_direct_only = CARPE3D_vertical(direct_only);
+channel_direct_only = vertical_channel_model(direct_only);
 case_results.direct_only = local_compact_channel_result(channel_direct_only);
 checks = local_add_check(checks, 'direct_only_reflect_zero', ...
     max(abs(channel_direct_only.H_reflect_f(:))), eps, '<=');
@@ -89,7 +89,7 @@ energy_case.surface_boundary_model = 'ssa_stat_kernel';
 energy_case.sea_hs_target = 0.5;
 energy_case.sea_seed = 12345;
 fprintf('Running ssa_stat_kernel energy-limit case.\n');
-channel_energy = CARPE3D_vertical(energy_case);
+channel_energy = vertical_channel_model(energy_case);
 meta_energy = channel_energy.roughness_meta.ssa_stat_kernel_meta;
 case_results.energy_limit = local_compact_channel_result(channel_energy);
 case_results.energy_limit.ssa_meta = local_compact_ssa_meta(meta_energy);
@@ -108,7 +108,7 @@ checks = local_add_check(checks, 'propagating_bin_fraction_valid', ...
     double(meta_energy.propagating_bin_fraction >= 0 && meta_energy.propagating_bin_fraction <= 1), 1, '==');
 
 fprintf('Running deterministic same-seed repeat.\n');
-channel_repeat = CARPE3D_vertical(energy_case);
+channel_repeat = vertical_channel_model(energy_case);
 case_results.same_seed_repeat_max_abs_H_f = max(abs(channel_energy.H_f(:) - channel_repeat.H_f(:)));
 case_results.same_seed_repeat_max_abs_H_reflect_f = max(abs(channel_energy.H_reflect_f(:) - channel_repeat.H_reflect_f(:)));
 checks = local_add_check(checks, 'same_seed_H_f_repeat', ...
@@ -119,7 +119,7 @@ checks = local_add_check(checks, 'same_seed_H_reflect_repeat', ...
 seed_changed = energy_case;
 seed_changed.sea_seed = 12346;
 fprintf('Running changed-seed sensitivity case.\n');
-channel_seed_changed = CARPE3D_vertical(seed_changed);
+channel_seed_changed = vertical_channel_model(seed_changed);
 case_results.changed_seed = local_compact_channel_result(channel_seed_changed);
 case_results.changed_seed_direct_drift = max(abs(channel_energy.H_direct_f(:) - channel_seed_changed.H_direct_f(:)));
 case_results.changed_seed_reflect_change = max(abs(channel_energy.H_reflect_f(:) - channel_seed_changed.H_reflect_f(:)));
@@ -131,7 +131,7 @@ checks = local_add_check(checks, 'changed_seed_reflect_changes', ...
 metadata_only = energy_case;
 metadata_only.surface_ssa_random_scatter = false;
 fprintf('Running random_scatter=false metadata-only case.\n');
-channel_metadata_only = CARPE3D_vertical(metadata_only);
+channel_metadata_only = vertical_channel_model(metadata_only);
 meta_metadata_only = channel_metadata_only.roughness_meta.ssa_stat_kernel_meta;
 case_results.metadata_only = local_compact_channel_result(channel_metadata_only);
 case_results.metadata_only.ssa_meta = local_compact_ssa_meta(meta_metadata_only);
@@ -145,7 +145,7 @@ checks = local_add_check(checks, 'metadata_only_random_disabled', ...
 scale_zero = energy_case;
 scale_zero.surface_ssa_scatter_scale = 0;
 fprintf('Running scatter_scale=0 degeneration case.\n');
-channel_scale_zero = CARPE3D_vertical(scale_zero);
+channel_scale_zero = vertical_channel_model(scale_zero);
 meta_scale_zero = channel_scale_zero.roughness_meta.ssa_stat_kernel_meta;
 case_results.scale_zero = local_compact_channel_result(channel_scale_zero);
 case_results.scale_zero.ssa_meta = local_compact_ssa_meta(meta_scale_zero);
@@ -172,7 +172,7 @@ ssa1_energy = energy_case;
 ssa1_energy.surface_ssa_kernel_mode = 'ssa1_geometry';
 ssa1_energy.surface_ssa_geometry_source_id = flat_ssa1.surface_ssa_geometry_source_id;
 fprintf('Running ssa1_geometry energy-limit case.\n');
-channel_ssa1_energy = CARPE3D_vertical(ssa1_energy);
+channel_ssa1_energy = vertical_channel_model(ssa1_energy);
 meta_ssa1_energy = channel_ssa1_energy.roughness_meta.ssa_stat_kernel_meta;
 case_results.ssa1_energy = local_compact_channel_result(channel_ssa1_energy);
 case_results.ssa1_energy.ssa_meta = local_compact_ssa_meta(meta_ssa1_energy);
@@ -189,20 +189,20 @@ checks = local_add_check(checks, 'ssa1_metadata_core_stable', ...
 bad_boundary = ssa1_energy;
 bad_boundary.surface_reflect_coeff = -0.8;
 fprintf('Running ssa1_geometry non-Dirichlet rejection case.\n');
-[bad_boundary_error_id, bad_boundary_error_message] = local_expect_error(@() CARPE3D_vertical(bad_boundary));
+[bad_boundary_error_id, bad_boundary_error_message] = local_expect_error(@() vertical_channel_model(bad_boundary));
 case_results.bad_boundary_error_id = string(bad_boundary_error_id);
 case_results.bad_boundary_error_message = string(bad_boundary_error_message);
 checks = local_add_check(checks, 'ssa1_requires_dirichlet_R0', ...
-    double(strcmp(bad_boundary_error_id, 'pm_surface_kirchhoff_module:SsaDirichletReflectCoeffRequired')), 1, '==');
+    double(strcmp(bad_boundary_error_id, 'pm_surface_boundary_model:SsaDirichletReflectCoeffRequired')), 1, '==');
 
 zero_padded_case = energy_case;
 zero_padded_case.surface_ssa_conv_padding = 'zero_padded';
 fprintf('Running zero_padded convolution rejection case.\n');
-[zero_padded_error_id, zero_padded_error_message] = local_expect_error(@() CARPE3D_vertical(zero_padded_case));
+[zero_padded_error_id, zero_padded_error_message] = local_expect_error(@() vertical_channel_model(zero_padded_case));
 case_results.zero_padded_error_id = string(zero_padded_error_id);
 case_results.zero_padded_error_message = string(zero_padded_error_message);
 checks = local_add_check(checks, 'zero_padded_rejected_explicitly', ...
-    double(strcmp(zero_padded_error_id, 'pm_surface_kirchhoff_module:SsaConvPaddingNotImplemented')), 1, '==');
+    double(strcmp(zero_padded_error_id, 'pm_surface_boundary_model:SsaConvPaddingNotImplemented')), 1, '==');
 
 dense_fft = params_base;
 dense_fft.nx = 32;
@@ -218,9 +218,9 @@ dense_fft.surface_ssa_geometry_source_id = flat_ssa1.surface_ssa_geometry_source
 dense_dense = dense_fft;
 dense_dense.surface_ssa_kernel_mode = 'ssa1_debug_dense';
 fprintf('Running small-grid ssa1_geometry FFT case.\n');
-channel_dense_fft = CARPE3D_vertical(dense_fft);
+channel_dense_fft = vertical_channel_model(dense_fft);
 fprintf('Running small-grid ssa1_debug_dense case.\n');
-channel_dense_dense = CARPE3D_vertical(dense_dense);
+channel_dense_dense = vertical_channel_model(dense_dense);
 meta_dense_fft = channel_dense_fft.roughness_meta.ssa_stat_kernel_meta;
 meta_dense_dense = channel_dense_dense.roughness_meta.ssa_stat_kernel_meta;
 case_results.ssa1_dense_compare = struct();
@@ -401,13 +401,13 @@ for ii = 1:numel(scale_values)
     params_pm.surface_ssa_scatter_scale = scale_values(ii);
     params_pm.surface_ssa_random_scatter = false;
     params_pm.surface_ssa_kernel_mode = 'pm_convolution';
-    channel_pm = CARPE3D_vertical(params_pm);
+    channel_pm = vertical_channel_model(params_pm);
     pm_raw(ii) = channel_pm.roughness_meta.ssa_stat_kernel_meta.E_sca_raw;
 
     params_ssa1 = params_pm;
     params_ssa1.surface_ssa_kernel_mode = 'ssa1_geometry';
     params_ssa1.surface_ssa_geometry_source_id = source_id;
-    channel_ssa1 = CARPE3D_vertical(params_ssa1);
+    channel_ssa1 = vertical_channel_model(params_ssa1);
     ssa1_raw(ii) = channel_ssa1.roughness_meta.ssa_stat_kernel_meta.E_sca_raw;
 end
 end

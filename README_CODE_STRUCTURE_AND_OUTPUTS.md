@@ -6,9 +6,9 @@
 
 ## 1. 推荐阅读顺序
 
-1. 先读 `CARPE3D_vertical.m`：这是最稳定的信道 API 入口。
-2. 再读 `propWAPE_vertical.m`：这是 direct path、surface reflection 和频率循环所在位置。
-3. 再读 `pm_surface_kirchhoff_module.m`：这是粗糙海面 Kirchhoff 边界屏、k-domain 接口和谱诊断所在位置。
+1. 先读 `vertical_channel_model.m`：这是最稳定的信道 API 入口。
+2. 再读 `vertical_wape_propagator.m`：这是 direct path、surface reflection 和频率循环所在位置。
+3. 再读 `pm_surface_boundary_model.m`：这是粗糙海面 Kirchhoff 边界屏、k-domain 接口和谱诊断所在位置。
 4. 需要通信链路时读 `comm_main_vertical_psk.m`、`monte_carlo_comm_surface_psk_vertical.m` 和 `monte_carlo_comm_surface_psk_representative_vertical.m`。
 5. 需要统计信道生成器时读 `build_surface_empirical_channel_model_vertical.m`、`sample_surface_empirical_channel_vertical.m` 和 `validate_surface_empirical_channel_generator_vertical.m`。
 
@@ -27,15 +27,15 @@ paramsV.enable_surface_reflection = true;
 paramsV.surface_boundary_model = 'kirchhoff_kdomain';
 paramsV.show_figures = false;
 
-channel = CARPE3D_vertical(paramsV);
+channel = vertical_channel_model(paramsV);
 ```
 
 数据流可以概括为：
 
 ```text
 paramsV
-  -> CARPE3D_vertical.local_prepare_config
-  -> propWAPE_vertical frequency loop
+  -> vertical_channel_model.local_prepare_config
+  -> vertical_wape_propagator frequency loop
   -> direct path H_direct_f
   -> optional surface reflection H_reflect_f
   -> H_f = H_direct_f + H_reflect_f
@@ -48,14 +48,14 @@ paramsV
 
 ### 3.1 信道传播核心
 
-`CARPE3D_vertical.m`
+`vertical_channel_model.m`
 
 - 公共信道 API。
 - 负责把用户输入 `paramsV` 变成运行配置 `cfg`。
 - 负责默认值、参数校验和输出结构整理。
 - 必须保持对外输出字段兼容。
 
-`propWAPE_vertical.m`
+`vertical_wape_propagator.m`
 
 - 传播核心和频率循环。
 - 生成 `H_direct_f`、`H_reflect_f`、`H_f`。
@@ -63,7 +63,7 @@ paramsV
 - 反射开启时走 `tx -> surface -> boundary operator -> rx`。
 - 宽带运行中，粗糙海面诊断主要保存在参考频点 `idx_f_ref` 的 metadata 中，避免每个频点都保存大型诊断。
 
-`pm_surface_kirchhoff_module.m`
+`pm_surface_boundary_model.m`
 
 - 粗糙海面 Kirchhoff 相位屏模块。
 - 支持旧默认空间域模型 `surface_boundary_model='kirchhoff_spatial'`。
@@ -91,7 +91,7 @@ B_xi(K,K') proportional to G_hat(K-K')
 `comm_main_vertical_psk.m`
 
 - 单次端到端通信 demo。
-- 消费 `CARPE3D_vertical(paramsV)` 返回的 `H_f`。
+- 消费 `vertical_channel_model(paramsV)` 返回的 `H_f`。
 - 构造 baseband 频响和 tap，完成 QPSK 调制、信道、噪声、均衡、解调。
 
 `modem_psk.m`
@@ -153,7 +153,7 @@ B_xi(K,K') proportional to G_hat(K-K')
 
 - 读取 C3/C3.5 Monte Carlo `.mat` 结果。
 - 构建经验统计模型表。
-- 不调用 `CARPE3D_vertical`，不运行 PE/WAPE。
+- 不调用 `vertical_channel_model`，不运行 PE/WAPE。
 
 `sample_surface_empirical_channel_vertical.m`
 
@@ -172,7 +172,7 @@ B_xi(K,K') proportional to G_hat(K-K')
 
 ## 4. 主要输出字段解释
 
-`CARPE3D_vertical(paramsV)` 的核心输出字段如下。
+`vertical_channel_model(paramsV)` 的核心输出字段如下。
 
 `output.H_f`
 
@@ -830,7 +830,7 @@ vertical_upward_4k_uniform_Figure15_surface_kirchhoff.png
 单次信道：
 
 ```matlab
-channel = CARPE3D_vertical(paramsV);
+channel = vertical_channel_model(paramsV);
 ```
 
 单次通信 demo：

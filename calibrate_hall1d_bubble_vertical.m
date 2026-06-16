@@ -1,4 +1,4 @@
-% Reduced-grid Hall1D calibration with decoupled bubble and PM wind forcing.
+﻿% Reduced-grid Hall1D calibration with decoupled bubble and PM wind forcing.
 
 clear
 format compact
@@ -180,7 +180,7 @@ end
 
 function result = local_run_case(paramsV, group, name)
 fprintf('Running %s / %s\n', group, name);
-channel = CARPE3D_vertical(paramsV);
+channel = vertical_channel_model(paramsV);
 invariant_error = norm(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:));
 if invariant_error > 1e-10
     error('calibrate_hall1d_bubble_vertical:Invariant', ...

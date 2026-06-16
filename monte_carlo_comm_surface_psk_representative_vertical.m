@@ -1,6 +1,6 @@
-% Representative-sea-state QPSK BER/SER Monte Carlo for the D2 link.
+﻿% Representative-sea-state QPSK BER/SER Monte Carlo for the D2 link.
 % Uses weak/mid/strong sea states and keeps the D2 receive-window and Eb/N0
-% policies fixed. This script calls CARPE3D_vertical; it does not change the
+% policies fixed. This script calls vertical_channel_model; it does not change the
 % propagation model or communication reference implementation.
 
 clear
@@ -65,7 +65,7 @@ for cc = 1:n_cond
                 'seed %d/%d, sea_seed=%d\n'], ...
                 cc, n_cond, sea_conditions(cc).name, ss, n_scen, scenarios(ss).name, ...
                 mm, mc_count, seed_list(mm));
-            channel = CARPE3D_vertical(paramsV);
+            channel = vertical_channel_model(paramsV);
 
             invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
             if invariant_error > 1e-10

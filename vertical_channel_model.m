@@ -1,10 +1,10 @@
-function output = CARPE3D_vertical(paramsV)
-%CARPE3D_VERTICAL
-% Independent upward vertical PE driver.
+﻿function output = vertical_channel_model(paramsV)
+%VERTICAL_CHANNEL_MODEL
+% Public upward vertical acoustic channel API.
 
 cfg = local_prepare_config(paramsV);
 
-disp('--- CARPE3D_vertical ---')
+disp('--- vertical_channel_model ---')
 if numel(cfg.f0) == 1
     if cfg.enable_wideband
         disp(['f0 band (Hz): [', num2str(cfg.f_band_hz(1)), ', ', num2str(cfg.f_band_hz(2)), ...
@@ -37,7 +37,7 @@ disp(['surface_reflect_coeff=', num2str(cfg.surface_reflect_coeff), ...
  surface_elevation, delta_phi, psi_ref, roughness_meta, ...
  h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
  f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref, bubble_meta] = ...
-    propWAPE_vertical(cfg);
+    vertical_wape_propagator(cfg);
 
 if cfg.enforce_1_over_R
     if strcmpi(cfg.env_mode, 'uniform') && ~pass_1_over_R

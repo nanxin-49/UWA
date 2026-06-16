@@ -1,4 +1,4 @@
-% Multi-Hs, multi-seed channel statistics for ssa_stat_kernel comparison.
+﻿% Multi-Hs, multi-seed channel statistics for ssa_stat_kernel comparison.
 % The script compares kirchhoff_spatial and the SSA-like statistical kernel
 % on a reduced wideband grid. It stores compact frequency-response samples
 % and scalar metadata, not spatial fields or full 2-D spectra.
@@ -179,7 +179,7 @@ for ii = 1:mc_count
     paramsV.sea_seed = seed_list(ii);
     fprintf('SSA stat sweep condition %d/%d (%s), seed %d/%d, sea_seed=%d\n', ...
         condition_number, condition_total, spec.name, ii, mc_count, seed_list(ii));
-    channel = CARPE3D_vertical(paramsV);
+    channel = vertical_channel_model(paramsV);
 
     invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
     if invariant_error > 1e-10

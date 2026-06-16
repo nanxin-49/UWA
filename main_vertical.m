@@ -1,4 +1,4 @@
-% Execute upward vertical PE test (independent from legacy horizontal code).
+﻿% Execute upward vertical PE test (independent from legacy horizontal code).
 
 clear
 format compact
@@ -38,7 +38,7 @@ paramsV.sea_seed = 12345;
 
 save_prefix = 'vertical_upward_4k_uniform';
 
-simulata_vertical = CARPE3D_vertical(paramsV);
+simulata_vertical = vertical_channel_model(paramsV);
 
 save([save_prefix '.mat'], 'simulata_vertical', 'paramsV');
 

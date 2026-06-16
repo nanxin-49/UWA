@@ -1,5 +1,5 @@
-% Reduced QPSK BER/SER Monte Carlo comparison for ssa_stat_kernel.
-% This script keeps the existing CARPE3D_vertical -> H_f -> baseband taps
+﻿% Reduced QPSK BER/SER Monte Carlo comparison for ssa_stat_kernel.
+% This script keeps the existing vertical_channel_model -> H_f -> baseband taps
 % -> peak_sync/MMSE link policy and compares only the surface model.
 
 clear
@@ -80,7 +80,7 @@ for ih = 1:n_hs
                 'seed %d/%d, sea_seed=%d\n'], ...
                 ih, n_hs, sea_hs_values(ih), im, n_model, model_names{im}, ...
                 mm, mc_count, seed_list(mm));
-            channel = CARPE3D_vertical(paramsV);
+            channel = vertical_channel_model(paramsV);
 
             invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
             if invariant_error > 1e-10

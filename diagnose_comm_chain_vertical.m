@@ -1,4 +1,4 @@
-% Diagnose the vertical MPSK communication chain before using BER/SER results.
+﻿% Diagnose the vertical MPSK communication chain before using BER/SER results.
 % This script does not modify propagation or bubble physics. It isolates:
 % 1) ideal flat-channel modem/noise behavior;
 % 2) scalar PE h_total behavior;
@@ -26,7 +26,7 @@ bits_tx = randi([0, 1], n_sym*k, 1);
 [tx_symbols, bits_tx] = modem_psk('modulate', bits_tx, M);
 
 paramsV = local_base_params();
-channel = CARPE3D_vertical(paramsV);
+channel = vertical_channel_model(paramsV);
 invariant_error = norm(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:));
 if invariant_error > 1e-10
     error('H_f invariant failed: %.3e', invariant_error);

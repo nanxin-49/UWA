@@ -1,4 +1,4 @@
-% Minimal closed-loop validation for the vertical QPSK communication chain.
+﻿% Minimal closed-loop validation for the vertical QPSK communication chain.
 % The first cases use synthetic channels and do not depend on PE propagation.
 % The final cases diagnose whether PE-derived baseband taps are misaligned.
 
@@ -181,7 +181,7 @@ end
 function pe_alignment = local_run_pe_alignment_diagnostic(comm_cfg, bits_tx, tx_symbols, case_offset)
 fprintf('Running PE direct-only baseband tap alignment diagnostic\n');
 paramsV = local_pe_params();
-channel = CARPE3D_vertical(paramsV);
+channel = vertical_channel_model(paramsV);
 invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
 if invariant_error > 1e-10
     error('validate_comm_link_minimal_vertical:PEInvariant', ...

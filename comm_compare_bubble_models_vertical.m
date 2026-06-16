@@ -1,4 +1,4 @@
-% Compare QPSK BER/SER across vertical channel bubble scenarios.
+﻿% Compare QPSK BER/SER across vertical channel bubble scenarios.
 % Fairness: all scenarios use the same bits_tx. For each Eb/N0 index, all
 % scenarios reuse the same AWGN seed so channel differences dominate.
 
@@ -65,7 +65,7 @@ results = struct([]);
 for ss = 1:numel(scenarios)
     paramsV = local_apply_scenario(params_base, scenarios(ss));
     fprintf('Running channel/comm scenario %s\n', scenarios(ss).name);
-    channel = CARPE3D_vertical(paramsV);
+    channel = vertical_channel_model(paramsV);
     invariant_error = norm(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:));
     if invariant_error > 1e-10
         error('comm_compare_bubble_models_vertical:Invariant', ...

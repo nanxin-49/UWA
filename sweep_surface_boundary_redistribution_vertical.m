@@ -1,4 +1,4 @@
-% Reduced-grid diagnostics for Kirchhoff incident-weighted k-domain redistribution.
+﻿% Reduced-grid diagnostics for Kirchhoff incident-weighted k-domain redistribution.
 % This script varies sea-state parameters and scalar frequency, then records
 % how the current incident angular spectrum is redistributed by the surface
 % phase screen. The metrics are diagnostics, not scattering cross sections.
@@ -104,7 +104,7 @@ end
 
 function [result, row] = local_run_case(case_spec)
 fprintf('Running redistribution diagnostic %s / %s\n', case_spec.group, case_spec.name);
-channel = CARPE3D_vertical(case_spec.paramsV);
+channel = vertical_channel_model(case_spec.paramsV);
 invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
 if invariant_error > 1e-10
     error('sweep_surface_boundary_redistribution_vertical:Invariant', ...

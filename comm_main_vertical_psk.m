@@ -1,4 +1,4 @@
-% End-to-end MPSK communication demo over vertical PE channel.
+﻿% End-to-end MPSK communication demo over vertical PE channel.
 % Scenario: seabed instrument TX -> hydrophone at fixed z_rx=3 m below buoy.
 
 clear
@@ -73,7 +73,7 @@ scenarios(2).enable_surface_reflection = true;
 results = struct([]);
 for ss = 1:numel(scenarios)
     paramsV.enable_surface_reflection = scenarios(ss).enable_surface_reflection;
-    channel = CARPE3D_vertical(paramsV);
+    channel = vertical_channel_model(paramsV);
 
     h = channel.h_total;
     if abs(h) < 1e-12

@@ -1,4 +1,4 @@
-% Reduced-grid Hall1D bubble-model sensitivity diagnostics.
+﻿% Reduced-grid Hall1D bubble-model sensitivity diagnostics.
 
 clear
 format compact
@@ -161,7 +161,7 @@ for ii = 1:2:numel(varargin)
 end
 
 fprintf('Running %s / %s\n', group, name);
-channel = CARPE3D_vertical(paramsV);
+channel = vertical_channel_model(paramsV);
 invariant_error = norm(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:));
 if invariant_error > 1e-10
     error('sweep_hall1d_sensitivity_vertical:Invariant', ...

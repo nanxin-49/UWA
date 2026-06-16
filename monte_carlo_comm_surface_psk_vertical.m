@@ -1,4 +1,4 @@
-% Monte Carlo QPSK BER/SER statistics over vertical rough-surface channels.
+﻿% Monte Carlo QPSK BER/SER statistics over vertical rough-surface channels.
 % This script varies sea_seed for weak/strong sea states and compares
 % direct_only against direct_plus_reflect. It is an empirical communication
 % experiment over the implemented channel, not a new propagation model.
@@ -65,7 +65,7 @@ for cc = 1:n_cond
                 'seed %d/%d, sea_seed=%d\n'], ...
                 cc, n_cond, sea_conditions(cc).name, ss, n_scen, scenarios(ss).name, ...
                 mm, mc_count, seed_list(mm));
-            channel = CARPE3D_vertical(paramsV);
+            channel = vertical_channel_model(paramsV);
 
             invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
             if invariant_error > 1e-10

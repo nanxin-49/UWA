@@ -1,4 +1,4 @@
-# AGENTS.md
+﻿# AGENTS.md
 
 ## Scope
 This repository is a MATLAB vertical underwater acoustic channel and MPSK communication project.
@@ -22,9 +22,9 @@ The long-term project context is a seabed-to-near-surface vertical underwater ac
 - Receiver depth must satisfy `0 <= z_rx < z_tx`.
 
 ## Files That Require Extra Caution
-- `CARPE3D_vertical.m`: public channel API and config validation boundary.
-- `propWAPE_vertical.m`: propagation core and frequency loop.
-- `pm_surface_kirchhoff_module.m`: rough-surface reflection model.
+- `vertical_channel_model.m`: public channel API and config validation boundary.
+- `vertical_wape_propagator.m`: propagation core and frequency loop.
+- `pm_surface_boundary_model.m`: rough-surface reflection model.
 - `comm_main_vertical_psk.m`: communication-chain reference consumer of `H_f`.
 - Markdown method notes or research-summary documents that describe the implemented physics.
 
@@ -33,7 +33,7 @@ Do not rename exported fields in `output` or `results` without updating all entr
 ## Run Entrypoints
 - Channel-only demo: `explain_main_vertical`
 - End-to-end communication demo: `comm_main_vertical_psk`
-- Reusable channel API: `CARPE3D_vertical(paramsV)`
+- Reusable channel API: `vertical_channel_model(paramsV)`
 
 ## Regression Requirements
 - Run at least one scalar-frequency channel case and one wideband communication case after nontrivial edits.

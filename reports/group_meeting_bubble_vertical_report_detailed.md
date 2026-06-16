@@ -23,21 +23,21 @@
 
 | 文件名 | 类型 | 是否核心文件 | 主要作用 | 主要输入 | 主要输出 | 与其他文件的调用关系 |
 |---|---|---:|---|---|---|---|
-| `CARPE3D_vertical.m` | 核心 API / 配置边界 | 是 | 公开信道 API；合并 `paramsV` 默认值；执行参数校验；调用传播核心；打包输出结构 | `paramsV` 用户参数结构体 | `output`，含 `H_f`、`h_total`、`bubble_meta`、`config` 等 | 被 `main_vertical.m`、`compare_bubble_models_vertical.m`、`comm_compare_bubble_models_vertical.m` 等调用；内部调用 `propWAPE_vertical(cfg)` |
-| `propWAPE_vertical.m` | 核心传播 | 是 | 真正的垂直 WAPE/PE 传播核心；构造网格、频率轴、直达路径、反射路径和最终频域信道 | 已校验的 `cfg` | `h_direct`、`h_reflect`、`h_total`、`H_direct_f`、`H_reflect_f`、`H_f`、`f_axis`、`bubble_meta` | 被 `CARPE3D_vertical.m` 调用；内部调用 `bubble_environment_vertical.m` 和 `pm_surface_kirchhoff_module.m` |
-| `pm_surface_kirchhoff_module.m` | 核心传播 / 粗糙海面 | 是 | 生成 PM 粗糙海面并施加 Kirchhoff 相位反射 | 入射海面场、横向波数、海面参数、风速等 | 反射后的场、海面起伏、相位扰动、粗糙面元数据 | 被 `propWAPE_vertical.m` 的反射路径调用 |
-| `bubble_environment_vertical.m` | 气泡模型统一接口 | 是 | PE 相位屏调用的统一气泡环境函数；根据模型返回 `c_eff_xy` 与 `alpha_bub_xy` | `x,y,z_curr,f_hz,c_bg,cfg` | `c_eff_xy`、`alpha_bub_xy`、单步 `meta` | 被 `propWAPE_vertical.m/local_phase_screen` 调用；Hall1D 时调用 `bubble_hall_spectrum.m` 和 `bubble_effective_medium.m` |
+| `vertical_channel_model.m` | 核心 API / 配置边界 | 是 | 公开信道 API；合并 `paramsV` 默认值；执行参数校验；调用传播核心；打包输出结构 | `paramsV` 用户参数结构体 | `output`，含 `H_f`、`h_total`、`bubble_meta`、`config` 等 | 被 `main_vertical.m`、`compare_bubble_models_vertical.m`、`comm_compare_bubble_models_vertical.m` 等调用；内部调用 `vertical_wape_propagator(cfg)` |
+| `vertical_wape_propagator.m` | 核心传播 | 是 | 真正的垂直 WAPE/PE 传播核心；构造网格、频率轴、直达路径、反射路径和最终频域信道 | 已校验的 `cfg` | `h_direct`、`h_reflect`、`h_total`、`H_direct_f`、`H_reflect_f`、`H_f`、`f_axis`、`bubble_meta` | 被 `vertical_channel_model.m` 调用；内部调用 `bubble_environment_vertical.m` 和 `pm_surface_boundary_model.m` |
+| `pm_surface_boundary_model.m` | 核心传播 / 粗糙海面 | 是 | 生成 PM 粗糙海面并施加 Kirchhoff 相位反射 | 入射海面场、横向波数、海面参数、风速等 | 反射后的场、海面起伏、相位扰动、粗糙面元数据 | 被 `vertical_wape_propagator.m` 的反射路径调用 |
+| `bubble_environment_vertical.m` | 气泡模型统一接口 | 是 | PE 相位屏调用的统一气泡环境函数；根据模型返回 `c_eff_xy` 与 `alpha_bub_xy` | `x,y,z_curr,f_hz,c_bg,cfg` | `c_eff_xy`、`alpha_bub_xy`、单步 `meta` | 被 `vertical_wape_propagator.m/local_phase_screen` 调用；Hall1D 时调用 `bubble_hall_spectrum.m` 和 `bubble_effective_medium.m` |
 | `bubble_hall_spectrum.m` | 气泡物理模型 | 是 | 计算 Hall 型一维平均气泡半径谱、空化率 `beta` 和谱元数据 | 半径网格、深度、气泡风速、`cfg` | `n_a`、`beta`、`spec_meta` | 被 `bubble_environment_vertical.m` 在 `bubble_model='hall1d'` 时调用 |
 | `bubble_effective_medium.m` | 气泡等效介质 | 是 | 将气泡谱转换为等效声速 `c_eff` 和气泡衰减 `alpha_bub` | 半径网格、`n_a`、深度、频率、背景声速、`cfg` | `c_eff`、`alpha_bub`、`em_meta` | 被 `bubble_environment_vertical.m` 在 `bubble_model='hall1d'` 时调用 |
-| `comm_compare_bubble_models_vertical.m` | 当前通信比较脚本 | 是 | 当前主气泡通信比较脚本；默认使用 `scalar_h_total + pilot_ls`；保留 `wideband_diagnostic` 路径 | 场景参数、信道输出、QPSK 数据和 pilot | 各场景 BER/SER、`h_hat` 误差、有效 SNR、图和 `.mat` 结果 | 调用 `CARPE3D_vertical.m`、`modem_psk.m`、`noise_inject_vertical.m` |
-| `comm_main_vertical_psk.m` | 原始通信 demo | 否，参考入口 | 原始端到端 MPSK demo；曾作为 `H_f` 消费者和通信链路参考 | 内部脚本参数 | BER/SER、通信结果 | 调用 `CARPE3D_vertical.m`、`modem_psk.m`、`noise_inject_vertical.m`；当前不作为气泡通信主比较脚本 |
+| `comm_compare_bubble_models_vertical.m` | 当前通信比较脚本 | 是 | 当前主气泡通信比较脚本；默认使用 `scalar_h_total + pilot_ls`；保留 `wideband_diagnostic` 路径 | 场景参数、信道输出、QPSK 数据和 pilot | 各场景 BER/SER、`h_hat` 误差、有效 SNR、图和 `.mat` 结果 | 调用 `vertical_channel_model.m`、`modem_psk.m`、`noise_inject_vertical.m` |
+| `comm_main_vertical_psk.m` | 原始通信 demo | 否，参考入口 | 原始端到端 MPSK demo；曾作为 `H_f` 消费者和通信链路参考 | 内部脚本参数 | BER/SER、通信结果 | 调用 `vertical_channel_model.m`、`modem_psk.m`、`noise_inject_vertical.m`；当前不作为气泡通信主比较脚本 |
 | `modem_psk.m` | 通信基础模块 | 是，通信基础 | MPSK/QPSK 调制、解调和误码率统计 | bit 序列或接收符号、调制阶数 `M` | PSK 符号、判决 bit、BER/SER | 被 `comm_compare_bubble_models_vertical.m`、`comm_main_vertical_psk.m` 和诊断脚本调用 |
 | `noise_inject_vertical.m` | 通信噪声模块 | 是，通信基础 | AWGN 或自定义噪声注入；不包含气泡效应 | `rx_clean`、噪声配置、`signal_ref` | `rx_noisy`、噪声、噪声元数据 | 被通信脚本调用；气泡不能在这里实现 |
-| `compare_bubble_models_vertical.m` | 诊断脚本 | 否 | reduced-grid 信道频响对比：no bubble、Level 0、Hall1D default、Hall1D strong | 内置 reduced-grid 参数 | `compare_bubble_models_vertical_result.mat` 和 PNG | 调用 `CARPE3D_vertical.m` |
-| `sweep_hall1d_sensitivity_vertical.m` | 诊断脚本 | 否 | Hall1D 参数敏感性扫描，包括强度、风速、阻尼、半径上限、接收深度 | 内置 reduced-grid 扫描参数 | `sweep_hall1d_sensitivity_vertical_result.mat` 和 PNG | 调用 `CARPE3D_vertical.m` |
-| `calibrate_hall1d_bubble_vertical.m` | 诊断 / 校准脚本 | 否 | 解耦 `bubble_wind_speed` 后进行 Hall1D 校准和目标 ΔTL 匹配 | 内置 reduced-grid 校准参数 | `calibrate_hall1d_bubble_vertical_result.mat`、校准表和 PNG | 调用 `CARPE3D_vertical.m` |
-| `diagnose_comm_chain_vertical.m` | 诊断脚本 | 否 | 诊断 modem/noise、标量 PE 信道和 wideband `h_bb` 路径问题 | 内置 reduced-grid 通信参数 | `diagnose_comm_chain_vertical_result.mat` | 调用 `CARPE3D_vertical.m`、`modem_psk.m`、`noise_inject_vertical.m` |
-| `main_vertical.m` | 原始信道演示脚本 | 否，参考入口 | 单次垂直信道仿真入口，使用较大默认网格并保存 `vertical_upward_4k_uniform.mat` 与 Figure11-15 | 内置 `paramsV` | `simulata_vertical`、`paramsV`、信道图 | 调用 `CARPE3D_vertical.m` |
+| `compare_bubble_models_vertical.m` | 诊断脚本 | 否 | reduced-grid 信道频响对比：no bubble、Level 0、Hall1D default、Hall1D strong | 内置 reduced-grid 参数 | `compare_bubble_models_vertical_result.mat` 和 PNG | 调用 `vertical_channel_model.m` |
+| `sweep_hall1d_sensitivity_vertical.m` | 诊断脚本 | 否 | Hall1D 参数敏感性扫描，包括强度、风速、阻尼、半径上限、接收深度 | 内置 reduced-grid 扫描参数 | `sweep_hall1d_sensitivity_vertical_result.mat` 和 PNG | 调用 `vertical_channel_model.m` |
+| `calibrate_hall1d_bubble_vertical.m` | 诊断 / 校准脚本 | 否 | 解耦 `bubble_wind_speed` 后进行 Hall1D 校准和目标 ΔTL 匹配 | 内置 reduced-grid 校准参数 | `calibrate_hall1d_bubble_vertical_result.mat`、校准表和 PNG | 调用 `vertical_channel_model.m` |
+| `diagnose_comm_chain_vertical.m` | 诊断脚本 | 否 | 诊断 modem/noise、标量 PE 信道和 wideband `h_bb` 路径问题 | 内置 reduced-grid 通信参数 | `diagnose_comm_chain_vertical_result.mat` | 调用 `vertical_channel_model.m`、`modem_psk.m`、`noise_inject_vertical.m` |
+| `main_vertical.m` | 原始信道演示脚本 | 否，参考入口 | 单次垂直信道仿真入口，使用较大默认网格并保存 `vertical_upward_4k_uniform.mat` 与 Figure11-15 | 内置 `paramsV` | `simulata_vertical`、`paramsV`、信道图 | 调用 `vertical_channel_model.m` |
 | `AGENTS.md` | 工程文档 | 否 | 项目协作约束、数值一致性要求和文件修改规则 | 无 | 文档约束 | 指导后续开发 |
 | `BUBBLE_EXTENSION_SPEC.md` | 工程 / 模型规格文档 | 否 | 气泡扩展公式、接口和分阶段实现计划 | 无 | 文档规格 | 指导气泡模型实现 |
 | `PROJECT_CONTEXT.md` | 工程文档 | 否 | 记录项目代码结构、执行路径、数据流和扩展接口 | 无 | 文档说明 | 作为代码维护和交接参考 |
@@ -45,8 +45,8 @@
 
 需要特别说明：
 
-- `CARPE3D_vertical.m` 是公开 API 和配置校验边界，不直接承担 PE 数值推进。
-- `propWAPE_vertical.m` 是真正的 PE/WAPE 传播核心。
+- `vertical_channel_model.m` 是公开 API 和配置校验边界，不直接承担 PE 数值推进。
+- `vertical_wape_propagator.m` 是真正的 PE/WAPE 传播核心。
 - `bubble_environment_vertical.m` 是传播核心调用的气泡统一接口，不是独立后处理。
 - `bubble_hall_spectrum.m` 和 `bubble_effective_medium.m` 是 Hall1D 物理模型的两个 helper。
 - `comm_compare_bubble_models_vertical.m` 是当前气泡通信比较的主脚本。
@@ -55,20 +55,20 @@
 
 ## 3. 主程序数据流
 
-当前主信道数据流从用户参数 `paramsV` 开始，经 `CARPE3D_vertical` 校验为运行时配置 `cfg`，再进入 `propWAPE_vertical` 执行频率循环和 PE 传播。
+当前主信道数据流从用户参数 `paramsV` 开始，经 `vertical_channel_model` 校验为运行时配置 `cfg`，再进入 `vertical_wape_propagator` 执行频率循环和 PE 传播。
 
 文字流程如下：
 
 1. 用户或脚本构造 `paramsV`。
-2. `CARPE3D_vertical(paramsV)` 调用 `local_prepare_config(paramsV)`。
+2. `vertical_channel_model(paramsV)` 调用 `local_prepare_config(paramsV)`。
 3. `local_prepare_config` 合并默认值、校验网格、声源、接收器、气泡参数、反射参数和通信相关输出控制。
-4. 得到 `cfg` 后，`CARPE3D_vertical` 调用 `propWAPE_vertical(cfg)`。
-5. `propWAPE_vertical` 构造横向网格、波数网格、频率轴 `f_axis`。
+4. 得到 `cfg` 后，`vertical_channel_model` 调用 `vertical_wape_propagator(cfg)`。
+5. `vertical_wape_propagator` 构造横向网格、波数网格、频率轴 `f_axis`。
 6. 对每个频率执行直达路径 WAPE 推进，得到 `H_direct_f(ifq)`。
-7. 若启用海面反射，先从发射深度推进到海面，调用 `pm_surface_kirchhoff_module` 施加粗糙海面反射，再从海面推进到接收深度，得到 `H_reflect_f(ifq)`。
+7. 若启用海面反射，先从发射深度推进到海面，调用 `pm_surface_boundary_model` 施加粗糙海面反射，再从海面推进到接收深度，得到 `H_reflect_f(ifq)`。
 8. 对每个频率计算 `H_f(ifq) = H_direct_f(ifq) + H_reflect_f(ifq)`。
 9. 在参考频点 `idx_f_ref` 处提取 `h_direct`、`h_reflect` 和 `h_total`。
-10. `CARPE3D_vertical` 将频域和标量结果打包到 `output`。
+10. `vertical_channel_model` 将频域和标量结果打包到 `output`。
 11. 通信脚本读取 `channel.H_f` 或 `channel.h_total` 计算 BER/SER。
 
 ASCII 流程图：
@@ -77,7 +77,7 @@ ASCII 流程图：
 paramsV
   |
   v
-CARPE3D_vertical(paramsV)
+vertical_channel_model(paramsV)
   |
   +--> local_prepare_config(paramsV)
   |       |
@@ -85,7 +85,7 @@ CARPE3D_vertical(paramsV)
   |      cfg
   |
   v
-propWAPE_vertical(cfg)
+vertical_wape_propagator(cfg)
   |
   +--> build x-y grid, kx/ky/kappa2, sponge
   |
@@ -102,7 +102,7 @@ propWAPE_vertical(cfg)
   |       +--> optional reflection path
   |               |
   |               +--> local_march_field: z_tx -> 0
-  |               +--> pm_surface_kirchhoff_module
+  |               +--> pm_surface_boundary_model
   |               +--> local_march_field: 0 -> z_rx
   |
   +--> H_direct_f, H_reflect_f
@@ -213,7 +213,7 @@ S_{\rm bub}(x,y,z,f)
 
 正的 `alpha_bub` 必须导致幅度衰减。由相位屏可见，正的总衰减对应近似 `exp(-alpha_total*ds)` 的幅度因子。因此 Hall1D 有效介质公式中的虚部符号非常重要；若符号反，会出现负衰减，需要裁剪。当前实现中已经通过符号验证选择 `-1i*d` 的阻尼符号，使正常路径下 `alpha_bub = omega*imag(q)` 为非负。
 
-代码实现上，`propWAPE_vertical.m` 中的 `local_phase_screen` 负责构造相位屏。该 helper 调用：
+代码实现上，`vertical_wape_propagator.m` 中的 `local_phase_screen` 负责构造相位屏。该 helper 调用：
 
 ```matlab
 [c_eff_xy, alpha_bub_xy, bubble_step_meta] = ...
@@ -828,16 +828,16 @@ H_f -> H_baseband -> h_bb -> conv(tx_symbols,h_bb,'same') -> MMSE equalization
 
 ## 11. 代码实现逻辑与关键函数调用关系
 
-### 10.1 `CARPE3D_vertical.m`
+### 10.1 `vertical_channel_model.m`
 
 伪代码：
 
 ```text
-function output = CARPE3D_vertical(paramsV)
+function output = vertical_channel_model(paramsV)
     cfg = local_prepare_config(paramsV)
     [h_direct, h_reflect, h_total,
      f_axis, H_direct_f, H_reflect_f, H_f,
-     idx_f_ref, bubble_meta] = propWAPE_vertical(cfg)
+     idx_f_ref, bubble_meta] = vertical_wape_propagator(cfg)
 
     output.h_direct = h_direct
     output.h_reflect = h_reflect
@@ -859,7 +859,7 @@ end
 - 旧输出字段保持存在；
 - 新元数据通过 `output.bubble_meta` 添加。
 
-### 10.2 `propWAPE_vertical.m`
+### 10.2 `vertical_wape_propagator.m`
 
 伪代码：
 
@@ -880,7 +880,7 @@ for each f_hz in f_axis
 
     if enable_surface_reflection
         psi_surface = local_march_field(z_tx -> 0)
-        psi_ref = pm_surface_kirchhoff_module(psi_surface)
+        psi_ref = pm_surface_boundary_model(psi_surface)
         psi_rx = local_march_field(0 -> z_rx)
         H_reflect_f(ifq) = field at receiver
     else
@@ -939,7 +939,7 @@ generate common data bits
 generate deterministic pilots
 
 for each scenario
-    channel = CARPE3D_vertical(paramsV)
+    channel = vertical_channel_model(paramsV)
     h_true = channel.h_total
 
     if comm_mode='scalar_h_total' and csi_mode='pilot_ls'
@@ -965,17 +965,17 @@ end
 
 | 文件 | 说明 |
 |---|---|
-| `propWAPE_vertical.m` | PE/WAPE 传播核心 |
+| `vertical_wape_propagator.m` | PE/WAPE 传播核心 |
 | `bubble_environment_vertical.m` | 气泡介质统一接口 |
 | `bubble_hall_spectrum.m` | Hall1D 气泡半径谱 |
 | `bubble_effective_medium.m` | 气泡等效介质 |
-| `pm_surface_kirchhoff_module.m` | PM 粗糙海面和 Kirchhoff 反射 |
+| `pm_surface_boundary_model.m` | PM 粗糙海面和 Kirchhoff 反射 |
 
 核心 API / 配置：
 
 | 文件 | 说明 |
 |---|---|
-| `CARPE3D_vertical.m` | 公开信道 API 和参数校验边界 |
+| `vertical_channel_model.m` | 公开信道 API 和参数校验边界 |
 
 当前通信比较核心：
 

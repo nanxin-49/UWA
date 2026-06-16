@@ -1,4 +1,4 @@
-% Scatter-scale sensitivity sweep for ssa_stat_kernel kernels.
+﻿% Scatter-scale sensitivity sweep for ssa_stat_kernel kernels.
 % Compares pm_convolution and ssa1_geometry over Hs, scatter scale, and seed.
 
 clear
@@ -158,7 +158,7 @@ for ii = 1:mc_count
     paramsV.sea_seed = seed_list(ii);
     fprintf('SSA scale sweep condition %d/%d (%s), seed %d/%d, sea_seed=%d\n', ...
         condition_number, condition_total, spec.name, ii, mc_count, seed_list(ii));
-    channel = CARPE3D_vertical(paramsV);
+    channel = vertical_channel_model(paramsV);
     invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
     if invariant_error > 1e-10
         error('sweep_ssa_scatter_scale_sensitivity_vertical:Invariant', ...

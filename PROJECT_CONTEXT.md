@@ -1,4 +1,4 @@
-# PROJECT_CONTEXT.md
+﻿# PROJECT_CONTEXT.md
 
 ## Purpose
 This file records the current code structure, execution paths, and data flow of the MATLAB vertical underwater acoustic channel and MPSK communication project.
@@ -6,15 +6,15 @@ It is intended as a code-first reference for future maintenance and feature work
 
 ## Repository Role of Each Main MATLAB File
 
-### `CARPE3D_vertical.m`
-- Public channel entrypoint: `output = CARPE3D_vertical(paramsV)`.
+### `vertical_channel_model.m`
+- Public channel entrypoint: `output = vertical_channel_model(paramsV)`.
 - Accepts user-facing configuration in `paramsV`.
 - Normalizes and validates parameters through `local_prepare_config`.
-- Calls `propWAPE_vertical(cfg)` to perform propagation.
+- Calls `vertical_wape_propagator(cfg)` to perform propagation.
 - Packages all outputs into a stable `output` struct.
 - Enforces 1/R validation in uniform-medium mode when `enforce_1_over_R=true`.
 
-### `propWAPE_vertical.m`
+### `vertical_wape_propagator.m`
 - Core upward-marching WAPE propagation engine.
 - Builds transverse grids, source field, spectral operators, and absorption profile.
 - Resolves receiver state, frequency axis, optional GPU path, and optional reflection path.
@@ -27,7 +27,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - `h_reflect`
   - `h_total`
 
-### `pm_surface_kirchhoff_module.m`
+### `pm_surface_boundary_model.m`
 - Rough-surface reflection submodule.
 - Synthesizes a 2D Pierson-Moskowitz rough sea surface.
 - Applies Kirchhoff phase distortion to the incident surface field through a selectable boundary interface.
@@ -41,13 +41,13 @@ It is intended as a code-first reference for future maintenance and feature work
 ### `explain_main_vertical.m`
 - Channel-only demonstration script.
 - Builds a scalar-frequency `paramsV`.
-- Calls `CARPE3D_vertical(paramsV)`.
+- Calls `vertical_channel_model(paramsV)`.
 - Saves the output struct and standard figures.
 
 ### `comm_main_vertical_psk.m`
 - End-to-end communication demonstration script.
 - Builds a wideband channel configuration.
-- Calls `CARPE3D_vertical(paramsV)` for each scenario.
+- Calls `vertical_channel_model(paramsV)` for each scenario.
 - Converts acoustic frequency response to a discrete baseband channel.
 - Runs MPSK modulation, channel convolution, noise injection, equalization, and BER/SER statistics.
 
@@ -66,10 +66,10 @@ It is intended as a code-first reference for future maintenance and feature work
 ## Main Execution Paths
 
 ### Path 1: Channel Demo
-`explain_main_vertical -> CARPE3D_vertical -> propWAPE_vertical -> output struct + saved figures`
+`explain_main_vertical -> vertical_channel_model -> vertical_wape_propagator -> output struct + saved figures`
 
 ### Path 2: Communication Demo
-`comm_main_vertical_psk -> CARPE3D_vertical -> propWAPE_vertical -> H_f/f_axis -> baseband channel -> MPSK link simulation`
+`comm_main_vertical_psk -> vertical_channel_model -> vertical_wape_propagator -> H_f/f_axis -> baseband channel -> MPSK link simulation`
 
 ## Channel Data Flow
 
@@ -78,7 +78,7 @@ It is intended as a code-first reference for future maintenance and feature work
 - `paramsV` may contain both core physics fields and future extension fields.
 
 ### Step 2: Runtime configuration
-- `CARPE3D_vertical` calls `local_prepare_config(paramsV)`.
+- `vertical_channel_model` calls `local_prepare_config(paramsV)`.
 - `local_prepare_config`:
   - merges defaults
   - copies user fields into `cfg`
@@ -94,7 +94,7 @@ It is intended as a code-first reference for future maintenance and feature work
     - `dz_step`
 
 ### Step 3: Receiver state resolution
-- `propWAPE_vertical` initializes `rx_state_used` from:
+- `vertical_wape_propagator` initializes `rx_state_used` from:
   - `x_rx`
   - `y_rx`
   - `z_rx`
@@ -120,7 +120,7 @@ It is intended as a code-first reference for future maintenance and feature work
 ### Step 6: Reflected-path propagation
 - If `enable_surface_reflection=true`, the code performs:
   1. `tx -> surface` propagation via `local_march_field`
-  2. rough-surface reflection via `pm_surface_kirchhoff_module`
+  2. rough-surface reflection via `pm_surface_boundary_model`
   3. `surface -> rx` propagation via `local_march_field`
 - The result is stored as `H_reflect_f(ifq)`.
 - The selected surface boundary model acts only in step 2; it does not change the two propagation segments.
@@ -134,7 +134,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - `h_total = H_f(idx_f_ref)`
 
 ### Step 8: Output packaging
-- `CARPE3D_vertical` returns a stable `output` struct containing:
+- `vertical_channel_model` returns a stable `output` struct containing:
   - field snapshots
   - centerline diagnostics
   - rough-surface products
@@ -156,7 +156,7 @@ It is intended as a code-first reference for future maintenance and feature work
 - `modem_psk('modulate', bits_tx, M)` maps them to unit-power M-PSK symbols.
 
 ### Step 3: Channel acquisition
-- Each scenario calls `channel = CARPE3D_vertical(paramsV)`.
+- Each scenario calls `channel = vertical_channel_model(paramsV)`.
 - The communication chain mainly consumes:
   - `channel.f_axis`
   - `channel.H_f`
@@ -427,7 +427,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - fixed bit stream with `bits_seed=9000`.
   - varying AWGN seed: `noise_seed_base + condition_index*100000 + scenario_index*10000 + seed_index*100 + ebn0_index`.
 - Data flow:
-  - each run calls `CARPE3D_vertical(paramsV)`;
+  - each run calls `vertical_channel_model(paramsV)`;
   - builds baseband taps from `H_f` with the same `ifft(ifftshift(...))` logic as `comm_main_vertical_psk.m`;
   - applies the explicit receive-window policy used by `comm_main_vertical_psk.m`;
   - injects AWGN with `noise_inject_vertical`;
@@ -553,9 +553,9 @@ It is intended as a code-first reference for future maintenance and feature work
 ## 2026-06-10 Kirchhoff k-domain Boundary Validation
 
 Changed files for this interface:
-- `CARPE3D_vertical.m`: adds user-facing `paramsV` fields and validation.
-- `propWAPE_vertical.m`: forwards the surface boundary configuration and preserves disabled-path metadata.
-- `pm_surface_kirchhoff_module.m`: implements spatial and implicit k-domain boundary application paths.
+- `vertical_channel_model.m`: adds user-facing `paramsV` fields and validation.
+- `vertical_wape_propagator.m`: forwards the surface boundary configuration and preserves disabled-path metadata.
+- `pm_surface_boundary_model.m`: implements spatial and implicit k-domain boundary application paths.
 - `PROJECT_CONTEXT.md`: records formulas, interface, assumptions, limits, and validation.
 
 Reduced-grid validation settings:
@@ -590,9 +590,9 @@ Remaining issues:
 ## 2026-06-10 Boundary Coupling Diagnostic Validation
 
 Changed files for this diagnostic:
-- `CARPE3D_vertical.m`: adds default-off diagnostic flags.
-- `propWAPE_vertical.m`: forwards diagnostic flags only for the reference-frequency reflection call and preserves disabled metadata.
-- `pm_surface_kirchhoff_module.m`: computes scalar coupling metrics from `G_xy` and optional compact debug summaries.
+- `vertical_channel_model.m`: adds default-off diagnostic flags.
+- `vertical_wape_propagator.m`: forwards diagnostic flags only for the reference-frequency reflection call and preserves disabled metadata.
+- `pm_surface_boundary_model.m`: computes scalar coupling metrics from `G_xy` and optional compact debug summaries.
 - `PROJECT_CONTEXT.md`: records formulas, interpretation, limits, and validation.
 
 Reduced-grid validation settings:
@@ -638,9 +638,9 @@ Remaining issues:
 ## 2026-06-10 Incident-Weighted Redistribution Diagnostic Validation
 
 Changed files for this diagnostic:
-- `CARPE3D_vertical.m`: adds default-off redistribution diagnostic flags.
-- `propWAPE_vertical.m`: forwards redistribution flags only for the reference-frequency reflection call and preserves disabled metadata.
-- `pm_surface_kirchhoff_module.m`: compares `Psi_inc_k`, `Psi_ref_k`, and flat-reflected spectra without changing propagation results.
+- `vertical_channel_model.m`: adds default-off redistribution diagnostic flags.
+- `vertical_wape_propagator.m`: forwards redistribution flags only for the reference-frequency reflection call and preserves disabled metadata.
+- `pm_surface_boundary_model.m`: compares `Psi_inc_k`, `Psi_ref_k`, and flat-reflected spectra without changing propagation results.
 - `sweep_surface_boundary_redistribution_vertical.m`: reduced scalar trend sweep for `Hs`, wind speed, and frequency.
 - `PROJECT_CONTEXT.md`: records formulas, interpretation, limits, and validation.
 
@@ -830,7 +830,7 @@ Changed files for this prototype:
 
 Purpose and scope:
 - C4 converts existing Monte Carlo summary rows into a lightweight empirical random generator for reference-frequency and low-dimensional channel summaries.
-- It does not modify `CARPE3D_vertical`, `propWAPE_vertical`, `pm_surface_kirchhoff_module`, or communication-chain public outputs.
+- It does not modify `vertical_channel_model`, `vertical_wape_propagator`, `pm_surface_boundary_model`, or communication-chain public outputs.
 - It does not run PE/WAPE and does not save full channel structs, spatial fields, or two-dimensional spectra.
 - It is an empirical resampler of previously computed C3/C3.5 results, not a new rough-surface scattering theory.
 
@@ -882,7 +882,7 @@ Smoke validation settings:
   - `surface_empirical_channel_generator_validation_result.mat`
   - size `37379` bytes
 - Static check:
-  - C4 files do not call `CARPE3D_vertical`, `propWAPE_vertical`, or `pm_surface_kirchhoff_module`.
+  - C4 files do not call `vertical_channel_model`, `vertical_wape_propagator`, or `pm_surface_boundary_model`.
 
 Smoke validation results:
 - Condition 1, `Hs=0.05`, `wind=3`:
@@ -1203,7 +1203,7 @@ D2 policy:
 - Compatibility:
   - `comm_main_vertical_psk.m` still saves the previous result fields and adds `receive_window_mode`, `receive_meta`, `ebn0_reference`, and `h_eq`.
   - `monte_carlo_comm_surface_psk_vertical.m` keeps the same result tables and sample arrays, and adds receive-window metadata in per-run summaries.
-  - `comm_main_vertical_psk.m` remains the reference single-run demo; no changes were made to `CARPE3D_vertical` or propagation outputs.
+  - `comm_main_vertical_psk.m` remains the reference single-run demo; no changes were made to `vertical_channel_model` or propagation outputs.
 
 Expected effect from D1 diagnosis:
 - Unit and single-tap channels should remain zero-error in noiseless mode and should show BER/SER reduction with Eb/N0.
@@ -1263,9 +1263,9 @@ Remaining D2 issues:
 ## 2026-06-15 SSA-Like Statistical Surface Kernel
 
 Changed files for this update:
-- `CARPE3D_vertical.m`: adds validated `paramsV.surface_ssa_random_scatter`, `paramsV.surface_ssa_scatter_scale`, `paramsV.surface_ssa_seed_offset`, `paramsV.surface_ssa_kernel_mode`, `paramsV.surface_ssa_geometry_source_id`, `paramsV.surface_ssa_kz_branch`, `paramsV.surface_ssa_conv_padding`, and allows `surface_boundary_model='ssa_stat_kernel'`.
-- `propWAPE_vertical.m`: passes the SSA-like random-scatter controls and frequency index into the surface boundary module; keeps the two-segment reflected PE path and `H_f = H_direct_f + H_reflect_f`.
-- `pm_surface_kirchhoff_module.m`: adds the SSA-like PM-spectrum statistical boundary branch.
+- `vertical_channel_model.m`: adds validated `paramsV.surface_ssa_random_scatter`, `paramsV.surface_ssa_scatter_scale`, `paramsV.surface_ssa_seed_offset`, `paramsV.surface_ssa_kernel_mode`, `paramsV.surface_ssa_geometry_source_id`, `paramsV.surface_ssa_kz_branch`, `paramsV.surface_ssa_conv_padding`, and allows `surface_boundary_model='ssa_stat_kernel'`.
+- `vertical_wape_propagator.m`: passes the SSA-like random-scatter controls and frequency index into the surface boundary module; keeps the two-segment reflected PE path and `H_f = H_direct_f + H_reflect_f`.
+- `pm_surface_boundary_model.m`: adds the SSA-like PM-spectrum statistical boundary branch.
 - `vertical_comm_guide.md` and `PROJECT_CONTEXT.md`: document formulas, interfaces, limits, and validation status.
 
 Implemented interface and formulas:

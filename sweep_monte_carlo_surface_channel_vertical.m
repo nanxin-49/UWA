@@ -1,4 +1,4 @@
-% Multi-sea-state Monte Carlo statistics for Kirchhoff rough-surface channels.
+﻿% Multi-sea-state Monte Carlo statistics for Kirchhoff rough-surface channels.
 % This script scans Hs and wind speed, then varies only sea_seed inside each
 % sea-state condition. Outputs are empirical diagnostics for the implemented
 % phase-screen channel, not a new scattering model or stochastic generator.
@@ -167,7 +167,7 @@ for ii = 1:mc_count
     fprintf(['Surface MC sweep condition %d/%d (%s), seed %d/%d, ' ...
         'sea_seed=%d\n'], condition_number, condition_total, spec.name, ...
         ii, mc_count, seed_list(ii));
-    channel = CARPE3D_vertical(paramsV);
+    channel = vertical_channel_model(paramsV);
 
     invariant_error = max(abs(channel.H_f(:) - channel.H_direct_f(:) - channel.H_reflect_f(:)));
     if invariant_error > 1e-10
