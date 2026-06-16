@@ -1,315 +1,386 @@
-# 海底仪器到浮标水听器 MPSK 通信模块说明
+# 垂直水声通信与海面统计散射模型说明
 
-## 1. 场景与目标
-本模块用于仿真以下通信链路：
+本文说明当前 MATLAB 垂直水声通信模型的物理含义、频域信道定义、海面反射/散射模型和验证结论。它面向阅读模型的研究或工程人员，而不是脚本接口说明。
 
-- 发射端：海底仪器（默认 `z_tx = 100 m`）
-- 接收端：浮标下悬挂水听器（当前固定 `z_rx = 3 m`）
-- 调制方式：MPSK（默认 QPSK, `M = 4`）
-- 信道：上行 PE 直达路径 + 可选粗糙海面反射路径
+## 1. 问题背景
 
-核心开关：
-
-- `enable_surface_reflection = false`：仅直达，`h_total = h_direct`
-- `enable_surface_reflection = true`：直达 + 反射，`h_total = h_direct + h_reflect`
-
----
-
-## 2. 物理模型与默认参数
-
-### 2.1 坐标与传播约定
-- `z` 轴向下为正。
-- 传播方向为上行：从 `z_tx` 推进到 `z_rx`。
-- 发射与接收横向坐标位于 `(x,y)` 平面网格内。
-
-### 2.2 默认物理参数（主链路）
-| 参数 | 默认值 | 含义 |
-|---|---:|---|
-| `f0` | `4000 Hz` | 载频 |
-| `c0` | `1500 m/s` | 参考声速 |
-| `z_max` | `100 m` | 水深上限 |
-| `z_tx` | `100 m` | 发射深度 |
-| `z_rx` | `3 m` | 接收深度（当前阶段固定） |
-| `xw, yw` | `50 m, 50 m` | 横向计算域宽度 |
-| `nx, ny` | `1024, 1024` | 横向网格数 |
-| `stepz_lamb` | `0.5` | 垂向步长（波长单位） |
-| `sigma_src_m` | `0.3 m` | 初始高斯源宽度 |
-| `taper_ratio` | `0.12` | 横向海绵层比例 |
-
-### 2.3 粗糙海面（PM 谱）默认参数
-| 参数 | 默认值 | 含义 |
-|---|---:|---|
-| `U` | `5 m/s` | 风速 |
-| `Hs_target` | `0.5 m` | 目标有效波高（标定后） |
-| `seed` | `12345` | 随机种子 |
-| `g` | `9.81` | 重力加速度 |
-| `alpha_PM` | `8.10e-3` | PM 常数 |
-| `beta_PM` | `0.74` | PM 常数 |
-
-PM 波数谱采用：
+模型描述一个海底发射端到近海面接收端的上行水声通信链路。发射信号从较深位置向上传播，接收端位于海面以下。总接收信道由两部分组成：
 
 \[
-W(K)=\frac{\alpha_{PM}}{2K^3}\exp\left[-\beta_{PM}\frac{g^2}{U^4K^2}\right], \quad K=\sqrt{K_x^2+K_y^2}
+H(f)=H_{\rm dir}(f)+H_{\rm ref}(f),
 \]
 
-`K=0` 处能量置 0，避免奇点。
+其中 \(H_{\rm dir}\) 为直达传播贡献，\(H_{\rm ref}\) 为经海面反射或散射后返回接收深度的贡献。通信链路只使用最终频率响应 \(H(f)\)，因此海面模型的变化不要求重写调制、噪声注入、同步或均衡流程。
 
-### 2.4 海面反射相位畸变（Kirchhoff 近似）
-\[
-\Delta\phi = 2\pi \frac{2\xi(x,y)}{\lambda_0}
-\]
-\[
-\psi_{ref} = \psi_{inc}\cdot e^{j\Delta\phi}
-\]
-
----
-
-## 3. 文件与函数说明
-
-## 3.1 `explain_main_vertical.m`
-用途：单次信道求解入口脚本（会保存图与 `.mat`）。
-
-关键点：
-- 设置 `paramsV`（含几何、反射、海况等）
-- 调用 `CARPE3D_vertical(paramsV)`
-- 导出 Figure11~Figure15
-
-## 3.2 `CARPE3D_vertical.m`
-用途：参数检查、求解器调度、结果打包、绘图。
-
-输入：
-- `paramsV`（结构体）
-
-输出（核心字段）：
-- `h_direct`, `h_reflect`, `h_total`
-- `rx_state_used`（实际使用的接收点状态）
-- `fd_hz_used`（当前多普勒占位输出，默认 0）
-- `surface_elevation`, `psi_ref`, `delta_phi`
-- `direct_to_reflect_db`, `phase_diff_rad`
-
-参数约束（关键）：
-- `z_tx > z_rx >= 0`
-- 接收点在网格内
-- `nx, ny <= 2048`
-- `xw, yw <= 100 m`
-
-## 3.3 `propWAPE_vertical.m`
-用途：上行 PE 核心推进。
-
-主要流程：
-- 在 `(x,y)` 截面构造初场
-- split-step WAPE 推进至接收深度
-- 提取 `h_direct`
-- 可选反射分支：
-  - 先推进到海面得到 `psi_surface_inc`
-  - PM + Kirchhoff 得到 `psi_ref`
-  - 从海面再推进回接收深度得到 `h_reflect`
-  - 合成 `h_total`
-
-未来接口（已预留）：
-- `rx_position_fn(t_s, state)`：动态接收点
-- `doppler_fn(t_s, tx_state, rx_state, env_state)`：多普勒频移
-
-## 3.4 `pm_surface_kirchhoff_module.m`
-用途：粗糙海面生成 + 反射相位畸变 + sanity plot。
-
-输入：
-- `psi_inc, KX, KY, x, y, xw, yw, lambda0, pm_cfg`
-
-输出：
-- `surface_elevation, delta_phi, psi_ref, meta`
-
-`pm_cfg`：
-- `U`, `Hs_target`, `seed`, `show_figure`
-
-## 3.5 `noise_inject_vertical.m`
-用途：统一噪声注入接口（可开关、可替换模型）。
-
-签名：
-- `[rx_noisy, noise, meta] = noise_inject_vertical(rx_clean, noise_cfg, signal_ref)`
-
-`noise_cfg` 字段：
-- `enable_noise`：是否加噪
-- `model`：默认 `'awgn'`
-- `snr_db` 或 `ebn0_db`
-- `bits_per_symbol`
-- `seed`
-- `custom_noise_fn`（自定义噪声函数句柄）
-
-行为：
-- 关闭噪声：直接透传
-- 开启噪声：按配置注入，返回 `effective_snr_db`
-
-## 3.6 `comm_main_vertical_psk.m`
-用途：端到端 MPSK 通信主脚本。
-
-流程：
-- 构造 `paramsV`（固定 `z_rx = 3`）
-- 运行两工况：
-  - `direct_only`
-  - `direct_plus_reflect`
-- 调制 -> 信道 -> 噪声注入 -> 相干均衡 -> 解调
-- 输出 BER/SER 表格与对比图（Figure31/32）
-- 保存 `psk_comm_result.mat`
-
-## 3.7 `modem_psk.m`
-用途：MPSK 调制/解调与误码统计工具函数。
-
-支持模式：
-- `modulate`
-- `demodulate`
-- `error_rate`
-
----
-
-## 4. 常用运行方式
-
-### 4.1 单次信道仿真
-```matlab
-explain_main_vertical
-```
-
-### 4.2 通信闭环仿真
-```matlab
-comm_main_vertical_psk
-```
-
----
-
-## 5. 结果字段速查
-
-`CARPE3D_vertical` 输出关键字段：
-
-- `h_direct`：直达复通道
-- `h_reflect`：反射复通道（关闭反射时为 0）
-- `h_total`：总复通道
-- `rx_amplitude`, `rx_phase_rad`
-- `direct_to_reflect_db`
-- `phase_diff_rad`
-- `rx_state_used`
-- `fd_hz_used`
-
-`comm_main_vertical_psk` 保存的 `results(ss)`：
-
-- `name`（工况名）
-- `BER`, `SER`
-- `effective_snr_db`
-- `h_direct`, `h_reflect`, `h_total`
-- `fd_hz_used`, `rx_state_used`
-
----
-
-## 6. 当前假设与后续扩展
-
-当前假设：
-- 窄带等效复通道（单载频）
-- 接收点固定 3m
-- 多普勒占位输出，默认 `fd_hz_used = 0`
-- 噪声默认 AWGN
-
-后续扩展建议：
-- 通过 `rx_position_fn` 引入浮标随浪运动轨迹
-- 通过 `doppler_fn` 注入时变频偏
-- `custom_noise_fn` 接入海洋环境噪声模型
-- 扩展到更高阶 MPSK 与帧同步/导频估计
-## 2026-04-10 Formula Update (Readable Addendum)
-
-This addendum supersedes formula-related content if any old text is garbled by encoding.
-
-### PM 2D spectrum used with `ifft2`
+在参考频率 \(f_{\rm ref}\) 处，窄带等效复信道写为
 
 \[
-E_{1D}(K)=\frac{\alpha_{PM}}{2K^3}\exp\left(-\beta_{PM}\frac{g^2}{U^4K^2}\right),\ K>0
-\]
-\[
-\Phi_{2D}(K_x,K_y)=\frac{E_{1D}(K)}{2\pi K},\ K=\sqrt{K_x^2+K_y^2},\ K>0
-\]
-\[
-A=\sqrt{\Phi_{2D}\Delta k_x\Delta k_y}
+h_{\rm total}=H(f_{\rm ref}),\qquad
+h_{\rm dir}=H_{\rm dir}(f_{\rm ref}),\qquad
+h_{\rm ref}=H_{\rm ref}(f_{\rm ref}).
 \]
 
-Set `K=0` bin to zero energy.
+## 2. 坐标与传播约定
 
-### Surface reflection model
+海面定义为
 
 \[
-\psi_{ref}=R_{smooth}\,\psi_{inc}\,\exp(j\Delta\phi),\quad R_{smooth}=-1\ \text{(default)}
+z=0,
 \]
+
+深度方向向下为正。若发射端深度为 \(z_{\rm tx}\)，接收端深度为 \(z_{\rm rx}\)，则上行通信满足
+
 \[
-\Delta\phi=2k_0\xi(x,y)\Gamma,\quad k_0=\frac{2\pi}{\lambda_0}
+0\le z_{\rm rx}<z_{\rm tx}.
 \]
 
-- `normal` mode: `\Gamma=2` (reduces to `4\pi\xi/\lambda_0`)
-- `oblique` mode: `\Gamma=\cos\theta_i+\cos\theta_r`
+传播计算在横向平面 \((x,y)\) 上表示复声场，并沿 \(z\) 方向推进。直达项从 \(z_{\rm tx}\) 推进到 \(z_{\rm rx}\)。反射项先从 \(z_{\rm tx}\) 推进到海面，再由海面边界模型给出反射场，最后从海面推进回 \(z_{\rm rx}\)。
 
-### New parameters
+## 3. PM 海面高度谱
 
-- `surface_reflect_coeff` (default `-1`)
-- `surface_phase_mode` (`'normal'|'oblique'`, default `'normal'`)
-- `surface_oblique_clip` (default `[0,1]`)
+粗糙海面由 Pierson-Moskowitz（PM）谱描述。令
 
-### Added diagnostics in `roughness_meta`
+\[
+K=\sqrt{K_x^2+K_y^2},
+\]
 
-- `reflection_coeff_used`
-- `phase_mode_used`
-- `phase_factor_stats`
-- `phi2d_transform_error`
-- `spectrum_definition`
+一维波数谱写为
 
-### Updated structure diagram
+\[
+E_{1D}(K)
+=
+\frac{\alpha_{\rm PM}}{2K^3}
+\exp\left(
+-\beta_{\rm PM}\frac{g^2}{U^4K^2}
+\right),
+\qquad K>0.
+\]
 
-```mermaid
-flowchart TD
-    A["CARPE3D_vertical"] --> B["propWAPE_vertical"]
-    B --> C["Direct: z_tx -> z_rx"]
-    B --> D["Reflect path: z_tx -> surface"]
-    D --> E["pm_surface_kirchhoff_module"]
-    E --> E1["E1D -> Phi2D -> ifft2"]
-    E --> E2["R_smooth * exp(j*delta_phi)"]
-    E2 --> F["surface -> z_rx"]
-    C --> G["h_direct"]
-    F --> H["h_reflect"]
-    G --> I["h_total"]
-    H --> I
-```
+对应的各向同性二维高度谱为
 
-## 2026-04-11 Broadband + AAL + GPU Addendum
+\[
+\Phi_{2D}(K_x,K_y)
+=
+\frac{E_{1D}(K)}{2\pi K},
+\qquad K>0.
+\]
 
-### 1) Broadband frequency-selective channel
+实际使用时，谱会按目标有效波高 \(H_s\) 重新归一化。海面高度标准差取
 
-- `paramsV.f0` now supports scalar or vector.
-- If `enable_wideband=true` and `f0` is scalar, solver auto-builds `f_axis` from:
-  - `f_band_hz`, `Nf_min`, `Nf_max`
-  - delay-spread-based `Δf` target.
-- New outputs:
-  - `f_axis`, `H_f`, `H_direct_f`, `H_reflect_f`, `idx_f_ref`
-- Compatibility:
-  - `h_total/h_direct/h_reflect` are reference-frequency values (index `idx_f_ref`).
+\[
+\sigma_\eta=\frac{H_s}{4},
+\]
 
-### 2) Complex absorbing boundary (AAL)
+并要求离散谱对应的连续方差满足
 
-- Legacy amplitude taper path is removed from marching core.
-- New absorber parameters:
-  - `sponge_ratio` in `[0.10, 0.15]`
-  - `alpha_max_np_per_m` (positive scalar)
-- Absorption is injected by:
-  \[
-  U_{new}(x,y)=\frac{c_{local}-c_0}{c_{local}}-i\frac{\alpha(x,y)}{k_0}
-  \]
-  with cubic edge profile on both `x` and `y`.
+\[
+\iint W_\eta(K_x,K_y)\,dK_xdK_y=\sigma_\eta^2.
+\]
 
-### 3) GPU and memory mode
+因此，\(W_\eta\) 表示目标海况下的海面高度波数谱，而不是某一次具体随机海面 realization。
 
-- `use_gpu=true` enables gpuArray path when GPU support is available.
-- `save_mode`:
-  - `rx_only` (default): keep only essential channel outputs.
-  - `slice`: store reference-frequency mid-plane slices and sparse snapshots.
+当 \(H_s=0\) 时，
 
-### 4) Communication coupling update
+\[
+\sigma_\eta=0,\qquad W_\eta=0,
+\]
 
-- `comm_main_vertical_psk` uses broadband `H_f` to build baseband response:
-  - interpolate to symbol-rate FFT grid,
-  - `h_bb = ifft(ifftshift(H_baseband))`,
-  - truncate taps by energy threshold,
-  - inject ISI via `conv(tx_symbols, h_bb, 'same')`.
-- Receiver equalization switched to frequency-domain MMSE using `h_bb`.
+海面退化为平整自由海面。
+
+## 4. Kirchhoff 空间海面模型
+
+`kirchhoff_spatial` 是默认海面模型。它先从 PM 谱生成一个具体随机海面
+
+\[
+\xi(x,y),
+\]
+
+再用相位屏近似描述海面高度起伏导致的反射相位扰动：
+
+\[
+\Psi_{\rm ref}(x,y)
+=
+R_0\,\Psi_{\rm inc}(x,y)
+\exp\left(i\Delta\phi(x,y)\right),
+\]
+
+其中 \(R_0\) 为平整海面反射系数。压力释放自由海面的默认近似为
+
+\[
+R_0=-1.
+\]
+
+相位扰动采用
+
+\[
+\Delta\phi(x,y)=2k_0\Gamma\,\xi(x,y),
+\qquad
+k_0=\frac{2\pi f}{c_0}.
+\]
+
+\(\Gamma\) 表示入射与反射方向共同决定的有效垂向相位因子；法向近似下可理解为固定的几何因子，斜入射修正时由局部传播方向决定。
+
+该模型的特点是直观、可与具体海面 realization 对应，但每次随机海面都会改变相位屏。它不是严格的 SSA/NLSSA 散射截面模型，也不提供从海面谱直接生成统计散射功率的闭式通道。
+
+## 5. SSA 统计散射分支
+
+`ssa_stat_kernel` 分支不生成具体的 \(\xi(x,y)\)。它直接从 PM 高度谱 \(W_\eta(K_x,K_y)\) 构造统计散射功率，并在波数域合成海面反射场。
+
+令入射场的横向波数谱为
+
+\[
+\Psi_{\rm inc}(K),\qquad
+P_{\rm inc}(K)=|\Psi_{\rm inc}(K)|^2.
+\]
+
+反射场分为相干镜面项与非相干散射项：
+
+\[
+\Psi_{\rm ref}(K)
+=
+\Psi_{\rm coh}(K)+\Psi_{\rm sca}(K).
+\]
+
+### 5.1 相干镜面项
+
+粗糙度会降低镜面相干反射强度。当前模型采用
+
+\[
+R_{\rm coh}
+=
+R_0
+\exp\left[
+-\frac12(2k_0\Gamma)^2\sigma_\eta^2
+\right].
+\]
+
+因此
+
+\[
+\Psi_{\rm coh}(x,y)=R_{\rm coh}\Psi_{\rm inc}(x,y).
+\]
+
+当 \(H_s=0\) 时，\(\sigma_\eta=0\)，于是
+
+\[
+R_{\rm coh}=R_0.
+\]
+
+在压力释放自由海面默认条件下，
+
+\[
+R_{\rm coh}=-1.
+\]
+
+### 5.2 工程基线核：`pm_convolution`
+
+`pm_convolution` 是当前统计散射分支的工程基线。它使用海面高度谱与入射功率谱的卷积来分配非相干散射功率：
+
+\[
+S_{\rm PM}(K,K')
+\propto
+C_{\rm sca}W_\eta(K-K').
+\]
+
+对应的散射功率可写为
+
+\[
+P_{\rm sca}^{\rm raw}(K)
+=
+C_{\rm sca}
+\sum_{K'}
+W_\eta(K-K')P_{\rm inc}(K')
+\Delta K_x\Delta K_y.
+\]
+
+这里 \(C_{\rm sca}\) 是工程归一化常数，用于敏感性分析和数值调节；它不是实验标定的物理散射截面常数。
+
+该核的优点是简单、稳定，并能验证“从 PM 谱直接生成统计散射通道样本”的代码路径。它的限制是没有显式入射/散射方向几何因子，因此不应解释为严格 SSA 一阶角度核。
+
+### 5.3 一阶 Dirichlet 几何核：`ssa1_geometry`
+
+`ssa1_geometry` 加入一阶 SSA 的压力释放 Dirichlet 几何因子。对横向波数 \(K\)，定义传播垂向波数
+
+\[
+\gamma(K,f)=\sqrt{\max(k_0^2-|K|^2,0)}.
+\]
+
+当前版本只把 \(|K|\le k_0\) 的传播分量纳入散射功率；倏逝分量不参与第一版统计散射能量。
+
+压力释放 Dirichlet 条件下，一阶几何因子为
+
+\[
+G_{\rm SSA1}(K,K';f)
+=
+4\gamma(K,f)\gamma(K',f).
+\]
+
+因此统计核写为
+
+\[
+S_{\rm SSA1}(K,K';f)
+\propto
+G_{\rm SSA1}(K,K';f)W_\eta(K-K').
+\]
+
+相应的非相干散射功率为
+
+\[
+P_{\rm sca}^{\rm raw}(K)
+=
+C_{\rm sca}
+\sum_{K'}
+G_{\rm SSA1}(K,K';f)
+W_\eta(K-K')
+P_{\rm inc}(K')
+\Delta K_x\Delta K_y.
+\]
+
+等价地，可写成更紧凑的卷积形式：
+
+\[
+A(K')=\gamma(K',f)P_{\rm inc}(K'),
+\]
+
+\[
+P_{\rm sca}^{\rm raw}(K)
+=
+4C_{\rm sca}\gamma(K,f)
+\left[W_\eta * A\right](K)
+\Delta K_x\Delta K_y.
+\]
+
+这里的卷积为当前网格上的周期卷积。`ssa1_debug_dense` 用小网格显式求和验证该周期卷积形式，与快速卷积结果一致。
+
+`ssa1_geometry` 只对应压力释放 Dirichlet 边界，即 \(R_0=-1\)。任意阻抗边界、Neumann 边界或从一般反射系数到 SSA 几何因子的映射尚未实现。
+
+## 6. 能量约束
+
+非相干散射项是随机生成的。为避免随机散射导致非物理放大，模型对散射能量施加约束。
+
+定义
+
+\[
+E_{\rm inc}=\sum_K|\Psi_{\rm inc}(K)|^2,
+\]
+
+\[
+E_{\rm coh}=\sum_K|\Psi_{\rm coh}(K)|^2,
+\]
+
+\[
+E_{\rm sca}^{\rm raw}=\sum_KP_{\rm sca}^{\rm raw}(K).
+\]
+
+允许注入的散射能量不超过
+
+\[
+E_{\rm sca}^{\rm max}
+=
+\max(E_{\rm inc}-E_{\rm coh},0).
+\]
+
+因此实际使用的散射功率为
+
+\[
+P_{\rm sca}(K)
+=
+P_{\rm sca}^{\rm raw}(K)
+\min\left(
+1,
+\frac{E_{\rm sca}^{\rm max}}
+{\max(E_{\rm sca}^{\rm raw},\varepsilon)}
+\right).
+\]
+
+从而保证
+
+\[
+E_{\rm coh}+E_{\rm sca}\le E_{\rm inc}.
+\]
+
+这是一条数值能量审计约束，不代表已经完成绝对散射截面的实验标定。
+
+## 7. 随机散射谱与确定性
+
+若启用随机散射，非相干散射谱按复高斯随机相位生成：
+
+\[
+\Psi_{\rm sca}(K)
+=
+\sqrt{P_{\rm sca}(K)}\,z(K),
+\qquad
+z(K)\sim\mathcal{CN}(0,1).
+\]
+
+最后得到海面反射场
+
+\[
+\Psi_{\rm ref}(K)
+=
+\Psi_{\rm coh}(K)+\Psi_{\rm sca}(K),
+\]
+
+再反变换回横向空间域，并沿原有反射路径传播到接收深度。
+
+为保持可复现性，统计散射随机谱使用独立于 Kirchhoff 随机海面 realization 的种子流。频率索引改变时，随机散射样本随之确定性改变；相同海况、相同种子、相同频率轴会给出相同统计散射结果。
+
+若关闭随机散射，模型仍计算 \(P_{\rm sca}\) 和能量审计量，但不把 \(\Psi_{\rm sca}\) 注入反射场。此时通信链路只接收相干镜面反射项。
+
+## 8. 通信链路解释
+
+海面模型只改变频域信道 \(H(f)\)。后续 MPSK 通信仍沿用同一信道消费方式：
+
+\[
+H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
+\]
+
+然后进行符号卷积、噪声注入、同步、均衡和判决。也就是说，`kirchhoff_spatial`、`pm_convolution` 与 `ssa1_geometry` 的差异体现在海面反射贡献 \(H_{\rm ref}(f)\)，而不是通信接收机结构。
+
+因此比较不同海面模型时，重点观察
+
+\[
+|H(f)|,\qquad |H_{\rm ref}(f)|,\qquad \arg H(f),
+\]
+
+以及在相同通信流程下得到的 BER/SER 趋势。
+
+## 9. 验证结论
+
+当前 reduced-grid 验证支持以下结论：
+
+1. 当 \(H_s=0\) 时，统计海面模型退化为平整自由海面反射：
+
+   \[
+   \sigma_\eta=0,\qquad
+   W_\eta=0,\qquad
+   R_{\rm coh}=R_0,\qquad
+   E_{\rm sca}=0.
+   \]
+
+2. `pm_convolution` 和 `ssa1_geometry` 在 \(H_s=0\) 时都与平整 `kirchhoff_spatial` 响应达到舍入误差级一致。
+
+3. 对非零海况，随机散射能量满足
+
+   \[
+   E_{\rm coh}+E_{\rm sca}\le E_{\rm inc}.
+   \]
+
+4. 当关闭随机散射时，模型仍保留散射功率和能量统计，但不会向通信链路注入随机散射场。
+
+5. `ssa1_debug_dense` 的小网格显式求和结果与 `ssa1_geometry` 的周期卷积结果一致，验证了一阶 Dirichlet 几何核的离散实现。
+
+6. 增大 \(H_s\) 时，相干镜面项下降；散射功率预算增强。增大 \(C_{\rm sca}\) 时，原始散射功率单调增强，但最终散射能量仍受能量约束限制。
+
+## 10. 当前限制
+
+当前模型仍有明确边界：
+
+- `pm_convolution` 是工程统计核，不是严格 SSA 几何散射核。
+- `ssa1_geometry` 只覆盖压力释放 Dirichlet 一阶 SSA 几何因子。
+- \(C_{\rm sca}\) 是工程归一化常数，不是实验标定的绝对散射截面。
+- 当前卷积采用周期边界；非周期 zero-padding 卷积尚未实现。
+- 任意阻抗边界、Neumann 边界和一般反射系数到 SSA 几何项的映射尚未实现。
+- NLSSA、高阶多次散射和实验标定散射截面尚未实现。
+
+因此，当前 `ssa_stat_kernel` 应理解为“PM 谱驱动的统计散射信道生成分支”，其中 `ssa1_geometry` 是一阶 Dirichlet SSA 几何核的实现；它还不是完整的海面声散射理论闭环。

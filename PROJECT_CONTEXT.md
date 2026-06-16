@@ -961,6 +961,96 @@ Generated smoke artifacts:
 Remaining issue:
 - The full 192-propagation C3.5 run was not executed in this update; only the redirected smoke test was run. Existing `sweep_monte_carlo_surface_channel_vertical_result.mat` still reflects the previously saved `mc_count=4` run until the full script is rerun.
 
+## 2026-06-11 Realization-Based Platform and C4 Wideband Bootstrap Update
+
+Changed files for this update:
+- `plot_c35_core_heatmaps_vertical.m`: reads the C3.5 result file and regenerates the five core heatmaps.
+- `monte_carlo_comm_surface_psk_representative_vertical.m`: runs communication Monte Carlo on weak/mid/strong representative sea states while keeping the D2 link fixed.
+- `build_surface_empirical_channel_model_vertical.m`: detects stored wideband `H_f` Monte Carlo samples in C3/C3.5 result files.
+- `sample_surface_empirical_channel_vertical.m`: adds `sample_mode='wideband_hf'` and `sample_mode='tap_level'`.
+- `validate_surface_empirical_channel_generator_vertical.m`: validates summary, wideband, and tap-level C4 modes.
+- `reports/realization_to_empirical_channel_generator_report.md`: records the stage summary and main results.
+
+Fixed communication policy:
+- D2 is treated as fixed for this phase.
+- `receive_window_mode='peak_sync'`.
+- `ebn0_reference='rx_clean'`.
+- No changes were made to `comm_main_vertical_psk.m`.
+
+C3.5 full rerun:
+- `sea_hs_target=[0.05,0.5,1.0]`.
+- `sea_wind_speed=[3,5,8,12]`.
+- `mc_count=16`, `seed_list=12345:12360`.
+- Total propagation count: `12 x 16 = 192`.
+- `run_summary_table` rows: `192`.
+- `condition_summary_table` rows: `12`.
+- Maximum `H_f-(H_direct_f+H_reflect_f)` invariant error: `1.551583845779546e-17`.
+- Maximum direct-path drift: `1.390486644391991e-17`.
+- All 12 conditions contain stored wideband `H_f.samples` with `Nf=16`.
+
+C3.5 core heatmaps generated:
+- `c35_core_abs_H_ref_mean_heatmap.png`
+- `c35_core_abs_H_ref_std_heatmap.png`
+- `c35_core_reflect_rms_delta_k_mean_heatmap.png`
+- `c35_core_reflect_high_k_fraction_mean_heatmap.png`
+- `c35_core_tap_rms_delay_mean_heatmap.png`
+
+C3.5 selected condition results:
+- weak sea, `Hs=0.05`, `wind=5`:
+  - `abs_H_ref_mean=0.029723`
+  - `abs_H_ref_std=0.019989`
+  - `reflect_rms_delta_k_mean=2.6774`
+  - `reflect_high_k_fraction_mean=0.13695`
+  - `tap_rms_delay_symbols_mean=31.644`
+- mid representative sea, `Hs=0.5`, `wind=8`:
+  - `abs_H_ref_mean=0.045544`
+  - `abs_H_ref_std=0.018677`
+  - `reflect_rms_delta_k_mean=4.9028`
+  - `reflect_high_k_fraction_mean=0.56899`
+  - `tap_rms_delay_symbols_mean=97.101`
+- strong representative sea, `Hs=1.0`, `wind=12`:
+  - `abs_H_ref_mean=0.054750`
+  - `abs_H_ref_std=0.021414`
+  - `reflect_rms_delta_k_mean=6.0107`
+  - `reflect_high_k_fraction_mean=0.74638`
+  - `tap_rms_delay_symbols_mean=109.35`
+
+Representative communication Monte Carlo:
+- Sea states:
+  - weak: `Hs=0.05`, `wind=5`
+  - mid: `Hs=0.5`, `wind=8`
+  - strong: `Hs=1.0`, `wind=12`
+- Scenarios: `direct_only`, `direct_plus_reflect`.
+- `mc_count=16`.
+- Total channel runs: `3 x 2 x 16 = 96`.
+- Maximum channel invariant error: `1.387778780781446e-17`.
+- Maximum direct-only reflected response: `0`.
+- Selected BER results:
+  - weak direct-plus-reflect: `BER_mean` at `[0,10,20] dB = [0.11606, 3.125e-05, 0]`
+  - mid direct-plus-reflect: `BER_mean` at `[0,10,20] dB = [0.17438, 0.045906, 0.037469]`
+  - strong direct-plus-reflect: `BER_mean` at `[0,10,20] dB = [0.15978, 0.018125, 0.00875]`
+- Mid and strong reflected cases retain residual high-Eb/N0 BER for some seeds under the current reduced-grid channel and MMSE receiver.
+
+C4 upgraded generator:
+- `summary` mode retains low-dimensional bootstrap behavior.
+- `wideband_hf` mode bootstraps stored `H_f(f)` samples from the matched C3.5 condition.
+- `tap_level` mode derives baseband/tap samples from bootstrapped `H_f(f)` without rerunning PE/WAPE.
+- C4 validation using the new C3.5 source:
+  - comparison rows: `18`
+  - output file size: `219191` bytes
+  - `H_f_sample_size=[16 50]`
+  - `idx_f_ref=8`
+  - `tap_count_mean=501.92`
+  - `tap_rms_delay_mean=40.0435`
+  - `tap_peak_fraction_mean=0.9857`
+  - tap metrics finite: true
+  - no PE/WAPE propagation run: true
+
+Stage conclusion:
+- The current platform is a realization-based PE/WAPE simulation and empirical Monte Carlo analysis pipeline.
+- The next stage should focus on empirical statistics-based channel generation from the C3.5 sample ensemble.
+- C4 remains an empirical bootstrap generator. It is not a T-matrix, SSA/NLSSA, physical scattering cross-section model, or closed-form statistical channel model.
+
 ## 2026-06-10 Communication Monte Carlo PSK Validation
 
 Changed files for this script:
@@ -1169,3 +1259,138 @@ Remaining D2 issues:
 - `peak_sync` is a deterministic dominant-tap synchronization rule; it is not a timing recovery loop.
 - `rx_clean` Eb/N0 is a receiver-side performance convention. It is useful for comparing channel distortion at controlled received SNR, but it no longer includes absolute path-loss penalty in the noise power.
 - The strong reflected channel can still have residual ISI/noise enhancement, so BER may remain nonzero at 20 dB for small `n_sym`/`mc_count` smoke tests.
+
+## 2026-06-15 SSA-Like Statistical Surface Kernel
+
+Changed files for this update:
+- `CARPE3D_vertical.m`: adds validated `paramsV.surface_ssa_random_scatter`, `paramsV.surface_ssa_scatter_scale`, `paramsV.surface_ssa_seed_offset`, `paramsV.surface_ssa_kernel_mode`, `paramsV.surface_ssa_geometry_source_id`, `paramsV.surface_ssa_kz_branch`, `paramsV.surface_ssa_conv_padding`, and allows `surface_boundary_model='ssa_stat_kernel'`.
+- `propWAPE_vertical.m`: passes the SSA-like random-scatter controls and frequency index into the surface boundary module; keeps the two-segment reflected PE path and `H_f = H_direct_f + H_reflect_f`.
+- `pm_surface_kirchhoff_module.m`: adds the SSA-like PM-spectrum statistical boundary branch.
+- `vertical_comm_guide.md` and `PROJECT_CONTEXT.md`: document formulas, interfaces, limits, and validation status.
+
+Implemented interface and formulas:
+- `ssa_stat_kernel` does not synthesize `xi(x,y)`. It scales the PM height spectrum directly so `sum(W_eta(:))*dkx*dky = sigma_eta^2`, where `sigma_eta = sea_hs_target/4`.
+- The coherent term is `R_coh = R0*exp(-0.5*(2*k0*phase_factor_eff)^2*sigma_eta^2)`.
+- The raw incoherent power uses the engineering kernel `P_sca_raw = surface_ssa_scatter_scale*abs(R0)^2*(2*k0*phase_factor_eff)^2*dkx*dky*circconv(W_eta,abs(Psi_inc_k).^2)`.
+- Energy limiting enforces `E_coh+E_sca <= E_inc`; after random scatter synthesis, the final combined reflected spectrum is also checked against `E_inc`.
+- The random scatter seed is `seed_ssa = sea_seed + surface_ssa_seed_offset + frequency_index - 1`, with default `surface_ssa_seed_offset=100000`.
+- The current engineering kernel is explicitly identified by `surface_ssa_kernel_mode='pm_convolution'`.
+- `ssa1_geometry` and `ssa1_debug_dense` implement the `SSA.md` first-order Dirichlet geometry factor `G_SSA1(K,K';f)=4*gamma(K,f)*gamma(K',f)`.
+
+Metadata:
+- `roughness_meta.ssa_stat_kernel_meta` records `sigma_eta_m`, `Hs_target_m`, `R_coh`, `P_sca` stats, `E_inc`, `E_coh`, `E_sca_raw`, `E_sca`, `E_ref`, energy scale factors, `seed_ssa`, formulas, normalization notes, and limitations.
+- The metadata now also records `kernel_mode`, `geometry_source_id`, `kz_branch`, `conv_padding`, `E_sca_limited`, `energy_limit_applied`, `energy_conservation_error`, and `propagating_bin_fraction`.
+- For this branch, `surface_elevation=[]`, `delta_phi=[]`, and `roughness_meta.surface_realization_generated=false`.
+
+Validation:
+- Reduced scalar defaults: `nx=ny=128`, `xw=yw=50`, `z_tx=100`, `z_rx=3`, `sigma_src_m=0.4`, `show_figures=false`, `save_mode='rx_only'`, `enforce_1_over_R=false`.
+- Default `kirchhoff_spatial`: invariant error `max(abs(H_f-H_direct_f-H_reflect_f)) = 0`.
+- `ssa_stat_kernel`, `sea_hs_target=0`: `R_coh=-1`, `E_sca=0`, and flat-model difference from `kirchhoff_spatial` was `7.76e-17`.
+- `ssa_stat_kernel`, `sea_hs_target=0.5`: `E_coh+E_sca = E_inc = 53831.9373`; same seed gave identical `H_f`, changed seed kept `H_direct_f` fixed and changed `H_reflect_f`.
+- `surface_ssa_random_scatter=false`: `P_sca.sum=53831.9373` remained available in metadata, while `E_sca=0` and no random scatter was added to `psi_ref`.
+- Direct-only with `ssa_stat_kernel`: `H_reflect_f=0` and the public channel fields remained present.
+- Reduced wideband PSK smoke: direct-only and direct-plus-reflect both consumed `H_f` and completed the baseband tap/equalizer flow.
+- Weak sea comparison with `sea_hs_target=0.05`: `kirchhoff_spatial` gave `|H|=0.074770323`, phase `-1.2009652`, BER `[0.11133 0 0]` at Eb/N0 `[0 10 20]`; `ssa_stat_kernel` gave `|H|=0.027797463`, phase `-1.7734442`, BER `[0.13086 0 0]`. The BER trend is consistent; pointwise channel equality is not expected.
+
+Limitations and remaining issues:
+- This is an SSA-like statistical kernel for validating the PM-spectrum-to-random-channel path. It is not a strict SSA/NLSSA scattering solver and does not include calibrated angular geometry factors or scattering cross sections.
+- `surface_ssa_scatter_scale` is an engineering normalization knob, not a physical calibration.
+- The old Kirchhoff realization models remain the default and should be used for legacy comparison unless the statistical branch is explicitly requested.
+
+## 2026-06-15 SSA Kernel Mode Interface and SSA1 Geometry
+
+Changed behavior:
+- `surface_ssa_kernel_mode='pm_convolution'` is the default and reproduces the current engineering PM-spectrum convolution baseline.
+- `surface_ssa_kernel_mode='ssa1_geometry'` implements the `SSA.md` first-order Dirichlet / pressure-release power geometry:
+  `G_SSA1(K,K';f)=4*gamma(K,f)*gamma(K',f)`.
+- The implemented FFT form is `A(K')=gamma(K',f)*abs(Psi_inc(K'))^2`, `B=circconv(W_eta,A)`, and `P_sca_raw(K)=4*C_norm*gamma(K,f)*B(K)*dkx*dky`, with `C_norm=surface_ssa_scatter_scale`.
+- `surface_ssa_kernel_mode='ssa1_debug_dense'` computes the same periodic sum explicitly on small grids for FFT-vs-dense validation.
+- `surface_ssa_kz_branch='downward_positive_real'` computes `kz(K)=sqrt(max(k0^2-|K|^2,0))`; non-propagating bins are excluded from the propagating fraction metadata but the baseline `pm_convolution` formula remains numerically unchanged.
+- `surface_ssa_conv_padding='periodic'` keeps the existing FFT circular convolution. `zero_padded` is accepted at the public config boundary but rejected by the kernel until aliasing-control implementation is added.
+
+Current formula status:
+- The first-order Dirichlet SSA geometry factor from `SSA.md` has been implemented.
+- No calibrated angular scattering cross section has been implemented.
+- No strict boundary-condition mapping from arbitrary `surface_reflect_coeff` to Dirichlet/Neumann/impedance SSA factors has been implemented; `ssa1_geometry` and `ssa1_debug_dense` require `surface_reflect_coeff=-1`.
+- The code must not be described as NLSSA, impedance-boundary SSA, or experimentally calibrated rough-surface scattering.
+
+Validation additions:
+- `validate_ssa_stat_kernel_vertical.m` checks that `pm_convolution` records the new metadata fields, `ssa1_geometry` degenerates correctly for `Hs=0`, and `ssa1_debug_dense` matches the FFT sum on a small grid through compact `P_sca` metadata.
+- Sweep and communication summary tables carry kernel-mode energy audit fields: `E_sca_limited`, `energy_conservation_error`, `energy_limit_applied`, and `propagating_bin_fraction`.
+- `sweep_ssa_stat_kernel_surface_channel_vertical.m` and `monte_carlo_comm_ssa_stat_kernel_psk_vertical.m` compare `kirchhoff_spatial`, `ssa_pm_convolution`, and `ssa1_geometry`.
+- `plot_ssa_stat_kernel_report_vertical.m` emits `ssa_kernel_mode_*` figures; dense-vs-FFT is available through the validation result rather than default wideband sweeps.
+
+Latest executed validation:
+- `validate_ssa_stat_kernel_vertical` completed successfully.
+- `Hs=0` flat degeneration:
+  - `pm_convolution` vs `kirchhoff_spatial`: max response difference `7.7579e-17`.
+  - `ssa1_geometry` vs `kirchhoff_spatial`: max response difference `7.7579e-17`.
+- `ssa1_geometry` energy audit: `energy_conservation_error=1.3516e-16`, below the `1e-12` validation tolerance.
+- `ssa1_debug_dense` vs FFT `ssa1_geometry`: compact `P_sca_raw` relative sum error `2.5247e-15`.
+- `sweep_ssa_stat_kernel_surface_channel_vertical` completed with `SSA_STAT_MC_COUNT=1`, `Hs=[0 0.05 0.2 0.5]`, and model labels `kirchhoff_spatial`, `ssa_pm_convolution`, `ssa1_geometry`.
+- In that sweep, both statistical kernels matched the `Hs=0` flat Kirchhoff response within `1.2533e-16`.
+- `monte_carlo_comm_ssa_stat_kernel_psk_vertical` completed with `SSA_STAT_COMM_MC_COUNT=1`; all three model labels propagated through the existing `H_f` communication path and produced BER/SER summaries.
+- `plot_ssa_stat_kernel_report_vertical` completed and regenerated `ssa_stat_kernel_report_*` plus `ssa_kernel_mode_*` report figures.
+
+## 2026-06-15 SSA Statistical Validation and Report Scripts
+
+Changed files for this validation/report update:
+- `validate_ssa_stat_kernel_vertical.m`: new reduced scalar validation script.
+- `sweep_ssa_stat_kernel_surface_channel_vertical.m`: new multi-Hs, multi-seed channel statistics script.
+- `monte_carlo_comm_ssa_stat_kernel_psk_vertical.m`: new reduced QPSK BER/SER statistics script using the existing `H_f` communication path.
+- `sweep_ssa_scatter_scale_sensitivity_vertical.m`: new reduced scalar sensitivity script for `surface_ssa_scatter_scale`.
+- `plot_ssa_stat_kernel_report_vertical.m`: new plot-only report script that reads saved `.mat` results.
+- `vertical_comm_guide.md` and `PROJECT_CONTEXT.md`: document run order, outputs, validation scope, and limitations.
+
+Validation scope:
+- Sea states: `sea_hs_target=[0 0.05 0.2 0.5]`, `sea_wind_speed=5`.
+- Surface models: `kirchhoff_spatial` and `ssa_stat_kernel`.
+- Channel sweep default seeds: `12345+(0:7)`, override with `SSA_STAT_MC_COUNT`.
+- Communication default seeds: `12345+(0:3)`, override with `SSA_STAT_COMM_MC_COUNT`.
+- Scatter-scale sweep default seeds: `12345+(0:3)`, override with `SSA_SCALE_SWEEP_MC_COUNT`.
+- Scatter-scale sweep defaults: `sea_hs_target=[0.05 0.2 0.5]`, `surface_ssa_scatter_scale=[0 0.25 1 4]`, kernels `ssa_pm_convolution` and `ssa1_geometry`.
+- Smoke-test condition limits: `SSA_STAT_SWEEP_MAX_CONDITIONS` and `SSA_STAT_COMM_MAX_CONDITIONS`.
+- Scale-sweep smoke-test limit: `SSA_SCALE_SWEEP_MAX_CONDITIONS`.
+- Reduced wideband channel defaults: `enable_wideband=true`, `f_band_hz=[4000 8000]`, `Nf_min=Nf_max=16`, `f_ref_hz=6000`, `nx=ny=128`, `show_figures=false`, `enforce_1_over_R=false`.
+
+Acceptance metrics checked or summarized:
+- `max(abs(H_f-H_direct_f-H_reflect_f)) <= 1e-10`.
+- `h_total == H_f(idx_f_ref)` and `h_reflect == H_reflect_f(idx_f_ref)` within roundoff.
+- `direct_only` keeps `H_reflect_f=0` and public channel fields present.
+- `Hs=0` gives `sigma_eta_m=0`, `R_coh=surface_reflect_coeff`, `P_sca.sum=0`, `E_sca=0`, and a flat-response match against `kirchhoff_spatial`.
+- `E_coh+E_sca <= E_inc + 1e-12*max(E_inc,1)` and `E_ref <= E_inc + 1e-12*max(E_inc,1)` for `ssa_stat_kernel` metadata.
+- `surface_ssa_random_scatter=false` leaves finite `P_sca` metadata but sets realized `E_sca=0`, so downstream `H_reflect_f` receives only the coherent term.
+- `surface_ssa_scatter_scale=0` gives zero raw scatter energy in both `pm_convolution` and `ssa1_geometry`.
+- `E_sca_raw/E_inc` should be nondecreasing as `surface_ssa_scatter_scale` increases for a fixed kernel, sea state, and seed.
+- Statistical summaries report mean/std of `|H(f)|`, `|H_reflect(f)|`, `angle(H(f_ref))`, `|h_total|`, `|h_reflect|`, `E_sca/E_inc`, `E_ref/E_inc`, and energy scaling.
+- BER/SER summaries compare qualitative trends with paired bit/noise seeds, not pointwise equality between physical models.
+
+Report outputs:
+- Channel result: `sweep_ssa_stat_kernel_surface_channel_vertical_result.mat`.
+- Communication result: `monte_carlo_comm_ssa_stat_kernel_psk_vertical_result.mat`.
+- Validation result: `validate_ssa_stat_kernel_vertical_result.mat`.
+- Scale-sensitivity result: `sweep_ssa_scatter_scale_sensitivity_vertical_result.mat`.
+- Figures:
+  - `ssa_stat_kernel_report_abs_H_f_mean_std.png`
+  - `ssa_stat_kernel_report_abs_H_reflect_f_mean_std.png`
+  - `ssa_stat_kernel_report_phase_H_f_ref_vs_Hs.png`
+  - `ssa_stat_kernel_report_reflect_energy_vs_Hs.png`
+  - `ssa_stat_kernel_report_Esca_Einc_vs_Hs.png`
+  - `ssa_stat_kernel_report_energy_scale_vs_Hs.png`
+  - `ssa_stat_kernel_report_abs_h_total_model_compare.png`
+  - `ssa_stat_kernel_report_abs_h_reflect_model_compare.png`
+  - `ssa_stat_kernel_report_BER_model_compare.png`
+  - `ssa_stat_kernel_report_SER_model_compare.png`
+  - `ssa_stat_kernel_report_Hs0_flat_check.png`
+  - `ssa_stat_kernel_report_metadata_energy_table.mat`
+
+Limitations:
+- These scripts are validation and reporting harnesses around the current implementation. They do not modify `comm_main_vertical_psk.m`, modem/noise/MMSE policy, WAPE marching, or `local_march_field`.
+- Full spatial fields, `psi_ref`, `P_sca`, and `W_eta` matrices are intentionally not saved in the statistical result files.
+- The current model remains an SSA-like engineering/statistical kernel. Strict SSA angular geometry factors and calibrated scattering cross sections remain future work.
+
+Latest scale-sensitivity smoke result:
+- `sweep_ssa_scatter_scale_sensitivity_vertical` completed with `SSA_SCALE_SWEEP_MC_COUNT=1`, `Hs=[0.05 0.2 0.5]`, and scales `[0 0.25 1 4]`.
+- For `Hs=0.05`, `E_sca_raw/E_inc` was `[0 0.39478 1.5791 6.3165]` for `ssa_pm_convolution` and `[0 0.09768 0.39072 1.5629]` for `ssa1_geometry`.
+- `energy_conservation_error_max=0` for every listed scale-sweep condition.
+- The sweep uses `surface_ssa_random_scatter=false`; therefore `E_sca/E_inc=0` in the realized reflected field, while `E_sca_limited/E_inc` records the limited scatter-energy budget for metadata analysis.

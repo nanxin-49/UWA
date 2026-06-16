@@ -62,6 +62,30 @@ end
 if ~isfield(pm_cfg, 'boundary_redistribution_debug') || isempty(pm_cfg.boundary_redistribution_debug)
     pm_cfg.boundary_redistribution_debug = false;
 end
+if ~isfield(pm_cfg, 'ssa_random_scatter') || isempty(pm_cfg.ssa_random_scatter)
+    pm_cfg.ssa_random_scatter = true;
+end
+if ~isfield(pm_cfg, 'ssa_scatter_scale') || isempty(pm_cfg.ssa_scatter_scale)
+    pm_cfg.ssa_scatter_scale = 1.0;
+end
+if ~isfield(pm_cfg, 'ssa_seed_offset') || isempty(pm_cfg.ssa_seed_offset)
+    pm_cfg.ssa_seed_offset = 100000;
+end
+if ~isfield(pm_cfg, 'ssa_kernel_mode') || isempty(pm_cfg.ssa_kernel_mode)
+    pm_cfg.ssa_kernel_mode = 'pm_convolution';
+end
+if ~isfield(pm_cfg, 'ssa_geometry_source_id') || isempty(pm_cfg.ssa_geometry_source_id)
+    pm_cfg.ssa_geometry_source_id = '';
+end
+if ~isfield(pm_cfg, 'ssa_kz_branch') || isempty(pm_cfg.ssa_kz_branch)
+    pm_cfg.ssa_kz_branch = 'downward_positive_real';
+end
+if ~isfield(pm_cfg, 'ssa_conv_padding') || isempty(pm_cfg.ssa_conv_padding)
+    pm_cfg.ssa_conv_padding = 'periodic';
+end
+if ~isfield(pm_cfg, 'frequency_index') || isempty(pm_cfg.frequency_index)
+    pm_cfg.frequency_index = 1;
+end
 
 if ~(isscalar(pm_cfg.reflect_coeff) && isnumeric(pm_cfg.reflect_coeff) && isfinite(pm_cfg.reflect_coeff))
     error('pm_cfg.reflect_coeff must be a finite scalar (real or complex).');
@@ -87,8 +111,8 @@ if ~(isnumeric(pm_cfg.rx_xyz) && numel(pm_cfg.rx_xyz) == 3 && all(isfinite(pm_cf
     error('pm_cfg.rx_xyz must be a finite [x,y,z].');
 end
 boundary_model = local_normalize_choice(pm_cfg.boundary_model, 'pm_cfg.boundary_model');
-if ~any(strcmp(boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain'}))
-    error('pm_cfg.boundary_model must be ''kirchhoff_spatial'' or ''kirchhoff_kdomain''.');
+if ~any(strcmp(boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain', 'ssa_stat_kernel'}))
+    error('pm_cfg.boundary_model must be ''kirchhoff_spatial'', ''kirchhoff_kdomain'', or ''ssa_stat_kernel''.');
 end
 if ~isscalar(pm_cfg.boundary_check_equivalence)
     error('pm_cfg.boundary_check_equivalence must be a scalar logical flag.');
@@ -119,15 +143,219 @@ if ~isscalar(pm_cfg.boundary_redistribution_debug)
     error('pm_cfg.boundary_redistribution_debug must be a scalar logical flag.');
 end
 boundary_redistribution_debug = logical(pm_cfg.boundary_redistribution_debug);
+if ~isscalar(pm_cfg.ssa_random_scatter)
+    error('pm_cfg.ssa_random_scatter must be a scalar logical flag.');
+end
+ssa_random_scatter = logical(pm_cfg.ssa_random_scatter);
+if ~(isscalar(pm_cfg.ssa_scatter_scale) && isnumeric(pm_cfg.ssa_scatter_scale) && ...
+     isfinite(pm_cfg.ssa_scatter_scale) && pm_cfg.ssa_scatter_scale >= 0)
+    error('pm_cfg.ssa_scatter_scale must be a nonnegative finite scalar.');
+end
+ssa_scatter_scale = pm_cfg.ssa_scatter_scale;
+ssa_seed_offset = local_force_int(pm_cfg.ssa_seed_offset, 'pm_cfg.ssa_seed_offset');
+if ssa_seed_offset < 0
+    error('pm_cfg.ssa_seed_offset must be nonnegative.');
+end
+ssa_kernel_mode = local_normalize_choice(pm_cfg.ssa_kernel_mode, 'pm_cfg.ssa_kernel_mode');
+if ~any(strcmp(ssa_kernel_mode, {'pm_convolution', 'ssa1_geometry', 'ssa1_debug_dense'}))
+    error('pm_cfg.ssa_kernel_mode must be ''pm_convolution'', ''ssa1_geometry'', or ''ssa1_debug_dense''.');
+end
+if isstring(pm_cfg.ssa_geometry_source_id)
+    pm_cfg.ssa_geometry_source_id = char(pm_cfg.ssa_geometry_source_id);
+end
+if ~ischar(pm_cfg.ssa_geometry_source_id)
+    error('pm_cfg.ssa_geometry_source_id must be a char vector or string scalar.');
+end
+ssa_geometry_source_id = pm_cfg.ssa_geometry_source_id;
+ssa_kz_branch = local_normalize_choice(pm_cfg.ssa_kz_branch, 'pm_cfg.ssa_kz_branch');
+if ~strcmp(ssa_kz_branch, 'downward_positive_real')
+    error('pm_cfg.ssa_kz_branch currently supports only ''downward_positive_real''.');
+end
+ssa_conv_padding = local_normalize_choice(pm_cfg.ssa_conv_padding, 'pm_cfg.ssa_conv_padding');
+if ~any(strcmp(ssa_conv_padding, {'periodic', 'zero_padded'}))
+    error('pm_cfg.ssa_conv_padding must be ''periodic'' or ''zero_padded''.');
+end
+frequency_index = local_force_int(pm_cfg.frequency_index, 'pm_cfg.frequency_index');
+if frequency_index < 1
+    error('pm_cfg.frequency_index must be positive.');
+end
 
 % -----------------------------
-% 1) PM rough surface generation
+% 1) PM spectrum and boundary phase geometry
 % -----------------------------
-U = pm_cfg.U;          % m/s
-g = 9.81;              % m/s^2
+pm_spectrum = local_pm_spectrum(KX, KY, xw, yw, pm_cfg.U);
+U = pm_spectrum.U;          % m/s
+g = pm_spectrum.g;          % m/s^2
+alpha_PM = pm_spectrum.alpha_PM;
+beta_PM = pm_spectrum.beta_PM;
+K = pm_spectrum.K;
+E1D = pm_spectrum.E1D;
+Phi2D = pm_spectrum.Phi2D;
+mask = pm_spectrum.mask;
+dkx = pm_spectrum.dkx;
+dky = pm_spectrum.dky;
+Hs_target = pm_cfg.Hs_target; % m
+if ~(isscalar(Hs_target) && isnumeric(Hs_target) && isfinite(Hs_target) && Hs_target >= 0)
+    error('pm_cfg.Hs_target must be a nonnegative finite scalar.');
+end
+k0 = 2*pi / lambda0;
+[X, Y] = meshgrid(x, y);
+phase_factor = local_surface_phase_factor( ...
+    phase_mode, X, Y, pm_cfg.tx_xyz, pm_cfg.rx_xyz, pm_cfg.z_surface, clip_pair);
+ssa_meta = local_disabled_ssa_stat_kernel_meta(Hs_target, ssa_seed_offset);
+
+% -----------------------------
+% 2) Surface boundary operator
+% -----------------------------
+surface_realization_generated = ~strcmp(boundary_model, 'ssa_stat_kernel');
+if surface_realization_generated
+    A = sqrt(Phi2D .* dkx .* dky);
+    rng(pm_cfg.seed, 'twister')
+    N = (randn(size(K)) + 1i*randn(size(K))) / sqrt(2);
+    Zk = A .* N;
+
+    eta_raw = real(ifft2(Zk));
+    eta_raw = eta_raw * numel(eta_raw); % compensate MATLAB ifft2 normalization
+
+    % Calibrate to realistic PM sea-state scale (~0.5 m significant wave height at U=5 m/s).
+    Hs_raw = 4 * std(eta_raw(:));
+    if Hs_raw > 0
+        scale_factor = Hs_target / Hs_raw;
+    else
+        scale_factor = 0;
+    end
+    surface_elevation = eta_raw * scale_factor;
+    Hs_scaled = 4 * std(surface_elevation(:));
+
+    delta_phi = 2 * k0 * surface_elevation .* phase_factor;
+    G_xy = pm_cfg.reflect_coeff .* exp(1i * delta_phi);
+    [coupling_diag, coupling_debug] = local_boundary_coupling_diagnostics( ...
+        G_xy, KX, KY, boundary_coupling_diagnostics, boundary_coupling_debug);
+    [psi_ref, boundary_meta] = local_apply_kirchhoff_boundary( ...
+        psi_inc, G_xy, boundary_model, boundary_check_equivalence, ...
+        boundary_debug, boundary_equivalence_tol);
+    [redistribution_diag, redistribution_debug] = local_boundary_redistribution_diagnostics( ...
+        psi_inc, psi_ref, pm_cfg.reflect_coeff .* psi_inc, KX, KY, ...
+        boundary_redistribution_diagnostics, boundary_redistribution_debug);
+else
+    surface_elevation = [];
+    delta_phi = [];
+    Hs_raw = NaN;
+    sigma_eta = Hs_target / 4;
+    spectral_variance = sum(Phi2D(:)) * dkx * dky;
+    if spectral_variance > 0 && sigma_eta > 0
+        scale_factor = sigma_eta / sqrt(spectral_variance);
+    else
+        scale_factor = 0;
+    end
+    Hs_scaled = 4 * sigma_eta;
+    W_eta = Phi2D * scale_factor^2;
+
+    seed_ssa = pm_cfg.seed + ssa_seed_offset + frequency_index - 1;
+    [psi_ref, boundary_meta, ssa_meta] = local_apply_ssa_stat_kernel( ...
+        psi_inc, W_eta, KX, KY, phase_factor, dkx, dky, k0, pm_cfg.reflect_coeff, ...
+        ssa_scatter_scale, ssa_random_scatter, seed_ssa, ssa_seed_offset, ...
+        Hs_target, sigma_eta, boundary_equivalence_tol, ssa_kernel_mode, ...
+        ssa_geometry_source_id, ssa_kz_branch, ssa_conv_padding);
+    coupling_diag = local_disabled_coupling_diagnostics();
+    coupling_debug = struct();
+    [redistribution_diag, redistribution_debug] = local_boundary_redistribution_diagnostics( ...
+        psi_inc, psi_ref, ssa_meta.R_coh .* psi_inc, KX, KY, ...
+        boundary_redistribution_diagnostics, boundary_redistribution_debug);
+end
+
+% -----------------------------
+% 3) Sanity-check visualization
+% -----------------------------
+if pm_cfg.show_figure
+    figure(15); clf
+    subplot(1,2,1)
+    if surface_realization_generated
+        surf(X, Y, surface_elevation, 'EdgeColor', 'none')
+        view(40, 35)
+        axis tight
+        xlabel('x (m)')
+        ylabel('y (m)')
+        zlabel('\xi(x,y) (m)')
+        title('PM rough sea surface elevation')
+    else
+        imagesc(fftshift(log10(max(W_eta, realmin))))
+        axis xy tight
+        xlabel('k_x index')
+        ylabel('k_y index')
+        title('log10 W_\eta(K_x,K_y), no surface realization')
+    end
+    colorbar
+
+    subplot(1,2,2)
+    imagesc(x, y, angle(psi_ref))
+    axis xy tight
+    xlabel('x (m)')
+    ylabel('y (m)')
+    title(sprintf('Phase of reflected field angle(\\psi_{ref}), mode=%s, boundary=%s', ...
+        phase_mode, boundary_model))
+    colorbar
+end
+
+E_from_Phi = zeros(size(K));
+E_from_Phi(mask) = Phi2D(mask) .* 2*pi .* K(mask);
+rel_err = abs(E_from_Phi(mask) - E1D(mask)) ./ max(abs(E1D(mask)), eps);
+
+meta = struct();
+meta.U = U;
+meta.g = g;
+meta.alpha_PM = alpha_PM;
+meta.beta_PM = beta_PM;
+meta.dkx = dkx;
+meta.dky = dky;
+meta.spectrum_definition = 'E1D(K)=alpha/(2K^3)exp(-beta g^2/(U^4 K^2)); Phi2D(Kx,Ky)=E1D(K)/(2*pi*K)';
+meta.E1D = local_field_stats(E1D(mask));
+meta.Phi2D = local_field_stats(Phi2D(mask));
+meta.phi2d_transform_error = struct( ...
+    'max_rel', max(rel_err(:), [], 'omitnan'), ...
+    'mean_rel', mean(rel_err(:), 'omitnan'));
+meta.Hs_target = Hs_target;
+meta.Hs_raw = Hs_raw;
+meta.Hs_scaled = Hs_scaled;
+meta.scale_factor = scale_factor;
+meta.seed = pm_cfg.seed;
+meta.reflection_coeff_used = pm_cfg.reflect_coeff;
+meta.surface_realization_generated = surface_realization_generated;
+meta.phase_mode_used = phase_mode;
+meta.phase_factor_stats = struct( ...
+    'min', min(phase_factor(:)), ...
+    'max', max(phase_factor(:)), ...
+    'mean', mean(phase_factor(:)));
+meta.oblique_clip_used = clip_pair;
+meta.show_figure = logical(pm_cfg.show_figure);
+meta.enabled = true;
+meta.boundary_model = boundary_meta.boundary_model;
+meta.boundary_operator_form = boundary_meta.boundary_operator_form;
+meta.boundary_dense_matrix_used = boundary_meta.boundary_dense_matrix_used;
+meta.boundary_fft_convention = boundary_meta.boundary_fft_convention;
+meta.boundary_equivalence_error = boundary_meta.boundary_equivalence_error;
+meta.boundary_coupling_diagnostics = coupling_diag;
+meta.boundary_coupling_debug = coupling_debug;
+meta.boundary_redistribution_diagnostics = redistribution_diag;
+meta.boundary_redistribution_debug = redistribution_debug;
+meta.boundary_debug_stats = boundary_meta.boundary_debug_stats;
+meta.ssa_stat_kernel_meta = ssa_meta;
+if surface_realization_generated
+    meta.W_eta = local_field_stats([]);
+else
+    meta.W_eta = local_field_stats(W_eta(mask));
+end
+
+end
+
+function spec = local_pm_spectrum(KX, KY, xw, yw, U)
+if ~(isscalar(U) && isnumeric(U) && isfinite(U) && U > 0)
+    error('pm_cfg.U must be a positive finite wind speed.');
+end
+
+g = 9.81;
 alpha_PM = 8.10e-3;
 beta_PM = 0.74;
-
 K = sqrt(KX.^2 + KY.^2);
 E1D = zeros(size(K));
 Phi2D = zeros(size(K));
@@ -138,40 +366,27 @@ E1D(mask) = (alpha_PM ./ (2 .* K_nonzero.^3)) .* ...
             exp(-beta_PM * (g^2) ./ (U^4 .* K_nonzero.^2));
 Phi2D(mask) = E1D(mask) ./ (2*pi*K_nonzero);
 
-dkx = 2*pi / xw;
-dky = 2*pi / yw;
-
-A = sqrt(Phi2D .* dkx .* dky);
-rng(pm_cfg.seed, 'twister')
-N = (randn(size(K)) + 1i*randn(size(K))) / sqrt(2);
-Zk = A .* N;
-
-eta_raw = real(ifft2(Zk));
-eta_raw = eta_raw * numel(eta_raw); % compensate MATLAB ifft2 normalization
-
-% Calibrate to realistic PM sea-state scale (~0.5 m significant wave height at U=5 m/s).
-Hs_target = pm_cfg.Hs_target; % m
-Hs_raw = 4 * std(eta_raw(:));
-if Hs_raw > 0
-    scale_factor = Hs_target / Hs_raw;
-else
-    scale_factor = 0;
+spec = struct( ...
+    'U', U, ...
+    'g', g, ...
+    'alpha_PM', alpha_PM, ...
+    'beta_PM', beta_PM, ...
+    'K', K, ...
+    'E1D', E1D, ...
+    'Phi2D', Phi2D, ...
+    'mask', mask, ...
+    'dkx', 2*pi / xw, ...
+    'dky', 2*pi / yw);
 end
-surface_elevation = eta_raw * scale_factor;
 
-% -----------------------------
-% 2) Kirchhoff phase distortion
-% -----------------------------
-k0 = 2*pi / lambda0;
-[X, Y] = meshgrid(x, y);
-
+function phase_factor = local_surface_phase_factor( ...
+    phase_mode, X, Y, tx_xyz, rx_xyz, z_surface, clip_pair)
 switch phase_mode
     case 'normal'
-        phase_factor = 2 * ones(size(surface_elevation));
+        phase_factor = 2 * ones(size(X));
     case 'oblique'
-        tx_xyz = pm_cfg.tx_xyz(:).';
-        rx_xyz = pm_cfg.rx_xyz(:).';
-        z_surface = pm_cfg.z_surface;
+        tx_xyz = tx_xyz(:).';
+        rx_xyz = rx_xyz(:).';
 
         dz_i = tx_xyz(3) - z_surface;
         dz_r = rx_xyz(3) - z_surface;
@@ -195,84 +410,409 @@ switch phase_mode
     otherwise
         error('Unsupported phase_mode: %s', phase_mode);
 end
-
-delta_phi = 2 * k0 * surface_elevation .* phase_factor;
-G_xy = pm_cfg.reflect_coeff .* exp(1i * delta_phi);
-[coupling_diag, coupling_debug] = local_boundary_coupling_diagnostics( ...
-    G_xy, KX, KY, boundary_coupling_diagnostics, boundary_coupling_debug);
-[psi_ref, boundary_meta] = local_apply_kirchhoff_boundary( ...
-    psi_inc, G_xy, boundary_model, boundary_check_equivalence, ...
-    boundary_debug, boundary_equivalence_tol);
-[redistribution_diag, redistribution_debug] = local_boundary_redistribution_diagnostics( ...
-    psi_inc, psi_ref, pm_cfg.reflect_coeff .* psi_inc, KX, KY, ...
-    boundary_redistribution_diagnostics, boundary_redistribution_debug);
-
-% -----------------------------
-% 3) Sanity-check visualization
-% -----------------------------
-if pm_cfg.show_figure
-    figure(15); clf
-    subplot(1,2,1)
-    surf(X, Y, surface_elevation, 'EdgeColor', 'none')
-    view(40, 35)
-    axis tight
-    xlabel('x (m)')
-    ylabel('y (m)')
-    zlabel('\xi(x,y) (m)')
-    title('PM rough sea surface elevation')
-    colorbar
-
-    subplot(1,2,2)
-    imagesc(x, y, angle(psi_ref))
-    axis xy tight
-    xlabel('x (m)')
-    ylabel('y (m)')
-    title(sprintf('Phase of reflected field angle(\\psi_{ref}), mode=%s', phase_mode))
-    colorbar
 end
 
-E_from_Phi = zeros(size(K));
-E_from_Phi(mask) = Phi2D(mask) .* 2*pi .* K(mask);
-rel_err = abs(E_from_Phi(mask) - E1D(mask)) ./ max(abs(E1D(mask)), eps);
+function [psi_ref_xy, boundary_meta, meta] = local_apply_ssa_stat_kernel( ...
+    psi_inc_xy, W_eta, KX, KY, phase_factor, dkx, dky, k0, R0, scatter_scale, ...
+    random_enabled, seed_ssa, seed_offset, Hs_target, sigma_eta, equivalence_tol, ...
+    kernel_mode, geometry_source_id, kz_branch, conv_padding)
 
-meta = struct();
-meta.U = U;
-meta.g = g;
-meta.alpha_PM = alpha_PM;
-meta.beta_PM = beta_PM;
-meta.dkx = dkx;
-meta.dky = dky;
-meta.spectrum_definition = 'E1D(K)=alpha/(2K^3)exp(-beta g^2/(U^4 K^2)); Phi2D(Kx,Ky)=E1D(K)/(2*pi*K)';
-meta.E1D = local_field_stats(E1D(mask));
-meta.Phi2D = local_field_stats(Phi2D(mask));
-meta.phi2d_transform_error = struct( ...
-    'max_rel', max(rel_err(:), [], 'omitnan'), ...
-    'mean_rel', mean(rel_err(:), 'omitnan'));
-meta.Hs_target = Hs_target;
-meta.Hs_raw = Hs_raw;
-meta.Hs_scaled = 4 * std(surface_elevation(:));
-meta.scale_factor = scale_factor;
-meta.seed = pm_cfg.seed;
-meta.reflection_coeff_used = pm_cfg.reflect_coeff;
-meta.phase_mode_used = phase_mode;
-meta.phase_factor_stats = struct( ...
-    'min', min(phase_factor(:)), ...
-    'max', max(phase_factor(:)), ...
-    'mean', mean(phase_factor(:)));
-meta.oblique_clip_used = clip_pair;
-meta.show_figure = logical(pm_cfg.show_figure);
-meta.enabled = true;
-meta.boundary_model = boundary_meta.boundary_model;
-meta.boundary_operator_form = boundary_meta.boundary_operator_form;
-meta.boundary_dense_matrix_used = boundary_meta.boundary_dense_matrix_used;
-meta.boundary_fft_convention = boundary_meta.boundary_fft_convention;
-meta.boundary_equivalence_error = boundary_meta.boundary_equivalence_error;
-meta.boundary_coupling_diagnostics = coupling_diag;
-meta.boundary_coupling_debug = coupling_debug;
-meta.boundary_redistribution_diagnostics = redistribution_diag;
-meta.boundary_redistribution_debug = redistribution_debug;
-meta.boundary_debug_stats = boundary_meta.boundary_debug_stats;
+boundary_meta = local_boundary_meta_base('ssa_stat_kernel', equivalence_tol);
+boundary_meta.boundary_operator_form = sprintf( ...
+    'ssa_stat_kernel:%s coherent scalar reflection plus statistical scatter power', kernel_mode);
 
+Psi_inc_k = fft2(psi_inc_xy);
+P_inc = abs(Psi_inc_k).^2;
+E_inc = sum(P_inc(:));
+[kz_grid, propagating_mask, propagating_bin_fraction] = local_compute_vertical_wavenumber( ...
+    KX, KY, k0, kz_branch);
+
+inc_weight = abs(psi_inc_xy).^2;
+if sum(inc_weight(:)) > 0
+    phase_factor_eff = sum(phase_factor(:) .* inc_weight(:)) / sum(inc_weight(:));
+else
+    phase_factor_eff = mean(phase_factor(:));
+end
+
+R_coh_raw = R0 .* exp(-0.5 * (2 * k0 * phase_factor_eff)^2 * sigma_eta^2);
+Psi_coh_k = R_coh_raw .* Psi_inc_k;
+E_coh_raw = sum(abs(Psi_coh_k(:)).^2);
+coherent_energy_scale_applied = 1;
+if E_inc > 0 && E_coh_raw > E_inc
+    coherent_energy_scale_applied = sqrt(E_inc / E_coh_raw);
+    Psi_coh_k = coherent_energy_scale_applied .* Psi_coh_k;
+end
+R_coh = coherent_energy_scale_applied .* R_coh_raw;
+E_coh = sum(abs(Psi_coh_k(:)).^2);
+
+[P_sca_raw, kernel_detail] = local_compute_ssa_scatter_power( ...
+    kernel_mode, W_eta, P_inc, KX, KY, kz_grid, propagating_mask, ...
+    dkx, dky, k0, R0, scatter_scale, phase_factor_eff, ...
+    geometry_source_id, conv_padding);
+E_sca_raw = sum(P_sca_raw(:));
+
+E_sca_limit = max(E_inc - E_coh, 0);
+if E_sca_raw > 0
+    energy_scale_applied = min(1, E_sca_limit / E_sca_raw);
+else
+    energy_scale_applied = 1;
+end
+P_sca = P_sca_raw .* energy_scale_applied;
+E_sca_limited = sum(P_sca(:));
+E_sca_target = E_sca_limited;
+
+Psi_sca_k = complex(zeros(size(Psi_inc_k)));
+seed_ssa_used = local_rng_seed(seed_ssa);
+random_realization_energy_scale_applied = 1;
+total_field_energy_scale_applied = 1;
+if random_enabled && E_sca_target > 0
+    rng(seed_ssa_used, 'twister')
+    z_rand = (randn(size(P_sca)) + 1i*randn(size(P_sca))) / sqrt(2);
+    Psi_sca_k = sqrt(P_sca) .* z_rand;
+
+    E_sca_realized = sum(abs(Psi_sca_k(:)).^2);
+    if E_sca_realized > E_sca_limit && E_sca_realized > 0
+        random_realization_energy_scale_applied = sqrt(E_sca_limit / E_sca_realized);
+        Psi_sca_k = random_realization_energy_scale_applied .* Psi_sca_k;
+    end
+
+    E_ref = sum(abs(Psi_coh_k(:) + Psi_sca_k(:)).^2);
+    if E_ref > E_inc && sum(abs(Psi_sca_k(:)).^2) > 0
+        total_field_energy_scale_applied = local_scatter_scale_for_total_energy( ...
+            Psi_coh_k, Psi_sca_k, E_inc);
+        Psi_sca_k = total_field_energy_scale_applied .* Psi_sca_k;
+    end
+end
+
+E_sca = sum(abs(Psi_sca_k(:)).^2);
+Psi_ref_k = Psi_coh_k + Psi_sca_k;
+psi_ref_xy = ifft2(Psi_ref_k);
+E_ref = sum(abs(Psi_ref_k(:)).^2);
+energy_conservation_error = max(E_ref - E_inc, 0) / max(E_inc, eps);
+energy_limit_applied = E_sca_raw > 0 && energy_scale_applied < 1;
+
+meta = struct( ...
+    'enabled', true, ...
+    'model', 'ssa_stat_kernel_v2_interface', ...
+    'surface_realization_generated', false, ...
+    'random_scatter_enabled', logical(random_enabled), ...
+    'kernel_mode', kernel_mode, ...
+    'geometry_source_id', geometry_source_id, ...
+    'kz_branch', kz_branch, ...
+    'conv_padding', conv_padding, ...
+    'kz_stats', local_real_stats(kz_grid), ...
+    'propagating_bin_fraction', propagating_bin_fraction, ...
+    'formula_source', local_get_detail_field(kernel_detail, 'formula_source', 'not_applicable'), ...
+    'boundary_condition', local_get_detail_field(kernel_detail, 'boundary_condition', 'not_applicable'), ...
+    'evanescent_included', local_get_detail_field(kernel_detail, 'evanescent_included', false), ...
+    'sigma_eta_m', sigma_eta, ...
+    'Hs_target_m', Hs_target, ...
+    'R_coh', R_coh, ...
+    'R_coh_raw', R_coh_raw, ...
+    'phase_factor_eff', phase_factor_eff, ...
+    'scatter_scale', scatter_scale, ...
+    'P_sca', local_power_stats(P_sca), ...
+    'P_sca_raw', local_power_stats(P_sca_raw), ...
+    'E_inc', E_inc, ...
+    'E_coh_raw', E_coh_raw, ...
+    'E_coh', E_coh, ...
+    'E_sca_raw', E_sca_raw, ...
+    'E_sca_limited', E_sca_limited, ...
+    'E_sca_target', E_sca_target, ...
+    'E_sca', E_sca, ...
+    'E_ref', E_ref, ...
+    'E_sca_limit', E_sca_limit, ...
+    'energy_scale_applied', energy_scale_applied, ...
+    'energy_limit_applied', energy_limit_applied, ...
+    'energy_conservation_error', energy_conservation_error, ...
+    'coherent_energy_scale_applied', coherent_energy_scale_applied, ...
+    'random_realization_energy_scale_applied', random_realization_energy_scale_applied, ...
+    'total_field_energy_scale_applied', total_field_energy_scale_applied, ...
+    'seed_ssa', seed_ssa_used, ...
+    'seed_ssa_requested', seed_ssa, ...
+    'seed_offset', seed_offset, ...
+    'kernel_detail', kernel_detail, ...
+    'kernel_formula', kernel_detail.kernel_formula, ...
+    'normalization_note', ['W_eta is scaled so sum(W_eta)*dkx*dky=sigma_eta^2; ', ...
+        'P_sca is energy-limited before random scatter synthesis; strict SSA modes require an external formula source.'], ...
+    'limitations', kernel_detail.limitations);
+end
+
+function [P_sca_raw, detail] = local_compute_ssa_scatter_power( ...
+    kernel_mode, W_eta, P_inc, KX, KY, kz_grid, propagating_mask, ...
+    dkx, dky, k0, R0, scatter_scale, phase_factor_eff, ...
+    geometry_source_id, conv_padding)
+
+switch kernel_mode
+    case 'pm_convolution'
+        if ~strcmp(conv_padding, 'periodic')
+            error('pm_surface_kirchhoff_module:SsaConvPaddingNotImplemented', ...
+                ['surface_ssa_conv_padding=''%s'' is not implemented for pm_convolution. ', ...
+                 'Use ''periodic'' until zero-padded aliasing control is added.'], conv_padding);
+        end
+        conv_power = real(ifft2(fft2(W_eta) .* fft2(P_inc)));
+        conv_power = max(conv_power, 0);
+        P_sca_raw = scatter_scale * abs(R0)^2 * (2 * k0 * phase_factor_eff)^2 * ...
+            dkx * dky * conv_power;
+        P_sca_raw = max(real(P_sca_raw), 0);
+        detail = struct( ...
+            'kernel_mode', kernel_mode, ...
+            'geometry_source_id', geometry_source_id, ...
+            'formula_source', 'not_applicable: engineering PM convolution baseline', ...
+            'boundary_condition', 'engineering scalar reflection coefficient', ...
+            'evanescent_included', false, ...
+            'conv_padding', conv_padding, ...
+            'uses_strict_geometry_factor', false, ...
+            'uses_dense_matrix', false, ...
+            'G_SSA1_formula', 'not_applicable', ...
+            'kernel_formula', ['pm_convolution baseline: ', ...
+                'P_sca_raw=scatter_scale*abs(R0)^2*(2*k0*phase_factor_eff)^2*dkx*dky*', ...
+                'circconv(W_eta,abs(Psi_inc_k).^2).'], ...
+            'limitations', ['Engineering PM-spectrum convolution baseline. ', ...
+                'No strict G_SSA(K,K'';f), angular calibration, or calibrated scattering cross section is implemented.']);
+    case 'ssa1_geometry'
+        if ~strcmp(conv_padding, 'periodic')
+            error('pm_surface_kirchhoff_module:SsaConvPaddingNotImplemented', ...
+                ['surface_ssa_conv_padding=''%s'' is not implemented for ssa1_geometry. ', ...
+                 'Use ''periodic'' until zero-padded aliasing control is added.'], conv_padding);
+        end
+        local_require_dirichlet_reflect_coeff(R0, kernel_mode);
+        G_note = local_compute_ssa1_geometry_factor(KX, KY, kz_grid, propagating_mask, ...
+            k0, R0, geometry_source_id);
+        A_inc = kz_grid .* P_inc;
+        A_inc(~propagating_mask) = 0;
+        conv_power = real(ifft2(fft2(W_eta) .* fft2(A_inc)));
+        conv_power = max(conv_power, 0);
+        P_sca_raw = 4 * scatter_scale * kz_grid .* conv_power * dkx * dky;
+        P_sca_raw(~propagating_mask) = 0;
+        P_sca_raw = max(real(P_sca_raw), 0);
+        detail = struct( ...
+            'kernel_mode', kernel_mode, ...
+            'geometry_source_id', geometry_source_id, ...
+            'formula_source', local_ssa1_formula_source(geometry_source_id), ...
+            'boundary_condition', 'pressure-release / Dirichlet', ...
+            'evanescent_included', false, ...
+            'conv_padding', conv_padding, ...
+            'uses_strict_geometry_factor', true, ...
+            'uses_dense_matrix', false, ...
+            'G_SSA1_formula', G_note.G_SSA1_formula, ...
+            'kernel_formula', ['ssa1_geometry: P_sca_raw(K)=4*C_norm*gamma(K)*', ...
+                'circconv(W_eta,gamma(Kprime)*abs(Psi_inc(Kprime))^2)*dkx*dky, ', ...
+                'with C_norm=surface_ssa_scatter_scale.'], ...
+            'limitations', ['First-order Dirichlet SSA / perturbation-limit geometry from SSA.md. ', ...
+                'No NLSSA, multiple scattering, impedance boundary, experimental calibration, or evanescent scattering is included.']);
+    case 'ssa1_debug_dense'
+        if ~strcmp(conv_padding, 'periodic')
+            error('pm_surface_kirchhoff_module:SsaConvPaddingNotImplemented', ...
+                ['surface_ssa_conv_padding=''%s'' is not implemented for ssa1_debug_dense. ', ...
+                 'Use ''periodic'' until zero-padded aliasing control is added.'], conv_padding);
+        end
+        [P_sca_raw, detail] = local_compute_scatter_power_dense( ...
+            W_eta, P_inc, KX, KY, kz_grid, propagating_mask, ...
+            dkx, dky, k0, R0, scatter_scale, geometry_source_id);
+    otherwise
+        error('Unsupported SSA kernel mode: %s', kernel_mode);
+end
+end
+
+function G = local_compute_ssa1_geometry_factor( ...
+    KX, KY, kz_grid, propagating_mask, k0, R0, geometry_source_id) %#ok<INUSD>
+gamma_valid = kz_grid(propagating_mask);
+if isempty(gamma_valid)
+    gamma_min = NaN;
+    gamma_max = NaN;
+else
+    gamma_min = min(gamma_valid);
+    gamma_max = max(gamma_valid);
+end
+G = struct( ...
+    'G_SSA1_formula', 'G_SSA1(K,Kprime;f)=4*gamma(Kprime,f)*gamma(K,f)', ...
+    'formula_source', local_ssa1_formula_source(geometry_source_id), ...
+    'propagating_bin_fraction', nnz(propagating_mask) / numel(propagating_mask), ...
+    'gamma_min', gamma_min, ...
+    'gamma_max', gamma_max);
+end
+
+function [P_sca_raw, detail] = local_compute_scatter_power_dense( ...
+    W_eta, P_inc, KX, KY, kz_grid, propagating_mask, ...
+    dkx, dky, k0, R0, scatter_scale, geometry_source_id) %#ok<INUSD>
+local_require_dirichlet_reflect_coeff(R0, 'ssa1_debug_dense');
+n_bin = numel(P_inc);
+if n_bin > 4096
+    error('pm_surface_kirchhoff_module:SsaDenseGridTooLarge', ...
+        'ssa1_debug_dense is limited to <=4096 spectral bins. Use nx=ny<=64 for dense validation.');
+end
+
+P_sca_raw = zeros(size(P_inc));
+[ny, nx] = size(P_inc);
+for out_idx = 1:n_bin
+    if ~propagating_mask(out_idx)
+        continue
+    end
+    [iy_out, ix_out] = ind2sub(size(P_inc), out_idx);
+    gamma_s = kz_grid(out_idx);
+    acc = 0;
+    for in_idx = 1:n_bin
+        if ~propagating_mask(in_idx)
+            continue
+        end
+        [iy_in, ix_in] = ind2sub(size(P_inc), in_idx);
+        qy_idx = mod(iy_out - iy_in, ny) + 1;
+        qx_idx = mod(ix_out - ix_in, nx) + 1;
+        gamma_i = kz_grid(in_idx);
+        acc = acc + W_eta(qy_idx, qx_idx) * gamma_i * P_inc(in_idx);
+    end
+    P_sca_raw(out_idx) = 4 * scatter_scale * gamma_s * acc * dkx * dky;
+end
+P_sca_raw = max(real(P_sca_raw), 0);
+detail = struct( ...
+    'kernel_mode', 'ssa1_debug_dense', ...
+    'geometry_source_id', geometry_source_id, ...
+    'formula_source', local_ssa1_formula_source(geometry_source_id), ...
+    'boundary_condition', 'pressure-release / Dirichlet', ...
+    'evanescent_included', false, ...
+    'conv_padding', 'periodic_dense', ...
+    'uses_strict_geometry_factor', true, ...
+    'uses_dense_matrix', true, ...
+    'G_SSA1_formula', 'G_SSA1(K,Kprime;f)=4*gamma(Kprime,f)*gamma(K,f)', ...
+    'kernel_formula', ['ssa1_debug_dense: explicit periodic sum P_sca_raw(K)=', ...
+        '4*C_norm*gamma(K)*sum_Kprime W_eta(K-Kprime)*gamma(Kprime)*abs(Psi_inc(Kprime))^2*dkx*dky.'], ...
+    'limitations', ['Dense debug implementation for small grids only. ', ...
+        'No NLSSA, multiple scattering, impedance boundary, experimental calibration, or evanescent scattering is included.']);
+end
+
+function local_require_dirichlet_reflect_coeff(R0, kernel_mode)
+if abs(R0 + 1) > 1e-12
+    error('pm_surface_kirchhoff_module:SsaDirichletReflectCoeffRequired', ...
+        ['surface_ssa_kernel_mode=''%s'' uses the pressure-release / Dirichlet ', ...
+         'SSA1 geometry from SSA.md and currently requires surface_reflect_coeff=-1.'], ...
+        kernel_mode);
+end
+end
+
+function value = local_get_detail_field(detail, field_name, default_value)
+if isfield(detail, field_name)
+    value = detail.(field_name);
+else
+    value = default_value;
+end
+end
+
+function source = local_ssa1_formula_source(geometry_source_id)
+if nargin < 1 || isempty(geometry_source_id)
+    source = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+        'Dirichlet SSA first-order / perturbation-limit geometry'];
+else
+    source = geometry_source_id;
+end
+end
+
+function [kz_grid, propagating_mask, propagating_bin_fraction] = local_compute_vertical_wavenumber( ...
+    KX, KY, k0, kz_branch)
+if ~strcmp(kz_branch, 'downward_positive_real')
+    error('Unsupported SSA kz branch: %s', kz_branch);
+end
+Kmag2 = KX.^2 + KY.^2;
+propagating_mask = Kmag2 <= k0^2;
+kz_grid = zeros(size(KX));
+kz_grid(propagating_mask) = sqrt(max(k0^2 - Kmag2(propagating_mask), 0));
+propagating_bin_fraction = nnz(propagating_mask) / numel(propagating_mask);
+end
+
+function scale = local_scatter_scale_for_total_energy(Psi_coh_k, Psi_sca_k, E_limit)
+a = sum(abs(Psi_sca_k(:)).^2);
+if a <= 0
+    scale = 0;
+    return
+end
+b = 2 * real(sum(conj(Psi_coh_k(:)) .* Psi_sca_k(:)));
+c = sum(abs(Psi_coh_k(:)).^2) - E_limit;
+disc = max(b^2 - 4*a*c, 0);
+roots_scale = [(-b - sqrt(disc)) / (2*a), (-b + sqrt(disc)) / (2*a)];
+valid = roots_scale(isfinite(roots_scale) & roots_scale >= 0 & roots_scale <= 1);
+if isempty(valid)
+    scale = 0;
+else
+    scale = max(valid);
+end
+end
+
+function seed = local_rng_seed(seed_requested)
+seed = mod(round(seed_requested), 2^32);
+end
+
+function meta = local_disabled_ssa_stat_kernel_meta(Hs_target, seed_offset)
+meta = struct( ...
+    'enabled', false, ...
+    'model', 'off', ...
+    'surface_realization_generated', false, ...
+    'random_scatter_enabled', false, ...
+    'kernel_mode', 'not_executed', ...
+    'geometry_source_id', '', ...
+    'kz_branch', 'not_executed', ...
+    'conv_padding', 'not_executed', ...
+    'kz_stats', local_real_stats([]), ...
+    'propagating_bin_fraction', NaN, ...
+    'formula_source', 'not_executed', ...
+    'boundary_condition', 'not_executed', ...
+    'evanescent_included', false, ...
+    'sigma_eta_m', NaN, ...
+    'Hs_target_m', Hs_target, ...
+    'R_coh', complex(NaN, NaN), ...
+    'P_sca', local_power_stats([]), ...
+    'E_inc', NaN, ...
+    'E_coh', NaN, ...
+    'E_sca_raw', NaN, ...
+    'E_sca_limited', NaN, ...
+    'E_sca', NaN, ...
+    'E_ref', NaN, ...
+    'energy_scale_applied', NaN, ...
+    'energy_limit_applied', false, ...
+    'energy_conservation_error', NaN, ...
+    'seed_ssa', NaN, ...
+    'seed_offset', seed_offset, ...
+    'kernel_detail', struct(), ...
+    'kernel_formula', 'not_executed', ...
+    'limitations', 'not_executed');
+end
+
+function stats = local_power_stats(P)
+if isempty(P)
+    stats = struct('min', NaN, 'max', NaN, 'mean', NaN, 'std', NaN, 'sum', NaN, 'finite_count', 0);
+    return
+end
+valid = isfinite(P(:));
+if ~any(valid)
+    stats = struct('min', NaN, 'max', NaN, 'mean', NaN, 'std', NaN, 'sum', NaN, 'finite_count', 0);
+    return
+end
+v = P(valid);
+stats = struct( ...
+    'min', min(v), ...
+    'max', max(v), ...
+    'mean', mean(v), ...
+    'std', std(v), ...
+    'sum', sum(v), ...
+    'finite_count', nnz(valid));
+end
+
+function stats = local_real_stats(x)
+if isempty(x)
+    stats = struct('min', NaN, 'max', NaN, 'mean', NaN, 'std', NaN, 'finite_count', 0);
+    return
+end
+valid = isfinite(x(:));
+if ~any(valid)
+    stats = struct('min', NaN, 'max', NaN, 'mean', NaN, 'std', NaN, 'finite_count', 0);
+    return
+end
+v = real(x(valid));
+stats = struct( ...
+    'min', min(v), ...
+    'max', max(v), ...
+    'mean', mean(v), ...
+    'std', std(v), ...
+    'finite_count', nnz(valid));
 end
 
 function [diag, debug] = local_boundary_redistribution_diagnostics( ...
@@ -304,7 +844,7 @@ centroid_shift_ky = ref_stats.centroid_ky_rad_per_m - inc_stats.centroid_ky_rad_
 
 diag = struct( ...
     'enabled', true, ...
-    'diagnostic_target', 'incident and reflected Kirchhoff boundary spectra', ...
+    'diagnostic_target', 'incident and reflected boundary spectra', ...
     'spectrum_quantity', 'P_k = abs(fft2(psi_xy)).^2', ...
     'incident_total_energy', inc_stats.total_energy, ...
     'incident_centroid_kx_rad_per_m', inc_stats.centroid_kx_rad_per_m, ...
@@ -328,9 +868,9 @@ diag = struct( ...
     'rough_vs_flat_rms_delta_k_increase_rad_per_m', ref_stats.rms_delta_k_rad_per_m - flat_stats.rms_delta_k_rad_per_m, ...
     'rough_vs_flat_energy_radius_90_increase_rad_per_m', ref_stats.energy_radius_90_rad_per_m - flat_stats.energy_radius_90_rad_per_m, ...
     'rough_vs_flat_high_k_fraction_increase', reflect_high_k_fraction - flat_high_k_fraction, ...
-    'interpretation', ['Compares the current incident angular spectrum with the Kirchhoff-reflected spectrum. ', ...
+    'interpretation', ['Compares the current incident angular spectrum with the boundary-reflected spectrum. ', ...
         'Larger reflected rms_delta_k, centroid shift, and high-k fraction indicate stronger spectrum redistribution for this incident field.'], ...
-    'limitations', ['Diagnostic only: these are incident-weighted spectrum moments under the Kirchhoff phase screen, ', ...
+    'limitations', ['Diagnostic only: these are incident-weighted spectrum moments under the selected boundary operator, ', ...
         'not T-matrix entries, SSA/NLSSA terms, scattering cross sections, or statistical channel generation.']);
 
 if debug_enabled
@@ -365,7 +905,7 @@ end
 function diag = local_disabled_redistribution_diagnostics()
 diag = struct( ...
     'enabled', false, ...
-    'diagnostic_target', 'incident and reflected Kirchhoff boundary spectra', ...
+    'diagnostic_target', 'incident and reflected boundary spectra', ...
     'spectrum_quantity', 'P_k = abs(fft2(psi_xy)).^2', ...
     'incident_total_energy', NaN, ...
     'incident_centroid_kx_rad_per_m', NaN, ...
@@ -662,6 +1202,16 @@ if ~ischar(v)
     error('%s must be a string or char.', name);
 end
 out = lower(v);
+end
+
+function out = local_force_int(v, name)
+if ~isscalar(v) || ~isfinite(v)
+    error('%s must be a finite scalar.', name);
+end
+out = round(v);
+if abs(out - v) > 1e-9
+    error('%s must be an integer.', name);
+end
 end
 
 function stats = local_field_stats(v)

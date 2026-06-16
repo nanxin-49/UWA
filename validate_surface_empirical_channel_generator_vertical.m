@@ -34,6 +34,7 @@ metric_names = { ...
 
 comparison_rows = struct([]);
 sample_sets = struct([]);
+mode_validation = struct([]);
 for ii = 1:numel(condition_positions)
     condition = model.conditions(condition_positions(ii));
     query = struct( ...
@@ -54,6 +55,10 @@ for ii = 1:numel(condition_positions)
     sample_set.sample_meta = sample_meta;
     sample_set.generated_sample_table = generated_samples.sample_table;
     sample_sets = local_append_struct(sample_sets, sample_set);
+
+    if ii == 1
+        mode_validation = local_validate_wideband_modes(model, query, min(n_fast_samples, 50));
+    end
 end
 
 comparison_table = struct2table(comparison_rows);
@@ -66,6 +71,7 @@ validation_meta.metric_names = metric_names;
 validation_meta.no_pe_wape_propagation_run = true;
 validation_meta.full_channel_structs_saved = false;
 validation_meta.large_spectral_arrays_saved = false;
+validation_meta.wideband_mode_checked = ~isempty(mode_validation);
 
 disp(model.condition_table)
 disp(comparison_table(:, {'condition_index', 'sea_hs_target', 'sea_wind_speed', ...
@@ -75,11 +81,11 @@ disp(comparison_table(:, {'condition_index', 'sea_hs_target', 'sea_wind_speed', 
 local_plot_selected_histograms(model, sample_sets, metric_names, figure_prefix);
 
 save(output_file, 'result_file', 'model', 'comparison_table', ...
-    'validation_meta', 'sample_sets');
+    'validation_meta', 'sample_sets', 'mode_validation');
 file_info = dir(output_file);
 validation_meta.output_file_size_bytes = file_info.bytes;
 save(output_file, 'result_file', 'model', 'comparison_table', ...
-    'validation_meta', 'sample_sets');
+    'validation_meta', 'sample_sets', 'mode_validation');
 
 fprintf('C4 empirical generator validation saved %s (%d bytes).\n', ...
     output_file, validation_meta.output_file_size_bytes);
@@ -139,6 +145,36 @@ row.generated_q50 = generated_stats.quantiles_5_25_50_75_95(3);
 row.generated_q75 = generated_stats.quantiles_5_25_50_75_95(4);
 row.generated_q95 = generated_stats.quantiles_5_25_50_75_95(5);
 row.abs_q50_diff = abs(row.generated_q50 - row.source_q50);
+end
+
+function mode_validation = local_validate_wideband_modes(model, query, n_samples)
+mode_validation = struct();
+if ~isfield(model, 'supports_wideband_hf') || ~model.supports_wideband_hf
+    mode_validation.available = false;
+    mode_validation.reason = 'model_has_no_wideband_hf_samples';
+    return
+end
+
+[wideband_samples, wideband_meta] = sample_surface_empirical_channel_vertical( ...
+    model, query, n_samples, 61001, 'wideband_hf');
+[tap_samples, tap_meta] = sample_surface_empirical_channel_vertical( ...
+    model, query, n_samples, 61002, 'tap_level');
+
+mode_validation.available = true;
+mode_validation.wideband_sample_mode = wideband_meta.sample_mode;
+mode_validation.tap_sample_mode = tap_meta.sample_mode;
+mode_validation.n_samples = n_samples;
+mode_validation.n_freq = numel(wideband_samples.f_axis);
+mode_validation.H_f_sample_size = size(wideband_samples.H_f_samples);
+mode_validation.idx_f_ref = wideband_samples.idx_f_ref;
+mode_validation.tap_count_mean = mean(tap_samples.tap_level_tap_count, 'omitnan');
+mode_validation.tap_rms_delay_mean = mean(tap_samples.tap_level_rms_delay_symbols, 'omitnan');
+mode_validation.tap_peak_fraction_mean = mean(tap_samples.tap_level_peak_fraction, 'omitnan');
+mode_validation.tap_metrics_all_finite = all(isfinite(tap_samples.tap_level_tap_count)) && ...
+    all(isfinite(tap_samples.tap_level_rms_delay_symbols)) && ...
+    all(isfinite(tap_samples.tap_level_peak_fraction));
+mode_validation.no_pe_wape_propagation_run = wideband_meta.no_pe_wape_propagation_run && ...
+    tap_meta.no_pe_wape_propagation_run;
 end
 
 function stats = local_distribution_stats(x)

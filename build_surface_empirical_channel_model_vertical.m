@@ -16,8 +16,8 @@ if ~exist(result_file, 'file')
 end
 
 S = load(result_file);
-[source_type, rows, condition_summary, base_params] = local_extract_source(S);
-conditions = local_build_conditions(rows, condition_summary, base_params);
+[source_type, rows, condition_summary, base_params, condition_results] = local_extract_source(S);
+conditions = local_build_conditions(rows, condition_summary, base_params, condition_results);
 
 model = struct();
 model.kind = 'surface_empirical_channel_model_v1';
@@ -32,6 +32,8 @@ model.limitations = ['Nearest-neighbor sea-state matching only; valid only withi
     'the scanned Monte Carlo parameter range; not a T matrix, SSA/NLSSA, ' ...
     'closed-form statistical channel model, or scattering cross-section model.'];
 model.sample_fields = local_sample_field_names();
+model.supports_wideband_hf = any([conditions.has_wideband_hf]);
+model.supports_tap_level = model.supports_wideband_hf;
 model.conditions = conditions;
 model.condition_table = local_condition_table(conditions);
 model.available_sea_hs_target = unique([conditions.sea_hs_target]).';
@@ -49,9 +51,10 @@ else
 end
 end
 
-function [source_type, rows, condition_summary, base_params] = local_extract_source(S)
+function [source_type, rows, condition_summary, base_params, condition_results] = local_extract_source(S)
 condition_summary = table();
 base_params = struct();
+condition_results = struct([]);
 if isfield(S, 'base_params')
     base_params = S.base_params;
 elseif isfield(S, 'params_base')
@@ -64,10 +67,16 @@ if isfield(S, 'run_summary_table')
     if isfield(S, 'condition_summary_table')
         condition_summary = S.condition_summary_table;
     end
+    if isfield(S, 'condition_results')
+        condition_results = S.condition_results;
+    end
 elseif isfield(S, 'summary_table')
     source_type = 'C3_fixed_sea_state';
     rows = S.summary_table;
     rows = local_add_fixed_condition_columns(rows, base_params);
+    if isfield(S, 'mc_stats')
+        condition_results = local_fixed_condition_result(S.mc_stats, base_params, rows);
+    end
 else
     error('build_surface_empirical_channel_model_vertical:UnsupportedFile', ...
         'Result file does not contain run_summary_table or summary_table.');
@@ -84,6 +93,21 @@ for ii = 1:numel(required)
 end
 end
 
+function condition_results = local_fixed_condition_result(mc_stats, base_params, rows)
+condition_results = struct();
+condition_results.condition_index = 1;
+condition_results.name = 'fixed_sea_state';
+condition_results.sea_hs_target = local_first_finite(rows.sea_hs_target);
+condition_results.sea_wind_speed = local_first_finite(rows.sea_wind_speed);
+condition_results.paramsV = base_params;
+condition_results.seed_list = local_optional_column(rows, 'seed', NaN(height(rows), 1));
+if isfield(mc_stats, 'H_f') && isfield(mc_stats.H_f, 'f_axis')
+    condition_results.f_axis = mc_stats.H_f.f_axis(:);
+    condition_results.idx_f_ref = mc_stats.H_f.idx_f_ref;
+end
+condition_results.mc_stats = mc_stats;
+end
+
 function rows = local_add_fixed_condition_columns(rows, base_params)
 n = height(rows);
 if ~ismember('condition_index', rows.Properties.VariableNames)
@@ -97,7 +121,7 @@ if ~ismember('sea_wind_speed', rows.Properties.VariableNames)
 end
 end
 
-function conditions = local_build_conditions(rows, condition_summary, base_params)
+function conditions = local_build_conditions(rows, condition_summary, base_params, condition_results)
 if ~ismember('condition_index', rows.Properties.VariableNames)
     rows.condition_index = ones(height(rows), 1);
 end
@@ -119,8 +143,59 @@ for ii = 1:numel(condition_ids)
     condition.mc_count = height(rows_i);
     condition.seed_list = local_optional_column(rows_i, 'seed', NaN(height(rows_i), 1));
     condition.samples = samples;
+    condition.wideband = local_extract_wideband_samples(condition_results, cid);
+    condition.has_wideband_hf = condition.wideband.available;
     condition.stats = local_sample_stats(samples);
     conditions = local_append_struct(conditions, condition);
+end
+end
+
+function wideband = local_extract_wideband_samples(condition_results, cid)
+wideband = struct( ...
+    'available', false, ...
+    'f_axis', [], ...
+    'idx_f_ref', NaN, ...
+    'H_f_samples', [], ...
+    'H_direct_f_samples', [], ...
+    'H_reflect_f_samples', []);
+if isempty(condition_results)
+    return
+end
+
+idx = [];
+for ii = 1:numel(condition_results)
+    if isfield(condition_results(ii), 'condition_index') && condition_results(ii).condition_index == cid
+        idx = ii;
+        break
+    end
+end
+if isempty(idx)
+    return
+end
+
+result = condition_results(idx);
+if ~isfield(result, 'mc_stats') || ~isfield(result.mc_stats, 'H_f') || ...
+        ~isfield(result.mc_stats.H_f, 'samples')
+    return
+end
+
+wideband.available = true;
+if isfield(result.mc_stats.H_f, 'f_axis')
+    wideband.f_axis = result.mc_stats.H_f.f_axis(:);
+elseif isfield(result, 'f_axis')
+    wideband.f_axis = result.f_axis(:);
+end
+if isfield(result.mc_stats.H_f, 'idx_f_ref')
+    wideband.idx_f_ref = result.mc_stats.H_f.idx_f_ref;
+elseif isfield(result, 'idx_f_ref')
+    wideband.idx_f_ref = result.idx_f_ref;
+end
+wideband.H_f_samples = result.mc_stats.H_f.samples;
+if isfield(result.mc_stats, 'H_direct_f') && isfield(result.mc_stats.H_direct_f, 'samples')
+    wideband.H_direct_f_samples = result.mc_stats.H_direct_f.samples;
+end
+if isfield(result.mc_stats, 'H_reflect_f') && isfield(result.mc_stats.H_reflect_f, 'samples')
+    wideband.H_reflect_f_samples = result.mc_stats.H_reflect_f.samples;
 end
 end
 
@@ -196,7 +271,8 @@ sea_hs_target = [conditions.sea_hs_target].';
 sea_wind_speed = [conditions.sea_wind_speed].';
 f_ref_hz = [conditions.f_ref_hz].';
 mc_count = [conditions.mc_count].';
-T = table(condition_index, sea_hs_target, sea_wind_speed, f_ref_hz, mc_count);
+has_wideband_hf = [conditions.has_wideband_hf].';
+T = table(condition_index, sea_hs_target, sea_wind_speed, f_ref_hz, mc_count, has_wideband_hf);
 end
 
 function f_ref_hz = local_condition_f_ref(cid, condition_summary, base_params)

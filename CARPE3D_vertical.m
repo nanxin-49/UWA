@@ -141,6 +141,13 @@ defaults = struct( ...
     'surface_boundary_coupling_debug', false, ...
     'surface_boundary_redistribution_diagnostics', false, ...
     'surface_boundary_redistribution_debug', false, ...
+    'surface_ssa_random_scatter', true, ...
+    'surface_ssa_scatter_scale', 1.0, ...
+    'surface_ssa_seed_offset', 100000, ...
+    'surface_ssa_kernel_mode', 'pm_convolution', ...
+    'surface_ssa_geometry_source_id', '', ...
+    'surface_ssa_kz_branch', 'downward_positive_real', ...
+    'surface_ssa_conv_padding', 'periodic', ...
     'enable_bubbles', false, ...
     'bubble_model', 'off', ...
     'bubble_spatial_mode', 'none', ...
@@ -327,8 +334,8 @@ if cfg.surface_oblique_clip(1) < 0 || cfg.surface_oblique_clip(2) > 1
     error('surface_oblique_clip must satisfy 0 <= min <= max <= 1.');
 end
 cfg.surface_boundary_model = local_normalize_choice(cfg.surface_boundary_model, 'surface_boundary_model');
-if ~any(strcmp(cfg.surface_boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain'}))
-    error('surface_boundary_model must be ''kirchhoff_spatial'' or ''kirchhoff_kdomain''.');
+if ~any(strcmp(cfg.surface_boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain', 'ssa_stat_kernel'}))
+    error('surface_boundary_model must be ''kirchhoff_spatial'', ''kirchhoff_kdomain'', or ''ssa_stat_kernel''.');
 end
 if ~isscalar(cfg.surface_boundary_check_equivalence)
     error('surface_boundary_check_equivalence must be a scalar logical flag.');
@@ -358,6 +365,33 @@ if ~isscalar(cfg.surface_boundary_redistribution_debug)
     error('surface_boundary_redistribution_debug must be a scalar logical flag.');
 end
 cfg.surface_boundary_redistribution_debug = logical(cfg.surface_boundary_redistribution_debug);
+if ~isscalar(cfg.surface_ssa_random_scatter)
+    error('surface_ssa_random_scatter must be a scalar logical flag.');
+end
+cfg.surface_ssa_random_scatter = logical(cfg.surface_ssa_random_scatter);
+local_require_nonnegative_scalar(cfg.surface_ssa_scatter_scale, 'surface_ssa_scatter_scale');
+cfg.surface_ssa_seed_offset = local_force_int(cfg.surface_ssa_seed_offset, 'surface_ssa_seed_offset');
+if cfg.surface_ssa_seed_offset < 0
+    error('surface_ssa_seed_offset must be nonnegative.');
+end
+cfg.surface_ssa_kernel_mode = local_normalize_choice(cfg.surface_ssa_kernel_mode, 'surface_ssa_kernel_mode');
+if ~any(strcmp(cfg.surface_ssa_kernel_mode, {'pm_convolution', 'ssa1_geometry', 'ssa1_debug_dense'}))
+    error('surface_ssa_kernel_mode must be ''pm_convolution'', ''ssa1_geometry'', or ''ssa1_debug_dense''.');
+end
+if isstring(cfg.surface_ssa_geometry_source_id)
+    cfg.surface_ssa_geometry_source_id = char(cfg.surface_ssa_geometry_source_id);
+end
+if ~ischar(cfg.surface_ssa_geometry_source_id)
+    error('surface_ssa_geometry_source_id must be a char vector or string scalar.');
+end
+cfg.surface_ssa_kz_branch = local_normalize_choice(cfg.surface_ssa_kz_branch, 'surface_ssa_kz_branch');
+if ~strcmp(cfg.surface_ssa_kz_branch, 'downward_positive_real')
+    error('surface_ssa_kz_branch currently supports only ''downward_positive_real''.');
+end
+cfg.surface_ssa_conv_padding = local_normalize_choice(cfg.surface_ssa_conv_padding, 'surface_ssa_conv_padding');
+if ~any(strcmp(cfg.surface_ssa_conv_padding, {'periodic', 'zero_padded'}))
+    error('surface_ssa_conv_padding must be ''periodic'' or ''zero_padded''.');
+end
 
 cfg = local_validate_bubble_config(cfg);
 
