@@ -261,6 +261,8 @@ row.ssa_surface_realization_generated = logical(ssa.surface_realization_generate
 row.ssa_random_scatter_enabled = logical(ssa.random_scatter_enabled);
 row.ssa_kernel_mode = string(ssa.kernel_mode);
 row.ssa_geometry_source_id = string(ssa.geometry_source_id);
+row.ssa_conv_padding = string(ssa.conv_padding);
+row.ssa_conv_operator = string(ssa.conv_operator);
 row.sigma_eta_m = ssa.sigma_eta_m;
 row.Hs_target_m = ssa.Hs_target_m;
 row.R_coh_abs = abs(ssa.R_coh);
@@ -278,6 +280,10 @@ row.energy_scale_applied = ssa.energy_scale_applied;
 row.energy_limit_applied = local_get_field_or_nan(ssa, 'energy_limit_applied');
 row.energy_conservation_error = local_get_field_or_nan(ssa, 'energy_conservation_error');
 row.propagating_bin_fraction = local_get_field_or_nan(ssa, 'propagating_bin_fraction');
+row.incident_rms_delta_k_rad_per_m = local_nested_field_or_nan(ssa, {'incident_spectrum_stats', 'rms_delta_k_rad_per_m'});
+row.scatter_rms_delta_k_rad_per_m = local_nested_field_or_nan(ssa, {'scatter_power_spectrum_stats', 'rms_delta_k_rad_per_m'});
+row.reflected_rms_delta_k_rad_per_m = local_nested_field_or_nan(ssa, {'reflected_spectrum_stats', 'rms_delta_k_rad_per_m'});
+row.scatter_energy_radius_90_rad_per_m = local_nested_field_or_nan(ssa, {'scatter_power_spectrum_stats', 'energy_radius_90_rad_per_m'});
 row.seed_ssa = ssa.seed_ssa;
 end
 
@@ -316,6 +322,10 @@ row.R_coh_abs_mean = local_nanmean([rows.R_coh_abs]);
 row.R_coh_abs_std = local_nanstd([rows.R_coh_abs]);
 row.P_sca_sum_mean = local_nanmean([rows.P_sca_sum]);
 row.P_sca_sum_std = local_nanstd([rows.P_sca_sum]);
+row.incident_rms_delta_k_mean = local_nanmean([rows.incident_rms_delta_k_rad_per_m]);
+row.scatter_rms_delta_k_mean = local_nanmean([rows.scatter_rms_delta_k_rad_per_m]);
+row.reflected_rms_delta_k_mean = local_nanmean([rows.reflected_rms_delta_k_rad_per_m]);
+row.scatter_energy_radius_90_mean = local_nanmean([rows.scatter_energy_radius_90_rad_per_m]);
 row.max_invariant_error = max([rows.invariant_error]);
 row.max_h_total_ref_consistency_error = max([rows.h_total_ref_consistency_error]);
 row.max_h_reflect_ref_consistency_error = max([rows.h_reflect_ref_consistency_error]);
@@ -399,6 +409,21 @@ function out = local_get_field_or_nan(s, field_name)
 if isfield(s, field_name)
     out = s.(field_name);
 else
+    out = NaN;
+end
+end
+
+function out = local_nested_field_or_nan(s, field_path)
+out = s;
+for ii = 1:numel(field_path)
+    if isstruct(out) && isfield(out, field_path{ii})
+        out = out.(field_path{ii});
+    else
+        out = NaN;
+        return
+    end
+end
+if ~(isnumeric(out) && isscalar(out) && isfinite(out))
     out = NaN;
 end
 end

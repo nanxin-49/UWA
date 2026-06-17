@@ -4,6 +4,29 @@
 This file records the current code structure, execution paths, and data flow of the MATLAB vertical underwater acoustic channel and MPSK communication project.
 It is intended as a code-first reference for future maintenance and feature work.
 
+## Current Snapshot / 当前状态摘要
+
+- Project role: vertical underwater acoustic random-channel generation and communication validation platform.
+- Propagation structure: the channel is decomposed into direct propagation, sea-surface reflection/scattering, and the total frequency response:
+  - `H_f = H_direct_f + H_reflect_f`
+  - `h_total = H_f(idx_f_ref)`
+- Current communication policy after the D2 update:
+  - receive-window mode defaults to `peak_sync`, which aligns the effective equalizer taps to the dominant baseband tap and then keeps the first `N` samples from a full convolution;
+  - Eb/N0 noise reference defaults to `rx_clean`, i.e. receiver-side clean waveform power.
+- `same_legacy` / `same` receive slicing is retained only as a historical or diagnostic mode. It is not the current default communication flow.
+- Current sea-surface model set:
+  - `kirchhoff_spatial`: realization-based Kirchhoff phase-screen comparison path and default surface model;
+  - `ssa_stat_kernel` with `pm_convolution`: PM-spectrum engineering baseline statistical kernel;
+  - `ssa_stat_kernel` with `ssa1_geometry`: first-order pressure-release / Dirichlet geometry kernel.
+- Current SSA-like kernel status:
+  - PM-spectrum-driven statistical scattering is connected to the existing reflected PE path and communication `H_f` consumer;
+  - `periodic` and `zero_padded` convolution paths are implemented for `pm_convolution` and `ssa1_geometry`;
+  - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed.
+- Current physics boundary:
+  - this is not a complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering model;
+  - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a dedicated model;
+  - under fixed `sea_hs_target` normalization, changing wind speed mainly changes PM spectral shape, not a monotonic sea-state intensity by itself.
+
 ## Repository Role of Each Main MATLAB File
 
 ### `vertical_channel_model.m`
@@ -28,15 +51,17 @@ It is intended as a code-first reference for future maintenance and feature work
   - `h_total`
 
 ### `pm_surface_boundary_model.m`
-- Rough-surface reflection submodule.
-- Synthesizes a 2D Pierson-Moskowitz rough sea surface.
-- Applies Kirchhoff phase distortion to the incident surface field through a selectable boundary interface.
+- Rough-surface boundary and statistical scattering submodule.
+- Supports concrete Pierson-Moskowitz surface realizations for Kirchhoff-style spatial reflection.
+- Supports PM-spectrum statistical scattering through `ssa_stat_kernel`, including `pm_convolution`, `ssa1_geometry`, and small-grid `ssa1_debug_dense`.
+- Applies the selected surface boundary operator to the incident surface field.
 - Supports:
   - reflection coefficient control
   - normal-incidence phase mode
   - oblique phase mode using TX/RX geometry
   - spatial-domain and implicit wavenumber-domain Kirchhoff phase-screen boundary models
-- Returns reflected field and reflection metadata.
+  - SSA-like statistical scatter metadata and energy audit fields
+- Returns reflected field and reflection/scattering metadata.
 
 ### `explain_main_vertical.m`
 - Channel-only demonstration script.
@@ -175,14 +200,19 @@ It is intended as a code-first reference for future maintenance and feature work
   - truncates taps to a target cumulative energy ratio
 
 ### Step 5: Signal propagation at baseband
-- The transmitted symbol stream is convolved with `h_bb` using:
-  - `rx_clean = conv(tx_symbols, h_bb, 'same')`
+- The current default receive-window policy is `peak_sync`:
+  - find the dominant tap of `h_bb`;
+  - discard pre-peak taps for equalizer/channel application;
+  - compute a full convolution with the effective taps;
+  - keep the first `N` received samples as the symbol-aligned `rx_clean`.
+- `same_legacy` remains available only as a diagnostic/historical slicing mode.
 
 ### Step 6: Noise injection
 - `noise_inject_vertical` adds noise to `rx_clean`.
 - In the current demo:
   - model: `awgn`
   - control variable: `Eb/N0`
+  - default reference signal: `rx_clean`
   - SNR conversion uses `bits_per_symbol`
 
 ### Step 7: Equalization and decisions
@@ -461,8 +491,8 @@ It is intended as a code-first reference for future maintenance and feature work
   - `M=4`, `n_sym=2000`, `EbN0_dB_list=0:2:20`;
   - fixed `bits_seed=9000`;
   - deterministic AWGN seeds from `noise_seed_base=7000`.
-- It compares two receive slicing modes:
-  - `same`: current `conv(tx_symbols,h_bb,'same')` behavior used by the communication scripts.
+- It compares receive slicing modes:
+  - `same`: legacy `conv(tx_symbols,h_bb,'same')` diagnostic behavior retained for pre-D2 comparisons.
   - `causal_head`: diagnostic-only `conv(...,'full')` followed by the first `N` samples, appropriate for causal taps whose main energy starts at tap 1.
   - `peak_sync`: D2 policy that shifts the effective tap origin to the dominant tap before causal-head receive-window selection.
 - Outputs:
@@ -1133,7 +1163,7 @@ Validation results:
   - `BER(20 dB)=0`, `SER(20 dB)=0`
   - BER curve `[0.22275, 0.15075, 0.07425, 0.0365, 0.01, 0.002, 0, 0, 0, 0, 0]`
   - nonmonotonic counts: BER `0`, SER `0`
-- Known short multipath with current `conv(...,'same')` slicing:
+- Known short multipath with pre-D2 legacy `conv(...,'same')` slicing:
   - `tap_count=3`, `peak_index=1`, `peak_fraction=0.8733624454148472`
   - noiseless `BER=0.506`, `SER=0.758`
   - `BER(20 dB)=0.50575`, `SER(20 dB)=0.7575`
@@ -1143,15 +1173,15 @@ Validation results:
   - `BER(20 dB)=0`, `SER(20 dB)=0`
   - BER curve `[0.14575, 0.07975, 0.03475, 0.00675, 0.0005, 0, 0, 0, 0, 0, 0]`
   - nonmonotonic counts: BER `0`, SER `0`
-- PE direct-only current taps with current `conv(...,'same')` slicing:
+- PE direct-only taps with pre-D2 legacy `conv(...,'same')` slicing:
   - `H_f` invariant error `=0`
   - `max(abs(H_reflect_f))=0`
   - `peak_index_before_alignment=1`
   - `h_full` peak fraction `=0.9976004631466816`
-  - current retained `tap_count=1997`
+  - retained `tap_count=1997`
   - noiseless `BER=0.51775`, `SER=0.768`
   - `BER(20 dB)=0.49175`, `SER(20 dB)=0.739`
-- PE direct-only peak-aligned taps with current `conv(...,'same')` slicing:
+- PE direct-only peak-aligned taps with pre-D2 legacy `conv(...,'same')` slicing:
   - peak alignment does not change the result because the dominant tap was already at index 1.
   - noiseless `BER=0.51775`, `SER=0.768`
   - `BER(20 dB)=0.4925`, `SER(20 dB)=0.7415`
@@ -1160,13 +1190,13 @@ Validation results:
   - BER curve `[0.49725, 0.47675, 0.475, 0.4745, 0.47275, 0.4625, 0.45075, 0.431, 0.42525, 0.3695, 0.342]`
   - SER curve `[0.741, 0.7185, 0.7055, 0.704, 0.701, 0.677, 0.6655, 0.617, 0.6005, 0.5195, 0.479]`
   - nonmonotonic counts: BER `0`, SER `0`
-  - effective SNR at nominal `20 dB` Eb/N0 is still `-4.9334090404706892 dB`, because current AWGN injection references transmit-symbol power while the PE channel gain is much smaller.
+  - effective SNR at nominal `20 dB` Eb/N0 is still `-4.9334090404706892 dB`, because the pre-D2 AWGN reference used transmit-symbol power while the PE channel gain is much smaller.
 
 Diagnosis:
 - The PSK mapper/demapper, AWGN injection, and single-tap equalization are functional.
-- The current communication scripts fail for multi-tap channels mainly because `conv(tx_symbols,h_bb,'same')` center-crops a causal impulse response. For a long PE `h_bb`, this introduces a large symbol timing offset even when the dominant tap is already at index 1.
+- The pre-D2 communication slicing failed for multi-tap channels mainly because `conv(tx_symbols,h_bb,'same')` center-cropped a causal impulse response. For a long PE `h_bb`, this introduced a large symbol timing offset even when the dominant tap was already at index 1.
 - Main-peak alignment alone is not sufficient for PE taps; receive-window selection must also respect causal timing.
-- After causal receive-window selection, PE direct-only noiseless BER/SER becomes zero, but noisy BER remains high because the current Eb/N0 noise calibration is referenced to transmitted symbols rather than received/channel-output power.
+- After causal receive-window selection, PE direct-only noiseless BER/SER becomes zero, but noisy BER remains high under the pre-D2 transmit-symbol Eb/N0 reference.
 
 Generated result artifacts:
 - `validate_comm_link_minimal_vertical_result.mat`
@@ -1176,8 +1206,7 @@ Generated result artifacts:
 - `validate_comm_link_minimal_vertical_pe_h_bb_aligned_taps.png`
 
 Remaining issues:
-- D1 does not change production communication scripts.
-- A follow-up fix should replace or parameterize `conv(...,'same')` receive slicing for causal channel taps.
+- D1 did not change production communication scripts; the later D2 update changed the default receive policy to `peak_sync` and the default Eb/N0 reference to `rx_clean`.
 - A separate noise-calibration decision is needed: Eb/N0 can be referenced to transmit-symbol power, received clean-signal power, or post-equalizer noise enhancement, and these produce different BER interpretations.
 
 ## 2026-06-10 D2 Communication Receive Window and Eb/N0 Reference Update
@@ -1306,7 +1335,8 @@ Changed behavior:
 - The implemented FFT form is `A(K')=gamma(K',f)*abs(Psi_inc(K'))^2`, `B=circconv(W_eta,A)`, and `P_sca_raw(K)=4*C_norm*gamma(K,f)*B(K)*dkx*dky`, with `C_norm=surface_ssa_scatter_scale`.
 - `surface_ssa_kernel_mode='ssa1_debug_dense'` computes the same periodic sum explicitly on small grids for FFT-vs-dense validation.
 - `surface_ssa_kz_branch='downward_positive_real'` computes `kz(K)=sqrt(max(k0^2-|K|^2,0))`; non-propagating bins are excluded from the propagating fraction metadata but the baseline `pm_convolution` formula remains numerically unchanged.
-- `surface_ssa_conv_padding='periodic'` keeps the existing FFT circular convolution. `zero_padded` is accepted at the public config boundary but rejected by the kernel until aliasing-control implementation is added.
+- `surface_ssa_conv_padding='periodic'` keeps the existing FFT circular convolution.
+- `surface_ssa_conv_padding='zero_padded'` now runs for `pm_convolution` and `ssa1_geometry`: inputs are `fftshift`ed to signed-k order, a full zero-padded linear convolution is computed on a `(2*ny-1,2*nx-1)` grid, and the original signed-k support is cropped back before returning to FFT order.
 
 Current formula status:
 - The first-order Dirichlet SSA geometry factor from `SSA.md` has been implemented.
@@ -1315,7 +1345,7 @@ Current formula status:
 - The code must not be described as NLSSA, impedance-boundary SSA, or experimentally calibrated rough-surface scattering.
 
 Validation additions:
-- `validate_ssa_stat_kernel_vertical.m` checks that `pm_convolution` records the new metadata fields, `ssa1_geometry` degenerates correctly for `Hs=0`, and `ssa1_debug_dense` matches the FFT sum on a small grid through compact `P_sca` metadata.
+- `validate_ssa_stat_kernel_vertical.m` checks that `pm_convolution` records the new metadata fields, `ssa1_geometry` degenerates correctly for `Hs=0`, `zero_padded` convolution runs for both `pm_convolution` and `ssa1_geometry`, and `ssa1_debug_dense` matches the periodic FFT sum on a small grid through compact `P_sca` metadata.
 - Sweep and communication summary tables carry kernel-mode energy audit fields: `E_sca_limited`, `energy_conservation_error`, `energy_limit_applied`, and `propagating_bin_fraction`.
 - `sweep_ssa_stat_kernel_surface_channel_vertical.m` and `monte_carlo_comm_ssa_stat_kernel_psk_vertical.m` compare `kirchhoff_spatial`, `ssa_pm_convolution`, and `ssa1_geometry`.
 - `plot_ssa_stat_kernel_report_vertical.m` emits `ssa_kernel_mode_*` figures; dense-vs-FFT is available through the validation result rather than default wideband sweeps.
@@ -1394,3 +1424,94 @@ Latest scale-sensitivity smoke result:
 - For `Hs=0.05`, `E_sca_raw/E_inc` was `[0 0.39478 1.5791 6.3165]` for `ssa_pm_convolution` and `[0 0.09768 0.39072 1.5629]` for `ssa1_geometry`.
 - `energy_conservation_error_max=0` for every listed scale-sweep condition.
 - The sweep uses `surface_ssa_random_scatter=false`; therefore `E_sca/E_inc=0` in the realized reflected field, while `E_sca_limited/E_inc` records the limited scatter-energy budget for metadata analysis.
+
+## 2026-06-16 Core MATLAB File Rename
+
+Changed core names:
+- `CARPE3D_vertical.m` -> `vertical_channel_model.m`.
+- `propWAPE_vertical.m` -> `vertical_wape_propagator.m`.
+- `pm_surface_kirchhoff_module.m` -> `pm_surface_boundary_model.m`.
+
+Behavioral intent:
+- This is a naming refactor only. It does not change `paramsV`, `cfg`, `output`, `H_f`, `H_direct_f`, `H_reflect_f`, `h_total`, or communication-chain result semantics.
+- No compatibility wrappers for the old core names are kept; active scripts call the new names directly.
+- The `old/` directory remains archival and was not migrated.
+
+Validation after rename:
+- Reduced scalar smoke through `vertical_channel_model` passed with `max(abs(H_f-H_direct_f-H_reflect_f))=0`.
+- Direct-only smoke passed with `max(abs(H_reflect_f))=0`.
+- `validate_ssa_stat_kernel_vertical` passed after updating expected error IDs to `pm_surface_boundary_model:*`.
+- `monte_carlo_comm_ssa_stat_kernel_psk_vertical` completed with the renamed entrypoint and existing `H_f` communication path.
+- `git diff --check` passed.
+
+## 2026-06-17 SSA-Like Statistical Kernel Increment
+
+Purpose:
+- Continue treating `ssa_stat_kernel` as a PM-spectrum-driven SSA-like statistical scattering kernel prototype.
+- Preserve `kirchhoff_spatial` as the realization-based phase-screen comparison path.
+- Keep `pm_convolution` as an engineering baseline and `ssa1_geometry` as the current first-order Dirichlet research kernel.
+- Do not claim complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering physics.
+
+Implementation updates:
+- `pm_convolution` and `ssa1_geometry` now support both `surface_ssa_conv_padding='periodic'` and `surface_ssa_conv_padding='zero_padded'`.
+- `periodic` remains the compatible FFT circular convolution path.
+- `zero_padded` computes an FFT-accelerated linear convolution using `(2*ny-1,2*nx-1)` padding, signed-k ordering via `fftshift`, center cropping back to the original signed-k support, and `ifftshift` back to the solver's FFT order.
+- `ssa1_debug_dense` remains a small-grid explicit periodic-sum validator for the periodic FFT path.
+- `compare_ssa_conv_padding_vertical.m` adds a reduced scalar-frequency comparison between `periodic` and `zero_padded` for `pm_convolution` and `ssa1_geometry`.
+
+Metadata additions:
+- `ssa_stat_kernel_meta` records `conv_operator`, `conv_padding_size`, `conv_crop_start_index`, `conv_crop_end_index`, and `conv_crop_rule`.
+- It also records compact angular-spectrum diagnostics for incident, coherent, scatter-power, and reflected spectra: total spectral energy, centroid, RMS transverse wavenumber, and 90% energy radius.
+- Existing energy audit fields remain unchanged: `E_inc`, `E_coh`, `E_sca_raw`, `E_sca_limited`, `E_sca`, `E_ref`, `energy_scale_applied`, `energy_limit_applied`, and `energy_conservation_error`.
+
+Validation updates:
+- `validate_ssa_stat_kernel_vertical` now expects `zero_padded` to run for both `pm_convolution` and `ssa1_geometry` and records its raw-scatter-energy difference from the periodic path.
+- The validation still covers `Hs=0`, direct-only invariants, deterministic seeding, changed-seed reflection sensitivity, `random_scatter=false`, scale monotonicity, non-Dirichlet rejection for `ssa1_geometry`, and periodic dense-vs-FFT consistency.
+- Wideband statistics scripts now carry convolution mode/operator and angular-spectrum broadening metrics in their run and condition summaries.
+
+Latest numerical validation:
+- `validate_ssa_stat_kernel_vertical` completed successfully after the zero-padding implementation.
+- `Hs=0` flat degeneration remained at roundoff level:
+  - `pm_convolution` vs flat `kirchhoff_spatial`: max response difference `7.7579e-17`.
+  - `ssa1_geometry` vs flat `kirchhoff_spatial`: max response difference `7.7579e-17`.
+- Energy audit checks remained within tolerance:
+  - `ssa1_geometry` energy conservation error `1.3516e-16`.
+  - zero-padded `pm_convolution` energy conservation error `0`.
+  - zero-padded `ssa1_geometry` energy conservation error `0`.
+- `ssa1_debug_dense` still matches the periodic FFT implementation for compact raw scatter power with relative sum error `2.5247e-15`.
+- The reduced zero-padded wideband invariant check passed with `max(abs(H_f-H_direct_f-H_reflect_f))=8.9974e-19` over four frequency bins.
+- `sweep_ssa_stat_kernel_surface_channel_vertical` completed a light statistical sweep with one seed over `Hs=[0 0.05 0.2 0.5]` and model labels `kirchhoff_spatial`, `ssa_pm_convolution`, and `ssa1_geometry`.
+- In the light sweep, both statistical kernels matched the `Hs=0` flat Kirchhoff response within `1.2533e-16`.
+- `compare_ssa_conv_padding_vertical` completed with one seed over `Hs=[0 0.05 0.2]` and kernels `pm_convolution` / `ssa1_geometry`.
+- Periodic-vs-zero-padded comparison highlights:
+  - `Hs=0`: both convolution paths match the flat `kirchhoff_spatial` reference within `7.7579e-17`.
+  - `pm_convolution`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `1.5791` to `1.5784`; `rel_diff_H_reflect_f=0.021329`; `rel_diff_H_f=0.0025413`.
+  - `pm_convolution`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `25.266` to `25.254`; `rel_diff_H_reflect_f=0.0058398`; `rel_diff_H_f=0.00193`.
+  - `ssa1_geometry`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `0.39072` to `0.39054`; `rel_diff_H_reflect_f=0.010755`; `rel_diff_H_f=0.0019122`.
+  - `ssa1_geometry`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `6.2515` to `6.2486`; `rel_diff_H_reflect_f=0.0056472`; `rel_diff_H_f=0.0018676`.
+  - All periodic-vs-zero-padded comparison rows kept `energy_conservation_error=0`; maximum invariant error stayed below `3.6e-18`.
+- Comparison artifacts:
+  - `compare_ssa_conv_padding_vertical_result.mat`
+  - `ssa_conv_padding_compare_raw_scatter_energy.png`
+  - `ssa_conv_padding_compare_relative_difference.png`
+
+Documentation update:
+- `vertical_comm_guide.md` was rewritten as a human-readable mathematical model note.
+- The guide separates `kirchhoff_spatial`, `pm_convolution`, and `ssa1_geometry` by physical role.
+- It states that `periodic` is the default compatible convolution path and `zero_padded` is a linear-convolution aliasing audit path.
+- It keeps the current scope conservative: PM-spectrum-driven SSA-like statistical scattering prototype, not complete SSA/NLSSA, T-matrix, impedance-boundary, or experimentally calibrated rough-surface scattering physics.
+- It documents that periodic and zero-padded paths are not expected to match pointwise; acceptance is based on channel invariants, energy audit, and interpretable trends.
+- It now states two additional limitations:
+  - statistical scattering realization frequency correlation is still simplified, so wideband `H_f` continuity needs a dedicated model;
+  - under fixed `sea_hs_target`, wind-speed sweeps primarily change PM spectral shape and should not be read as monotonic sea-state intensity sweeps.
+
+Stage conclusion:
+- Current status: PM-spectrum-driven SSA-like statistical scattering has engineering integration, `periodic`/`zero_padded` convolution paths, energy audit, compact metadata, core reduced-grid validation, and an initial periodic-vs-zero-padded comparison report.
+- The module can serve as a data-generation component for random-channel and communication-algorithm evaluation.
+- It remains outside the scope of complete physical SSA/NLSSA sea-surface scattering theory, calibrated absolute scattering cross sections, impedance-boundary SSA, and higher-order multiple scattering.
+
+Recommended next stage, not implemented here:
+- frequency-correlated random scattering across wideband bins;
+- larger multi-seed convergence statistics;
+- numerical or experimental calibration of `surface_ssa_scatter_scale`;
+- larger-scale linkage between scatter statistics and BER/SER trends.

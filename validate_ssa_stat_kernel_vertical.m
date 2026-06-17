@@ -195,14 +195,46 @@ case_results.bad_boundary_error_message = string(bad_boundary_error_message);
 checks = local_add_check(checks, 'ssa1_requires_dirichlet_R0', ...
     double(strcmp(bad_boundary_error_id, 'pm_surface_boundary_model:SsaDirichletReflectCoeffRequired')), 1, '==');
 
-zero_padded_case = energy_case;
-zero_padded_case.surface_ssa_conv_padding = 'zero_padded';
-fprintf('Running zero_padded convolution rejection case.\n');
-[zero_padded_error_id, zero_padded_error_message] = local_expect_error(@() vertical_channel_model(zero_padded_case));
-case_results.zero_padded_error_id = string(zero_padded_error_id);
-case_results.zero_padded_error_message = string(zero_padded_error_message);
-checks = local_add_check(checks, 'zero_padded_rejected_explicitly', ...
-    double(strcmp(zero_padded_error_id, 'pm_surface_boundary_model:SsaConvPaddingNotImplemented')), 1, '==');
+zero_padded_pm = metadata_only;
+zero_padded_pm.surface_ssa_conv_padding = 'zero_padded';
+fprintf('Running zero_padded pm_convolution case.\n');
+channel_zero_padded_pm = vertical_channel_model(zero_padded_pm);
+meta_zero_padded_pm = channel_zero_padded_pm.roughness_meta.ssa_stat_kernel_meta;
+case_results.zero_padded_pm = local_compact_channel_result(channel_zero_padded_pm);
+case_results.zero_padded_pm.ssa_meta = local_compact_ssa_meta(meta_zero_padded_pm);
+case_results.zero_padded_pm.periodic_raw_sum = meta_metadata_only.E_sca_raw;
+case_results.zero_padded_pm.zero_padded_raw_sum = meta_zero_padded_pm.E_sca_raw;
+case_results.zero_padded_pm.raw_sum_relative_delta = ...
+    abs(meta_zero_padded_pm.E_sca_raw - meta_metadata_only.E_sca_raw) / max(abs(meta_metadata_only.E_sca_raw), 1);
+checks = local_add_check(checks, 'zero_padded_pm_runs', ...
+    double(strcmp(meta_zero_padded_pm.conv_padding, 'zero_padded')), 1, '==');
+checks = local_add_check(checks, 'zero_padded_pm_operator_recorded', ...
+    double(strcmp(meta_zero_padded_pm.conv_operator, 'linear_fft_zero_padded')), 1, '==');
+checks = local_add_check(checks, 'zero_padded_pm_energy_conservation_small', ...
+    meta_zero_padded_pm.energy_conservation_error, tol_roundoff, '<=');
+checks = local_add_check(checks, 'zero_padded_pm_raw_difference_finite', ...
+    double(isfinite(case_results.zero_padded_pm.raw_sum_relative_delta)), 1, '==');
+
+zero_padded_ssa1 = ssa1_energy;
+zero_padded_ssa1.surface_ssa_conv_padding = 'zero_padded';
+zero_padded_ssa1.surface_ssa_random_scatter = false;
+fprintf('Running zero_padded ssa1_geometry case.\n');
+channel_zero_padded_ssa1 = vertical_channel_model(zero_padded_ssa1);
+meta_zero_padded_ssa1 = channel_zero_padded_ssa1.roughness_meta.ssa_stat_kernel_meta;
+case_results.zero_padded_ssa1 = local_compact_channel_result(channel_zero_padded_ssa1);
+case_results.zero_padded_ssa1.ssa_meta = local_compact_ssa_meta(meta_zero_padded_ssa1);
+case_results.zero_padded_ssa1.periodic_raw_sum = meta_ssa1_energy.E_sca_raw;
+case_results.zero_padded_ssa1.zero_padded_raw_sum = meta_zero_padded_ssa1.E_sca_raw;
+case_results.zero_padded_ssa1.raw_sum_relative_delta = ...
+    abs(meta_zero_padded_ssa1.E_sca_raw - meta_ssa1_energy.E_sca_raw) / max(abs(meta_ssa1_energy.E_sca_raw), 1);
+checks = local_add_check(checks, 'zero_padded_ssa1_runs', ...
+    double(strcmp(meta_zero_padded_ssa1.conv_padding, 'zero_padded')), 1, '==');
+checks = local_add_check(checks, 'zero_padded_ssa1_operator_recorded', ...
+    double(strcmp(meta_zero_padded_ssa1.conv_operator, 'linear_fft_zero_padded')), 1, '==');
+checks = local_add_check(checks, 'zero_padded_ssa1_energy_conservation_small', ...
+    meta_zero_padded_ssa1.energy_conservation_error, tol_roundoff, '<=');
+checks = local_add_check(checks, 'zero_padded_ssa1_raw_difference_finite', ...
+    double(isfinite(case_results.zero_padded_ssa1.raw_sum_relative_delta)), 1, '==');
 
 dense_fft = params_base;
 dense_fft.nx = 32;
@@ -229,6 +261,31 @@ case_results.ssa1_dense_compare.P_sca_raw_sum_diff = abs(meta_dense_fft.P_sca_ra
 dense_scale = max(abs(meta_dense_fft.P_sca_raw.sum), 1);
 checks = local_add_check(checks, 'ssa1_dense_fft_P_sca_raw_sum_match', ...
     case_results.ssa1_dense_compare.P_sca_raw_sum_diff / dense_scale, 1e-10, '<=');
+
+wideband_zp = params_base;
+wideband_zp.enable_wideband = true;
+wideband_zp.f0 = 4000;
+wideband_zp.f_band_hz = [4000, 8000];
+wideband_zp.Nf_min = 4;
+wideband_zp.Nf_max = 4;
+wideband_zp.f_ref_hz = 6000;
+wideband_zp.surface_boundary_model = 'ssa_stat_kernel';
+wideband_zp.surface_ssa_kernel_mode = 'ssa1_geometry';
+wideband_zp.surface_ssa_conv_padding = 'zero_padded';
+wideband_zp.surface_ssa_random_scatter = false;
+wideband_zp.surface_ssa_geometry_source_id = flat_ssa1.surface_ssa_geometry_source_id;
+fprintf('Running reduced wideband zero_padded ssa1_geometry invariant case.\n');
+channel_wideband_zp = vertical_channel_model(wideband_zp);
+case_results.wideband_zero_padded_ssa1 = local_compact_channel_result(channel_wideband_zp);
+case_results.wideband_zero_padded_ssa1.abs_H_f = abs(channel_wideband_zp.H_f(:));
+case_results.wideband_zero_padded_ssa1.abs_H_reflect_f = abs(channel_wideband_zp.H_reflect_f(:));
+checks = local_add_check(checks, 'wideband_zero_padded_ssa1_invariant', ...
+    local_invariant_error(channel_wideband_zp), tol_invariant, '<=');
+checks = local_add_check(checks, 'wideband_zero_padded_ssa1_frequency_count', ...
+    numel(channel_wideband_zp.f_axis), 4, '==');
+checks = local_add_check(checks, 'wideband_zero_padded_ssa1_ref_consistency', ...
+    abs(channel_wideband_zp.h_total - channel_wideband_zp.H_f(channel_wideband_zp.idx_f_ref)), ...
+    tol_roundoff, '<=');
 
 summary_table = struct2table(checks);
 validation_meta = struct();
@@ -315,6 +372,10 @@ names = {'sigma_eta_m', 'Hs_target_m', 'R_coh', 'P_sca', 'P_sca_raw', 'E_inc', .
     'energy_conservation_error', 'propagating_bin_fraction', ...
     'kernel_mode', 'geometry_source_id', 'formula_source', ...
     'boundary_condition', 'evanescent_included', 'conv_padding', ...
+    'conv_operator', 'conv_padding_size', 'conv_crop_start_index', ...
+    'conv_crop_end_index', 'conv_crop_rule', ...
+    'incident_spectrum_stats', 'scatter_power_spectrum_stats', ...
+    'reflected_spectrum_stats', ...
     'kernel_detail', 'seed_ssa'};
 tf = true;
 for ii = 1:numel(names)
@@ -326,6 +387,7 @@ end
 function tf = local_has_stable_metadata_values(meta)
 tf = isfield(meta, 'kernel_mode') && ~isempty(meta.kernel_mode) && ...
     isfield(meta, 'conv_padding') && ~isempty(meta.conv_padding) && ...
+    isfield(meta, 'conv_operator') && ~isempty(meta.conv_operator) && ...
     isfield(meta, 'formula_source') && ~isempty(meta.formula_source) && ...
     isfield(meta, 'boundary_condition') && ~isempty(meta.boundary_condition) && ...
     isfield(meta, 'seed_ssa') && isfinite(meta.seed_ssa) && ...
@@ -359,6 +421,11 @@ out.kernel_mode = meta.kernel_mode;
 out.geometry_source_id = meta.geometry_source_id;
 out.kz_branch = meta.kz_branch;
 out.conv_padding = meta.conv_padding;
+out.conv_operator = meta.conv_operator;
+out.conv_padding_size = meta.conv_padding_size;
+out.conv_crop_start_index = meta.conv_crop_start_index;
+out.conv_crop_end_index = meta.conv_crop_end_index;
+out.conv_crop_rule = meta.conv_crop_rule;
 out.formula_source = meta.formula_source;
 out.boundary_condition = meta.boundary_condition;
 out.evanescent_included = meta.evanescent_included;
@@ -377,6 +444,9 @@ out.energy_scale_applied = meta.energy_scale_applied;
 out.energy_limit_applied = meta.energy_limit_applied;
 out.energy_conservation_error = meta.energy_conservation_error;
 out.propagating_bin_fraction = meta.propagating_bin_fraction;
+out.incident_rms_delta_k_rad_per_m = meta.incident_spectrum_stats.rms_delta_k_rad_per_m;
+out.scatter_rms_delta_k_rad_per_m = meta.scatter_power_spectrum_stats.rms_delta_k_rad_per_m;
+out.reflected_rms_delta_k_rad_per_m = meta.reflected_spectrum_stats.rms_delta_k_rad_per_m;
 out.seed_ssa = meta.seed_ssa;
 out.seed_offset = meta.seed_offset;
 out.limitations = meta.limitations;
