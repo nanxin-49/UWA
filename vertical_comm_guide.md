@@ -150,9 +150,23 @@ R_{\rm coh}
 =
 R_0
 \exp\left[
--\frac12(2k_0\Gamma)^2\sigma_\eta^2
+-\frac12(\gamma_i+\gamma_s)^2\sigma_\eta^2
 \right].
 \]
+
+在镜面方向 \(\gamma_s=\gamma_i\)，因此
+
+\[
+R_{\rm coh}=R_0\exp[-2\gamma_i^2\sigma_\eta^2].
+\]
+
+法向入射时 \(\gamma_i=k_0\)，pressure-release / Dirichlet 自由海面的 \(R_0=-1\)，于是
+
+\[
+R_{\rm coh}=-\exp[-2k_0^2\sigma_\eta^2].
+\]
+
+Broschat 1993 的 PM 海面 SSA coherent reflection 主要用于核对这个相干镜面反射系数，而不是下面的非相干散射功率 \(P_{\rm sca}\)。
 
 于是
 
@@ -407,7 +421,7 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
    `pm_convolution` 的 \(E_{\rm sca}^{\rm raw}/E_{\rm inc}\) 相对差异约为 \(4.90\times 10^{-4}\)，
    `ssa1_geometry` 约为 \(4.64\times 10^{-4}\)。
 
-3. 反射频响差异比散射能量差异更明显，因为随机散射谱经过反射路径传播后会改变相位叠加。在弱海况 \(H_s=0.05\) 下，当前单 seed 对比中 `pm_convolution` 的 \(H_{\rm ref}\) 相对差异约为 \(2.13\times 10^{-2}\)，`ssa1_geometry` 约为 \(1.08\times 10^{-2}\)。
+3. 反射频响差异比散射能量差异更明显，因为随机散射谱经过反射路径传播后会改变相位叠加。在弱海况 \(H_s=0.05\) 下，当前单 seed 对比中 `pm_convolution` 的 \(H_{\rm ref}\) 相对差异约为 \(3.19\times 10^{-3}\)，`ssa1_geometry` 约为 \(3.09\times 10^{-3}\)。
 
 4. 能量审计仍通过。当前对比中总信道不变量保持在舍入误差级，能量守恒误差为 0。
 
@@ -426,4 +440,4 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 - 当前统计散射 realization 的跨频率相关性仍是简化处理，尚未建立物理或经验的宽带频率相关模型。因此宽带 \(H_f\) 的频域连续性仍需要后续专门研究。
 - 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；不应简单解释为海况强度随风速单调增强。
 
-因此，当前 `ssa_stat_kernel` 应理解为 PM 谱驱动的 SSA-like 统计散射信道生成原型。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。
+因此，当前 `ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release / Dirichlet SSA statistical scattering branch。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。

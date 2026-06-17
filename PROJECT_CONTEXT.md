@@ -18,7 +18,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - `kirchhoff_spatial`: realization-based Kirchhoff phase-screen comparison path and default surface model;
   - `ssa_stat_kernel` with `pm_convolution`: PM-spectrum engineering baseline statistical kernel;
   - `ssa_stat_kernel` with `ssa1_geometry`: first-order pressure-release / Dirichlet geometry kernel.
-- Current SSA-like kernel status:
+- Current SSA statistical kernel status:
   - PM-spectrum-driven statistical scattering is connected to the existing reflected PE path and communication `H_f` consumer;
   - `periodic` and `zero_padded` convolution paths are implemented for `pm_convolution` and `ssa1_geometry`;
   - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed.
@@ -1299,7 +1299,9 @@ Changed files for this update:
 
 Implemented interface and formulas:
 - `ssa_stat_kernel` does not synthesize `xi(x,y)`. It scales the PM height spectrum directly so `sum(W_eta(:))*dkx*dky = sigma_eta^2`, where `sigma_eta = sea_hs_target/4`.
-- The coherent term is `R_coh = R0*exp(-0.5*(2*k0*phase_factor_eff)^2*sigma_eta^2)`.
+- The coherent term is now interpreted as the pressure-release / Dirichlet SSA coherent reflection coefficient:
+  `R_coh = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
+  In normal specular reflection this reduces to `R_coh = -exp(-2*k0^2*sigma_eta^2)` for `R0=-1`.
 - The raw incoherent power uses the engineering kernel `P_sca_raw = surface_ssa_scatter_scale*abs(R0)^2*(2*k0*phase_factor_eff)^2*dkx*dky*circconv(W_eta,abs(Psi_inc_k).^2)`.
 - Energy limiting enforces `E_coh+E_sca <= E_inc`; after random scatter synthesis, the final combined reflected spectrum is also checked against `E_inc`.
 - The random scatter seed is `seed_ssa = sea_seed + surface_ssa_seed_offset + frequency_index - 1`, with default `surface_ssa_seed_offset=100000`.
@@ -1485,10 +1487,10 @@ Latest numerical validation:
 - `compare_ssa_conv_padding_vertical` completed with one seed over `Hs=[0 0.05 0.2]` and kernels `pm_convolution` / `ssa1_geometry`.
 - Periodic-vs-zero-padded comparison highlights:
   - `Hs=0`: both convolution paths match the flat `kirchhoff_spatial` reference within `7.7579e-17`.
-  - `pm_convolution`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `1.5791` to `1.5784`; `rel_diff_H_reflect_f=0.021329`; `rel_diff_H_f=0.0025413`.
-  - `pm_convolution`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `25.266` to `25.254`; `rel_diff_H_reflect_f=0.0058398`; `rel_diff_H_f=0.00193`.
-  - `ssa1_geometry`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `0.39072` to `0.39054`; `rel_diff_H_reflect_f=0.010755`; `rel_diff_H_f=0.0019122`.
-  - `ssa1_geometry`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `6.2515` to `6.2486`; `rel_diff_H_reflect_f=0.0056472`; `rel_diff_H_f=0.0018676`.
+  - `pm_convolution`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `1.5791` to `1.5784`; `rel_diff_H_reflect_f=0.0031907`; `rel_diff_H_f=0.0032389`.
+  - `pm_convolution`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `25.266` to `25.254`; `rel_diff_H_reflect_f=0.0063383`; `rel_diff_H_f=0.0019823`.
+  - `ssa1_geometry`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `0.39072` to `0.39054`; `rel_diff_H_reflect_f=0.0030922`; `rel_diff_H_f=0.0031332`.
+  - `ssa1_geometry`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `6.2515` to `6.2486`; `rel_diff_H_reflect_f=0.0061289`; `rel_diff_H_f=0.0019182`.
   - All periodic-vs-zero-padded comparison rows kept `energy_conservation_error=0`; maximum invariant error stayed below `3.6e-18`.
 - Comparison artifacts:
   - `compare_ssa_conv_padding_vertical_result.mat`
@@ -1515,3 +1517,52 @@ Recommended next stage, not implemented here:
 - larger multi-seed convergence statistics;
 - numerical or experimental calibration of `surface_ssa_scatter_scale`;
 - larger-scale linkage between scatter statistics and BER/SER trends.
+
+## 2026-06-17 SSA Coherent Reflection Formula Correction
+
+Purpose:
+- Correct the `ssa_stat_kernel` coherent reflection coefficient so it matches the pressure-release / Dirichlet first-order SSA coherent reflection interpretation.
+- Keep the Kirchhoff realization phase-screen path unchanged.
+- Keep `pm_convolution` as an engineering PM-spectrum convolution baseline and `ssa1_geometry` as the first-order pressure-release / Dirichlet scattering geometry.
+
+Formula correction:
+- Previous SSA coherent implementation used:
+  `R_coh = R0*exp(-0.5*(2*k0*phase_factor_eff)^2*sigma_eta^2)`.
+- Because `phase_factor_eff=2` in normal mode, that produced the unintended normal exponent `-8*k0^2*sigma_eta^2`.
+- The corrected SSA coherent implementation uses:
+  `R_coh = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
+- For normal specular reflection, `gamma_i=gamma_s=k0`, so with `R0=-1`:
+  `R_coh = -exp(-2*k0^2*sigma_eta^2)`.
+- Broschat 1993 is used as the coherent reflection coefficient reference for PM rough surfaces; it is not treated as the source of the noncoherent `P_sca` distribution.
+
+Implementation notes:
+- `phase_factor_eff` is still retained as the effective `cos_i+cos_s` geometry factor.
+- `coherent_gamma_sum_eff_rad_per_m = k0*phase_factor_eff` is now the quantity used in the SSA coherent exponent.
+- The Kirchhoff phase screen still uses the existing double-height phase expression and was not changed.
+- The `pm_convolution` noncoherent baseline still uses its engineering scalar normalization; it is not described as strict SSA.
+- `ssa1_geometry` still computes the first-order Dirichlet scattering power through `G_SSA1=4*gamma_s*gamma_i` and still rejects non-Dirichlet `surface_reflect_coeff`.
+
+Metadata additions:
+- `R_coh_raw`, `R_coh`.
+- `coherent_exponent`.
+- `coherent_gamma_sum_eff_rad_per_m`.
+- `coherent_vertical_factor_eff`.
+- `coherent_reflection_formula`.
+- `phase_factor_eff_legacy_note`.
+- `W_eta_variance_target`, `W_eta_variance_discrete`, `W_eta_variance_rel_error`.
+
+Validation results:
+- `validate_ssa_stat_kernel_vertical` completed successfully.
+- Normal-mode coherent reflection matched `R0*exp(-2*k0^2*sigma_eta^2)` within roundoff.
+- The validation explicitly rejected the old unintended `R0*exp(-8*k0^2*sigma_eta^2)` behavior; the checked difference was `2.6753e-09`.
+- `coherent_gamma_sum_eff_rad_per_m` equaled `2*k0` in normal mode.
+- PM spectrum normalization passed: `W_eta_variance_rel_error <= 8.6736e-15` across the Hs trend cases.
+- `Hs=[0 0.05 0.2 0.5]` gave monotone decreasing `|R_coh|` and nondecreasing `E_sca_limit`.
+- `ssa1_geometry` metadata recorded `G_SSA1` and `pressure-release / Dirichlet`; non-Dirichlet reflection coefficient rejection still passed.
+- `ssa1_debug_dense` vs periodic FFT raw scatter relative sum error remained `2.5247e-15`.
+- `compare_ssa_conv_padding_vertical` completed after the coherent correction, with energy conservation error `0` for all compared rows.
+
+Recommended naming:
+- In papers or method notes, describe the module as:
+  `PM-spectrum-driven first-order pressure-release / Dirichlet SSA statistical scattering branch`.
+- Avoid naming it complete SSA, NLSSA, T-matrix, impedance-boundary scattering, multiple-scattering, or experimentally calibrated sea-surface scattering.
