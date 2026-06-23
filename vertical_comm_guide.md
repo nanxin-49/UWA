@@ -140,7 +140,8 @@ P_{\rm inc}(K)=|\Psi_{\rm inc}(K)|^2.
 \[
 \Psi_{\rm ref}(K)=\Psi_{\rm coh}(K)+\Psi_{\rm sca}(K).
 \]
-
+* 即使主传播方向近似垂直，只要海面是粗糙的，反射就不可能只有一个完美镜面分量。
+* 粗糙海面让镜面反射变弱，缺失的能量一部分来自非相干散射
 ### 5.1 相干镜面项
 
 粗糙度会降低镜面相干反射。当前采用
@@ -166,7 +167,37 @@ R_{\rm coh}=R_0\exp[-2\gamma_i^2\sigma_\eta^2].
 R_{\rm coh}=-\exp[-2k_0^2\sigma_\eta^2].
 \]
 
-Broschat 1993 的 PM 海面 SSA coherent reflection 主要用于核对这个相干镜面反射系数，而不是下面的非相干散射功率 \(P_{\rm sca}\)。
+Broschat 1993 的 PM 海面 SSA coherent reflection 主要用于核对这个相干镜面反射系数，而不是下面的非相干散射功率 \(P_{\rm sca}\)。也就是说，Broschat 型结果约束的是镜面相干项随粗糙度和频率衰减的趋势；非相干散射功率分布需要由一阶 Dirichlet 散射核单独给出。
+
+当前默认仍采用上述一阶 coherent reflection。为了评估二阶 coherent correction 是否值得纳入，本项目还提供一个可选的 Broschat-style 二阶相干反射系数对比：
+
+\[
+R_2
+=
+R_1
++
+2\gamma_i\exp[-2\gamma_i^2\sigma_\eta^2]
+\iint
+W_\eta(q)\,[\gamma(K_i+q)-\gamma_i]\,dq_xdq_y .
+\]
+
+其中
+
+\[
+R_1=-\exp[-2\gamma_i^2\sigma_\eta^2],
+\qquad
+\gamma(K)=\sqrt{k_0^2-|K|^2}.
+\]
+
+数值实现中，\(\gamma(K)\) 使用复数平方根分支：
+
+\[
+\gamma(K)=\sqrt{\mathrm{complex}(k_0^2-|K|^2,0)}.
+\]
+
+因此传播分量给出正实根，倏逝分量给出正虚根。该二阶项只用于比较 coherent reflection coefficient；它不是二阶非相干散射功率 \(P_{\rm sca}\)，也不是完整 SSA2 T-matrix 或 NLSSA 模型。当前主测试采用法向入射 \(K_i=0\)、\(\gamma_i=k_0\)；斜入射时只使用有效二维近似，结论应以法向或近垂直几何为准。
+
+当前 reduced-grid 对比显示，在 \(H_s\le 0.5\) m 的弱到中等海况下，SSA2 coherent loss 与 SSA1 的差异不超过约 \(0.1\) dB；在 \(H_s=1\) m、4000 Hz 的强海况低频点，差异约为 \(0.37\) dB。因此本项目暂把 `ssa2_broschat_coherent` 作为诊断对照，而不是默认模型。是否采用它应取决于目标海况、频段和后续是否实现完整二阶非相干散射。
 
 于是
 
@@ -174,7 +205,7 @@ Broschat 1993 的 PM 海面 SSA coherent reflection 主要用于核对这个相�
 \Psi_{\rm coh}(x,y)=R_{\rm coh}\Psi_{\rm inc}(x,y).
 \]
 
-这个指数项可理解为随机相位屏的相干平均。若海面高度近似为零均值高斯随机变量，反射相位扰动的方差越大，不同海面 realization 的镜面相干叠加越容易相互抵消。
+这个指数项可理解为 SSA coherent reflection 的统计平均。它和 Kirchhoff realization 相位屏中的单次高度相位扰动不是同一个量：Kirchhoff 相位屏先生成具体 \(\xi(x,y)\)，再给每个空间点加相位；SSA coherent reflection 则直接对随机海面统计平均后得到 \(R_{\rm coh}\)。若海面高度近似为零均值高斯随机变量，反射相位扰动的方差越大，不同海面 realization 的镜面相干叠加越容易相互抵消。
 
 当 \(H_s=0\) 时，\(\sigma_\eta=0\)，因此
 
@@ -395,6 +426,25 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
 8. 增大 \(H_s\) 时，相干镜面项下降，散射功率预算增强。增大 \(C_{\rm sca}\) 时，原始散射功率单调增强，但最终注入散射能量仍受能量约束限制。
 
+9. SSA 物理趋势验证覆盖 \(H_s=0,0.05,0.2,0.5,1.0\) 和 \(f=4,6,8,10\ {\rm kHz}\)。在法向镜面基准下，`pm_convolution` 与 `ssa1_geometry` 都应满足
+
+   \[
+   R_{\rm coh}=R_0\exp(-2k_0^2\sigma_\eta^2).
+   \]
+
+   该验证同时检查固定频率下 \(H_s\) 增大时 \(|R_{\rm coh}|\) 与 \(E_{\rm coh}/E_{\rm inc}\) 不增，以及固定非零 \(H_s\) 下频率升高时 \(|R_{\rm coh}|\) 不增、相干指数更负。
+
+10. 新增的 Kirchhoff/SSA1 统计对照不是证明两者逐点等价。`kirchhoff_spatial` 是具体海面 realization 相位屏模型；`ssa1_geometry` 是 PM 谱驱动的一阶 pressure-release Dirichlet 统计反射/散射模型。二者应在统计趋势上互相支持，例如粗糙度增强时 coherent loss 增强、反射角谱展宽增强、反射通道幅相波动增强。
+
+    对照中共同观察
+
+    \[
+    |h_{\rm ref}|,\qquad |h_{\rm total}|,\qquad
+    \left|\frac{h_{\rm ref}}{h_{\rm dir}}\right|,
+    \]
+
+    以及反射角谱的 RMS 横向波数和高波数能量比例。Kirchhoff 的展宽指标来自具体 realization 的反射谱；SSA1 的展宽指标来自统计散射合成后的反射谱。有限 seed 下不要求每个样本或每个相邻海况严格单调。
+
 ## 11. 周期卷积与 zero-padding 对比
 
 当前 reduced-grid 对比覆盖 \(H_s=0,0.05,0.2\)，并分别检查 `pm_convolution` 与 `ssa1_geometry`。
@@ -436,8 +486,9 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 - \(C_{\rm sca}\) 是工程归一化常数，不是实验标定的绝对散射截面。
 - 周期卷积是默认兼容路径；zero-padding 线性卷积是 aliasing 审计路径。
 - 任意阻抗边界、Neumann 边界和一般反射系数到 SSA 几何项的映射尚未实现。
-- NLSSA、高阶多次散射、T-matrix 和实验标定海面散射截面尚未实现。
+- second-order SSA coherent correction、NLSSA、高阶多次散射、full T-matrix solver 和实验标定海面散射截面尚未实现。
+- 当前不向通信反射场注入倏逝散射分量。
 - 当前统计散射 realization 的跨频率相关性仍是简化处理，尚未建立物理或经验的宽带频率相关模型。因此宽带 \(H_f\) 的频域连续性仍需要后续专门研究。
 - 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；不应简单解释为海况强度随风速单调增强。
 
-因此，当前 `ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release / Dirichlet SSA statistical scattering branch。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。
+因此，当前 `ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。

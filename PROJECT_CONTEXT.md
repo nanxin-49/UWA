@@ -1566,3 +1566,234 @@ Recommended naming:
 - In papers or method notes, describe the module as:
   `PM-spectrum-driven first-order pressure-release / Dirichlet SSA statistical scattering branch`.
 - Avoid naming it complete SSA, NLSSA, T-matrix, impedance-boundary scattering, multiple-scattering, or experimentally calibrated sea-surface scattering.
+
+## 2026-06-17 SSA Physical Trend Validation Closeout
+
+Purpose:
+- Add a reduced-grid physical trend validation for the sea-surface SSA branch without running or modifying the communication chain.
+- Close the wording around the current SSA module as a PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model.
+- Keep `kirchhoff_spatial` as the default and preserve the existing `H_f = H_direct_f + H_reflect_f` channel semantics.
+
+New validation script:
+- `validate_ssa_physical_trends_vertical.m` scans:
+  - `Hs=[0 0.05 0.2 0.5 1.0]`;
+  - `f=[4000 6000 8000 10000]` Hz;
+  - `sea_wind_speed=5`;
+  - reduced grid `nx=ny=128`;
+  - `surface_ssa_random_scatter=false`;
+  - `surface_ssa_conv_padding='periodic'`.
+- Compared kernels:
+  - `pm_convolution`, retained as an engineering PM-spectrum convolution baseline;
+  - `ssa1_geometry`, retained as the first-order pressure-release / Dirichlet geometry kernel.
+- The script saves compact metadata tables only; it does not save full 2-D fields or full spectra.
+
+Recorded quantities:
+- Frequency, target sea state, `sigma_eta`, `k0`, `R_coh`, `abs(R_coh)`, coherent exponent, effective vertical factor, and PM spectrum variance audit.
+- Energy audit fields: `E_inc`, `E_coh`, `E_sca_raw`, `E_sca_limited`, `E_sca`, `E_sca_limit`, `E_ref`, and `energy_conservation_error`.
+- Kernel metadata: `kernel_mode`, `conv_padding`, `kernel_formula`, `G_SSA1_formula`, `boundary_condition`, `formula_source`, and limitations.
+
+Trend checks:
+- `Hs=0`: `R_coh=R0`, `W_eta_variance_discrete=0`, `E_sca_raw=0`, and `E_sca=0`.
+- Normal coherent formula at every scanned frequency and sea state:
+  `R_coh = R0*exp(-2*k0^2*sigma_eta^2)`.
+- Fixed frequency and increasing `Hs`: `abs(R_coh)` and `E_coh/E_inc` must not increase; `E_sca_limit/E_inc` must not decrease.
+- Fixed nonzero `Hs` and increasing frequency: `abs(R_coh)` must not increase and the coherent exponent must become more negative.
+- `ssa1_geometry` must record `G_SSA1(Ks,Ki;f)=4*gamma(Ks)*gamma(Ki)` and `pressure-release / Dirichlet`, and it must reject non-Dirichlet `surface_reflect_coeff`.
+- `pm_convolution` must remain clearly labeled as an engineering baseline and must not be described as strict SSA.
+
+Expected artifacts:
+- `validate_ssa_physical_trends_vertical_result.mat`, with `summary_table`, `trend_table`, and `validation_report`.
+- `validate_ssa_abs_R_coh_vs_Hs.png`.
+- `validate_ssa_abs_R_coh_vs_frequency.png`.
+- `validate_ssa_coherent_energy_fraction_vs_Hs.png`.
+- `validate_ssa_scatter_budget_fraction_vs_Hs.png`.
+- `validate_ssa_W_eta_variance_check.png`.
+
+Documentation update:
+- `vertical_comm_guide.md` now states that Broschat 1993 is used for coherent reflection coefficient interpretation, not as the source of `P_sca`.
+- It separates the Kirchhoff realization phase screen from the SSA coherent statistical average exponent.
+- It records the first-order Dirichlet noncoherent power kernel:
+  `P_sca(Ks)=4*C_norm*gamma(Ks)*[W_eta*(gamma(Ki)*abs(Psi_inc(Ki))^2)](Ks)*DeltaKx*DeltaKy`.
+- It states that `C_norm` / `surface_ssa_scatter_scale` is an engineering normalization parameter, not an experimentally calibrated absolute scattering cross-section constant.
+
+Remaining physical boundaries:
+- No second-order SSA coherent correction.
+- No NLSSA.
+- No full T-matrix solver.
+- No impedance-boundary or Neumann-boundary SSA factor.
+- No multiple scattering.
+- No evanescent scattering injection into the communication reflected field.
+- No experimentally calibrated bistatic scattering cross section.
+
+## 2026-06-18 SSA1 vs Kirchhoff Surface Statistics Comparison
+
+Purpose:
+- Compare the PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model against the default Kirchhoff realization phase-screen model.
+- Validate statistical trend compatibility, not sample-wise equivalence.
+- Keep communication scripts, BER/SER, WAPE marching, default `kirchhoff_spatial`, and `H_f = H_direct_f + H_reflect_f` semantics unchanged.
+
+New comparison script:
+- `compare_ssa1_kirchhoff_surface_statistics_vertical.m`.
+- Default scan:
+  - `Hs=[0 0.05 0.2 0.5 1.0]`;
+  - `f=[4000 6000 8000 10000]` Hz;
+  - `sea_seed=12345+(0:15)`;
+  - `sea_wind_speed=5`;
+  - reduced grid `nx=ny=64`;
+  - `show_figures=false`, `save_mode='rx_only'`, `enforce_1_over_R=false`;
+  - `surface_boundary_redistribution_diagnostics=true`.
+- Default model set:
+  - `kirchhoff_spatial`;
+  - `ssa_stat_kernel` with `surface_ssa_kernel_mode='ssa1_geometry'`.
+- Optional engineering baseline:
+  - `ssa_stat_kernel` with `surface_ssa_kernel_mode='pm_convolution'`;
+  - enabled only by environment flag, and not described as strict SSA.
+
+Outputs:
+- `compare_ssa1_kirchhoff_surface_statistics_vertical_result.mat`, containing:
+  - `run_table`;
+  - `summary_table`;
+  - `trend_table`;
+  - `validation_report`.
+- Report figures:
+  - `compare_ssa1_kirchhoff_abs_h_reflect_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_abs_R_coh_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_coherent_fraction_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_scatter_budget_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_rms_delta_k_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_phase_variance_vs_Hs.png`.
+
+Recorded run-level quantities:
+- Channel statistics: `h_reflect`, `abs_h_reflect`, `phase_h_reflect`, `h_total`, `abs_h_total`, and `h_reflect/h_direct` magnitude/phase.
+- SSA metadata where applicable: `R_coh`, `abs_R_coh`, `E_inc`, `E_coh`, `E_sca`, `E_sca_limit`, `E_ref`, and `energy_conservation_error`.
+- Angular-spectrum spread:
+  - SSA rows use `ssa_stat_kernel_meta.reflected_spectrum_stats`;
+  - Kirchhoff rows use `boundary_redistribution_diagnostics.reflect_rms_delta_k_rad_per_m`, `reflect_high_k_fraction`, and `centroid_shift_mag_rad_per_m`;
+  - unavailable fields remain `NaN` rather than fabricated.
+
+Validation interpretation:
+- Hard checks:
+  - all rows satisfy `max(abs(H_f-H_direct_f-H_reflect_f)) <= 1e-10`;
+  - `Hs=0` `ssa1_geometry` and `kirchhoff_spatial` reflected/total channel samples match to roundoff;
+  - `ssa1_geometry` keeps `energy_conservation_error <= 1e-12`;
+  - `ssa1_geometry` metadata records `G_SSA1=4*gamma(Ks)*gamma(Ki)` and `pressure-release / Dirichlet`.
+- Compatibility observations:
+  - as `Hs` increases, SSA1 `abs(R_coh)` and `E_coh/E_inc` decrease while `E_sca_limit/E_inc` increases;
+  - Kirchhoff reflected spectrum should broaden from flat to rough sea through RMS delta-k or high-k fraction;
+  - frequency trends are recorded as compatibility evidence, not as proof of realization-by-realization equivalence.
+
+Full 16-seed reduced-grid result:
+- The default comparison was completed with the default 16 seeds, 5 sea states, 4 frequencies, 2 models, and `nx=ny=64`.
+- Total reduced scalar cases: `640`.
+- Result tables:
+  - `run_table`: 640 rows;
+  - `summary_table`: 40 rows;
+  - `trend_table`: 156 rows.
+- Hard checks:
+  - `hard_checks_passed=true`;
+  - `hard_fail_count=0`;
+  - maximum channel invariant error `max(abs(H_f-H_direct_f-H_reflect_f))=1.5516e-17`;
+  - maximum `Hs=0` SSA1/Kirchhoff reflected/total channel difference `2.2205e-16`;
+  - maximum SSA1 `energy_conservation_error=9.9322e-16`.
+- Compatibility checks:
+  - `compatibility_observed_fraction=1.000`;
+  - `compat_fail_count=0`.
+- Kirchhoff reflected-spectrum broadening from `Hs=0` to `Hs=1.0` was observed at every tested frequency through the RMS delta-k metric:
+  - 4000 Hz: increase `3.4532 rad/m`;
+  - 6000 Hz: increase `3.2032 rad/m`;
+  - 8000 Hz: increase `3.1521 rad/m`;
+  - 10000 Hz: increase `3.1419 rad/m`.
+- Kirchhoff frequency-variability compatibility metrics were positive for every nonzero tested sea state:
+  - `Hs=0.05`: `0.80958`;
+  - `Hs=0.2`: `1.8987`;
+  - `Hs=0.5`: `0.23620`;
+  - `Hs=1.0`: `0.058270`.
+- The six `compare_ssa1_kirchhoff_*.png` figures were regenerated from the 16-seed result and copied into `ssa1_geometry_report_figures/`, replacing the earlier smoke-summary figures.
+
+Scope boundary:
+- This comparison does not prove Kirchhoff and SSA1 are pointwise equivalent.
+- Kirchhoff remains a concrete rough-surface realization phase-screen model.
+- SSA1 remains a PM-spectrum-driven first-order pressure-release Dirichlet statistical reflection/scattering model.
+- The project still does not include second-order SSA, NLSSA, T-matrix, impedance boundary, multiple scattering, evanescent scattering injection, or experimentally calibrated scattering cross sections.
+
+## 2026-06-23 SSA1 vs Broschat-Style SSA2 Coherent Reflection Comparison
+
+Purpose:
+- Add an optional coherent reflection order inside `ssa_stat_kernel` for comparing the default first-order coherent coefficient against a Broschat 1993-style second-order coherent correction.
+- Keep default `surface_ssa_coherent_order='ssa1'`.
+- Keep `kirchhoff_spatial`, WAPE marching, communication scripts, BER/SER logic, random scatter synthesis, and the first-order `P_sca` formula unchanged.
+
+Implemented interface:
+- New validated parameter:
+  - `surface_ssa_coherent_order='ssa1'` by default;
+  - optional value `surface_ssa_coherent_order='ssa2_broschat_coherent'`.
+- The parameter is passed from `vertical_channel_model.m` through `vertical_wape_propagator.m` to `pm_surface_boundary_model.m`.
+- `ssa2_broschat_coherent` is accepted only for pressure-release / Dirichlet reflection, `surface_reflect_coeff=-1`; otherwise the code raises:
+  `pm_surface_boundary_model:Ssa2DirichletReflectCoeffRequired`.
+
+Implemented formula:
+- SSA1 coherent reflection remains:
+  `R1 = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
+- In normal pressure-release reflection:
+  `R1 = -exp(-2*k0^2*sigma_eta^2)`.
+- The optional Broschat-style coherent correction uses the user-specified 2-D extension:
+  `R2 = R1 + 2*gamma_i*exp(-2*gamma_i^2*sigma_eta^2)*sum(W_eta(q)*(gamma(K_i+q)-gamma_i))*dkx*dky`.
+- The square-root branch is:
+  `gamma(K)=sqrt(complex(k0^2-|K|^2,0))`.
+  This keeps the full complex coherent integral and records propagating-only and evanescent contributions separately.
+- For normal tests, `K_i=[0,0]` and `gamma_i=k0`.
+- For oblique mode, the implementation records an effective 2-D approximation using an assumed `+kx` incident azimuth; physical conclusions should rely on normal or near-vertical cases.
+
+Metadata additions:
+- `coherent_order`.
+- `R_coh_ssa1`, `R_coh_ssa2`, and selected `R_coh`.
+- `abs_R_coh_ssa1`, `abs_R_coh_ssa2`.
+- `coherent_loss_ssa1_db`, `coherent_loss_ssa2_db`, `coherent_loss_delta_db`.
+- `delta_R_abs`, `delta_R_rel`.
+- `ssa2_correction_integral`, real/imag components, `ssa2_gamma_i_eff_rad_per_m`, `ssa2_K_i_eff_rad_per_m`.
+- `ssa2_sqrt_branch`, `ssa2_formula`, `ssa2_formula_source`, `ssa2_limitations`, `ssa2_evanescent_handling`.
+- `ssa2_propagating_integral`, `ssa2_evanescent_integral`, and `ssa2_evanescent_fraction_abs`.
+
+New validation script:
+- `compare_ssa1_ssa2_coherent_reflection_vertical.m`.
+- Default scan:
+  - `Hs=[0 0.05 0.2 0.5 1.0]`;
+  - `f=[4000 6000 8000 10000]` Hz;
+  - `surface_phase_mode='normal'`;
+  - `surface_boundary_model='ssa_stat_kernel'`;
+  - `surface_ssa_kernel_mode='ssa1_geometry'`;
+  - `surface_ssa_random_scatter=false`;
+  - reduced grid `nx=ny=128`.
+- The script saves:
+  - `compare_ssa1_ssa2_coherent_reflection_vertical_result.mat`;
+  - `run_table`, `summary_table`, and `validation_report`.
+- Figures:
+  - `compare_ssa1_ssa2_abs_R_coh_vs_Hs.png`;
+  - `compare_ssa1_ssa2_coherent_loss_vs_Hs.png`;
+  - `compare_ssa1_ssa2_loss_delta_vs_Hs.png`;
+  - `compare_ssa1_ssa2_loss_delta_vs_frequency.png`;
+  - `compare_ssa1_ssa2_negligible_region_heatmap.png`;
+  - `compare_ssa1_ssa2_evanescent_fraction_heatmap.png`.
+
+Executed validation:
+- `compare_ssa1_ssa2_coherent_reflection_vertical` completed successfully.
+- All checks passed:
+  - channel invariant maximum `4.0492e-18`;
+  - maximum energy conservation error `0`;
+  - maximum `W_eta` variance relative error `8.6736e-15`;
+  - `Hs=0` gives `R1=R2=R0`;
+  - normal SSA1 formula matched exactly within reported roundoff;
+  - `ssa2_broschat_coherent` rejected non-Dirichlet `surface_reflect_coeff=-0.8`.
+- Maximum absolute coherent-loss delta over the default grid was `0.370648 dB`.
+- With the `0.1 dB` negligible threshold:
+  - weak to moderate cases through `Hs<=0.5 m` stayed at or below about `0.1 dB`;
+  - the strongest low-frequency point `Hs=1 m`, `f=4000 Hz` exceeded the threshold at about `0.37065 dB`;
+  - high-frequency high-roughness cases can saturate the loss calculation near machine epsilon and should not be overinterpreted as accurate absolute loss.
+- `validate_ssa_stat_kernel_vertical` completed successfully after the new coherent-order metadata additions.
+
+Interpretation:
+- `ssa2_broschat_coherent` is a coherent-coefficient diagnostic, not a complete second-order SSA scattering model.
+- The first-order `ssa1_geometry` noncoherent scattering power remains:
+  `G_SSA1=4*gamma_s*gamma_i`.
+- The current recommendation is not to make SSA2 the default. It can be used as a sensitivity check, especially for strong roughness and lower frequencies.
+- A true second-order rough-surface model would still require second-order incoherent scattering, consistent normalization, and a broader validation basis.
