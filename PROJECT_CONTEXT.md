@@ -24,6 +24,12 @@ It is intended as a code-first reference for future maintenance and feature work
   - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed;
   - optional frequency-correlated random scattering modes are available for wideband stochastic-channel diagnostics, while the default remains independent per-frequency scatter;
   - reduced-grid scatter-scale calibration and compact applicability reporting scripts are available as engineering diagnostics.
+  - optional `ssa2_broschat_coherent` is implemented only as a coherent-reflection sensitivity diagnostic; second-order incoherent scattering is not implemented.
+- Optional reference-frequency surface-wavefield diagnostics can record:
+  - the incident center slice from `z_tx` to the sea surface;
+  - the reflected center slice from the sea surface to `z_rx`;
+  - the incident and reflected complex fields on the sea-surface plane.
+  This path is disabled by default and does not change channel values.
 - Current physics boundary:
   - this is not a complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering model;
   - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a physically or empirically calibrated model;
@@ -1619,7 +1625,7 @@ Documentation update:
 - It states that `C_norm` / `surface_ssa_scatter_scale` is an engineering normalization parameter, not an experimentally calibrated absolute scattering cross-section constant.
 
 Remaining physical boundaries:
-- No second-order SSA coherent correction.
+- At this stage there was no second-order SSA coherent correction. This historical limitation was later superseded by the coherent-only `ssa2_broschat_coherent` diagnostic documented in the 2026-06-23 section.
 - No NLSSA.
 - No full T-matrix solver.
 - No impedance-boundary or Neumann-boundary SSA factor.
@@ -1716,7 +1722,7 @@ Scope boundary:
 - This comparison does not prove Kirchhoff and SSA1 are pointwise equivalent.
 - Kirchhoff remains a concrete rough-surface realization phase-screen model.
 - SSA1 remains a PM-spectrum-driven first-order pressure-release Dirichlet statistical reflection/scattering model.
-- The project still does not include second-order SSA, NLSSA, T-matrix, impedance boundary, multiple scattering, evanescent scattering injection, or experimentally calibrated scattering cross sections.
+- At the time of this comparison, the project did not include second-order SSA. The later `ssa2_broschat_coherent` addition covers only the coherent reflection coefficient; second-order incoherent scattering, NLSSA, T-matrix, impedance boundary, multiple scattering, evanescent scattering injection, and experimentally calibrated scattering cross sections remain outside the current model.
 
 ## 2026-06-23 SSA1 vs Broschat-Style SSA2 Coherent Reflection Comparison
 
@@ -1930,3 +1936,110 @@ Current recommendation:
 - Keep `surface_ssa_coherent_order='ssa1'` by default; use `ssa2_broschat_coherent` as a coherent-loss sensitivity diagnostic.
 - Use `surface_ssa_frequency_correlation_mode='independent'` by default for backward compatibility.
 - Treat `shared_seed_phase` and `ar1_frequency` as optional wideband random-channel diagnostics until a physical or empirical frequency-correlation model is established.
+
+## 2026-06-24 Incident and Surface-Reflected Wavefield Visualization
+
+Purpose:
+- Show the shape of the incident wave approaching the sea surface and the reflected/scattered wave leaving the surface.
+- Keep the diagnostic separate from channel generation and communication processing.
+
+Interface:
+- New disabled-by-default configuration:
+  - `surface_wavefield_diagnostics=false`;
+  - `surface_wavefield_slice_axis='x'`;
+  - `surface_wavefield_max_z_samples=256`.
+- New stable output field:
+  - `output.surface_wavefield_meta`.
+- When disabled, the field remains present with `enabled=false` and empty arrays.
+- When enabled, only the reference-frequency center slice is sampled. Full three-dimensional propagation volumes are not saved.
+
+Recorded data:
+- incident complex-envelope slice for `z_tx -> 0`;
+- reflected complex-envelope slice for `0 -> z_rx`;
+- sea-surface incident and reflected complex fields;
+- transverse and depth coordinates;
+- reference frequency, `k0`, boundary model, normalization amplitude;
+- endpoint consistency errors against the existing surface and receiver fields;
+- carrier-reconstruction formulas and their visualization-only limitation.
+
+Core `output.surface_wavefield_meta` fields:
+- state and coordinates:
+  - `enabled`, `reference_frequency_hz`, `k0_rad_per_m`, `omega_rad_per_s`, `c0_m_per_s`;
+  - `slice_axis`, `fixed_coordinate_m`, `transverse_coordinate_m`;
+  - `incident_z_m`, `reflected_z_m`, `x_m`, `y_m`;
+- complex fields:
+  - `incident_field_slice`, `reflected_field_slice`;
+  - `surface_incident_xy`, `surface_reflected_xy`;
+- interpretation and audit:
+  - `surface_boundary_model`, `ssa_kernel_mode`, `phase_mode`;
+  - `normalization_amplitude`;
+  - `endpoint_consistency`;
+  - `carrier_reconstruction`.
+
+Visualization script:
+- `visualize_surface_reflection_wavefield_vertical.m`.
+- Default demonstration:
+  - `ssa_stat_kernel + ssa1_geometry`;
+  - `f=6000 Hz`;
+  - `Hs=0.2 m`;
+  - `128 x 128` transverse grid;
+  - `zero_padded` SSA convolution.
+- The model can be changed with `SURFACE_WAVEFIELD_MODEL`, including `kirchhoff_spatial`.
+- Outputs:
+  - `surface_wavefield_xz_comparison.png`;
+  - `surface_wavefield_xy_comparison.png`;
+  - `surface_wavefield_spectrum_comparison.png`;
+  - `surface_wavefield_instantaneous_pressure.mp4`;
+  - compact `surface_wavefield_visualization_result.mat`.
+
+Physical interpretation:
+- Static `x-z` plots show PE/WAPE complex-envelope magnitude, not instantaneous pressure.
+- Surface-plane phase plots show the complex phase of the incident and reflected envelopes.
+- Spectrum plots show discrete angular-spectrum redistribution. They are not calibrated bistatic scattering cross sections.
+- The animation reconstructs one nominal carrier period using:
+  - incident: `real(Psi_inc*exp(i*k0*(z_tx-z)-i*omega*t))`;
+  - reflected: `real(Psi_ref*exp(i*k0*z-i*omega*t))`.
+- The pressure-release phase reversal is already included in `Psi_ref`.
+- The carrier restoration uses nominal `c0` and is not a separate time-domain propagation solution.
+
+Reduced validation:
+- Script: `validate_surface_wavefield_visualization_vertical.m`.
+- Settings:
+  - `nx=ny=64`;
+  - `z_tx=20 m`, `z_rx=2 m`;
+  - `f=6000 Hz`, plus a `[4000,6000,8000] Hz` wideband invariant case;
+  - `ssa1_geometry` and `kirchhoff_spatial`.
+- Results:
+  - diagnostics-on versus diagnostics-off differences in `H_f`, `H_direct_f`, and `H_reflect_f`: `0`;
+  - flat pressure-release phase-reversal relative error: `2.6158e-16`;
+  - flat reflected-magnitude relative error: `2.0828e-16`;
+  - maximum wideband channel invariant error: `1.5516e-17`;
+  - incident-surface, reflected-surface, and reflected-receiver endpoint errors: `0`;
+  - all validation checks passed.
+
+Generated-example diagnostics:
+- Example settings:
+  - `ssa_stat_kernel + ssa1_geometry`;
+  - `f=6000 Hz`, `Hs=0.2 m`;
+  - `nx=ny=128`;
+  - `surface_ssa_conv_padding='zero_padded'`;
+  - `sea_seed=12345`.
+- Angular-spectrum results:
+  - incident RMS transverse wavenumber: `3.3332019367144 rad/m`;
+  - reflected RMS transverse wavenumber: `3.36650468954104 rad/m`;
+  - RMS increase: `0.0333027528266383 rad/m`;
+  - incident 90% energy radius: `5.06133446181766 rad/m`;
+  - reflected 90% energy radius: `5.11307005973656 rad/m`;
+  - 90% energy-radius increase: `0.0517355979189071 rad/m`.
+- These values describe one reduced-grid realization. They are visualization diagnostics, not universal rough-surface scattering coefficients.
+- Static PNG generation completed and `surface_wavefield_instantaneous_pressure.mp4` was written successfully.
+
+Regression coverage after integration:
+- Existing `validate_ssa_stat_kernel_vertical` completed successfully:
+  - all Hs=0, energy, seed, scatter-scale, Dirichlet-boundary, zero-padding, and dense-vs-FFT checks passed;
+  - maximum `W_eta` variance relative error: `8.6736e-15`;
+  - dense periodic sum versus FFT raw-scatter relative difference: `2.5247e-15`;
+  - maximum reduced wideband invariant error: `2.1346e-18`;
+  - reported energy-conservation errors remained `0`.
+- A one-condition reduced wideband communication smoke run completed through the existing `H_f -> H_baseband -> h_bb -> peak_sync/MMSE` consumer with diagnostics left at their default disabled state.
+- `git diff --check` passed.

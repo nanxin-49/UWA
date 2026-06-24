@@ -498,9 +498,80 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 - \(C_{\rm sca}\) 是工程归一化常数，不是实验标定的绝对散射截面。
 - 周期卷积是默认兼容路径；zero-padding 线性卷积是 aliasing 审计路径。
 - 任意阻抗边界、Neumann 边界和一般反射系数到 SSA 几何项的映射尚未实现。
-- second-order SSA coherent correction、NLSSA、高阶多次散射、full T-matrix solver 和实验标定海面散射截面尚未实现。
+- 当前只实现了可选的 Broschat-style SSA2 coherent reflection coefficient 诊断；二阶非相干散射功率、完整 SSA2 T-matrix、NLSSA、高阶多次散射和实验标定海面散射截面仍未实现。
 - 当前不向通信反射场注入倏逝散射分量。
 - 当前统计散射 realization 的跨频率相关性只有 independent、共享随机样本和一阶自回归这类工程随机模型；尚未建立物理或经验标定的宽带频率相关模型。因此宽带 \(H_f\) 的频域连续性仍需要后续专门研究。
 - 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；不应简单解释为海况强度随风速单调增强。
 
 因此，当前 `ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。
+
+## 13. 入射与海面反射声场的可视化
+
+为了直观比较声波到达海面前后的形状，当前实现可以在参考频点记录两段中心截面：
+
+1. 入射段从发射深度 \(z_{\rm tx}\) 向上传播到海面 \(z=0\)；
+2. 反射段从海面 \(z=0\) 向下传播到接收深度 \(z_{\rm rx}\)。
+
+静态传播图显示的是 PE/WAPE 复包络的幅度
+
+\[
+20\log_{10}|\Psi(x,z)|,
+\]
+
+而不是某个瞬间的真实声压。入射和反射图使用同一个幅度参考，因此可以同时观察波束形状和反射衰减，不能把两幅图分别归一化后再比较强弱。
+
+海面平面图比较
+
+\[
+|\Psi_{\rm inc}(x,y)|,\quad \arg\Psi_{\rm inc}(x,y),
+\quad
+|\Psi_{\rm ref}(x,y)|,\quad \arg\Psi_{\rm ref}(x,y),
+\]
+
+用于观察粗糙边界造成的幅度起伏和相位畸变。角谱图比较
+
+\[
+|\Psi_{\rm inc}(K_x,K_y)|^2
+\quad\text{与}\quad
+|\Psi_{\rm ref}(K_x,K_y)|^2,
+\]
+
+并给出横向波数 RMS 和 90% 能量半径。角谱变宽表示能量被重新分配到更大的横向波数，但该图仍是离散反射场诊断，不能解释为实验标定的双站散射截面。
+
+为了显示波峰和波谷的运动，可以用名义声速 \(c_0\) 为复包络恢复载波：
+
+\[
+p_{\rm inc}(x,z,t)=
+\Re\left\{
+\Psi_{\rm inc}(x,z)
+\exp\left[i k_0(z_{\rm tx}-z)-i\omega t\right]
+\right\},
+\]
+
+\[
+p_{\rm ref}(x,z,t)=
+\Re\left\{
+\Psi_{\rm ref}(x,z)
+\exp\left[i k_0z-i\omega t\right]
+\right\}.
+\]
+
+这里的动画只是在单频 PE 复包络上恢复一个载波周期，用于展示入射向上、反射向下的传播方向和波前结构；它不是额外的时域声场求解。压力释放自由海面的 \(R_0=-1\) 已包含在 \(\Psi_{\rm ref}\) 中，因此不应再人为增加一次相位反转。
+
+该诊断默认关闭，仅在显式启用时保存参考频点的截面和海面二维复场。它不改变
+
+\[
+H(f)=H_{\rm dir}(f)+H_{\rm ref}(f)
+\]
+
+及其通信链路接口。
+
+当前 reduced-grid 验证使用 \(64\times64\) 横向网格、\(z_{\rm tx}=20\) m、\(z_{\rm rx}=2\) m，并覆盖 `ssa1_geometry`、`kirchhoff_spatial` 和 \(4,6,8\) kHz 的宽带不变量检查。结果为：
+
+- 开启与关闭该诊断时，\(H_f\)、\(H_{\rm dir}\) 和 \(H_{\rm ref}\) 的最大差异均为 0；
+- 当 \(H_s=0\) 时，反射场满足压力释放边界的相位反转，\(\Psi_{\rm ref}\approx-\Psi_{\rm inc}\)，相对误差为 \(2.62\times10^{-16}\)；
+- 平整海面反射前后幅度一致性的相对误差为 \(2.08\times10^{-16}\)；
+- 宽带总信道代数不变量的最大误差为 \(1.55\times10^{-17}\)；
+- 入射场海面端点、反射场海面起点和反射场接收端点与原传播结果的差异均为 0。
+
+在默认展示算例 \(f=6000\) Hz、\(H_s=0.2\) m、`ssa1_geometry` 和 \(128\times128\) 网格下，入射角谱横向波数 RMS 为 \(3.3332\ {\rm rad/m}\)，反射角谱为 \(3.3665\ {\rm rad/m}\)；90% 能量半径分别为 \(5.0613\ {\rm rad/m}\) 和 \(5.1131\ {\rm rad/m}\)。这说明该次 realization 中存在轻微角谱展宽，但这些数值只对应当前网格、海况和随机种子，不能外推为普适散射规律。静态图和一个载波周期的 MP4 动画均已成功生成。
