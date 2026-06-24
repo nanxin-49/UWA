@@ -380,6 +380,8 @@ z(K)\sim\mathcal{CN}(0,1).
 
 若关闭随机散射，模型仍计算 \(P_{\rm sca}\) 和能量审计量，但不把 \(\Psi_{\rm sca}\) 注入反射场。此时通信链路只接收相干镜面反射项。
 
+宽带频率轴上，随机散射 realization 还需要说明跨频率相关性。默认处理仍是各频点独立生成复高斯随机谱，这保持了早期实现的兼容性。当前还提供两个仅用于随机信道生成诊断的工程相关模式：一种是在不同频点复用同一个随机相位样本，另一种是在频率序列上使用一阶自回归相关样本。它们的作用是检查宽带 \(H_f\) 的频域连续性对随机散射 realization 的敏感性；它们不是新的 SSA 物理散射公式，也不是经过实验标定的海面时间频率相关模型。
+
 ## 9. 通信链路解释
 
 海面模型只改变频域信道 \(H(f)\)。后续 MPSK 通信仍沿用同一链路：
@@ -445,6 +447,16 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
     以及反射角谱的 RMS 横向波数和高波数能量比例。Kirchhoff 的展宽指标来自具体 realization 的反射谱；SSA1 的展宽指标来自统计散射合成后的反射谱。有限 seed 下不要求每个样本或每个相邻海况严格单调。
 
+11. `surface_ssa_scatter_scale` 的标定被作为工程诊断处理。当前 reduced-grid 标定使用 `kirchhoff_spatial` 的多 seed 统计作为 realization-based reference，比较 \(E_{\rm sca}/E_{\rm inc}\)、反射角谱展宽、\(|h_{\rm ref}|\) 和 \(|h_{\rm ref}/h_{\rm dir}|\) 等统计量，给出候选 \(C_{\rm sca}\) 的相对误差。该标定不把 \(C_{\rm sca}\) 解释为实验绝对散射截面。
+
+12. 跨频率相关随机散射验证表明，默认 independent 模式保持原有行为；相关模式只改变随机非相干反射样本，不改变直达项，也不改变
+    \[
+    H(f)=H_{\rm dir}(f)+H_{\rm ref}(f)
+    \]
+    的接口语义。它们用于后续宽带随机信道生成研究，而不是替代当前的海面散射核。
+
+13. 新增适用性汇总只读取已有 reduced-grid 结果，汇总 SSA1/SSA2 coherent loss 差异、periodic/zero-padding 差异、Kirchhoff 标定残差和频率相关性诊断。该表是工程使用指南，不是完整物理适用域图。
+
 ## 11. 周期卷积与 zero-padding 对比
 
 当前 reduced-grid 对比覆盖 \(H_s=0,0.05,0.2\)，并分别检查 `pm_convolution` 与 `ssa1_geometry`。
@@ -488,7 +500,7 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 - 任意阻抗边界、Neumann 边界和一般反射系数到 SSA 几何项的映射尚未实现。
 - second-order SSA coherent correction、NLSSA、高阶多次散射、full T-matrix solver 和实验标定海面散射截面尚未实现。
 - 当前不向通信反射场注入倏逝散射分量。
-- 当前统计散射 realization 的跨频率相关性仍是简化处理，尚未建立物理或经验的宽带频率相关模型。因此宽带 \(H_f\) 的频域连续性仍需要后续专门研究。
+- 当前统计散射 realization 的跨频率相关性只有 independent、共享随机样本和一阶自回归这类工程随机模型；尚未建立物理或经验标定的宽带频率相关模型。因此宽带 \(H_f\) 的频域连续性仍需要后续专门研究。
 - 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；不应简单解释为海况强度随风速单调增强。
 
 因此，当前 `ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。

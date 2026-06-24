@@ -21,10 +21,12 @@ It is intended as a code-first reference for future maintenance and feature work
 - Current SSA statistical kernel status:
   - PM-spectrum-driven statistical scattering is connected to the existing reflected PE path and communication `H_f` consumer;
   - `periodic` and `zero_padded` convolution paths are implemented for `pm_convolution` and `ssa1_geometry`;
-  - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed.
+  - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed;
+  - optional frequency-correlated random scattering modes are available for wideband stochastic-channel diagnostics, while the default remains independent per-frequency scatter;
+  - reduced-grid scatter-scale calibration and compact applicability reporting scripts are available as engineering diagnostics.
 - Current physics boundary:
   - this is not a complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering model;
-  - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a dedicated model;
+  - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a physically or empirically calibrated model;
   - under fixed `sea_hs_target` normalization, changing wind speed mainly changes PM spectral shape, not a monotonic sea-state intensity by itself.
 
 ## Repository Role of Each Main MATLAB File
@@ -1797,3 +1799,134 @@ Interpretation:
   `G_SSA1=4*gamma_s*gamma_i`.
 - The current recommendation is not to make SSA2 the default. It can be used as a sensitivity check, especially for strong roughness and lower frequencies.
 - A true second-order rough-surface model would still require second-order incoherent scattering, consistent normalization, and a broader validation basis.
+
+## 2026-06-23 SSA Scatter-Scale Calibration and Frequency-Correlation Diagnostics
+
+Purpose:
+- Keep the core WAPE propagation, communication scripts, BER/SER logic, and default `kirchhoff_spatial` behavior unchanged.
+- Add reduced-grid engineering diagnostics for two practical SSA statistical-kernel questions:
+  - how to choose the numerical normalization `surface_ssa_scatter_scale` against a Kirchhoff realization-based reference;
+  - how sensitive wideband random reflected channels are to the assumed cross-frequency correlation of the random scatter spectrum.
+
+Checkpoint status:
+- A checkpoint commit was created before these follow-up diagnostics:
+  - `ca913a5 feat: add SSA coherent diagnostics and validation scripts`.
+- Push to `origin/codex/rename-core-matlab-files` was attempted from the current environment but was blocked by the environment's external remote export policy. The local commit remains available.
+
+New random-scatter frequency-correlation interface:
+- `vertical_channel_model.m` now validates:
+  - `surface_ssa_frequency_correlation_mode`, default `'independent'`;
+  - allowed values: `'independent'`, `'shared_seed_phase'`, `'ar1_frequency'`;
+  - `surface_ssa_frequency_correlation_rho`, default `0.8`, constrained to `0 <= rho < 1`.
+- `vertical_wape_propagator.m` passes these fields into the surface-boundary configuration.
+- `pm_surface_boundary_model.m` uses them only when `surface_boundary_model='ssa_stat_kernel'` and `surface_ssa_random_scatter=true`.
+- Default `'independent'` preserves the previous seed rule and random spectrum generation.
+- `'shared_seed_phase'` reuses the same complex Gaussian random scatter spectrum across frequency bins.
+- `'ar1_frequency'` creates a deterministic first-order autoregressive complex Gaussian sequence along the frequency index.
+- Metadata records:
+  - `frequency_correlation_mode`;
+  - `frequency_correlation_rho`;
+  - random spectrum base and innovation seeds;
+  - frequency index and generation rule.
+
+Important scope boundary:
+- These frequency-correlation options are stochastic-channel generation diagnostics.
+- They are not new SSA physics, not a sea-surface time-evolution model, and not an experimentally calibrated cross-frequency coherence law.
+- They do not alter the direct path, coherent reflection formula, `P_sca` formula, or `H_f = H_direct_f + H_reflect_f` semantics.
+
+New scatter-scale calibration script:
+- `calibrate_ssa_scatter_scale_vertical.m`.
+- It uses `kirchhoff_spatial` multi-seed reduced-grid statistics as a realization-based reference and compares `ssa_stat_kernel + ssa1_geometry` across candidate `surface_ssa_scatter_scale` values.
+- Calibration metrics include:
+  - `abs(h_reflect)` mean/std;
+  - `abs(h_reflect/h_direct)` mean/std;
+  - reflected spectrum RMS delta-k;
+  - SSA scatter budget terms such as `E_sca_limit/E_inc`.
+- Outputs:
+  - `calibrate_ssa_scatter_scale_vertical_result.mat`;
+  - `calibrate_ssa_scatter_scale_summary.png`;
+  - `run_table`, `summary_table`, `calibration_table`, `candidate_table`, `global_scale_table`, and `validation_report`.
+- Interpretation:
+  - `surface_ssa_scatter_scale` remains an engineering/numerical normalization parameter;
+  - it is not an experimentally calibrated absolute scattering cross-section constant.
+
+Scatter-scale smoke validation:
+- Command overrides used:
+  - `SSA_SCALE_CAL_HS_LIST='0.05 0.2'`;
+  - `SSA_SCALE_CAL_F_LIST_HZ='4000 8000'`;
+  - `SSA_SCALE_CAL_SEED_COUNT='2'`;
+  - `SSA_SCALE_CAL_SCALE_VALUES='0 1 4'`;
+  - `SSA_SCALE_CAL_GRID_N='64'`.
+- The script completed successfully.
+- Recommended condition-wise scales in the smoke run:
+  - `Hs=0.05`, `4000 Hz`: scale `0`;
+  - `Hs=0.05`, `8000 Hz`: scale `1`;
+  - `Hs=0.2`, `4000 Hz`: scale `1`;
+  - `Hs=0.2`, `8000 Hz`: scale `1`.
+- Global candidate objective in the smoke run:
+  - scale `0`: mean objective `0.31582`;
+  - scale `1`: mean objective `0.085728`;
+  - scale `4`: mean objective `0.085728`.
+- Smoke-run global recommendation: scale `1`.
+- Because this was a two-seed smoke run, it should not be treated as a final physical calibration.
+
+New frequency-correlation validation script:
+- `validate_ssa_frequency_correlation_vertical.m`.
+- It compares:
+  - `'independent'`;
+  - `'shared_seed_phase'`;
+  - `'ar1_frequency'`.
+- It computes random reflected-channel residuals by subtracting a `surface_ssa_random_scatter=false` coherent reference from random-scatter runs.
+- Validation metrics include:
+  - adjacent-frequency random-reflection coherence;
+  - repeatability with fixed seed;
+  - direct-path stability;
+  - `H_f = H_direct_f + H_reflect_f` invariant error.
+- Outputs:
+  - `validate_ssa_frequency_correlation_vertical_result.mat`;
+  - `validate_ssa_frequency_correlation_summary.png`;
+  - `run_table`, `summary_table`, `trend_table`, and `validation_report`.
+
+Frequency-correlation smoke validation:
+- Command overrides used:
+  - `SSA_FREQ_CORR_SEED_COUNT='2'`;
+  - `SSA_FREQ_CORR_GRID_N='64'`;
+  - `SSA_FREQ_CORR_RHO='0.85'`.
+- The script completed successfully.
+- Adjacent-frequency random-reflection coherence means:
+  - independent: `0.24155`;
+  - shared seed phase: `0.99993`;
+  - AR(1): `0.78367`.
+- Maximum channel invariant error: `7.1524e-18`.
+- Repeatability error for fixed seed: `0`.
+- Direct-path difference across correlation modes: `0`.
+- Interpretation:
+  - correlated modes increase random reflected-frequency continuity relative to the independent baseline;
+  - only the random reflected component changes;
+  - the channel interface and direct path remain stable.
+
+New applicability summary script:
+- `summarize_ssa_applicability_vertical.m`.
+- It only reads existing compact result files; it does not run PE/WAPE or communication simulations.
+- It combines available diagnostics from:
+  - SSA1/SSA2 coherent comparison;
+  - periodic vs zero-padded convolution comparison;
+  - scatter-scale calibration;
+  - frequency-correlation validation.
+- Outputs:
+  - `summarize_ssa_applicability_vertical_result.mat`;
+  - `summarize_ssa_applicability_vertical_table.csv`.
+- The table is an engineering guide with columns for:
+  - recommended kernel;
+  - recommended scale when available;
+  - SSA2 coherent-loss attention flag;
+  - padding-difference attention flag;
+  - wideband frequency-correlation risk note.
+- It is not an experimental validity map and not a full SSA/NLSSA applicability proof.
+
+Current recommendation:
+- Keep `kirchhoff_spatial` as the default realization-based surface model.
+- Keep `ssa_stat_kernel + ssa1_geometry` as the current PM-spectrum-driven first-order pressure-release / Dirichlet statistical reflection/scattering research branch.
+- Keep `surface_ssa_coherent_order='ssa1'` by default; use `ssa2_broschat_coherent` as a coherent-loss sensitivity diagnostic.
+- Use `surface_ssa_frequency_correlation_mode='independent'` by default for backward compatibility.
+- Treat `shared_seed_phase` and `ar1_frequency` as optional wideband random-channel diagnostics until a physical or empirical frequency-correlation model is established.
