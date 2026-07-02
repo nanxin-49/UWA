@@ -25,6 +25,8 @@ It is intended as a code-first reference for future maintenance and feature work
   - optional frequency-correlated random scattering modes are available for wideband stochastic-channel diagnostics, while the default remains independent per-frequency scatter;
   - reduced-grid scatter-scale calibration and compact applicability reporting scripts are available as engineering diagnostics.
   - optional `ssa2_broschat_coherent` is implemented only as a coherent-reflection sensitivity diagnostic; second-order incoherent scattering is not implemented.
+- Optional SSA component diagnostics can decompose the surface-reflected field into coherent specular and incoherent scatter components, march both components to the receiver, and report whether the scatter-only received contribution is negligible for the current settings. This path is disabled by default and does not alter `H_reflect_f`.
+- A surface-only plane-wave coherent-reflection diagnostic is available in `compare_plane_wave_surface_coherent_reflection_vertical.m`. It bypasses PE/WAPE and communication code, uses a vertical plane wave at the sea surface, and compares raw-PM SSA1 coherent reflection with Kirchhoff phase-screen ensemble coherent reflection under wind-speed sweeps.
 - Optional reference-frequency surface-wavefield diagnostics can record:
   - the incident center slice from `z_tx` to the sea surface;
   - the reflected center slice from the sea surface to `z_rx`;
@@ -34,6 +36,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - this is not a complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering model;
   - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a physically or empirically calibrated model;
   - under fixed `sea_hs_target` normalization, changing wind speed mainly changes PM spectral shape, not a monotonic sea-state intensity by itself.
+  - in the plane-wave raw-PM diagnostic, no `sea_hs_target` normalization is applied, so wind speed changes both the PM spectral shape and the integrated roughness variance.
 
 ## Repository Role of Each Main MATLAB File
 
@@ -283,8 +286,10 @@ It is intended as a code-first reference for future maintenance and feature work
   - `surface_boundary_redistribution_debug`
 
 ### Kirchhoff surface boundary interface
-- Default behavior is unchanged:
+- Default surface model remains Kirchhoff, but the rough-surface phase convention has been corrected:
   - `surface_boundary_model='kirchhoff_spatial'`
+  - `delta_phi = k0*(cos_i+cos_r)*eta`
+  - normal incidence gives `delta_phi=2*k0*eta`
   - `G_xy = surface_reflect_coeff * exp(1i*delta_phi)`
   - `psi_ref_xy = G_xy .* psi_inc_xy`
 - Optional k-domain interface:
@@ -313,7 +318,8 @@ It is intended as a code-first reference for future maintenance and feature work
 - Current limits:
   - This is not a T-matrix, SSA, or NLSSA rough-surface solver.
   - It is not a fast statistical channel generator.
-  - It keeps the PM sea synthesis, phase factor, reflection coefficient, and two-segment reflected path unchanged.
+  - It keeps the PM sea synthesis, reflection coefficient, and two-segment reflected path unchanged.
+  - The pre-fix `delta_phi=2*k0*(cos_i+cos_r)*eta` convention is retained only in standalone diagnostics as a legacy comparison.
 
 ### Boundary screen coupling diagnostics
 - `surface_boundary_coupling_diagnostics=false` by default. When enabled, the code only adds metadata and does not change the reflected field or channel outputs.
@@ -1310,10 +1316,11 @@ Implemented interface and formulas:
 - The coherent term is now interpreted as the pressure-release / Dirichlet SSA coherent reflection coefficient:
   `R_coh = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
   In normal specular reflection this reduces to `R_coh = -exp(-2*k0^2*sigma_eta^2)` for `R0=-1`.
-- The raw incoherent power uses the engineering kernel `P_sca_raw = surface_ssa_scatter_scale*abs(R0)^2*(2*k0*phase_factor_eff)^2*dkx*dky*circconv(W_eta,abs(Psi_inc_k).^2)`.
+- The raw incoherent power uses the corrected engineering baseline scale `P_sca_raw = surface_ssa_scatter_scale*abs(R0)^2*(k0*phase_factor_eff)^2*dkx*dky*circconv(W_eta,abs(Psi_inc_k).^2)`, where `phase_factor_eff` represents the effective `cos_i+cos_s` factor. The pre-correction `2*k0*phase_factor_eff` scale is retained only in metadata as a legacy audit value.
 - Energy limiting enforces `E_coh+E_sca <= E_inc`; after random scatter synthesis, the final combined reflected spectrum is also checked against `E_inc`.
 - The random scatter seed is `seed_ssa = sea_seed + surface_ssa_seed_offset + frequency_index - 1`, with default `surface_ssa_seed_offset=100000`.
 - The current engineering kernel is explicitly identified by `surface_ssa_kernel_mode='pm_convolution'`.
+- `pm_convolution` remains an engineering PM-spectrum baseline, not a strict SSA geometry kernel or a calibrated scattering cross section.
 - `ssa1_geometry` and `ssa1_debug_dense` implement the `SSA.md` first-order Dirichlet geometry factor `G_SSA1(K,K';f)=4*gamma(K,f)*gamma(K',f)`.
 
 Metadata:
@@ -1530,7 +1537,7 @@ Recommended next stage, not implemented here:
 
 Purpose:
 - Correct the `ssa_stat_kernel` coherent reflection coefficient so it matches the pressure-release / Dirichlet first-order SSA coherent reflection interpretation.
-- Keep the Kirchhoff realization phase-screen path unchanged.
+- At this stage the Kirchhoff realization phase-screen path was not changed; a later correction updates its phase convention to `delta_phi=k0*(cos_i+cos_r)*eta`.
 - Keep `pm_convolution` as an engineering PM-spectrum convolution baseline and `ssa1_geometry` as the first-order pressure-release / Dirichlet scattering geometry.
 
 Formula correction:
@@ -1546,8 +1553,8 @@ Formula correction:
 Implementation notes:
 - `phase_factor_eff` is still retained as the effective `cos_i+cos_s` geometry factor.
 - `coherent_gamma_sum_eff_rad_per_m = k0*phase_factor_eff` is now the quantity used in the SSA coherent exponent.
-- The Kirchhoff phase screen still uses the existing double-height phase expression and was not changed.
-- The `pm_convolution` noncoherent baseline still uses its engineering scalar normalization; it is not described as strict SSA.
+- The SSA correction did not change Kirchhoff at that time. The current Kirchhoff phase screen now uses `delta_phi=k0*(cos_i+cos_r)*eta`, giving `2*k0*eta` for normal incidence.
+- The `pm_convolution` noncoherent baseline remains an engineering scalar normalization; after the Kirchhoff phase audit its phase scale is `k0*phase_factor_eff`, with the older `2*k0*phase_factor_eff` value kept only as legacy metadata.
 - `ssa1_geometry` still computes the first-order Dirichlet scattering power through `G_SSA1=4*gamma_s*gamma_i` and still rejects non-Dirichlet `surface_reflect_coeff`.
 
 Metadata additions:
@@ -2043,3 +2050,149 @@ Regression coverage after integration:
   - reported energy-conservation errors remained `0`.
 - A one-condition reduced wideband communication smoke run completed through the existing `H_f -> H_baseband -> h_bb -> peak_sync/MMSE` consumer with diagnostics left at their default disabled state.
 - `git diff --check` passed.
+
+## 2026-06-30 Specular vs Incoherent SSA Reflection Contribution Diagnostics
+
+Purpose:
+- Quantify whether the SSA1 incoherent scatter component can be ignored under selected sea-surface and frequency settings.
+- Keep the default `kirchhoff_spatial` model, WAPE marching, communication scripts, BER/SER logic, and `H_f = H_direct_f + H_reflect_f` semantics unchanged.
+
+New disabled-by-default interface:
+- `vertical_channel_model.m` validates `surface_ssa_component_diagnostics=false` by default.
+- When enabled with `surface_boundary_model='ssa_stat_kernel'`, `vertical_wape_propagator.m` decomposes the sea-surface reflected field as:
+  - `Psi_coh = R_coh * Psi_inc`;
+  - `Psi_sca = Psi_ref - Psi_coh`.
+- It then marches `Psi_coh` and `Psi_sca` separately from the sea surface to the receiver and stores the result in `output.surface_ssa_component_meta`.
+- The original reflected field and public channel fields are unchanged:
+  - `H_reflect_f` remains the result of the full reflected field;
+  - `H_f = H_direct_f + H_reflect_f` remains the only channel composition used by downstream scripts.
+
+Core diagnostic fields:
+- Receiver components:
+  - `h_reflect_coh_f`;
+  - `h_reflect_sca_f`;
+  - `h_reflect_total_f`;
+  - `scatter_to_coherent_rx_db_f`;
+  - `component_sum_error_rel_f`.
+- Surface spectral energy audit:
+  - `surface_E_inc_f`;
+  - `surface_E_coh_f`;
+  - `surface_E_sca_f`;
+  - `surface_E_sca_limited_f`;
+  - `surface_E_ref_f`;
+  - `scatter_energy_fraction_db_f`;
+  - `energy_conservation_error_f`;
+  - `W_eta_variance_rel_error_f`.
+
+New comparison script:
+- `compare_specular_incoherent_surface_reflection_vertical.m`.
+- Default reduced scan:
+  - wind speed `[3,5,8,12] m/s`;
+  - frequency `[4000,6000,8000,10000] Hz`;
+  - fixed `Hs_target=0.5 m`;
+  - `seed=12345+(0:7)`;
+  - `nx=ny=128`;
+  - `ssa_stat_kernel + ssa1_geometry`;
+  - `surface_ssa_random_scatter=true`.
+- Environment variables can reduce the run for smoke tests:
+  - `SPEC_INCOH_WIND_LIST`;
+  - `SPEC_INCOH_F_LIST_HZ`;
+  - `SPEC_INCOH_SEED_COUNT`;
+  - `SPEC_INCOH_GRID_N`;
+  - `SPEC_INCOH_HS_TARGET`;
+  - `SPEC_INCOH_SCATTER_SCALE`;
+  - `SPEC_INCOH_CONV_PADDING`;
+  - `SPEC_INCOH_RESULT_FILE`.
+
+Outputs:
+- `compare_specular_incoherent_surface_reflection_vertical_result.mat`;
+- `compare_specular_incoherent_surface_reflection_vertical_summary.csv`;
+- `run_table`, `summary_table`, `decision_table`, and `validation_report`;
+- PNG figures:
+  - `specular_incoherent_Ecoh_Esca_vs_frequency.png`;
+  - `specular_incoherent_rx_ratio_vs_frequency.png`;
+  - `specular_incoherent_rx_abs_vs_frequency.png`;
+  - `specular_incoherent_decision_heatmap.png`;
+  - `specular_incoherent_energy_limit_heatmap.png`.
+
+Decision rule:
+- `negligible`: both the receiver scatter/coherent ratio and surface scatter/coherent energy ratio are below `-20 dB`.
+- `borderline`: between `-20 dB` and `-10 dB`.
+- `not_negligible`: above `-10 dB`, or the scatter/coherent receiver ratio has large seed-to-seed spread.
+- This is an engineering diagnostic for the current grid, `Hs_target`, `surface_ssa_scatter_scale`, seed set, and SSA1 Dirichlet model. It is not an experimentally calibrated scattering threshold.
+
+Interpretation boundary:
+- The default sweep fixes `Hs_target`, so changing `sea_wind_speed` changes the normalized PM spectral shape, not total roughness variance.
+- `surface_ssa_scatter_scale` remains an engineering normalization parameter, not an absolute scattering cross section.
+- Scatter-only receiver propagation is a diagnostic decomposition; it is not a new channel model and does not replace the full reflected channel.
+
+Smoke validation:
+- Command overrides used:
+  - `SPEC_INCOH_WIND_LIST='3 8'`;
+  - `SPEC_INCOH_F_LIST_HZ='4000 8000'`;
+  - `SPEC_INCOH_SEED_COUNT='2'`;
+  - `SPEC_INCOH_GRID_N='64'`;
+  - `SPEC_INCOH_RESULT_FILE='compare_specular_incoherent_surface_reflection_vertical_smoke_result.mat'`.
+- The script completed successfully and generated all five PNG figures.
+- Diagnostics-disabled versus diagnostics-enabled differences:
+  - `H_f`: `0`;
+  - `H_direct_f`: `0`;
+  - `H_reflect_f`: `0`.
+- Validation maxima:
+  - channel invariant error: `6.9929e-18`;
+  - receiver component sum relative error: `1.3409e-15`;
+  - energy-conservation error: `1.6554e-16`;
+  - `W_eta` variance relative error: `2.2204e-15`.
+- Smoke decision table:
+  - `U=3 m/s`, `4000 Hz`: scatter/coherent receiver ratio `+74.55 dB`, scatter/coherent energy ratio `+76.20 dB`, decision `not_negligible`;
+  - `U=3 m/s`, `8000 Hz`: scatter/coherent receiver ratio `+282.63 dB`, scatter/coherent energy ratio `+197.63 dB`, decision `not_negligible`;
+  - `U=8 m/s`, `4000 Hz`: scatter/coherent receiver ratio `+75.10 dB`, scatter/coherent energy ratio `+76.20 dB`, decision `not_negligible`;
+  - `U=8 m/s`, `8000 Hz`: scatter/coherent receiver ratio `+283.82 dB`, scatter/coherent energy ratio `+197.63 dB`, decision `not_negligible`.
+- Interpretation:
+  - For this smoke case, `Hs_target=0.5 m` and `surface_ssa_scatter_scale=1` cause very strong SSA coherent mirror loss, so the coherent receiver component is extremely small and the scatter-only reflected contribution dominates.
+  - This result supports retaining the incoherent term for the tested roughness/frequency settings; weaker `Hs_target` and calibrated smaller `surface_ssa_scatter_scale` should be checked before making a broader simplification.
+
+## Surface-Only Plane-Wave Coherent Reflection Diagnostic
+
+Purpose:
+- `compare_plane_wave_surface_coherent_reflection_vertical.m` isolates the sea-surface boundary response from PE/WAPE propagation.
+- The incident field is a vertical plane wave; on the sea-surface plane this is represented by a constant transverse envelope:
+  - `Psi_inc(x,y)=1`.
+- The diagnostic compares coherent specular reflection strength, not full channel gain, communication BER/SER, or receiver propagation.
+
+Raw PM roughness:
+- This script intentionally does not apply `Hs_target` normalization.
+- For each wind speed, the PM spectrum is integrated directly:
+  - `sigma_eta_raw^2 = sum(Phi2D(:))*dkx*dky`;
+  - `Hs_raw = 4*sigma_eta_raw`.
+- Therefore wind speed changes both PM spectral shape and integrated roughness variance in this diagnostic.
+
+Compared coherent-reflection quantities:
+- SSA1 pressure-release normal-incidence coherent reflection:
+  - `R_SSA1 = -exp(-2*k0^2*sigma_eta_raw^2)`.
+- Kirchhoff realization coherent reflection:
+  - for each random surface realization, the script forms a phase screen `G(x,y)=R0*exp(i*delta_phi(x,y))`;
+  - the coherent mirror component for one finite surface is the spatial mean `mean(G(:))`;
+  - the ensemble coherent estimate is `abs(mean(R_sample))` across realizations, where `R_sample=mean(G(:))`;
+  - `mean(abs(R_sample))` is also reported as a finite-aperture residual, but it is not the strict ensemble coherent coefficient.
+- Two Kirchhoff phase conventions are reported:
+  - `kirchhoff_corrected`: `delta_phi=2*k0*eta` for normal incidence, the corrected two-way height phase convention whose Gaussian coherent expectation matches SSA1;
+  - `kirchhoff_legacy_4k_eta`: `delta_phi=2*k0*2*eta`, the pre-fix diagnostic convention that produces stronger `exp(-8*k0^2*sigma_eta^2)`-type coherent attenuation.
+- The script also reports `mean(abs(G(:)).^2)`, which should stay near 1 for a pure pressure-release phase screen. This distinguishes total reflected surface power from coherent specular strength.
+- The script also records realization variance `std(eta)^2` against the PM spectrum variance and writes a controlled i.i.d. Gaussian validation table. The controlled validation checks that `abs(E[-exp(i*2*k0*eta)])` follows `exp(-2*k0^2*sigma_eta^2)` within Monte Carlo tolerance.
+
+Outputs:
+- `compare_plane_wave_surface_coherent_reflection_vertical_result.mat`;
+- `compare_plane_wave_surface_coherent_reflection_vertical_summary.csv`;
+- `compare_plane_wave_surface_coherent_reflection_vertical_controlled_gaussian.csv`;
+- `plane_wave_coherent_absR_vs_wind.png`;
+- `plane_wave_coherent_power_vs_wind.png`;
+- `plane_wave_coherent_loss_vs_wind.png`;
+- `plane_wave_kirchhoff_vs_ssa_absR_heatmap.png`;
+- `plane_wave_raw_pm_sigma_vs_wind.png`.
+
+Validation checks:
+- flat synthetic case gives `|R_SSA1|=1` and `|R_Kirchhoff|=1`;
+- PM variance identity is checked from the discrete spectrum;
+- Kirchhoff phase-screen total reflected power is checked against 1;
+- all checks are recorded in `validation_report`.

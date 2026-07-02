@@ -115,7 +115,7 @@ R_0=-1.
 相位扰动写作
 
 \[
-\Delta\phi(x,y)=2k_0\Gamma\,\xi(x,y),
+\Delta\phi(x,y)=k_0\Gamma\,\xi(x,y),
 \qquad
 k_0=\frac{2\pi f}{c_0}.
 \]
@@ -247,6 +247,14 @@ W_\eta(K-K')P_{\rm inc}(K')
 离散求和时需要用每个小网格面积把积分近似为求和。
 
 \(C_{\rm sca}\) 是工程归一化常数，用于数值敏感性分析；它不是实验标定的绝对散射截面常数。
+
+当前实现中，`pm_convolution` 的相位尺度与 Kirchhoff 相位屏和 SSA coherent reflection 保持同一法向定义：
+
+\[
+q_z^{\rm eff}=k_0(\cos\theta_i+\cos\theta_s).
+\]
+
+因此工程散射强度中使用 \((q_z^{\rm eff})^2\)，法向时为 \((2k_0)^2\)。旧的 \(2k_0(\cos\theta_i+\cos\theta_s)\) 口径会在法向时变成 \(4k_0\)，相当于重复计算双程相位因子；它现在只作为历史审计量记录，不再作为 `pm_convolution` 主公式。需要强调的是，这个修正只统一工程 baseline 的相位尺度，仍不把 `pm_convolution` 变成严格 SSA 散射截面模型。
 
 ### 5.3 一阶 Dirichlet 几何核：`ssa1_geometry`
 
@@ -382,6 +390,61 @@ z(K)\sim\mathcal{CN}(0,1).
 
 宽带频率轴上，随机散射 realization 还需要说明跨频率相关性。默认处理仍是各频点独立生成复高斯随机谱，这保持了早期实现的兼容性。当前还提供两个仅用于随机信道生成诊断的工程相关模式：一种是在不同频点复用同一个随机相位样本，另一种是在频率序列上使用一阶自回归相关样本。它们的作用是检查宽带 \(H_f\) 的频域连续性对随机散射 realization 的敏感性；它们不是新的 SSA 物理散射公式，也不是经过实验标定的海面时间频率相关模型。
 
+### 8.1 镜面项与非相干项的接收贡献诊断
+
+为了判断非相干散射项在当前设置下是否可以忽略，模型提供一个默认关闭的诊断分解。它不改变主反射场，只把同一个海面反射场写成
+
+\[
+\Psi_{\rm ref}(x,y)
+=
+\Psi_{\rm coh}(x,y)+\Psi_{\rm sca}(x,y),
+\]
+
+其中
+
+\[
+\Psi_{\rm coh}(x,y)=R_{\rm coh}\Psi_{\rm inc}(x,y),
+\qquad
+\Psi_{\rm sca}(x,y)=\Psi_{\rm ref}(x,y)-\Psi_{\rm coh}(x,y).
+\]
+
+然后分别把 \(\Psi_{\rm coh}\) 和 \(\Psi_{\rm sca}\) 从海面推进到接收深度，得到
+
+\[
+h_{\rm ref}^{\rm coh},\qquad
+h_{\rm ref}^{\rm sca},\qquad
+h_{\rm ref}^{\rm total}
+\approx
+h_{\rm ref}^{\rm coh}+h_{\rm ref}^{\rm sca}.
+\]
+
+这个诊断回答的是一个工程问题：在给定频率、风速、\(H_s\)、网格、随机种子和 \(C_{\rm sca}\) 下，接收点处的非相干反射分量相对于镜面相干分量有多大。常用判据为
+
+\[
+20\log_{10}
+\frac{|h_{\rm ref}^{\rm sca}|}
+{|h_{\rm ref}^{\rm coh}|}
+\]
+
+以及海面谱能量预算中的
+
+\[
+10\log_{10}
+\frac{E_{\rm sca}}{E_{\rm coh}}.
+\]
+
+若二者都低于约 \(-20\) dB，通常可以把非相干项视为当前设置下的弱修正；若接近或高于 \(-10\) dB，则不应轻易忽略。这个阈值是工程判据，不是物理定理。
+
+在固定 \(H_s\) 的风速扫描中，\(\sigma_\eta=H_s/4\) 和
+
+\[
+\iint W_\eta(K_x,K_y)\,dK_xdK_y
+=
+\sigma_\eta^2
+\]
+
+保持不变。此时改变风速 \(U\) 主要改变归一化 PM 谱的形状，也就是不同海面波数尺度的能量分布；它不表示海况强度随风速单调增强。
+
 ## 9. 通信链路解释
 
 海面模型只改变频域信道 \(H(f)\)。后续 MPSK 通信仍沿用同一链路：
@@ -456,6 +519,10 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
     的接口语义。它们用于后续宽带随机信道生成研究，而不是替代当前的海面散射核。
 
 13. 新增适用性汇总只读取已有 reduced-grid 结果，汇总 SSA1/SSA2 coherent loss 差异、periodic/zero-padding 差异、Kirchhoff 标定残差和频率相关性诊断。该表是工程使用指南，不是完整物理适用域图。
+
+14. 镜面/非相干反射贡献对比使用固定 \(H_s\) 的风速-频率扫描。它分别传播相干镜面场和非相干散射场到接收点，比较 \(|h_{\rm ref}^{\rm sca}|/|h_{\rm ref}^{\rm coh}|\) 以及 \(E_{\rm sca}/E_{\rm coh}\)。该对比用于判断当前设置下非相干项是否可忽略，不改变主反射场或通信链路。
+
+    在 \(H_s=0.5\) m、\(C_{\rm sca}=1\)、\(64\times64\) reduced-grid smoke 设置下，\(U=3,8\) m/s 和 \(f=4,8\) kHz 的测试点均显示非相干项远大于相干镜面项。因此这些设置下不应忽略非相干散射。该结论只对应当前粗糙度、网格和工程归一化常数；更弱海况或重新标定 \(C_{\rm sca}\) 后需要重新判断。
 
 ## 11. 周期卷积与 zero-padding 对比
 
@@ -575,3 +642,60 @@ H(f)=H_{\rm dir}(f)+H_{\rm ref}(f)
 - 入射场海面端点、反射场海面起点和反射场接收端点与原传播结果的差异均为 0。
 
 在默认展示算例 \(f=6000\) Hz、\(H_s=0.2\) m、`ssa1_geometry` 和 \(128\times128\) 网格下，入射角谱横向波数 RMS 为 \(3.3332\ {\rm rad/m}\)，反射角谱为 \(3.3665\ {\rm rad/m}\)；90% 能量半径分别为 \(5.0613\ {\rm rad/m}\) 和 \(5.1131\ {\rm rad/m}\)。这说明该次 realization 中存在轻微角谱展宽，但这些数值只对应当前网格、海况和随机种子，不能外推为普适散射规律。静态图和一个载波周期的 MP4 动画均已成功生成。
+## 附：无 PE 的垂直平面波相干反射诊断
+
+为单独检查海面边界的相干镜面反射强度，可以不调用 PE/WAPE，而令入射波为垂直平面波
+\[
+p_{\rm inc}=e^{ikz}.
+\]
+在海面 \(z=0\) 处，其横向复包络为常数：
+\[
+\Psi_{\rm inc}(x,y)=1.
+\]
+
+在这种设置下，SSA1 pressure-release / Dirichlet 相干反射为
+\[
+R_{\rm SSA1}=-\exp(-2k_0^2\sigma_\eta^2).
+\]
+如果不对 PM 谱做 \(H_s\) 归一化，则
+\[
+\sigma_\eta^2=\sum W_\eta(K_x,K_y)\Delta K_x\Delta K_y,
+\qquad
+H_{s,\rm raw}=4\sigma_\eta .
+\]
+因此风速 \(U\) 同时改变 PM 谱形状和积分粗糙度方差，不能与固定 \(H_s\) 的风速 sweep 混为一谈。
+
+Kirchhoff realization 对照不是直接给出一个统计平均公式，而是先生成具体海面 \(\eta(x,y)\)，再形成相位屏
+\[
+G(x,y)=R_0\exp[i\Delta\phi(x,y)].
+\]
+垂直平面波的相干镜面分量是该相位屏的空间平均：
+\[
+R_{\rm K,coh}=\langle G(x,y)\rangle_{x,y}.
+\]
+脚本同时记录两种相位约定：\(\Delta\phi=2k_0\eta\) 的修正后法向双程高度相位，以及 legacy 诊断口径 \(\Delta\phi=2k_0\cdot2\eta\)。前者的 Gaussian coherent expectation 与 SSA1 法向公式一致；后者用于说明旧的额外 2 倍因子会带来更强的相干衰减。
+
+修正后，\(\Delta\phi=2k_0\eta\) 是主 Kirchhoff 公式；\(\Delta\phi=4k_0\eta\) 只作为 `legacy_4k_eta` 对照。
+
+需要区分三个量：\(\langle |G|^2\rangle\) 表示相位屏的总反射表面功率，对纯 pressure-release 相位屏可接近 1；单个 realization 的 \(|\langle G\rangle_{x,y}|\) 会受到有限孔径和随机样本残余影响；多 realization 下的 \(|\mathbb{E}[\langle G\rangle_{x,y}]|\) 才对应严格意义上的 ensemble coherent specular strength。粗糙海面可以在总反射功率基本不变的同时，使镜面相干项因相位抵消而显著下降。
+
+## 附：Kirchhoff 相位屏法向因子修正
+
+当前 Kirchhoff realization 相位屏采用
+\[
+\Delta\phi(x,y)=k_0(\cos\theta_i+\cos\theta_r)\eta(x,y).
+\]
+法向入射和镜面反射时
+\[
+\cos\theta_i=\cos\theta_r=1,
+\]
+因此
+\[
+\Delta\phi=2k_0\eta.
+\]
+
+这与垂直平面波的双程高度路径差一致：海面高度扰动为 \(\eta\) 时，入射-反射的等效路径差为 \(2\eta\)，相位扰动为 \(k_0\cdot2\eta\)。旧实现等效使用
+\[
+\Delta\phi=2k_0(\cos\theta_i+\cos\theta_r)\eta,
+\]
+在法向时变成 \(4k_0\eta\)，会使 Kirchhoff coherent average 出现类似 \(\exp(-8k_0^2\sigma_\eta^2)\) 的过强相干衰减。该旧口径现在只保留在独立平面波诊断脚本中作为 `legacy_4k_eta` 对照，不再作为主模型公式。

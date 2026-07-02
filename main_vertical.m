@@ -1,4 +1,5 @@
-﻿% Execute upward vertical PE test (independent from legacy horizontal code).
+﻿run(fullfile(fileparts(mfilename('fullpath')), 'scripts', 'bootstrap_project.m'));
+% Execute upward vertical PE test (independent from legacy horizontal code).
 
 clear
 format compact
@@ -47,3 +48,4 @@ print(12, '-dpng', '-r200', [save_prefix '_Figure12_xz.png'])
 print(13, '-dpng', '-r200', [save_prefix '_Figure13_yz.png'])
 print(14, '-dpng', '-r200', [save_prefix '_Figure14_1overR.png'])
 print(15, '-dpng', '-r200', [save_prefix '_Figure15_surface_kirchhoff.png'])
+

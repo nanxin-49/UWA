@@ -42,13 +42,19 @@ model.available_f_ref_hz = unique([conditions.f_ref_hz]).';
 end
 
 function result_file = local_default_result_file()
-if exist('sweep_monte_carlo_surface_channel_vertical_result.mat', 'file')
-    result_file = 'sweep_monte_carlo_surface_channel_vertical_result.mat';
-elseif exist('monte_carlo_surface_channel_vertical_result.mat', 'file')
-    result_file = 'monte_carlo_surface_channel_vertical_result.mat';
-else
-    result_file = 'sweep_monte_carlo_surface_channel_vertical_result.mat';
+project_root = fileparts(mfilename('fullpath'));
+candidates = { ...
+    fullfile(project_root, 'results', 'experiments', 'sweep_monte_carlo_surface_channel_vertical_result.mat'), ...
+    fullfile(project_root, 'results', 'experiments', 'monte_carlo_surface_channel_vertical_result.mat'), ...
+    'sweep_monte_carlo_surface_channel_vertical_result.mat', ...
+    'monte_carlo_surface_channel_vertical_result.mat'};
+for ii = 1:numel(candidates)
+    if exist(candidates{ii}, 'file')
+        result_file = candidates{ii};
+        return
+    end
 end
+result_file = candidates{1};
 end
 
 function [source_type, rows, condition_summary, base_params, condition_results] = local_extract_source(S)

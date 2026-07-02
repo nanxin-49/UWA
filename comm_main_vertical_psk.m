@@ -1,4 +1,5 @@
-﻿% End-to-end MPSK communication demo over vertical PE channel.
+﻿run(fullfile(fileparts(mfilename('fullpath')), 'scripts', 'bootstrap_project.m'));
+% End-to-end MPSK communication demo over vertical PE channel.
 % Scenario: seabed instrument TX -> hydrophone at fixed z_rx=3 m below buoy.
 
 clear
@@ -45,10 +46,20 @@ paramsV.sea_wind_speed = 5.0;
 paramsV.sea_hs_target = 0.5;
 paramsV.sea_seed = 12345;
 
+% Optional smoke-test overrides. Defaults above remain the reference demo.
+paramsV.nx = local_env_scalar('COMM_NX', paramsV.nx);
+paramsV.ny = local_env_scalar('COMM_NY', paramsV.ny);
+paramsV.Nf_min = local_env_scalar('COMM_NF_MIN', paramsV.Nf_min);
+paramsV.Nf_max = local_env_scalar('COMM_NF_MAX', paramsV.Nf_max);
+paramsV.enforce_1_over_R = local_env_bool('COMM_ENFORCE_1_OVER_R', paramsV.enforce_1_over_R);
+
 % --- communication setup ---
 M = 4;                % QPSK (MPSK can be changed here)
 n_sym = 2000;
 EbN0_dB_list = 0:2:20;
+M = local_env_scalar('COMM_M', M);
+n_sym = local_env_scalar('COMM_N_SYM', n_sym);
+EbN0_dB_list = local_env_numeric_list('COMM_EBN0_DB_LIST', EbN0_dB_list);
 k = log2(M);
 symbol_rate_hz = 1000;
 isi_mode = 'linear_conv';
@@ -287,3 +298,51 @@ H = fft(h_pad);
 W = conj(H) ./ (abs(H).^2 + reg_eps);
 rx_eq = ifft(fft(rx_noisy) .* W);
 end
+
+function value = local_env_scalar(name, default_value)
+raw = getenv(name);
+if isempty(raw)
+    value = default_value;
+    return
+end
+parsed = str2double(raw);
+if ~isfinite(parsed)
+    warning('Ignoring invalid numeric environment override %s=%s.', name, raw);
+    value = default_value;
+    return
+end
+value = parsed;
+end
+
+function tf = local_env_bool(name, default_value)
+raw = getenv(name);
+if isempty(raw)
+    tf = default_value;
+    return
+end
+switch lower(strtrim(raw))
+    case {'1', 'true', 'yes', 'on'}
+        tf = true;
+    case {'0', 'false', 'no', 'off'}
+        tf = false;
+    otherwise
+        warning('Ignoring invalid logical environment override %s=%s.', name, raw);
+        tf = default_value;
+end
+end
+
+function values = local_env_numeric_list(name, default_values)
+raw = getenv(name);
+if isempty(raw)
+    values = default_values;
+    return
+end
+parts = regexp(raw, '[,;\s]+', 'split');
+parts = parts(~cellfun('isempty', parts));
+values = str2double(parts);
+if isempty(values) || any(~isfinite(values))
+    warning('Ignoring invalid numeric-list environment override %s=%s.', name, raw);
+    values = default_values;
+end
+end
+
