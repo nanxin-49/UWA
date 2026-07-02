@@ -41,6 +41,34 @@ run('scripts/validation/validate_surface_wavefield_visualization_vertical.m')
 
 For quick validation, prefer reduced grids (`nx=128` or `nx=256`, `ny=128` or `ny=256`) and `show_figures=false`.
 
+## Surface Boundary Models
+
+`surface_boundary_model` currently supports:
+
+- `kirchhoff_spatial`: default explicit PM sea-surface realization and spatial phase screen.
+- `kirchhoff_kdomain`: FFT k-domain interface for the same explicit Kirchhoff phase screen.
+- `kirchhoff_kstat`: Kirchhoff statistical phase-screen branch. It does not generate a concrete `eta(x,y)`; it builds `C_eta`, `S_deltaG`, coherent reflection, incoherent scatter power, and optional random reflected spectra from the PM height spectrum.
+- `ssa_stat_kernel`: SSA-oriented statistical research branch used as a weak-roughness/small-angle reference.
+
+Roughness amplitude scaling is controlled by `surface_roughness_scale_mode`:
+
+- `target_hs` (default): scale the PM surface spectrum or realization to `sea_hs_target`.
+- `raw_pm`: use the PM spectrum amplitude implied directly by `sea_wind_speed`; metadata records `sigma_eta_raw_m`, `Hs_raw_m`, `Hs_target_m`, and `scale_factor`.
+
+Quick kstat validation:
+
+```matlab
+run('scripts/validation/validate_kirchhoff_kstat_vertical.m')
+```
+
+Raw-PM wind-driven comparison between the explicit `kirchhoff_kdomain` and statistical `kirchhoff_kstat` branches:
+
+```matlab
+run('scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m')
+```
+
+It writes the MAT/CSV summary and figures under `results/comparisons/`.
+
 ## Output Policy
 
 Generated `.mat`, `.png`, `.csv`, `.mp4`, `.log`, and similar run artifacts belong under `results/`. Large binary outputs are intentionally ignored by Git; the committed source of truth is the MATLAB code and Markdown documentation.

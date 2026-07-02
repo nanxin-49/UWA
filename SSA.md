@@ -351,3 +351,31 @@ formula_source = 'Thorsos & Broschat 1995 JASA, Dirichlet SSA first-order / pert
 G_SSA1_formula = 'G_SSA1(K,K'') = 4*gamma(K'')*gamma(K)'
 boundary_condition = 'pressure-release / Dirichlet'
 evanescent_included = false
+```
+
+## Addendum: Relation to `kirchhoff_kstat`
+
+`surface_boundary_model='kirchhoff_kstat'` is not an SSA branch. It is a Kirchhoff / Gaussian statistical phase-screen branch used to generate coherent plus incoherent reflected spectra without a concrete `eta(x,y)` realization.
+
+The kstat branch uses:
+
+```text
+alpha = 2*k0
+<G> = exp(-0.5*alpha^2*sigma_eta^2)
+R_coh = R0*<G>
+C_deltaG(rho) = exp(-alpha^2*sigma_eta^2) * (exp(alpha^2*C_eta(rho)) - 1)
+S_deltaG = F{C_deltaG}
+P_sca(Ks) = |R0|^2/(2*pi)^2 int S_deltaG(Ks-Ki) |Psi_inc(Ki)|^2 dKi
+```
+
+Only `S_deltaG` is used for the incoherent spectrum. The coherent delta spike from the total phase-screen spectrum is not used as scatter power.
+
+SSA1 remains useful as a weak-roughness and small-angle reference because the pressure-release coherent term reduces to the same normal-incidence form:
+
+```text
+R_coh = -exp(-2*k0^2*sigma_eta^2)
+```
+
+This agreement does not make the kstat branch an SSA/NLSSA/T-matrix implementation, and it does not provide a calibrated scattering cross section.
+
+`surface_roughness_scale_mode='raw_pm'` does not change the SSA formulas above. It only disables the usual `sea_hs_target` rescaling so wind speed directly sets the PM-spectrum roughness used by Kirchhoff branches. The raw-PM wind comparison script reports both the explicit Kirchhoff discrete PM realization variance and the K-Stat continuous `(2*pi)^-2` phase-screen variance so the two normalizations are visible.

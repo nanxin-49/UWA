@@ -886,11 +886,49 @@ validate_surface_empirical_channel_generator_vertical
 
 下一阶段的重点已经从“单个 realization 是否可算、诊断是否可解释”转向“如何基于经验统计构建更有用、更可控的随机信道生成器”。
 
+## 2026-07-02 Addendum: `kirchhoff_kstat`
+
+`surface_boundary_model='kirchhoff_kstat'` adds a Kirchhoff statistical phase-screen branch under `pm_surface_boundary_model.m`.
+
+Core behavior:
+- It does not synthesize an explicit sea surface `eta(x,y)`.
+- It uses the PM height spectrum to form `C_eta`, `C_deltaG`, and `S_deltaG`.
+- It returns a coherent reflected spectrum `Psi_coh_k=R_coh*Psi_inc_k`.
+- It forms incoherent scatter power with `P_sca=|R0|^2*circconv(S_deltaG,abs(Psi_inc_k).^2)*dkx*dky/(2*pi)^2`.
+- If `surface_kstat_random_scatter=true`, it adds `sqrt(P_sca).*CN(0,1)` as a random reflected spectrum realization.
+
+New public configuration fields:
+- `surface_kstat_random_scatter`, default `true`.
+- `surface_kstat_seed_offset`, default `200000`.
+- `surface_kstat_conv_padding`, default `periodic`, allowed `periodic` or `zero_padded`.
+- `surface_kstat_trusted_angle_deg`, default `NaN`.
+
+Metadata:
+- `output.roughness_meta.kirchhoff_kstat_meta` stores `sigma_eta2_m2`, `alpha_rad_per_m`, `G_mean`, `R_coh`, `S_deltaG`, `P_sca`, seed fields, FFT normalization notes, phase-screen energy closure, and propagation-window energies.
+- Disabled paths still include the `kirchhoff_kstat_meta` struct with `enabled=false`.
+
+Model boundary:
+- This branch is a Kirchhoff / Gaussian statistical phase-screen generator.
+- It conserves full phase-screen energy through `abs(<G>)^2 + int S_deltaG/(2*pi)^2`.
+- The propagation window `K_h<=k0` is diagnostic only and is not renormalized.
+- SSA1 remains a weak-roughness/small-angle reference check, not the kstat generation formula.
+
 ## 13. 使用结果时的注意事项
 
 1. reduced-grid 结果适合趋势分析和代码验证，不等同于最终高分辨率物理结论。
 2. Kirchhoff k-domain 接口是相位屏的波数域接口重写，不是新的粗糙面散射理论。
+
+## 2026-07-02 Addendum: Raw-PM Wind Comparison
+
+- New config: `surface_roughness_scale_mode='target_hs'|'raw_pm'`.
+- Default remains `target_hs`, so existing runs still scale PM roughness to `sea_hs_target`.
+- `raw_pm` leaves the PM spectrum/realization amplitude determined by `sea_wind_speed`; `sea_hs_target` is retained only as metadata.
+- `pm_surface_boundary_model.m` now records `roughness_scale_mode`, `sigma_eta_raw_m`, `Hs_raw_m`, `Hs_target_m`, `scale_factor`, `pm_variance_raw_discrete_m2`, and `pm_variance_raw_continuous_m2`.
+- `scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m` compares `kirchhoff_kdomain` and `kirchhoff_kstat` for wind speeds `[3,5,8,10,12,15]` with 32 seeds by default.
+- Outputs are written only under `results/comparisons/`: MAT result, CSV summary, and five PNG figures for raw `Hs`, coherent reflection, reflected tap magnitude, incoherent energy, and propagating-window energy.
+- Interpretation: explicit `kirchhoff_kdomain` uses the project's existing discrete PM realization convention, while `kirchhoff_kstat` uses the continuous `(2*pi)^-2` phase-screen convention. The comparison table exposes both raw PM variance audits instead of silently forcing them to match.
 3. C2/C2.5 诊断指标描述的是当前离散模型中的谱扩展和谱再分布，不是严格散射截面。
 4. C3/C3.5 Monte Carlo 是有限 seed 的经验统计，不是闭式随机信道模型。
+
 5. C4 经验生成器依赖已有 Monte Carlo 数据，不能外推到未扫描海况。
 6. 通信 BER/SER 是有限符号数和有限 AWGN realization 下的经验结果，高 Eb/N0 下出现 0 BER 是正常有限样本现象。

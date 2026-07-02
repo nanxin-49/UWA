@@ -2196,3 +2196,90 @@ Validation checks:
 - PM variance identity is checked from the discrete spectrum;
 - Kirchhoff phase-screen total reflected power is checked against 1;
 - all checks are recorded in `validation_report`.
+
+## 2026-07-02 Kirchhoff K-Stat Statistical Phase-Screen Branch
+
+Changed files:
+- `vertical_channel_model.m`: accepts `surface_boundary_model='kirchhoff_kstat'` and validates `surface_kstat_random_scatter`, `surface_kstat_seed_offset`, `surface_kstat_conv_padding`, and `surface_kstat_trusted_angle_deg`.
+- `vertical_wape_propagator.m`: passes the kstat configuration to `pm_surface_boundary_model.m` and preserves disabled `roughness_meta.kirchhoff_kstat_meta` when surface reflection is off.
+- `pm_surface_boundary_model.m`: implements `local_apply_kirchhoff_kstat` without generating a concrete `eta(x,y)`.
+- `scripts/validation/validate_kirchhoff_kstat_vertical.m`: validates flat-surface degeneration, coherent formula, phase-screen energy closure, propagation-window diagnostics, deterministic seeds, explicit Kirchhoff phase-screen mean comparison, and weak SSA1 coherent-reference consistency.
+
+Interface:
+- Select the branch with `paramsV.surface_boundary_model='kirchhoff_kstat'`.
+- `surface_kstat_random_scatter=true` synthesizes `Psi_sca_k=sqrt(P_sca).*Z`, `Z~CN(0,1)`.
+- `surface_kstat_random_scatter=false` returns the coherent reflected field only, while still recording `P_sca` and all energy diagnostics.
+- `surface_kstat_seed_offset=200000` gives `seed_kstat=sea_seed+surface_kstat_seed_offset+frequency_index-1`.
+- `surface_kstat_conv_padding` supports `periodic` and `zero_padded`, reusing the existing FFT convolution helper.
+- `surface_kstat_trusted_angle_deg=NaN` disables the optional trusted-angle window; finite values record `K_h<=k0*sind(angle)` energy without renormalizing it.
+
+Implemented formulas:
+- PM height spectrum is converted to the continuous convention used by this branch so that
+  `C_eta(0)=sum(W_eta(:))*dkx*dky/(2*pi)^2=(Hs_target/4)^2`.
+- `C_eta_xy = real(ifft2(W_eta))*numel(W_eta)*dkx*dky/(2*pi)^2`.
+- Near-vertical first version uses `alpha=2*k0`.
+- `<G>=exp(-0.5*alpha^2*sigma_eta^2)` and `R_coh=R0*<G>`. For pressure-release `R0=-1`, this is `-exp(-2*k0^2*sigma_eta^2)`.
+- `C_deltaG(rho)=exp(-alpha^2*sigma_eta^2)*(exp(alpha^2*C_eta(rho))-1)`, implemented in the algebraically equivalent stable form `exp(alpha^2*(C_eta-sigma_eta^2))-exp(-alpha^2*sigma_eta^2)`.
+- `S_deltaG=fft2(C_deltaG)*dx*dy`. Only `S_deltaG` is used for incoherent scatter; the coherent delta spike from total `S_G` is not used.
+- `P_sca(Ks)=|R0|^2*circconv(S_deltaG,abs(Psi_inc_k).^2)*dkx*dky/(2*pi)^2`.
+
+Metadata:
+- `output.roughness_meta.kirchhoff_kstat_meta` records `sigma_eta2_m2`, `alpha_rad_per_m`, `G_mean`, `R_coh`, `S_deltaG`, `P_sca`, seed fields, FFT normalization notes, negative-spectrum clipping diagnostics, and spectrum moment summaries.
+- Full-grid phase-screen energy is checked as `abs(G_mean)^2 + sum(S_deltaG(:))*dkx*dky/(2*pi)^2`.
+- Propagating-window energy `K_h<=k0` and optional trusted-angle energy are recorded separately and are not normalized to `1-abs(G_mean)^2`.
+
+Validation summary:
+- Reduced kstat validation with `KSTAT_VALIDATE_ENSEMBLE_COUNT=2` completed successfully.
+- `Hs=0` flat kstat versus `kirchhoff_spatial` maximum `H_f` difference: `7.7579e-17`.
+- Coherent formula check `abs(R_coh - R0*exp(-2*k0^2*sigma_eta^2))`: `0`.
+- Full-grid phase-screen energy closure error for the reduced rough case: `6.6613e-16`.
+- `H_f = H_direct_f + H_reflect_f` invariant for the rough kstat case: `2.6026e-18`.
+- Fixed seed repeat difference in `H_f`: `0`; changed seed changed reflected response by `0.011905` while direct path drift stayed `0`.
+- Explicit Kirchhoff phase-screen mean comparison relative error with 2 seeds: `0.26709`, recorded as a finite-Monte-Carlo trend check.
+- Weak roughness coherent reference against `ssa_stat_kernel + ssa1_geometry`: difference `0`.
+
+Interpretation boundary:
+- `kirchhoff_kstat` is a Kirchhoff / Gaussian statistical phase-screen model, not SSA/NLSSA, not a T-matrix, and not a calibrated scattering cross-section model.
+
+## 2026-07-02 Raw-PM Kirchhoff Wind Comparison
+
+Changed files:
+
+- `vertical_channel_model.m`: adds `paramsV.surface_roughness_scale_mode`.
+- `vertical_wape_propagator.m`: forwards the roughness scale mode into `pm_surface_boundary_model.m`.
+- `pm_surface_boundary_model.m`: supports `roughness_scale_mode='target_hs'` and `roughness_scale_mode='raw_pm'`.
+- `scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m`: compares `kirchhoff_kdomain` and `kirchhoff_kstat` across wind speeds using raw PM roughness.
+
+Interface:
+
+- `surface_roughness_scale_mode='target_hs'` remains the default and preserves prior behavior: PM spectra or realizations are scaled to `sea_hs_target`.
+- `surface_roughness_scale_mode='raw_pm'` disables `sea_hs_target` amplitude scaling. `sea_hs_target` is retained in config/metadata but does not set the surface variance.
+- Roughness metadata records `roughness_scale_mode`, `sigma_eta_raw_m`, `Hs_raw_m`, `Hs_target_m`, `scale_factor`, and raw PM variance audits.
+
+Formula and convention notes:
+
+- Explicit `kirchhoff_kdomain` uses the existing discrete PM realization convention, where the raw realization is generated from `Phi2D*dkx*dky` and `Hs_raw=4*std(eta(:))`.
+- `kirchhoff_kstat` uses the continuous phase-screen convention already implemented for this branch: `C_eta(0)=sum(W_eta(:))*dkx*dky/(2*pi)^2`. In `raw_pm` mode it sets `W_eta=Phi2D` with `scale_factor=1`.
+- The metadata includes both `pm_variance_raw_discrete_m2` and `pm_variance_raw_continuous_m2` so comparisons can be interpreted without hiding the FFT normalization convention difference.
+
+Comparison script defaults:
+
+- `wind_list=[3,5,8,10,12,15]` m/s.
+- `seed_count=32`, `seed_list=12345+(0:31)`.
+- `f0=6000` Hz, `nx=ny=128`, `save_mode='rx_only'`, `show_figures=false`.
+- Environment overrides: `KIRCH_WIND_LIST`, `KIRCH_SEED_COUNT`, `KIRCH_SEED_LIST`, `KIRCH_F0_HZ`, `KIRCH_GRID_N`, `KIRCH_NX`, `KIRCH_NY`, `KIRCH_XW_M`, and `KIRCH_YW_M`.
+
+Outputs:
+
+- `results/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical_result.mat`.
+- `results/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical_summary.csv`.
+- `kirchhoff_raw_pm_Hs_vs_wind.png`, `kirchhoff_coherent_R_vs_wind.png`, `kirchhoff_abs_h_reflect_vs_wind.png`, `kirchhoff_incoherent_energy_vs_wind.png`, and `kirchhoff_propagating_energy_vs_wind.png`.
+
+Validation intent:
+
+- The script checks `H_f = H_direct_f + H_reflect_f` for both branches.
+- For `kirchhoff_kstat`, it records phase-screen full-K energy closure and propagating-window incoherent energy without renormalizing the propagating window.
+- The comparison is a raw-PM wind-speed diagnostic. It should not be mixed with older sweeps where wind speed changed PM spectral shape after fixed-`Hs_target` rescaling.
+- Its full phase-screen energy is internally conserved by the coherent plus `S_deltaG` split.
+- SSA1 is retained as a weak-roughness/small-angle reference check; it is not the main generation formula for this branch.
+- The first version uses near-vertical `alpha=2*k0`; oblique `gamma_i+gamma_s` phase statistics remain future work.
