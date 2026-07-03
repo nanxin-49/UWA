@@ -285,6 +285,7 @@ if surface_realization_generated
 
     eta_raw = real(ifft2(Zk));
     eta_raw = eta_raw * numel(eta_raw); % compensate MATLAB ifft2 normalization
+    eta_raw = sqrt(2) * eta_raw; % real part of unconstrained complex spectrum carries half the target variance
 
     % Calibrate to target Hs by default; raw_pm keeps the PM realization amplitude.
     Hs_raw = 4 * std(eta_raw(:));
@@ -353,21 +354,22 @@ elseif strcmp(boundary_model, 'ssa_stat_kernel')
 else
     surface_elevation = [];
     delta_phi = [];
-    spectral_variance = sum(Phi2D(:)) * dkx * dky / (2*pi)^2;
+    spectral_variance = sum(Phi2D(:)) * dkx * dky;
     sigma_eta_raw_m = sqrt(max(spectral_variance, 0));
     Hs_raw_m = 4 * sigma_eta_raw_m;
     Hs_raw = Hs_raw_m;
     switch roughness_scale_mode
         case 'target_hs'
             sigma_eta_target = Hs_target / 4;
-            if spectral_variance > 0 && sigma_eta_target > 0
-                scale_factor = sigma_eta_target / sqrt(spectral_variance);
+            spectral_variance_continuous = sum(Phi2D(:)) * dkx * dky / (2*pi)^2;
+            if spectral_variance_continuous > 0 && sigma_eta_target > 0
+                scale_factor = sigma_eta_target / sqrt(spectral_variance_continuous);
             else
                 scale_factor = 0;
             end
         case 'raw_pm'
             sigma_eta_target = sigma_eta_raw_m;
-            scale_factor = 1;
+            scale_factor = 2*pi;
     end
     Hs_scaled = 4 * sigma_eta_target;
     W_eta = Phi2D * scale_factor^2;

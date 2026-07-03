@@ -2259,8 +2259,9 @@ Interface:
 Formula and convention notes:
 
 - Explicit `kirchhoff_kdomain` uses the existing discrete PM realization convention, where the raw realization is generated from `Phi2D*dkx*dky` and `Hs_raw=4*std(eta(:))`.
-- `kirchhoff_kstat` uses the continuous phase-screen convention already implemented for this branch: `C_eta(0)=sum(W_eta(:))*dkx*dky/(2*pi)^2`. In `raw_pm` mode it sets `W_eta=Phi2D` with `scale_factor=1`.
-- The metadata includes both `pm_variance_raw_discrete_m2` and `pm_variance_raw_continuous_m2` so comparisons can be interpreted without hiding the FFT normalization convention difference.
+- Raw-PM wind comparisons use the project discrete PM variance as the main convention: `sigma_eta_raw^2=sum(Phi2D(:))*dkx*dky`.
+- `kirchhoff_kstat` still evaluates `C_eta(0)=sum(W_eta(:))*dkx*dky/(2*pi)^2` internally, so in `raw_pm` mode it sets `W_eta=Phi2D*(2*pi)^2` and records `scale_factor=2*pi`.
+- The metadata includes both `pm_variance_raw_discrete_m2` and `pm_variance_raw_continuous_m2`; `sigma_eta_raw_m` and `Hs_raw_m` use the discrete convention for the two Kirchhoff branches.
 
 Comparison script defaults:
 

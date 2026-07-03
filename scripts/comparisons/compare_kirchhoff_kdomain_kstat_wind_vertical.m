@@ -116,6 +116,9 @@ for iw = 1:numel(cfg.wind_list_mps)
     summary_rows(row_idx).kdomain_Hs_raw_std_m = std(kd_Hs_raw, 0);
     summary_rows(row_idx).kstat_sigma_eta_raw_m = kstat_ref_meta.sigma_eta_raw_m;
     summary_rows(row_idx).kstat_Hs_raw_m = kstat_ref_meta.Hs_raw_m;
+    summary_rows(row_idx).Hs_raw_rel_error = ...
+        abs(summary_rows(row_idx).kdomain_Hs_raw_mean_m - summary_rows(row_idx).kstat_Hs_raw_m) / ...
+        max(summary_rows(row_idx).kstat_Hs_raw_m, eps);
     summary_rows(row_idx).pm_variance_raw_discrete_m2 = kstat_ref.roughness_meta.pm_variance_raw_discrete_m2;
     summary_rows(row_idx).pm_variance_raw_continuous_m2 = kstat_ref.roughness_meta.pm_variance_raw_continuous_m2;
     summary_rows(row_idx).kdomain_screen_R_mean_real = real(kd_R_mean);
@@ -172,7 +175,7 @@ local_plot_incoherent_energy_vs_wind(summary_table, cfg);
 local_plot_propagating_energy_vs_wind(summary_table, cfg);
 
 disp(summary_table(:, {'wind_speed_mps', 'kdomain_Hs_raw_mean_m', 'kstat_Hs_raw_m', ...
-    'kdomain_screen_abs_mean_R', 'kstat_abs_R_coh', ...
+    'Hs_raw_rel_error', 'kdomain_screen_abs_mean_R', 'kstat_abs_R_coh', ...
     'kdomain_abs_h_reflect_mean', 'kstat_abs_h_reflect_mean', ...
     'phase_screen_incoherent_energy', 'phase_screen_energy_error'}));
 disp(validation_report);
@@ -275,7 +278,7 @@ plot(T.wind_speed_mps, T.kstat_Hs_raw_m, '-s', 'LineWidth', 1.5);
 grid on
 xlabel('Wind speed U (m/s)');
 ylabel('Raw H_s (m)');
-legend('kirchhoff\_kdomain realization mean', 'kirchhoff\_kstat continuous PM', 'Location', 'northwest');
+legend('kirchhoff\_kdomain realization mean', 'kirchhoff\_kstat discrete PM', 'Location', 'northwest');
 title('Raw PM H_s vs wind');
 exportgraphics(gcf, fullfile(cfg.figure_dir, 'kirchhoff_raw_pm_Hs_vs_wind.png'), 'Resolution', 160);
 close(gcf);

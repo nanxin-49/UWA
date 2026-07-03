@@ -926,7 +926,7 @@ Model boundary:
 - `pm_surface_boundary_model.m` now records `roughness_scale_mode`, `sigma_eta_raw_m`, `Hs_raw_m`, `Hs_target_m`, `scale_factor`, `pm_variance_raw_discrete_m2`, and `pm_variance_raw_continuous_m2`.
 - `scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m` compares `kirchhoff_kdomain` and `kirchhoff_kstat` for wind speeds `[3,5,8,10,12,15]` with 32 seeds by default.
 - Outputs are written only under `results/comparisons/`: MAT result, CSV summary, and five PNG figures for raw `Hs`, coherent reflection, reflected tap magnitude, incoherent energy, and propagating-window energy.
-- Interpretation: explicit `kirchhoff_kdomain` uses the project's existing discrete PM realization convention, while `kirchhoff_kstat` uses the continuous `(2*pi)^-2` phase-screen convention. The comparison table exposes both raw PM variance audits instead of silently forcing them to match.
+- Interpretation: raw-PM wind comparison now uses the project's discrete PM variance as the main convention. `kirchhoff_kstat` keeps its continuous `(2*pi)^-2` correlation formula internally but receives `W_eta=Phi2D*(2*pi)^2` in `raw_pm` mode so its `Hs_raw_m` matches the explicit Kirchhoff convention in expectation.
 3. C2/C2.5 诊断指标描述的是当前离散模型中的谱扩展和谱再分布，不是严格散射截面。
 4. C3/C3.5 Monte Carlo 是有限 seed 的经验统计，不是闭式随机信道模型。
 

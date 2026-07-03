@@ -68,6 +68,7 @@ run('scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m')
 ```
 
 It writes the MAT/CSV summary and figures under `results/comparisons/`.
+See `vertical_comm_guide.md` for the discrete raw-PM variance convention used to align `kirchhoff_kdomain` and `kirchhoff_kstat`.
 
 ## Output Policy
 

@@ -679,6 +679,48 @@ R_{\rm K,coh}=\langle G(x,y)\rangle_{x,y}.
 
 需要区分三个量：\(\langle |G|^2\rangle\) 表示相位屏的总反射表面功率，对纯 pressure-release 相位屏可接近 1；单个 realization 的 \(|\langle G\rangle_{x,y}|\) 会受到有限孔径和随机样本残余影响；多 realization 下的 \(|\mathbb{E}[\langle G\rangle_{x,y}]|\) 才对应严格意义上的 ensemble coherent specular strength。粗糙海面可以在总反射功率基本不变的同时，使镜面相干项因相位抵消而显著下降。
 
+## 附：Raw PM 风速驱动下的 Kirchhoff 两分支统一口径
+
+当前项目有两种海面粗糙度幅度口径：
+
+- `surface_roughness_scale_mode='target_hs'`：默认模式。PM 谱或海面 realization 会按 `sea_hs_target` 缩放，因此改变风速 \(U\) 主要改变 PM 谱形状，不直接表示海况强度随风速增强。
+- `surface_roughness_scale_mode='raw_pm'`：风速驱动模式。不按 `sea_hs_target` 缩放，风速 \(U\) 直接决定 PM 谱积分方差和有效波高。
+
+在 raw PM 模式下，当前统一采用项目显式海面使用的离散谱方差作为主口径：
+\[
+\sigma_{\eta,\rm raw}^2
+=
+\sum_{K_x,K_y}\Phi_{2D}(K_x,K_y)\Delta K_x\Delta K_y,
+\qquad
+H_{s,\rm raw}=4\sigma_{\eta,\rm raw}.
+\]
+
+因此，`kirchhoff_kdomain` 和 `kirchhoff_kstat` 的 `sigma_eta_raw_m`、`Hs_raw_m` 都应按上式解释。两者的对齐方式不同：
+
+- `kirchhoff_kdomain` 显式生成具体海面 \(\eta(x,y)\)，raw PM 下记录的是该 realization 的 `std(eta(:))` 和对应 \(H_s\)。有限 seed 数下，样本标准差会围绕离散谱目标值波动。
+- `kirchhoff_kstat` 不生成具体 \(\eta(x,y)\)，而是用高度谱构造相关函数。它内部使用连续谱归一化
+\[
+C_\eta(0)=
+\frac{1}{(2\pi)^2}
+\sum W_\eta(K_x,K_y)\Delta K_x\Delta K_y.
+\]
+为了让该式与项目离散 PM 方差一致，raw PM 下使用
+\[
+W_\eta=\Phi_{2D}(2\pi)^2,
+\]
+从而 \(C_\eta(0)=\sum\Phi_{2D}\Delta K_x\Delta K_y\)。
+
+显式分支中还需要注意一个离散随机场细节：当前海面 realization 由 unconstrained complex spectrum 经 `real(ifft2(...))` 得到。对这种构造，取实部会使方差约损失一半，因此 raw PM 生成时需要乘以 \(\sqrt{2}\)，使显式海面的样本方差回到目标离散谱方差。这个修正只用于保证 raw PM 方差口径正确；在 `target_hs` 模式下，后续按目标 \(H_s\) 的缩放会抵消该差异，默认目标波高结果不应因此改变。
+
+最近一次 reduced-grid 对比使用
+`wind_list=[3 5 8 10 12 15]`、`seed_count=32`、`nx=ny=128`、\(f_0=6000\) Hz。结果显示：
+
+- \(H_{s,\rm raw}\) 的两分支相对误差最大约为 \(1.45\times10^{-2}\)，说明海况强度已经基本对齐；
+- `kirchhoff_kstat` 全 \(K\) 相位屏能量闭合误差最大约为 \(2.22\times10^{-15}\)；
+- 宽带/标量信道代数不变量 \(H_f=H_{\rm direct,f}+H_{\rm reflect,f}\) 保持在约 \(10^{-17}\) 量级。
+
+归一化后，两个分支的主要差异不再是 \(H_s\) 口径，而是模型本身：`kirchhoff_kdomain` 是具体海面相位屏 realization，接收端反射幅度包含有限孔径和 speckle 波动；`kirchhoff_kstat` 是统计相位屏模型，直接生成相干反射项、非相干散射功率谱和可复现随机散射 realization。因此二者不应要求逐点一致，更合理的比较对象是 ensemble 趋势、相干衰减、非相干能量以及接收端统计量。
+
 ## 附：Kirchhoff 相位屏法向因子修正
 
 当前 Kirchhoff realization 相位屏采用
