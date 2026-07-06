@@ -69,6 +69,10 @@ Do not rename exported fields in `output` or `results` without updating all entr
 ## Documentation Discipline
 - Every nontrivial physics or interface change must update the corresponding Markdown method note or research-summary document.
 - Documentation updates must include: changed files, changed interfaces, formulas implemented or affected, assumptions, limitations, validation settings, validation results, and remaining issues.
+- At the end of each completed implementation or validation task, check whether the main documentation must be updated before the final response.
+- Keep `PROJECT_CONTEXT.md` aligned with the current project state, active models, public interfaces, validation status, and known limitations.
+- Keep `vertical_comm_guide.md` aligned with the implemented physical/communication methods, equations, configuration semantics, validation interpretation, and result-reading guidance.
+- If a task only changes generated outputs or runs an existing script without changing project behavior, documentation may be left unchanged, but the final response should say why no documentation update was needed.
 - Do not claim a new physical model when the code only rewrites an existing model in an equivalent mathematical form.
 - Do not claim fast statistical channel generation unless the code actually estimates or uses statistical parameters such as means, variances, covariances, distributions, or a stochastic generator.
 
@@ -78,6 +82,7 @@ Do not rename exported fields in `output` or `results` without updating all entr
 - Then add the minimal model.
 - Then add advanced models only after the disabled/default path is confirmed unchanged.
 - After each stage, summarize changed files, changed interfaces, validation results, and documentation updates.
+- Before closing the task, verify that any required updates to `PROJECT_CONTEXT.md`, `vertical_comm_guide.md`, README files, and validation reports have been made.
 
 ## Do Not Do
 - Do not rewrite the whole project unless explicitly asked.

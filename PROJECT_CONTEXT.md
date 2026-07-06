@@ -10,21 +10,39 @@ It is intended as a code-first reference for future maintenance and feature work
 - Propagation structure: the channel is decomposed into direct propagation, sea-surface reflection/scattering, and the total frequency response:
   - `H_f = H_direct_f + H_reflect_f`
   - `h_total = H_f(idx_f_ref)`
+- Current propagation engine: the project still uses the vertical WAPE/PE-style split-step propagation path for acoustic channel generation. Surface boundary models only replace the sea-surface reflection/scattering operator between the upward incident march and the downward reflected march.
 - Current communication policy after the D2 update:
   - receive-window mode defaults to `peak_sync`, which aligns the effective equalizer taps to the dominant baseband tap and then keeps the first `N` samples from a full convolution;
   - Eb/N0 noise reference defaults to `rx_clean`, i.e. receiver-side clean waveform power.
 - `same_legacy` / `same` receive slicing is retained only as a historical or diagnostic mode. It is not the current default communication flow.
 - Current sea-surface model set:
-  - `kirchhoff_spatial`: realization-based Kirchhoff phase-screen comparison path and default surface model;
+  - `kirchhoff_spatial`: realization-based Kirchhoff phase-screen path and default surface model;
+  - `kirchhoff_kdomain`: wavenumber-domain interface for the same explicit Kirchhoff phase-screen realization model;
+  - `kirchhoff_kstat`: Kirchhoff statistical phase-screen branch. It does not generate a concrete sea surface; it builds coherent reflection, incoherent scattering power, optional random reflected spectra, and energy diagnostics from the PM height spectrum;
   - `ssa_stat_kernel` with `pm_convolution`: PM-spectrum engineering baseline statistical kernel;
   - `ssa_stat_kernel` with `ssa1_geometry`: first-order pressure-release / Dirichlet geometry kernel.
+- Current Kirchhoff K-Stat status:
+  - implemented as an independent branch under `pm_surface_boundary_model.m`, selected by `surface_boundary_model='kirchhoff_kstat'`;
+  - uses near-vertical phase-screen factor `alpha=2*k0`, coherent reflection `R_coh=-exp(-2*k0^2*sigma_eta^2)`, and the incoherent phase-screen spectrum `S_deltaG` rather than the total phase-screen spectrum with the coherent delta peak included;
+  - metadata records `sigma_eta2_m2`, `G_mean`, `R_coh`, `S_deltaG`, `P_sca`, deterministic random seed fields, FFT normalization notes, full-K energy closure, and propagation/trusted-window energies;
+  - disabled/default paths keep compatibility and do not replace the existing default `kirchhoff_spatial` behavior.
+- Current roughness scaling policy:
+  - `surface_roughness_scale_mode='target_hs'` remains the default and scales the PM spectrum or explicit surface realization to `sea_hs_target`;
+  - `surface_roughness_scale_mode='raw_pm'` disables target-Hs scaling, so `sea_wind_speed` sets both PM spectral shape and integrated roughness strength;
+  - raw-PM comparisons use the project's discrete spectrum variance convention, `sigma_eta_raw^2=sum(Phi2D(:))*dkx*dky` and `Hs_raw=4*sigma_eta_raw`;
+  - in raw-PM mode, `kirchhoff_kstat` maps the project PM spectrum to its continuous correlation formula with `W_eta=Phi2D*(2*pi)^2`, while explicit `kirchhoff_kdomain` uses the current `sqrt(2)*real(ifft2(...))` realization convention.
 - Current SSA statistical kernel status:
   - PM-spectrum-driven statistical scattering is connected to the existing reflected PE path and communication `H_f` consumer;
   - `periodic` and `zero_padded` convolution paths are implemented for `pm_convolution` and `ssa1_geometry`;
   - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed;
   - optional frequency-correlated random scattering modes are available for wideband stochastic-channel diagnostics, while the default remains independent per-frequency scatter;
-  - reduced-grid scatter-scale calibration and compact applicability reporting scripts are available as engineering diagnostics.
+  - reduced-grid scatter-scale calibration and compact applicability reporting scripts are available as engineering diagnostics;
   - optional `ssa2_broschat_coherent` is implemented only as a coherent-reflection sensitivity diagnostic; second-order incoherent scattering is not implemented.
+- Current K-Stat / K-Domain validation status:
+  - `validate_kirchhoff_kstat_vertical.m` validates the standalone kstat branch for flat-surface degeneration, coherent formula, phase-screen energy closure, propagation-window diagnostics, deterministic seeds, explicit Kirchhoff mean comparison, and weak SSA1 coherent-reference consistency;
+  - `compare_kirchhoff_kdomain_kstat_wind_vertical.m` compares explicit and statistical Kirchhoff branches under raw-PM wind sweeps. With the discrete-variance alignment, the full reduced run reported maximum `Hs_raw_rel_error` about `0.0145`, maximum kstat energy-closure error about `2.22e-15`, and `H_f=H_direct_f+H_reflect_f` at about the `1e-17` level;
+  - `validate_kstat_vs_kdomain_phase_screen_vertical.m` is a surface-boundary-only plane-wave ensemble check. The latest full reduced run (`f=[4000 6000 8000] Hz`, `Hs=[0.05 0.1 0.2 0.5] m`, `M=[8 16 32 64]`, `128x128`) reported maximum kstat energy-closure error `4.663e-15`, maximum `sigma_eta` relative error `4.163e-16`, final-M mean radial-spectrum L2 error `0.0213`, and final-M mean radial-spectrum correlation `0.9997`;
+  - single-seed `kirchhoff_kdomain` fields are not expected to match `kirchhoff_kstat` pointwise. The intended comparison is ensemble coherent mean, incoherent power spectrum, radial spectral shape, energy closure, and receiver-side statistics after PE/WAPE if propagation is included.
 - Optional SSA component diagnostics can decompose the surface-reflected field into coherent specular and incoherent scatter components, march both components to the receiver, and report whether the scatter-only received contribution is negligible for the current settings. This path is disabled by default and does not alter `H_reflect_f`.
 - A surface-only plane-wave coherent-reflection diagnostic is available in `compare_plane_wave_surface_coherent_reflection_vertical.m`. It bypasses PE/WAPE and communication code, uses a vertical plane wave at the sea surface, and compares raw-PM SSA1 coherent reflection with Kirchhoff phase-screen ensemble coherent reflection under wind-speed sweeps.
 - Optional reference-frequency surface-wavefield diagnostics can record:
@@ -34,8 +52,9 @@ It is intended as a code-first reference for future maintenance and feature work
   This path is disabled by default and does not change channel values.
 - Current physics boundary:
   - this is not a complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering model;
+  - `kirchhoff_kstat` is a near-vertical Kirchhoff/Gaussian statistical phase-screen model, not a full rough-surface scattering theory and not a replacement for calibrated sea-surface scattering measurements;
   - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a physically or empirically calibrated model;
-  - under fixed `sea_hs_target` normalization, changing wind speed mainly changes PM spectral shape, not a monotonic sea-state intensity by itself.
+  - under fixed `sea_hs_target` normalization, changing wind speed mainly changes PM spectral shape, not a monotonic sea-state intensity by itself;
   - in the plane-wave raw-PM diagnostic, no `sea_hs_target` normalization is applied, so wind speed changes both the PM spectral shape and the integrated roughness variance.
 
 ## Repository Role of Each Main MATLAB File

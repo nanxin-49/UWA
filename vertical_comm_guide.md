@@ -38,7 +38,47 @@ z=0,
 
 直达项从 \(z_{\rm tx}\) 推进到 \(z_{\rm rx}\)。反射项先从 \(z_{\rm tx}\) 推进到海面，再由海面边界模型给出反射/散射场，最后从海面推进回 \(z_{\rm rx}\)。
 
-## 3. PM 海面高度谱
+## 3. 发射声场初始条件
+
+当前 PE/WAPE 信道模型中的初始发射声场不是理想数学点源，也不是已经调制好的时域 PSK 波形。代码在发射深度 \(z=z_{\rm tx}\) 的横向平面上给定一个二维高斯复包络：
+
+\[
+\Psi_{\rm tx}(x,y;z_{\rm tx})
+=
+\exp\left[
+-\frac{(x-x_{\rm tx})^2+(y-y_{\rm tx})^2}{2\sigma_{\rm src}^2}
+\right].
+\]
+
+这里 \((x_{\rm tx},y_{\rm tx},z_{\rm tx})\) 是发射端位置，\(\sigma_{\rm src}\) 是横向高斯源宽度。默认参数为
+
+\[
+x_{\rm tx}=0,\qquad
+y_{\rm tx}=0,\qquad
+z_{\rm tx}=100\ {\rm m},\qquad
+\sigma_{\rm src}=0.3\ {\rm m}.
+\]
+
+该初始包络在中心点幅度为 1，初始相位为 0，随后对每个频率 \(f\) 用
+
+\[
+k_0=\frac{2\pi f}{c_0}
+\]
+
+进入 PE/WAPE 上行传播。也就是说，声学传播部分处理的是频域/窄带复包络 \(\Psi\)，真实声压可理解为复包络乘以载波相位后取实部。对入射上行场，文档和可视化中采用的约定是
+
+\[
+p_{\rm inc}(x,y,z,t)
+=
+\Re\left\{
+\Psi_{\rm inc}(x,y,z)
+\exp\left[i k_0(z_{\rm tx}-z)-i\omega t\right]
+\right\}.
+\]
+
+通信脚本中的 MPSK 符号不是用来重新定义这个空间初始声场，而是在得到信道频响 \(H(f)\) 或基带冲激响应 \(h_{\rm bb}\) 后，通过乘法或卷积作用到符号序列上。因此，“声学初始发射场”对应上面的高斯空间包络；“通信发射信号”对应后续的 PSK 符号流，两者处在不同层级。
+
+## 4. PM 海面高度谱
 
 粗糙海面由 Pierson-Moskowitz, PM, 谱描述。令横向波数
 
@@ -67,7 +107,9 @@ E_{1D}(K)
 \qquad K>0.
 \]
 
-实际使用时，谱会按目标有效波高 \(H_s\) 归一化。海面高度标准差取
+实际使用时有两种粗糙度幅度口径，由 `surface_roughness_scale_mode` 控制。
+
+默认 `target_hs` 模式会按目标有效波高 \(H_s\) 归一化。海面高度标准差取
 
 \[
 \sigma_\eta=\frac{H_s}{4},
@@ -81,6 +123,18 @@ E_{1D}(K)
 
 这里 \(W_\eta\) 表示海面高度的波数谱。它说明不同尺度、不同方向的海面起伏各有多少方差贡献，而不是只表示“有没有”某个波纹尺度。
 
+`raw_pm` 模式不按 `sea_hs_target` 缩放，风速 \(U\) 直接决定 PM 谱积分方差。当前项目统一采用显式海面使用的离散谱方差作为 raw PM 主口径：
+
+\[
+\sigma_{\eta,\rm raw}^2
+=
+\sum_{K_x,K_y}\Phi_{2D}(K_x,K_y)\Delta K_x\Delta K_y,
+\qquad
+H_{s,\rm raw}=4\sigma_{\eta,\rm raw}.
+\]
+
+因此固定 \(H_s\) 的风速扫描和 raw PM 风速扫描含义不同：前者主要改变 PM 谱形状，后者同时改变谱形状和海况强度。
+
 当 \(H_s=0\) 时，
 
 \[
@@ -89,12 +143,16 @@ E_{1D}(K)
 
 这表示海面没有统计起伏，模型退化为平整自由海面反射。
 
-## 4. Kirchhoff 空间海面模型
+## 5. Kirchhoff 边界模型
+
+当前 Kirchhoff 类分支有两条路径：显式相位屏路径 `kirchhoff_spatial` / `kirchhoff_kdomain`，以及统计相位屏路径 `kirchhoff_kstat`。前者生成具体海面 realization，后者不生成具体海面，而是从 PM 谱直接生成相干项和非相干统计散射谱。
+
+### 5.1 显式相位屏：`kirchhoff_spatial` 与 `kirchhoff_kdomain`
 
 `kirchhoff_spatial` 是默认海面模型。它先从 PM 谱生成一次具体随机海面
 
 \[
-\xi(x,y),
+\eta(x,y),
 \]
 
 再用相位屏近似描述海面高度起伏导致的反射相位扰动：
@@ -115,16 +173,150 @@ R_0=-1.
 相位扰动写作
 
 \[
-\Delta\phi(x,y)=k_0\Gamma\,\xi(x,y),
+\Delta\phi(x,y)=k_0\Gamma\,\eta(x,y),
 \qquad
 k_0=\frac{2\pi f}{c_0}.
 \]
 
-\(\Gamma\) 是入射和反射方向共同决定的有效垂向相位因子。法向入射近似下，\(\Gamma\) 可理解为固定几何因子；斜入射修正时，它由局部传播方向决定。
+\(\Gamma\) 是入射和反射方向共同决定的有效垂向相位因子。当前主公式在法向入射和镜面反射时给出
 
-该模型的特点是直观，并对应某一次具体海面 realization。它会通过随机相位屏自然产生角谱展宽和 speckle 式起伏，但它不是从海面谱直接给出平均散射功率的闭式统计核。
+\[
+\Delta\phi=2k_0\eta.
+\]
 
-## 5. PM 谱驱动的 SSA-like 统计散射分支
+这对应入射-反射双程高度路径差 \(2\eta\)。旧的 \(4k_0\eta\) 口径只保留在历史诊断中，不再作为主模型公式。
+
+`kirchhoff_kdomain` 是同一显式相位屏思想的波数域接口，便于和统计卷积路径比较。显式分支的特点是直观，并对应某一次具体海面 realization。它会通过随机相位屏自然产生角谱展宽和 speckle 式起伏，但单次 realization 不是从海面谱直接给出 ensemble 平均散射功率的闭式统计核。
+
+在 `raw_pm` 模式下，显式海面 realization 记录的是 `std(eta(:))` 和对应 \(H_{s,\rm raw}\)。由于当前 realization 由 unconstrained complex spectrum 经 `real(ifft2(...))` 得到，取实部会使方差约损失一半，因此 raw PM 生成时乘以 \(\sqrt{2}\)，使样本方差回到目标离散谱方差。有限 seed 数下，显式分支的 \(H_{s,\rm raw}\) 仍会围绕离散谱目标值波动。
+
+### 5.2 统计相位屏：`kirchhoff_kstat`
+
+`kirchhoff_kstat` 是 Kirchhoff / 统计相位屏分支。它不显式生成某个具体 \(\eta(x,y)\)，而是由 PM 高度谱构造海面高度相关函数、相干反射项、非相干相位屏谱和可选随机反射场 realization。该分支独立于 `ssa_stat_kernel`，当前作为粗糙海面非相干散射的主统计生成路径。
+
+第一版采用近垂直 Kirchhoff 相位屏
+
+\[
+G(\mathbf r)=\exp(i\alpha\eta(\mathbf r)),
+\qquad
+\alpha=2k_0,
+\qquad
+R_0=-1.
+\]
+
+由高度谱得到相关函数
+
+\[
+C_\eta(\boldsymbol\rho)
+=
+\frac{1}{(2\pi)^2}
+\int W_\eta(\mathbf K)
+e^{i\mathbf K\cdot\boldsymbol\rho}\,d\mathbf K,
+\qquad
+\sigma_\eta^2=C_\eta(0).
+\]
+
+离散实现采用
+
+\[
+C_\eta=\mathrm{ifft2}(W_\eta)\,N_xN_y
+\frac{\Delta K_x\Delta K_y}{(2\pi)^2}.
+\]
+
+因此在 `raw_pm` 模式下，为了让 \(C_\eta(0)\) 与项目离散 PM 方差一致，K-Stat 使用
+
+\[
+W_\eta=\Phi_{2D}(2\pi)^2,
+\]
+
+从而
+
+\[
+C_\eta(0)=
+\sum \Phi_{2D}\Delta K_x\Delta K_y.
+\]
+
+相位屏均值和相干反射为
+
+\[
+\langle G\rangle
+=
+\exp\left(-\frac12\alpha^2\sigma_\eta^2\right),
+\qquad
+R_{\rm coh}=R_0\langle G\rangle.
+\]
+
+压力释放自由海面、近法向条件下即
+
+\[
+R_{\rm coh}=-\exp(-2k_0^2\sigma_\eta^2).
+\]
+
+相干反射场为
+
+\[
+\hat\Psi_{\rm coh}(\mathbf K)=R_{\rm coh}\hat\Psi_{\rm inc}(\mathbf K).
+\]
+
+非相干涨落相关函数为
+
+\[
+C_{\delta G}(\boldsymbol\rho)
+=
+\exp(-\alpha^2\sigma_\eta^2)
+\left[
+\exp(\alpha^2C_\eta(\boldsymbol\rho))-1
+\right].
+\]
+
+对它做傅里叶变换得到非相干相位屏谱 \(S_{\delta G}\)。注意这里使用的是 \(S_{\delta G}\)，不把包含相干 delta 尖峰的总相位屏谱当作非相干散射谱。
+
+非相干散射功率由统计卷积给出：
+
+\[
+P_{\rm sca}(\mathbf K_s)
+=
+\frac{|R_0|^2}{(2\pi)^2}
+\int
+S_{\delta G}(\mathbf K_s-\mathbf K_i)
+|\hat\Psi_{\rm inc}(\mathbf K_i)|^2\,d\mathbf K_i.
+\]
+
+若 `surface_kstat_random_scatter=true`，随机反射谱 realization 为
+
+\[
+\hat\Psi_{\rm sca}^{(m)}(\mathbf K)
+=
+\sqrt{P_{\rm sca}(\mathbf K)}Z_m(\mathbf K),
+\qquad
+Z_m\sim\mathcal{CN}(0,1),
+\]
+
+最终
+
+\[
+\hat\Psi_{\rm ref}^{(m)}
+=
+\hat\Psi_{\rm coh}
++
+\hat\Psi_{\rm sca}^{(m)}.
+\]
+
+随机种子使用 `sea_seed + surface_kstat_seed_offset + frequency_index - 1`，默认 `surface_kstat_seed_offset=200000`。若关闭随机散射，分支仍保留 \(P_{\rm sca}\)、\(S_{\delta G}\) 和能量诊断，但反射场只注入相干项。
+
+K-Stat 记录全波数相位屏能量闭合：
+
+\[
+|\langle G\rangle|^2
++
+\frac{1}{(2\pi)^2}
+\sum S_{\delta G}(\mathbf K)\Delta K_x\Delta K_y
+\approx 1.
+\]
+
+同时记录传播窗 \(K_h\le k_0\) 以及可选可信角窗内的非相干能量。传播窗能量只是诊断量，不会被强制重新归一化到 \(1-|R_{\rm coh}|^2\)。
+
+## 6. PM 谱驱动的 SSA-like 统计散射分支
 
 `ssa_stat_kernel` 分支不生成具体 \(\xi(x,y)\)。它直接由 \(W_\eta(K_x,K_y)\) 构造波数域统计散射功率，再合成海面反射场。
 
@@ -142,7 +334,7 @@ P_{\rm inc}(K)=|\Psi_{\rm inc}(K)|^2.
 \]
 * 即使主传播方向近似垂直，只要海面是粗糙的，反射就不可能只有一个完美镜面分量。
 * 粗糙海面让镜面反射变弱，缺失的能量一部分来自非相干散射
-### 5.1 相干镜面项
+### 6.1 相干镜面项
 
 粗糙度会降低镜面相干反射。当前采用
 
@@ -205,7 +397,7 @@ R_1=-\exp[-2\gamma_i^2\sigma_\eta^2],
 \Psi_{\rm coh}(x,y)=R_{\rm coh}\Psi_{\rm inc}(x,y).
 \]
 
-这个指数项可理解为 SSA coherent reflection 的统计平均。它和 Kirchhoff realization 相位屏中的单次高度相位扰动不是同一个量：Kirchhoff 相位屏先生成具体 \(\xi(x,y)\)，再给每个空间点加相位；SSA coherent reflection 则直接对随机海面统计平均后得到 \(R_{\rm coh}\)。若海面高度近似为零均值高斯随机变量，反射相位扰动的方差越大，不同海面 realization 的镜面相干叠加越容易相互抵消。
+这个指数项可理解为 SSA coherent reflection 的统计平均。它和 Kirchhoff realization 相位屏中的单次高度相位扰动不是同一个量：Kirchhoff 相位屏先生成具体 \(\eta(x,y)\)，再给每个空间点加相位；SSA coherent reflection 则直接对随机海面统计平均后得到 \(R_{\rm coh}\)。若海面高度近似为零均值高斯随机变量，反射相位扰动的方差越大，不同海面 realization 的镜面相干叠加越容易相互抵消。
 
 当 \(H_s=0\) 时，\(\sigma_\eta=0\)，因此
 
@@ -215,7 +407,7 @@ R_{\rm coh}=R_0.
 
 压力释放平整自由海面下即为 \(R_{\rm coh}=-1\)。
 
-### 5.2 工程基线核：`pm_convolution`
+### 6.2 工程基线核：`pm_convolution`
 
 `pm_convolution` 是工程基线核。它把非相干散射理解为：入射方向 \(K'\) 的谱能量，如果海面中存在波数差 \(K-K'\) 对应尺度的起伏，就可以被重新分配到散射方向 \(K\)。
 
@@ -256,7 +448,7 @@ q_z^{\rm eff}=k_0(\cos\theta_i+\cos\theta_s).
 
 因此工程散射强度中使用 \((q_z^{\rm eff})^2\)，法向时为 \((2k_0)^2\)。旧的 \(2k_0(\cos\theta_i+\cos\theta_s)\) 口径会在法向时变成 \(4k_0\)，相当于重复计算双程相位因子；它现在只作为历史审计量记录，不再作为 `pm_convolution` 主公式。需要强调的是，这个修正只统一工程 baseline 的相位尺度，仍不把 `pm_convolution` 变成严格 SSA 散射截面模型。
 
-### 5.3 一阶 Dirichlet 几何核：`ssa1_geometry`
+### 6.3 一阶 Dirichlet 几何核：`ssa1_geometry`
 
 `ssa1_geometry` 在工程卷积基础上加入压力释放 Dirichlet 自由海面的一阶几何因子。对横向波数 \(K\)，定义传播垂向波数
 
@@ -313,7 +505,7 @@ P_{\rm sca}^{\rm raw}(K)
 
 当前 `ssa1_geometry` 只支持压力释放 Dirichlet 边界，即 \(R_0=-1\)。任意阻抗边界、Neumann 边界或从一般反射系数到 SSA 几何项的映射尚未实现。
 
-## 6. 周期卷积与 zero-padding 线性卷积
+## 7. 周期卷积与 zero-padding 线性卷积
 
 当前实现支持两种卷积方式。
 
@@ -323,9 +515,11 @@ P_{\rm sca}^{\rm raw}(K)
 
 两种方式的物理含义不同。周期卷积假设超出网格边界的波数会从另一侧折回；zero-padding 则把网格外未表示的谱当作零处理。因此二者不要求逐点相同，但都必须满足能量审计和接口不变量。
 
-## 7. 能量约束
+## 8. 能量约束与能量诊断
 
-非相干散射项是随机生成的。为避免随机散射导致非物理放大，模型施加能量约束。
+不同统计分支的能量处理不同。
+
+`ssa_stat_kernel` 的非相干散射项是工程随机生成的。为避免随机散射导致非物理放大，该分支施加能量约束。
 
 定义
 
@@ -368,9 +562,21 @@ E_{\rm coh}+E_{\rm sca}\le E_{\rm inc}.
 
 这是数值稳定和物理合理性约束，不代表已经完成绝对散射截面的实验标定。
 
-## 8. 随机散射谱
+`kirchhoff_kstat` 不使用 `surface_ssa_scatter_scale` 和上述 SSA 能量限幅公式。它首先检查统计相位屏本身的能量闭合：
 
-若启用随机散射，非相干散射场按复高斯随机相位生成：
+\[
+|\langle G\rangle|^2
++
+\frac{1}{(2\pi)^2}
+\sum S_{\delta G}(\mathbf K)\Delta K_x\Delta K_y
+\approx 1.
+\]
+
+然后单独记录传播窗和可信角窗内的非相干能量。这些窗口能量只是诊断，不会被重新归一化为总非相干能量。
+
+## 9. 随机散射谱
+
+若启用随机散射，`ssa_stat_kernel` 和 `kirchhoff_kstat` 都会把非相干功率谱变成一个具体复谱 realization：
 
 \[
 \Psi_{\rm sca}(K)=\sqrt{P_{\rm sca}(K)}\,z(K),
@@ -388,9 +594,9 @@ z(K)\sim\mathcal{CN}(0,1).
 
 若关闭随机散射，模型仍计算 \(P_{\rm sca}\) 和能量审计量，但不把 \(\Psi_{\rm sca}\) 注入反射场。此时通信链路只接收相干镜面反射项。
 
-宽带频率轴上，随机散射 realization 还需要说明跨频率相关性。默认处理仍是各频点独立生成复高斯随机谱，这保持了早期实现的兼容性。当前还提供两个仅用于随机信道生成诊断的工程相关模式：一种是在不同频点复用同一个随机相位样本，另一种是在频率序列上使用一阶自回归相关样本。它们的作用是检查宽带 \(H_f\) 的频域连续性对随机散射 realization 的敏感性；它们不是新的 SSA 物理散射公式，也不是经过实验标定的海面时间频率相关模型。
+宽带频率轴上，`ssa_stat_kernel` 还提供几个仅用于随机信道生成诊断的工程相关模式：默认各频点独立生成复高斯随机谱，也可以在不同频点复用同一个随机相位样本，或在频率序列上使用一阶自回归相关样本。它们的作用是检查宽带 \(H_f\) 的频域连续性对随机散射 realization 的敏感性；它们不是新的 SSA 物理散射公式，也不是经过实验标定的海面时间频率相关模型。`kirchhoff_kstat` 当前使用由 `sea_seed + surface_kstat_seed_offset + frequency_index - 1` 定义的可复现独立频点样本。
 
-### 8.1 镜面项与非相干项的接收贡献诊断
+### 9.1 镜面项与非相干项的接收贡献诊断
 
 为了判断非相干散射项在当前设置下是否可以忽略，模型提供一个默认关闭的诊断分解。它不改变主反射场，只把同一个海面反射场写成
 
@@ -418,7 +624,7 @@ h_{\rm ref}^{\rm total}
 h_{\rm ref}^{\rm coh}+h_{\rm ref}^{\rm sca}.
 \]
 
-这个诊断回答的是一个工程问题：在给定频率、风速、\(H_s\)、网格、随机种子和 \(C_{\rm sca}\) 下，接收点处的非相干反射分量相对于镜面相干分量有多大。常用判据为
+这个诊断回答的是一个工程问题：在给定频率、风速、\(H_s\)、网格、随机种子和散射分支配置下，接收点处的非相干反射分量相对于镜面相干分量有多大。常用判据为
 
 \[
 20\log_{10}
@@ -435,17 +641,7 @@ h_{\rm ref}^{\rm coh}+h_{\rm ref}^{\rm sca}.
 
 若二者都低于约 \(-20\) dB，通常可以把非相干项视为当前设置下的弱修正；若接近或高于 \(-10\) dB，则不应轻易忽略。这个阈值是工程判据，不是物理定理。
 
-在固定 \(H_s\) 的风速扫描中，\(\sigma_\eta=H_s/4\) 和
-
-\[
-\iint W_\eta(K_x,K_y)\,dK_xdK_y
-=
-\sigma_\eta^2
-\]
-
-保持不变。此时改变风速 \(U\) 主要改变归一化 PM 谱的形状，也就是不同海面波数尺度的能量分布；它不表示海况强度随风速单调增强。
-
-## 9. 通信链路解释
+## 10. 通信链路解释
 
 海面模型只改变频域信道 \(H(f)\)。后续 MPSK 通信仍沿用同一链路：
 
@@ -455,7 +651,7 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
 然后进行符号卷积、噪声注入、同步、均衡和判决。
 
-因此比较 `kirchhoff_spatial`、`pm_convolution` 和 `ssa1_geometry` 时，应主要观察
+因此比较 `kirchhoff_spatial`、`kirchhoff_kdomain`、`kirchhoff_kstat`、`pm_convolution` 和 `ssa1_geometry` 时，应主要观察
 
 \[
 |H(f)|,\qquad |H_{\rm ref}(f)|,\qquad \arg H(f),
@@ -463,68 +659,46 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
 以及同一通信流程下的 BER/SER 趋势。
 
-## 10. 当前验证结论
+## 11. 当前验证结论
 
 当前 reduced-grid 数值验证支持以下结论：
 
-1. 当 \(H_s=0\) 时，统计海面模型退化为平整自由海面反射：
+1. 默认路径保持兼容。`kirchhoff_spatial` 仍是默认边界模型；新增 `kirchhoff_kdomain`、`kirchhoff_kstat` 和 `raw_pm` 不改变默认 `target_hs` 配置。
+
+2. 当 \(H_s=0\) 时，统计海面模型退化为平整自由海面反射：
 
    \[
    \sigma_\eta=0,\qquad W_\eta=0,\qquad R_{\rm coh}=R_0,\qquad E_{\rm sca}=0.
    \]
 
-2. `pm_convolution` 和 `ssa1_geometry` 在 \(H_s=0\) 时都与平整 `kirchhoff_spatial` 响应达到舍入误差级一致。
+   `ssa_stat_kernel` 与 `kirchhoff_kstat` 均覆盖该退化检查。
 
-3. 非零海况下能量审计满足
-
-   \[
-   E_{\rm coh}+E_{\rm sca}\le E_{\rm inc}.
-   \]
-
-4. 相同随机种子下统计散射结果可复现；改变海面随机种子会改变反射散射 realization，但直达项保持稳定。
-
-5. `random_scatter=false` 时，模型仍保留散射功率和能量统计，但不会向通信链路注入随机散射场。
-
-6. `ssa1_debug_dense` 的小网格显式求和与 `ssa1_geometry` 的周期 FFT 卷积结果一致，验证了一阶 Dirichlet 几何核的离散实现。
-
-7. `zero_padded` 线性卷积路径已经可运行，可用于检查周期卷积 aliasing 风险；它与周期卷积不要求逐点相等。
-
-8. 增大 \(H_s\) 时，相干镜面项下降，散射功率预算增强。增大 \(C_{\rm sca}\) 时，原始散射功率单调增强，但最终注入散射能量仍受能量约束限制。
-
-9. SSA 物理趋势验证覆盖 \(H_s=0,0.05,0.2,0.5,1.0\) 和 \(f=4,6,8,10\ {\rm kHz}\)。在法向镜面基准下，`pm_convolution` 与 `ssa1_geometry` 都应满足
+3. SSA 物理趋势验证覆盖 \(H_s=0,0.05,0.2,0.5,1.0\) 和 \(f=4,6,8,10\ {\rm kHz}\)。在法向镜面基准下，`pm_convolution` 与 `ssa1_geometry` 都应满足
 
    \[
    R_{\rm coh}=R_0\exp(-2k_0^2\sigma_\eta^2).
    \]
 
-   该验证同时检查固定频率下 \(H_s\) 增大时 \(|R_{\rm coh}|\) 与 \(E_{\rm coh}/E_{\rm inc}\) 不增，以及固定非零 \(H_s\) 下频率升高时 \(|R_{\rm coh}|\) 不增、相干指数更负。
+   `ssa1_debug_dense` 的小网格显式求和与 `ssa1_geometry` 的周期 FFT 卷积结果一致；`zero_padded` 线性卷积路径可用于检查周期 aliasing 风险。
 
-10. 新增的 Kirchhoff/SSA1 统计对照不是证明两者逐点等价。`kirchhoff_spatial` 是具体海面 realization 相位屏模型；`ssa1_geometry` 是 PM 谱驱动的一阶 pressure-release Dirichlet 统计反射/散射模型。二者应在统计趋势上互相支持，例如粗糙度增强时 coherent loss 增强、反射角谱展宽增强、反射通道幅相波动增强。
+4. `kirchhoff_kstat` 验证覆盖相干项、非相干相位屏谱、随机 seed 可复现性和全 \(K\) 能量闭合。最近一次检查中，相位屏能量闭合误差最大约为 \(2.22\times10^{-15}\)，满足数值精度预期。
 
-    对照中共同观察
+5. raw PM 风速驱动的 `kirchhoff_kdomain` / `kirchhoff_kstat` 对比使用
+   `wind_list=[3 5 8 10 12 15]`、`seed_count=32`、`nx=ny=128`、\(f_0=6000\) Hz。按离散谱方差统一后，\(H_{s,\rm raw}\) 的两分支相对误差最大约为 \(1.45\times10^{-2}\)，说明海况强度已经基本对齐。
 
-    \[
-    |h_{\rm ref}|,\qquad |h_{\rm total}|,\qquad
-    \left|\frac{h_{\rm ref}}{h_{\rm dir}}\right|,
-    \]
+6. 归一化后，两个 Kirchhoff 分支不应要求逐点一致。`kirchhoff_kdomain` 是具体海面相位屏 realization，`kirchhoff_kstat` 是统计相位屏模型。合理比较对象是 ensemble 趋势、相干衰减、非相干能量、接收端 \(|h_{\rm ref}|\) / \(|h_{\rm total}|\) 统计和反射角谱展宽。
 
-    以及反射角谱的 RMS 横向波数和高波数能量比例。Kirchhoff 的展宽指标来自具体 realization 的反射谱；SSA1 的展宽指标来自统计散射合成后的反射谱。有限 seed 下不要求每个样本或每个相邻海况严格单调。
+7. `validate_kstat_vs_kdomain_phase_screen_vertical.m` 是不接 PE/WAPE 的边界相位屏验证脚本。它用近垂直平面波入射，比较 `kirchhoff_kdomain` 多 realization ensemble 的相干均值、非相干功率谱、径向谱形状和能量闭合是否逼近 `kirchhoff_kstat` 统计相位屏公式。该脚本不要求单个 seed 的复数场逐点一致；若后续接入 PE，只应进一步比较接收端统计量，例如 \(E[|h_{\rm ref}|^2]\)、\(\mathrm{std}(|h_{\rm ref}|)\) 或平均 PDP。
 
-11. `surface_ssa_scatter_scale` 的标定被作为工程诊断处理。当前 reduced-grid 标定使用 `kirchhoff_spatial` 的多 seed 统计作为 realization-based reference，比较 \(E_{\rm sca}/E_{\rm inc}\)、反射角谱展宽、\(|h_{\rm ref}|\) 和 \(|h_{\rm ref}/h_{\rm dir}|\) 等统计量，给出候选 \(C_{\rm sca}\) 的相对误差。该标定不把 \(C_{\rm sca}\) 解释为实验绝对散射截面。
+8. 所有相关回归都必须保持
 
-12. 跨频率相关随机散射验证表明，默认 independent 模式保持原有行为；相关模式只改变随机非相干反射样本，不改变直达项，也不改变
-    \[
-    H(f)=H_{\rm dir}(f)+H_{\rm ref}(f)
-    \]
-    的接口语义。它们用于后续宽带随机信道生成研究，而不是替代当前的海面散射核。
+   \[
+   H(f)=H_{\rm dir}(f)+H_{\rm ref}(f).
+   \]
 
-13. 新增适用性汇总只读取已有 reduced-grid 结果，汇总 SSA1/SSA2 coherent loss 差异、periodic/zero-padding 差异、Kirchhoff 标定残差和频率相关性诊断。该表是工程使用指南，不是完整物理适用域图。
+   最近 raw PM 对比和可视化诊断中的该代数不变量保持在约 \(10^{-17}\) 量级。
 
-14. 镜面/非相干反射贡献对比使用固定 \(H_s\) 的风速-频率扫描。它分别传播相干镜面场和非相干散射场到接收点，比较 \(|h_{\rm ref}^{\rm sca}|/|h_{\rm ref}^{\rm coh}|\) 以及 \(E_{\rm sca}/E_{\rm coh}\)。该对比用于判断当前设置下非相干项是否可忽略，不改变主反射场或通信链路。
-
-    在 \(H_s=0.5\) m、\(C_{\rm sca}=1\)、\(64\times64\) reduced-grid smoke 设置下，\(U=3,8\) m/s 和 \(f=4,8\) kHz 的测试点均显示非相干项远大于相干镜面项。因此这些设置下不应忽略非相干散射。该结论只对应当前粗糙度、网格和工程归一化常数；更弱海况或重新标定 \(C_{\rm sca}\) 后需要重新判断。
-
-## 11. 周期卷积与 zero-padding 对比
+## 12. 周期卷积与 zero-padding 对比
 
 当前 reduced-grid 对比覆盖 \(H_s=0,0.05,0.2\)，并分别检查 `pm_convolution` 与 `ssa1_geometry`。
 
@@ -556,10 +730,13 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
 因此，`periodic` 与 `zero_padded` 的判断标准不是逐点相等，而是接口不变量、能量审计和趋势是否可解释。二者差异反映的是有限波数窗口和周期折返假设对统计散射功率分配的影响。
 
-## 12. 当前限制
+## 13. 当前限制
 
 当前模型仍有明确边界：
 
+- `kirchhoff_kstat` 第一版是近垂直 Kirchhoff 统计相位屏模型，使用 \(\alpha=2k_0\)，尚未加入一般斜入射的 \(\gamma_i+\gamma_s\) 几何因子。
+- `kirchhoff_kstat` 内部能量闭合的是相位屏统计量；传播窗和可信角窗能量只作为诊断记录，不会被强制归一化。
+- `kirchhoff_kdomain` / `kirchhoff_spatial` 是具体 realization 模型，有限 seed 下的 \(H_s\)、\(|h_{\rm ref}|\) 和角谱指标会有样本波动。
 - `pm_convolution` 是工程统计基线核，不是严格 SSA 几何核。
 - `ssa1_geometry` 只覆盖压力释放 Dirichlet 自由海面的一阶几何因子。
 - \(C_{\rm sca}\) 是工程归一化常数，不是实验标定的绝对散射截面。
@@ -568,11 +745,11 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 - 当前只实现了可选的 Broschat-style SSA2 coherent reflection coefficient 诊断；二阶非相干散射功率、完整 SSA2 T-matrix、NLSSA、高阶多次散射和实验标定海面散射截面仍未实现。
 - 当前不向通信反射场注入倏逝散射分量。
 - 当前统计散射 realization 的跨频率相关性只有 independent、共享随机样本和一阶自回归这类工程随机模型；尚未建立物理或经验标定的宽带频率相关模型。因此宽带 \(H_f\) 的频域连续性仍需要后续专门研究。
-- 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；不应简单解释为海况强度随风速单调增强。
+- 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；只有 `raw_pm` 模式才把风速同时解释为海况强度变化。
 
-因此，当前 `ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它还不是完整的海面声散射理论闭环。
+因此，当前 `kirchhoff_kstat` 应理解为 Kirchhoff statistical phase-screen model；`ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering reference branch。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它们还不是完整的海面声散射理论闭环。
 
-## 13. 入射与海面反射声场的可视化
+## 14. 入射与海面反射声场的可视化
 
 为了直观比较声波到达海面前后的形状，当前实现可以在参考频点记录两段中心截面：
 
@@ -642,102 +819,17 @@ H(f)=H_{\rm dir}(f)+H_{\rm ref}(f)
 - 入射场海面端点、反射场海面起点和反射场接收端点与原传播结果的差异均为 0。
 
 在默认展示算例 \(f=6000\) Hz、\(H_s=0.2\) m、`ssa1_geometry` 和 \(128\times128\) 网格下，入射角谱横向波数 RMS 为 \(3.3332\ {\rm rad/m}\)，反射角谱为 \(3.3665\ {\rm rad/m}\)；90% 能量半径分别为 \(5.0613\ {\rm rad/m}\) 和 \(5.1131\ {\rm rad/m}\)。这说明该次 realization 中存在轻微角谱展宽，但这些数值只对应当前网格、海况和随机种子，不能外推为普适散射规律。静态图和一个载波周期的 MP4 动画均已成功生成。
-## 附：无 PE 的垂直平面波相干反射诊断
 
-为单独检查海面边界的相干镜面反射强度，可以不调用 PE/WAPE，而令入射波为垂直平面波
-\[
-p_{\rm inc}=e^{ikz}.
-\]
-在海面 \(z=0\) 处，其横向复包络为常数：
-\[
-\Psi_{\rm inc}(x,y)=1.
-\]
+## 附：边界模型诊断脚本说明
 
-在这种设置下，SSA1 pressure-release / Dirichlet 相干反射为
-\[
-R_{\rm SSA1}=-\exp(-2k_0^2\sigma_\eta^2).
-\]
-如果不对 PM 谱做 \(H_s\) 归一化，则
-\[
-\sigma_\eta^2=\sum W_\eta(K_x,K_y)\Delta K_x\Delta K_y,
-\qquad
-H_{s,\rm raw}=4\sigma_\eta .
-\]
-因此风速 \(U\) 同时改变 PM 谱形状和积分粗糙度方差，不能与固定 \(H_s\) 的风速 sweep 混为一谈。
+部分脚本会绕开 PE/WAPE，只在海面边界处使用垂直平面波
+\(\Psi_{\rm inc}(x,y)=1\)。这类脚本的目的不是生成通信信道，而是单独检查边界模型的相干反射、相位因子和 raw PM 方差口径。
 
-Kirchhoff realization 对照不是直接给出一个统计平均公式，而是先生成具体海面 \(\eta(x,y)\)，再形成相位屏
-\[
-G(x,y)=R_0\exp[i\Delta\phi(x,y)].
-\]
-垂直平面波的相干镜面分量是该相位屏的空间平均：
-\[
-R_{\rm K,coh}=\langle G(x,y)\rangle_{x,y}.
-\]
-脚本同时记录两种相位约定：\(\Delta\phi=2k_0\eta\) 的修正后法向双程高度相位，以及 legacy 诊断口径 \(\Delta\phi=2k_0\cdot2\eta\)。前者的 Gaussian coherent expectation 与 SSA1 法向公式一致；后者用于说明旧的额外 2 倍因子会带来更强的相干衰减。
+这些诊断保留三个结论：
 
-修正后，\(\Delta\phi=2k_0\eta\) 是主 Kirchhoff 公式；\(\Delta\phi=4k_0\eta\) 只作为 `legacy_4k_eta` 对照。
+1. pressure-release 法向相干反射应满足
+   \(R_{\rm coh}=-\exp(-2k_0^2\sigma_\eta^2)\)。`kirchhoff_kstat`、`ssa_stat_kernel` 的相干项，以及显式 Kirchhoff 多 realization 的 ensemble coherent average，都应在适用条件下支持这个趋势。
 
-需要区分三个量：\(\langle |G|^2\rangle\) 表示相位屏的总反射表面功率，对纯 pressure-release 相位屏可接近 1；单个 realization 的 \(|\langle G\rangle_{x,y}|\) 会受到有限孔径和随机样本残余影响；多 realization 下的 \(|\mathbb{E}[\langle G\rangle_{x,y}]|\) 才对应严格意义上的 ensemble coherent specular strength。粗糙海面可以在总反射功率基本不变的同时，使镜面相干项因相位抵消而显著下降。
+2. 当前 Kirchhoff 主相位约定是 \(\Delta\phi=2k_0\eta\)。旧的 \(\Delta\phi=4k_0\eta\) 只作为 `legacy_4k_eta` 历史对照，用来说明额外 2 倍因子会造成过强相干衰减。
 
-## 附：Raw PM 风速驱动下的 Kirchhoff 两分支统一口径
-
-当前项目有两种海面粗糙度幅度口径：
-
-- `surface_roughness_scale_mode='target_hs'`：默认模式。PM 谱或海面 realization 会按 `sea_hs_target` 缩放，因此改变风速 \(U\) 主要改变 PM 谱形状，不直接表示海况强度随风速增强。
-- `surface_roughness_scale_mode='raw_pm'`：风速驱动模式。不按 `sea_hs_target` 缩放，风速 \(U\) 直接决定 PM 谱积分方差和有效波高。
-
-在 raw PM 模式下，当前统一采用项目显式海面使用的离散谱方差作为主口径：
-\[
-\sigma_{\eta,\rm raw}^2
-=
-\sum_{K_x,K_y}\Phi_{2D}(K_x,K_y)\Delta K_x\Delta K_y,
-\qquad
-H_{s,\rm raw}=4\sigma_{\eta,\rm raw}.
-\]
-
-因此，`kirchhoff_kdomain` 和 `kirchhoff_kstat` 的 `sigma_eta_raw_m`、`Hs_raw_m` 都应按上式解释。两者的对齐方式不同：
-
-- `kirchhoff_kdomain` 显式生成具体海面 \(\eta(x,y)\)，raw PM 下记录的是该 realization 的 `std(eta(:))` 和对应 \(H_s\)。有限 seed 数下，样本标准差会围绕离散谱目标值波动。
-- `kirchhoff_kstat` 不生成具体 \(\eta(x,y)\)，而是用高度谱构造相关函数。它内部使用连续谱归一化
-\[
-C_\eta(0)=
-\frac{1}{(2\pi)^2}
-\sum W_\eta(K_x,K_y)\Delta K_x\Delta K_y.
-\]
-为了让该式与项目离散 PM 方差一致，raw PM 下使用
-\[
-W_\eta=\Phi_{2D}(2\pi)^2,
-\]
-从而 \(C_\eta(0)=\sum\Phi_{2D}\Delta K_x\Delta K_y\)。
-
-显式分支中还需要注意一个离散随机场细节：当前海面 realization 由 unconstrained complex spectrum 经 `real(ifft2(...))` 得到。对这种构造，取实部会使方差约损失一半，因此 raw PM 生成时需要乘以 \(\sqrt{2}\)，使显式海面的样本方差回到目标离散谱方差。这个修正只用于保证 raw PM 方差口径正确；在 `target_hs` 模式下，后续按目标 \(H_s\) 的缩放会抵消该差异，默认目标波高结果不应因此改变。
-
-最近一次 reduced-grid 对比使用
-`wind_list=[3 5 8 10 12 15]`、`seed_count=32`、`nx=ny=128`、\(f_0=6000\) Hz。结果显示：
-
-- \(H_{s,\rm raw}\) 的两分支相对误差最大约为 \(1.45\times10^{-2}\)，说明海况强度已经基本对齐；
-- `kirchhoff_kstat` 全 \(K\) 相位屏能量闭合误差最大约为 \(2.22\times10^{-15}\)；
-- 宽带/标量信道代数不变量 \(H_f=H_{\rm direct,f}+H_{\rm reflect,f}\) 保持在约 \(10^{-17}\) 量级。
-
-归一化后，两个分支的主要差异不再是 \(H_s\) 口径，而是模型本身：`kirchhoff_kdomain` 是具体海面相位屏 realization，接收端反射幅度包含有限孔径和 speckle 波动；`kirchhoff_kstat` 是统计相位屏模型，直接生成相干反射项、非相干散射功率谱和可复现随机散射 realization。因此二者不应要求逐点一致，更合理的比较对象是 ensemble 趋势、相干衰减、非相干能量以及接收端统计量。
-
-## 附：Kirchhoff 相位屏法向因子修正
-
-当前 Kirchhoff realization 相位屏采用
-\[
-\Delta\phi(x,y)=k_0(\cos\theta_i+\cos\theta_r)\eta(x,y).
-\]
-法向入射和镜面反射时
-\[
-\cos\theta_i=\cos\theta_r=1,
-\]
-因此
-\[
-\Delta\phi=2k_0\eta.
-\]
-
-这与垂直平面波的双程高度路径差一致：海面高度扰动为 \(\eta\) 时，入射-反射的等效路径差为 \(2\eta\)，相位扰动为 \(k_0\cdot2\eta\)。旧实现等效使用
-\[
-\Delta\phi=2k_0(\cos\theta_i+\cos\theta_r)\eta,
-\]
-在法向时变成 \(4k_0\eta\)，会使 Kirchhoff coherent average 出现类似 \(\exp(-8k_0^2\sigma_\eta^2)\) 的过强相干衰减。该旧口径现在只保留在独立平面波诊断脚本中作为 `legacy_4k_eta` 对照，不再作为主模型公式。
+3. raw PM 风速对比应使用正文第 4 节和第 5.2 节中的离散谱方差口径。附录不再单独维护另一套 raw PM 公式，避免和主实现说明分叉。
