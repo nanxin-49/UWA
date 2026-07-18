@@ -4,6 +4,24 @@
 
 当前公开信道入口为 `vertical_channel_model.m`，垂直 WAPE/PE 推进核心为 `vertical_wape_propagator.m`，海面边界模型集中在 `pm_surface_boundary_model.m`。这些文件名只用于定位实现；下文主要使用物理量和公式描述。
 
+## 当前优化 joint-frequency 验证说明
+
+F=64 的独立验证构建器把解析协方差和伪协方差展开为
+`t=C_eta/sigma_eta^2` 的收敛级数，再执行标量空间 FFT、全局增广频率基和
+分块 K/-K 因子分解。该变换保留物理 joint 统计定义，并非 shared seed、
+shared phase 或 AR(1) 的替代方案。
+
+U=8 m/s 的审计结果选择 150 m/384² PM 网格，并保持与 PE 相同的采样间隔。
+该网格给出隐含 `Hs=1.3636 m`、离散/无限域捕获率 `0.99780` 和
+`Kpeak/Kmin=2.570`，之后通过中央裁剪映射到 50 m/128² PE 网格，不逐条
+realization 重归一化。离散条件库接口只接受已经验证的精确风速节点，不做
+静默插值。U=8 的 128/128 接收端验证已经通过：joint reflected-only
+PDP/LFM correlation 为 0.9809/0.9911，协方差误差 0.3554，明显优于
+independent 的 0.9703，并接近 kdomain split-sample floor 0.3403。
+U=8 properness 未被拒绝，默认保留 full rank 42；两节点库已经完成精确节点
+抽样和未知风速拒绝测试。完整结果见
+`reports/u8_joint_optimization_two_node_library_report.md`。
+
 ## 1. 问题背景
 
 模型描述海底发射端到近海面接收端的上行水声通信链路。总频域信道由直达传播和海面反射/散射贡献叠加：
@@ -659,6 +677,34 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
 以及同一通信流程下的 BER/SER 趋势。
 
+除通信链路外，当前还提供 LFM 测试信号验证脚本
+`validate_kstat_vs_kdomain_lfm_channel_vertical.m`。该脚本不调用
+`comm_main_vertical_psk.m`，也不使用 PSK、BER/SER、通信噪声或均衡。它先生成复解析基带 LFM 包络
+
+\[
+s_{\rm bb}(t)=w(t)\exp\{i\pi\mu(t-T/2)^2\},
+\qquad
+\mu=B/T,
+\]
+
+再把 `vertical_channel_model` 输出的 \(H_f\) 和 \(H_{\rm ref}(f)\) 插值到 LFM FFT 频率轴，通过频域乘法得到
+
+\[
+r_{\rm total}(t)=\mathcal F^{-1}\{S_{\rm LFM}(f)H(f)\},
+\qquad
+r_{\rm ref}(t)=\mathcal F^{-1}\{S_{\rm LFM}(f)H_{\rm ref}(f)\}.
+\]
+
+匹配滤波输出使用
+
+\[
+y_{\rm MF}(t)=\mathcal F^{-1}\{R(f)S_{\rm LFM}^*(f)\}.
+\]
+
+这个验证是 channel-level waveform validation：它用于直观看发射 LFM、接收总波形、反射波形和匹配滤波输出，并比较 ensemble 接收统计；它不是新的 PE/WAPE 空间源项，也不是通信系统 BER/SER 验证。
+
+为便于直接观察发射/接收变化，报告脚本 `plot_lfm_tx_rx_comparison_vertical.m` 会读取已保存的 LFM 验证结果，额外生成 `lfm_tx_vs_rx_total_waveform_compare.png` 和 `lfm_tx_vs_rx_reflect_waveform_compare.png`。这两张图把发射 LFM、`kirchhoff_kdomain` 接收端和 `kirchhoff_kstat` 接收端画在同一坐标中；实部和包络都做了归一化，因此它们用于比较波形形状和时延/展宽趋势，不用于读取绝对接收幅度。
+
 ## 11. 当前验证结论
 
 当前 reduced-grid 数值验证支持以下结论：
@@ -690,7 +736,11 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 
 7. `validate_kstat_vs_kdomain_phase_screen_vertical.m` 是不接 PE/WAPE 的边界相位屏验证脚本。它用近垂直平面波入射，比较 `kirchhoff_kdomain` 多 realization ensemble 的相干均值、非相干功率谱、径向谱形状和能量闭合是否逼近 `kirchhoff_kstat` 统计相位屏公式。该脚本不要求单个 seed 的复数场逐点一致；若后续接入 PE，只应进一步比较接收端统计量，例如 \(E[|h_{\rm ref}|^2]\)、\(\mathrm{std}(|h_{\rm ref}|)\) 或平均 PDP。
 
-8. 所有相关回归都必须保持
+8. `validate_kstat_vs_kdomain_channel_stats_vertical.m` 是接入完整 `vertical_channel_model` 后的接收端统计验证脚本。它比较 `kirchhoff_kdomain` 和 `kirchhoff_kstat` 在 \(E[|h_{\rm ref}|^2]\)、peak-synced reflected/total PDP ensemble mean、\(|h_{\rm total}|\) 分布、direct-path 一致性和 \(H_f=H_{\rm dir}+H_{\rm ref}\) 不变量上的统计一致性。该脚本不运行调制、噪声、均衡或 BER/SER；PDP 结论只表示当前宽带随机实现口径下的接收端统计检查，不表示已经建立了经过物理或实验标定的海面时间频率相关模型。最近一次 smoke run 使用 \(H_s=[0.1,0.2]\) m、8 个 seed、\(64\times64\) 网格和 8 个频点，硬检查通过：最大 \(H_f\) 不变量误差约 \(7.76\times10^{-18}\)，最大 K-Stat 能量闭合误差约 \(9.99\times10^{-16}\)，\(E[|h_{\rm ref}|^2]\) 最大相对误差约 0.097，reflected PDP 相关系数不低于 0.979，\(|h_{\rm total}|\) quantile NRMSE 最大约 0.193；其中 \(H_s=0.2\) m 的 reflected PDP L2 误差约 0.313，超过名义 0.25 统计目标，说明 full reduced 或更多 seed 仍是最终结论所需。
+
+9. `validate_kstat_vs_kdomain_lfm_channel_vertical.m` 是独立的 LFM 测试信号验证脚本。它使用完整 `vertical_channel_model` 得到的 \(H_f\) 和 \(H_{\rm ref}(f)\)，把复解析 LFM 基带信号通过频域乘法送入信道，并比较接收总波形、反射波形、匹配滤波输出、PDP 和 \(E[|h_{\rm ref}|^2]\) 等统计量。最近一次 reflected-focused run 使用 \(H_s=0.2\) m、32 个 seed、\(64\times64\) 网格、32 个频点、4--8 kHz LFM、\(f_s=24\) kHz、\(T=20\) ms。硬检查通过：最大 \(H_f\) 不变量误差约 \(1.39\times10^{-17}\)，最大 K-Stat 能量闭合误差约 \(1.11\times10^{-16}\)，direct path 分支/seed 差异为 0。但 reflected-only 指标没有通过：\(E[|h_{\rm ref}|^2]\) 相对误差约 0.580，reflected LFM 包络相关系数约 0.0279，reflected PDP 相关系数约 0.276，reflected 匹配滤波峰值相对误差约 0.743。total-channel 指标明显更好，例如 total LFM 包络相关系数约 0.982、total PDP 相关系数约 0.930，因此只看 total LFM 会掩盖反射路径统计不一致。
+
+10. 所有相关回归都必须保持
 
    \[
    H(f)=H_{\rm dir}(f)+H_{\rm ref}(f).
@@ -748,6 +798,66 @@ H(f)\rightarrow H_{\rm baseband}(f)\rightarrow h_{\rm bb}(t),
 - 在固定 \(H_s\) 归一化下，改变风速 \(U\) 主要改变 PM 谱形状；只有 `raw_pm` 模式才把风速同时解释为海况强度变化。
 
 因此，当前 `kirchhoff_kstat` 应理解为 Kirchhoff statistical phase-screen model；`ssa_stat_kernel` 应理解为 PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering reference branch。其中 `pm_convolution` 是工程基线，`ssa1_geometry` 是一阶 Dirichlet 几何核；它们还不是完整的海面声散射理论闭环。
+
+### 13.1 raw PM 网格与跨频 K-Stat 前置验证
+
+2026-07-11 新增的独立验证接口不改变公共默认值。raw PM 审计将两个指标分开：二维离散谱方差与解析无限域方差之比，以及只考虑 `K_min--K_max` 的理想径向支持覆盖。前者还包含矩形网格求积误差，因此单独接近 1 不能证明谱峰已经解析。
+
+固定 `dx=50/128 m` 时，U=5 推荐先在 100 m/256^2 PM 网格上建立海面统计，再以相同 `dx` 裁剪到 50 m/128^2 PE 窗口；32 seed 的平均映射能量误差为 2.04%。U=12 和 U=15 分别需要约 300 m/768^2 与 400 m/1024^2 才能覆盖低波数能量，因此不建议同步扩大完整 PE 网格。高风速更适合低/高 K 分解，但两个高度频带必须先合并到 `C_eta` 或 `eta`，不能在线性层面直接相加两个非线性相位屏散射谱。
+
+跨频 joint kstat 使用
+
+\[
+C_{G,ij}(\rho)=R_{0,i}R_{0,j}^*
+e^{-(\alpha_i^2+\alpha_j^2)\sigma_\eta^2/2}
+\left[e^{\alpha_i\alpha_jC_\eta(\rho)}-1\right]
+\]
+
+和
+
+\[
+P_{G,ij}(\rho)=R_{0,i}R_{0,j}
+e^{-(\alpha_i^2+\alpha_j^2)\sigma_\eta^2/2}
+\left[e^{-\alpha_i\alpha_jC_\eta(\rho)}-1\right].
+\]
+
+伪协方差在 K 域耦合 `K` 与 `-K`，实现通过增广谱对协方差 EVD 抽样，而不是 shared seed、shared phase 或 AR(1)。U=5、4--8 kHz、F=32、64^2、64 realization 的边界验证中，joint 模式相对同一显式海面的跨频 covariance 误差为 0.67%，PDP 和 LFM matched-filter correlation 为 0.9837 和 0.9842；independent 模式分别为 95.26%、0.4890 和 0.5163。
+
+该 U=5 条件的解析 `||P||_F/||C||_F` 只有 `2.09e-10`，所以此节点近似 proper；这不是删除 `P` 的通用依据。joint 原型尚未接入 PE，下一步必须在接收端重新验证 `C_H`、`P_H`、PDP 和 LFM。详细设置和成本见 `reports/raw_pm_joint_kstat_prerequisite_validation_report.md`。
+
+### 13.2 cached joint-kstat 接收端原型
+
+该独立验证路径不替换公共传播器。固定源、接收机、介质、PE 网格和频率轴后，它缓存海面入射场、直达接收响应、相干反射接收响应、surface-to-receiver 衍射因子、吸收屏以及同 `dx` 的 PM-to-PE 中央裁剪。每个 realization 只重复
+
+\[
+\Psi_{\rm ref,sca}^{(m)}\rightarrow H_{\rm ref,sca}^{(m)}(f),
+\]
+
+并保持
+
+\[
+H_{\rm total}=H_{\rm dir}+H_{\rm ref,coh}+H_{\rm ref,sca}.
+\]
+
+在 U=5 m/s、raw PM、4--8 kHz、F=32、PM 100 m/256²、PE 50 m/128²、训练 128 和测试 64 样本下，joint 模式相对显式同一海面 kdomain 的 reflected-only covariance 相对误差为 0.2704，PDP correlation 为 0.9714，LFM correlation 为 0.9917；independent 模式分别为 0.9750、-0.0445 和 0.5721。不能改用总信道重新计算这些指标，因为强直达项会掩盖反射误差。
+
+F=32 时真实时延分辨率为 0.25 ms，最大无模糊时延为 7.75 ms。当前 99% 散射尾部接近该窗口，因此通信 CIR 验证前建议提高到 F=64；零填充只能插值，不能提高物理分辨率。
+
+L=64 时，显式 kdomain 和 joint 的接收端样本 `||P||_F/||C||_F` 都约为 0.26。高维有限样本即使来自 proper 过程也会得到非零样本伪协方差，因此该结果尚不能证明过程 improper。完成 `scripts/validation/analyze_receiver_properness_null_vertical.m` 的 proper-null 校准前必须保留 P。完整设置、时间、内存和验收状态见 `reports/cached_joint_kstat_pe_receiver_validation_report.md`。
+
+### 13.3 U=5、F=64 条件接收端统计生成器
+
+固定条件统计模型将确定性分量与随机散射分量分开保存：
+
+\[
+H_{\rm total}^{(m)}=H_{\rm dir}+H_{\rm ref,coh}+H_{\rm ref,sca}^{(m)}.
+\]
+
+`estimate_conditional_channel_stats_vertical` 从 F×L 的散射接收样本估计均值、协方差、伪协方差、复EVD和实增广EVD。`sample_conditional_channel_vertical` 支持proper和improper路径；`build_physical_cir_vertical`检查等间隔频率轴并明确区分 `1/B` 真实分辨率、`1/df`无模糊时延和零填充插值间隔。
+
+U=5、raw PM、4--8 kHz、F=64、训练128和测试64的验证中，joint接收端PDP/LFM correlation为0.9525/0.9839；统计生成器full-rank为0.9548/0.9858。F=64给出0.25 ms真实分辨率和15.75 ms无模糊窗；包含99%能量的最短圆周时延区间为4.657 ms。圆周区间用于避免把带限脉冲的峰前旁瓣错误解释为窗口末端长尾，不等同于零填充。
+
+joint properness按central 95% null interval规则不能拒绝。显式kdomain也在central 95%区间内，但单侧p=0.0405，因此仍保留augmented-real路径。当前推荐full数值秩34；99.9%和99%候选秩为7和5，可作为压缩模式。完整数据、性能和限制见 `reports/u5_conditional_channel_generator_f64_report.md`。
 
 ## 14. 入射与海面反射声场的可视化
 
@@ -833,3 +943,45 @@ H(f)=H_{\rm dir}(f)+H_{\rm ref}(f)
 2. 当前 Kirchhoff 主相位约定是 \(\Delta\phi=2k_0\eta\)。旧的 \(\Delta\phi=4k_0\eta\) 只作为 `legacy_4k_eta` 历史对照，用来说明额外 2 倍因子会造成过强相干衰减。
 
 3. raw PM 风速对比应使用正文第 4 节和第 5.2 节中的离散谱方差口径。附录不再单独维护另一套 raw PM 公式，避免和主实现说明分叉。
+
+## 专题：精确离散伴随接收投影
+
+验证专用伴随原型只适用于当前 cached uniform PE 路径：CPU double、固定发射机和频率/空间网格、单个最近网格点接收机、无气泡且无 Doppler。它不扩展公共传播模式，也不修改 `vertical_channel_model`、`vertical_wape_propagator`、默认 surface model 或 `comm_main_vertical_psk`。
+
+对每个频率，令 `A_i` 表示 cached surface-to-receiver marching operator，`r` 表示 cached 接收网格点的单位脉冲。原型构造
+
+\[
+q_i=A_i^Hr,\qquad
+a_{{\rm PE},i}=\operatorname{conj}(\psi_{{\rm inc},i})\odot q_i.
+\]
+
+这是已实现离散算子的精确共轭转置，不是互易反传、逆传播或损耗补偿。实现反向遍历深度步，共轭 Fresnel 与空间屏，保留 sponge 衰减，并且不引入经验 FFT 归一化。
+
+joint-kstat 随机变量保持为
+
+\[
+\delta G_i=R_{0,i}\exp(i\alpha_i\eta)-R_{{\rm coh},i}.
+\]
+
+其当前协方差和伪协方差已经包含 `R0`，所以接收权重不能再次乘 `R0`。若 `E` 是现有 PM 到 PE 中央裁剪，则解析权重按 `a_PM=E^H*a_PE` 零嵌入，空间周期协方差始终在 PM 网格上计算：
+
+\[
+C_H(i,j)=a_{{\rm PM},i}^H C_{\delta G,ij}a_{{\rm PM},j},\qquad
+P_H(i,j)=a_{{\rm PM},i}^H P_{\delta G,ij}a_{{\rm PM},j}^*.
+\]
+
+总均值单独按 `H_direct + H_ref_coh + mu_scatter` 构造；当前 joint-kstat 的散射均值为零。FFT 收缩使用未 shift 的 MATLAB 排列，lag 零点位于 `(1,1)`，并已由显式 PM 周期稠密矩阵验证。
+
+完整验收的最大伴随/投影误差为 `7.77e-15`/`5.10e-15`，dense/FFT 的 `C/P` 误差为 `6.18e-16`/`9.35e-16`，同 realization 的 cached-forward/projection 误差在 F=9 和 F=64 下分别为 `2.52e-13` 和 `1.07e-13`。F=9 的 4096 条样本和 F=64 的 512 条样本均使解析/样本 `C/P` 误差落在 `1.25x` split-sample floor 内。F=64、PE 128²、PM 256² 时，主要解析成本来自 `F²` 频率对的 PM FFT/收缩。详细设置、reflected-only 通信派生指标、时间、内存、限制和接入判断见 `reports/adjoint_pe_receiver_projection_feasibility_report.md`。
+
+## 15. 两节点条件统计信道的通信接入与验证
+
+`comm_main_vertical_psk.m` 现在提供默认关闭的外部信道验证入口。仅当设置环境变量 `COMM_EXTERNAL_CHANNEL_FILE` 时，脚本才从 MAT 文件中的 `external_channels` 或 `external_channel` 读取 `H_f/f_axis_hz` 或 `h_t`；未设置该变量时仍执行原来的 PE 信道路径，公共默认配置和输出结构不变。外部信道不包含噪声，AWGN 仍由通信接收端在卷积之后单独注入。
+
+`build_communication_taps_vertical.m` 统一完成物理宽带频响到符号率等效 taps 的转换。4--8 kHz 物理带宽对应真实时延分辨率 0.25 ms；插值到通信 FFT 网格只增加时延采样密度，不能提高这一物理分辨率。正式两节点验证采用最短圆周能量窗保留至少 99.9% 的 CIR 能量，再把该窗口展开为因果 taps，以避免把带限 IFFT 的峰前旁瓣误删为负时延。转换同时检查等间隔频率轴、频带覆盖和 H--IFFT--H 数值闭合。
+
+2026-07-13 的正式验证覆盖 U=5 和 U=8 m/s、raw PM、4--8 kHz、F=64；比较 fresh `kirchhoff_kdomain + cached PE`、fresh `joint-kstat + cached PE`、条件统计 full-rank 和 99.9% 低秩模型。每条曲线使用 32 条独立信道、每信道 8000 个 QPSK 符号，并扫描 0:2:20 dB。统计 full-rank 相对 kdomain 的 BER/SER log10 RMSE 在 U=5 为 0.127/0.122，在 U=8 为 0.194/0.189；所有 Eb/N0 点的信道聚类 bootstrap 置信区间均重叠。四种来源的平均 BER 在 U=8 均高于 U=5，风速趋势一致。
+
+共享潜变量的 128 对 full-rank/99.9% 低秩样本显示：U=8 的所有 Eb/N0 点差值置信区间包含零；U=5 仅 20 dB 出现约 `1.08e-4` 的小幅显著 BER 增量。因此 full-rank 仍是参考模型，99.9% 低秩可作为压缩候选，不能据此自动推广到更激进的 99% 截断。
+
+当前已均衡 BER 在高 Eb/N0 出现约 `2e-3`--`7e-3` 的误码平台，无噪声运行也存在同量级残余误码。其主要来源是现有有限线性卷积块与循环 FFT 均衡器之间没有 CP、保护间隔或 overlap-save，以及固定正则化和有限 taps 截断。因此两节点库可用于同一接收机下的相对算法比较和趋势研究，但现阶段不应把该平台解释为信道物理模型的绝对高信噪比性能极限。完整设置、置信区间和结果路径见 `reports/two_node_statistical_channel_communication_validation_report.md`。

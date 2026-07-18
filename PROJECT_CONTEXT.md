@@ -42,6 +42,8 @@ It is intended as a code-first reference for future maintenance and feature work
   - `validate_kirchhoff_kstat_vertical.m` validates the standalone kstat branch for flat-surface degeneration, coherent formula, phase-screen energy closure, propagation-window diagnostics, deterministic seeds, explicit Kirchhoff mean comparison, and weak SSA1 coherent-reference consistency;
   - `compare_kirchhoff_kdomain_kstat_wind_vertical.m` compares explicit and statistical Kirchhoff branches under raw-PM wind sweeps. With the discrete-variance alignment, the full reduced run reported maximum `Hs_raw_rel_error` about `0.0145`, maximum kstat energy-closure error about `2.22e-15`, and `H_f=H_direct_f+H_reflect_f` at about the `1e-17` level;
   - `validate_kstat_vs_kdomain_phase_screen_vertical.m` is a surface-boundary-only plane-wave ensemble check. The latest full reduced run (`f=[4000 6000 8000] Hz`, `Hs=[0.05 0.1 0.2 0.5] m`, `M=[8 16 32 64]`, `128x128`) reported maximum kstat energy-closure error `4.663e-15`, maximum `sigma_eta` relative error `4.163e-16`, final-M mean radial-spectrum L2 error `0.0213`, and final-M mean radial-spectrum correlation `0.9997`;
+  - `validate_kstat_vs_kdomain_channel_stats_vertical.m` extends the comparison to the full `vertical_channel_model` PE/WAPE path and receiver-side statistics: `E[|h_ref|^2]`, peak-synced reflected/total PDP ensemble means, `|h_total|` distributions, direct-path consistency, and `H_f` invariants. The latest smoke run (`Hs=[0.1 0.2] m`, `seed_count=8`, `64x64`, `Nf=8`) passed hard checks with maximum `H_f` invariant error `7.76e-18`, maximum kstat energy error `9.99e-16`, maximum `E[|h_ref|^2]` relative error `0.0973`, reflected PDP correlations at least `0.979`, and `|h_total|` quantile NRMSE at most `0.193`; reflected PDP L2 exceeded the nominal statistical target at `0.313` for `Hs=0.2`, so larger ensembles are still needed for the full reduced conclusion;
+  - `validate_kstat_vs_kdomain_lfm_channel_vertical.m` is an independent channel-level LFM waveform validation script. It does not call `comm_main_vertical_psk.m` and does not use PSK, BER/SER, noise injection, or equalization. It generates an analytic baseband LFM test signal, interpolates `H_f` and `H_reflect_f` onto the LFM FFT grid, computes received total/reflected LFM waveforms and matched-filter outputs, and compares ensemble receiver statistics between `kirchhoff_kdomain` and `kirchhoff_kstat`. The latest reflected-focused run (`Hs=0.2 m`, `seed_count=32`, `64x64`, `Nf=32`, LFM `4-8 kHz`, `fs=24 kHz`, `T=20 ms`) passed hard checks with maximum `H_f` invariant error `1.39e-17`, maximum kstat energy error `1.11e-16`, and direct-path branch/seed delta `0`. However reflected-only agreement did not pass: `E[|h_ref|^2]` relative error was `0.580`, reflected LFM envelope correlation `0.0279`, reflected PDP correlation `0.276`, and reflected matched-filter peak relative error `0.743`. Total-channel metrics were much better (`rx_total_env_corr=0.982`, `pdp_total_corr=0.930`), so total LFM can mask reflected-path disagreement. `plot_lfm_tx_rx_comparison_vertical.m` reads the saved LFM result and generates normalized TX-vs-RX total/reflected waveform overlays for direct visual inspection;
   - single-seed `kirchhoff_kdomain` fields are not expected to match `kirchhoff_kstat` pointwise. The intended comparison is ensemble coherent mean, incoherent power spectrum, radial spectral shape, energy closure, and receiver-side statistics after PE/WAPE if propagation is included.
 - Optional SSA component diagnostics can decompose the surface-reflected field into coherent specular and incoherent scatter components, march both components to the receiver, and report whether the scatter-only received contribution is negligible for the current settings. This path is disabled by default and does not alter `H_reflect_f`.
 - A surface-only plane-wave coherent-reflection diagnostic is available in `compare_plane_wave_surface_coherent_reflection_vertical.m`. It bypasses PE/WAPE and communication code, uses a vertical plane wave at the sea surface, and compares raw-PM SSA1 coherent reflection with Kirchhoff phase-screen ensemble coherent reflection under wind-speed sweeps.
@@ -2303,3 +2305,162 @@ Validation intent:
 - Its full phase-screen energy is internally conserved by the coherent plus `S_deltaG` split.
 - SSA1 is retained as a weak-roughness/small-angle reference check; it is not the main generation formula for this branch.
 - The first version uses near-vertical `alpha=2*k0`; oblique `gamma_i+gamma_s` phase statistics remain future work.
+
+## 2026-07-11 Raw-PM Grid and Joint-Frequency K-Stat Prerequisite Validation
+
+New independent prototype interfaces:
+
+- `raw_pm_spectrum_grid_vertical.m` reproduces the project PM spectrum and records analytic infinite-domain variance, `K_min`, `K_peak`, `K_nyquist`, implied `Hs`, discrete/infinite variance ratio, and an idealized radial-support ratio.
+- `sample_raw_pm_surface_vertical.m` reproduces the explicit raw-PM surface convention for mapping tests.
+- `sample_kirchhoff_kstat_joint_frequency_vertical.m` generates zero-mean joint-frequency Kirchhoff phase screens from the analytic cross-frequency covariance and pseudo-covariance. It uses augmented `K,-K` spectral pairs; `mode='independent'` is retained only as an engineering comparison.
+- These interfaces do not change `vertical_channel_model`, public defaults, the existing independent kstat branch, or the communication chain.
+
+Validation scripts and results:
+
+- `validate_raw_pm_grid_coverage_vertical.m` scans wind, aperture, and resolution. At fixed `dx=50/128 m`, U=5 is well resolved by a 100 m/256^2 PM grid (`variance ratio=0.9983`). U=15 requires approximately 400 m/1024^2 (`variance ratio=0.9913`, idealized support ratio `0.9967`).
+- A same-dx central crop from U=5, 100 m/256^2 PM to 50 m/128^2 PE coordinates retained ensemble mean energy within `2.04%` over 32 seeds. This supports PM/PE grid separation for the prototype, but larger seed confidence intervals are still required.
+- `validate_kstat_joint_frequency_boundary_vertical.m` compares one shared explicit Gaussian surface, independent kstat, and covariance+pseudocovariance joint kstat at U=5, 4--8 kHz, F=32, 64^2, and 64 realizations.
+- Joint kstat achieved cross-frequency covariance relative error `0.0067`, adjacent-correlation RMSE `2.15e-4`, boundary PDP correlation `0.9837`, and boundary LFM matched-filter correlation `0.9842`. Independent kstat gave `0.9526`, `0.9899`, `0.4890`, and `0.5163`, respectively.
+- The analytic U=5 zero-lag pseudo/covariance Frobenius ratio was `2.09e-10`; finite explicit/joint sample ratios were `0.0027/0.0034`. Pseudo-covariance remains implemented because this near-proper result is condition-specific.
+- `audit_pe_caching_vertical.m` shows that fixed source/environment/frequency incident fields, direct response, coherent reflection, propagation kernels, and medium terms are cacheable. For F=32 and L=64, PE step and FFT counts are projected to fall by about `42.9x` and `41.1x` when only random surface-to-receiver propagation is repeated.
+
+Current boundary:
+
+- The joint model is a boundary-only prototype and is not yet connected to PE receiver outputs.
+- Full joint storage scales as `F^2*Nxy`; large PM grids need frequency low rank, K-domain blocking, or a low/high-wavenumber decomposition before production use.
+- The next stage is one U=5 cached joint-kstat + PE receiver validation, not a multi-wind channel library.
+- Detailed report: `reports/raw_pm_joint_kstat_prerequisite_validation_report.md`.
+
+## 2026-07-11 Cached Joint-Kstat + PE Receiver Validation
+
+The validation-only cached executor now stores the fixed incident surface
+field, direct receiver response, coherent reflected receiver response,
+surface-to-receiver PE factors/screens, and the same-dx PM-to-PE crop. The
+public propagator and defaults are unchanged.
+
+At U=5 m/s, raw PM, 4--8 kHz, F=32, PM 100 m/256^2, PE 50 m/128^2,
+Ltrain=128, and Ltest=64, reflected-only joint kstat achieved covariance
+relative error 0.2704 versus 0.9750 for independent kstat. PDP and LFM
+correlations against explicit same-surface kdomain were 0.9714 and 0.9917.
+The explicit kdomain train/test covariance split itself differed by 0.2610,
+so the joint result is near the present sampling floor.
+
+Double same-input cached/public validation gave a maximum total-response
+difference of 7.04e-16. Public F=32 time was 43.71 s versus 0.233 s for one
+cached surface-to-receiver propagation. Joint generation plus cached PE used
+74.14 s for L=128. Cache/model build times were 10.92/32.85 s; stored cache
+and factor arrays were 20/360 MiB, with a 3.018 GiB MATLAB memory snapshot.
+
+Seven of eight receiver-entry criteria pass. The unresolved item is whether
+receiver pseudo-covariance can be ignored: finite L=64 sample P/C ratios are
+about 0.26 for both kdomain and joint, and require a proper-null finite-sample
+calibration before interpretation. F=32 also places the 99% scatter tail near
+the 7.75 ms ambiguity window. Detailed report:
+`reports/cached_joint_kstat_pe_receiver_validation_report.md`.
+
+## 2026-07-12 U=5 Conditional Receiver Generator, F=64
+
+Independent modules now estimate one-condition receiver `mu/C/P`, sample
+proper or augmented-real improper channels, and build physical CIRs without
+changing the public propagator or communication chain. The validated model is
+U=5 m/s raw PM, 4--8 kHz, F=64, PM 100 m/256^2, PE 50 m/128^2,
+Ltrain=128, and held-out Ltest=64.
+
+Joint receiver PDP/LFM correlations against explicit kdomain were
+0.9525/0.9839; independent-frequency results were 0.0048/0.4104. The shortest
+circular 99% energy interval was 4.657 ms versus Tmax=15.75 ms. Joint
+properness was not rejected (observed P/C=0.1911, central 95% null interval
+[0.1364,0.3476], p_upper=0.7326). Explicit kdomain stayed inside its central
+95% interval but has a one-sided p=0.0405 warning; the improper sampler remains
+available.
+
+Held-out selection chose full numerical rank 34. Full/99.9%/99% ranks were
+34/7/5 with covariance errors 0.3922/0.4000/0.3992 and PDP correlations
+0.9548/0.9501/0.9533. Ten thousand H+CIR samples required 0.178 s without PE;
+MAT saving required another 1.007 s. The receiver model is about 694 KB.
+
+The expensive training frontend remains the main risk: F=64 joint factors
+took 631 s, total model construction 840 s, peak MATLAB memory 6.626 GiB, and
+the reusable spatial cache is about 815 MB. Detailed report:
+`reports/u5_conditional_channel_generator_f64_report.md`.
+
+## 2026-07-12 Streaming Joint Builder and U=8 Aperture
+
+The F=64 joint builder now uses a converged covariance/pseudo-covariance
+series, scalar spatial FFT modes, a global augmented-frequency basis, and
+blockwise local EVDs. It never allocates an `F x F x N_K` tensor. At U=5 its
+factor build fell from 631.3 s to 6.50 s, the MATLAB memory snapshot from
+6.626 to 1.664 GiB, and disk storage from about 815 MB to 109.6 MiB. Receiver
+PDP/LFM correlations against the original builder were 0.9986/0.9993.
+Short-batch expanded-factor sampling measured 0.948x old throughput, so
+sampling parity remains a small engineering issue even though construction
+targets pass.
+
+The U=8 raw-PM aperture audit used 128 seeds at common PE spacing. The chosen
+grid is 150 m/384^2: implied Hs=1.3636 m, discrete/infinite capture=0.99780,
+Kpeak/Kmin=2.570, and central-crop energy ratio 0.9579 with 95% CI
+[0.9143,1.0015]. The 100 m grid undersamples below the PM peak; moving from
+150 to 200 m changes implied Hs by only 0.146%.
+
+The U=8 full 128/128 cached receiver validation now passes. Joint covariance
+error is 0.3554, close to the kdomain split floor 0.3403 and far below the
+independent result 0.9703. Joint reflected-only PDP/LFM correlations are
+0.9809/0.9911, and T99/Tmax is 0.2910. U=8 properness is not rejected
+(observed P/C=0.2351, central 95% null interval [0.1770,0.2802], upper-tail
+p=0.3318). Full receiver rank 42 remains the physical default; ranks 14/11
+are compression candidates.
+
+Ten thousand U=8 H+CIR samples take 0.0154 s before file saving and make zero
+PE calls. The exact-node U=5/U=8 library is built and smoke-tested; unsupported
+U=6 is rejected and component sums are exact. U=8 builder-only memory is
+3.062 GiB, but expanded runtime sampling reaches a 6.858 GiB snapshot and the
+384^2 cache is 1.060 GB, so runtime factor streaming/grouping is required
+before higher-wind production. See
+`reports/u8_joint_optimization_two_node_library_report.md`.
+
+## 2026-07-13 Two-Node Communication Validation
+
+The existing MPSK entry now has an optional, disabled-by-default external
+H(f)/h(t) MAT-file input. The default direct-only/direct-plus-reflect PE path
+and receiver-side noise placement are unchanged. Independent reusable code
+converts H(f) to symbol taps and evaluates channel ensembles with common bits,
+noise seeds, peak synchronization, known-channel MMSE, Wilson intervals, and
+channel-cluster bootstrap intervals.
+
+At U=5 and U=8, 32 fresh channels per source and 8000 QPSK symbols per
+channel were tested over 0:2:20 dB. Statistical-full versus kdomain BER-curve
+log10 RMSE was 0.127/0.194 decades; joint versus kdomain was 0.242/0.086.
+All BER and SER cluster-95% intervals overlapped at every Eb/N0 point. Mean
+BER increased from U=5 to U=8 by 1.93x for kdomain, 1.35x for joint, and 1.69x
+for statistical-full channels, so the wind trend is consistent.
+
+The H-to-tap audit found that the legacy unshifted IFFT prefix retained all
+2048 zero-padded samples and could discard 61.8% pre-peak energy. The
+validation path now unwraps the shortest circular interval containing 99.9%
+energy. It preserves at least 0.999 energy, has about 1e-15 FFT closure, and
+keeps the distinction between 0.25 ms physical resolution and 1 ms symbol
+tap spacing.
+
+A 128-pair shared-latent test found no significant U=8 BER change between
+full rank 42 and 99.9% rank 14. U=5 rank 7 differed only at 20 dB by
+1.08e-4 BER. Full rank remains the reference; 99.9% is an acceptable
+compression candidate.
+
+The present frequency-domain MMSE has a noiseless BER floor of roughly
+0.2--0.5%, caused by finite linear-convolution boundaries, circular FFT
+equalization, tap truncation, and fixed regularization. The two-node library
+is approved for comparative communication research, but the next priority is
+a zero-error noiseless block/equalizer baseline before adding U=10. Detailed
+report: `reports/two_node_statistical_channel_communication_validation_report.md`.
+
+## 2026-07-16 Exact Discrete Adjoint PE Receiver Projection
+
+An independent validation-only prototype now implements the exact discrete conjugate transpose of the cached uniform surface-to-receiver PE. The public `vertical_channel_model`, `vertical_wape_propagator`, default surface model, and communication entrypoint remain unchanged. The v1 scope is CPU double, uniform sound speed, fixed transmitter/grid/frequency axis, one nearest-grid receiver, no bubbles, and no Doppler.
+
+The shared forward primitive preserves the existing `fr -> ifft2 -> screen -> fft2 -> fr` ordering. The adjoint reverses depth steps and uses `conj(fr)` and `conj(screen)` without inverse sponge gain or empirical FFT scaling. The receiver weight is `a_PE=conj(psi_inc).*q`. The PM weight is the exact central-crop adjoint `a_PM=E^H*a_PE`, and all covariance operations remain on the PM periodic grid. The current joint variable remains `deltaG=R0*exp(1i*alpha*eta)-Rcoh`; `C_deltaG/P_deltaG` already contain `R0`, so the projection weight does not multiply it again.
+
+Full validation passed. The maximum adjoint and receiver-projection errors were `7.77e-15` and `5.10e-15`; the refactored cached runner matched its original loop exactly. PM 16^2 / PE 8^2 dense-versus-FFT errors were `6.18e-16` for covariance and `9.35e-16` for pseudo-covariance. F=9 with 4096 realizations and F=64 with 512 realizations both placed analytic/sample covariance and pseudo-covariance errors below `1.25x` their split-sample floors. Same-realization cached-forward/projection errors were `2.52e-13` and `1.07e-13`.
+
+At F=64, PE 128^2, and PM 256^2, kernel construction took `0.497 s`, analytic `C/P` took `7.10 s`, and batched projection was about `35.2x` faster per realization than cached forward PE. The PM embedded/FFT weights require about `128 MiB`; the implementation streams frequency pairs and never stores spatial F^2 covariance blocks. The main analytic bottleneck is the F^2 frequency-pair PM FFT/contraction, not kernel construction.
+
+Recommended roles are: adjoint projection for exact fixed-environment receiver realizations; analytic FFT contraction for direct second-order `C/P`; cached forward PE as the physical regression oracle; and the conditional statistical generator for large communication Monte Carlo after analytic/sample validation. The prototype is suitable for main-branch inclusion as an isolated research module, but not yet for the public default propagation path. See `reports/adjoint_pe_receiver_projection_feasibility_report.md`.

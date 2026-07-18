@@ -81,10 +81,35 @@ scenarios(1).enable_surface_reflection = false;
 scenarios(2).name = 'direct_plus_reflect';
 scenarios(2).enable_surface_reflection = true;
 
+% Optional external-channel entry. The default empty path preserves the
+% original PE scenarios exactly. The MAT file must contain external_channels
+% (struct array) or external_channel (scalar), each with H_f+f_axis_hz or h_t.
+external_channel_file = strtrim(getenv('COMM_EXTERNAL_CHANNEL_FILE'));
+use_external_channels = ~isempty(external_channel_file);
+if use_external_channels
+    loaded_external = load(external_channel_file);
+    if isfield(loaded_external,'external_channels')
+        external_channels = loaded_external.external_channels;
+    elseif isfield(loaded_external,'external_channel')
+        external_channels = loaded_external.external_channel;
+    else
+        error('COMM_EXTERNAL_CHANNEL_FILE must contain external_channels or external_channel.');
+    end
+    scenarios = repmat(struct('name','','enable_surface_reflection',true),numel(external_channels),1);
+    for jj=1:numel(external_channels)
+        if isfield(external_channels(jj),'name'), scenarios(jj).name=external_channels(jj).name;
+        else, scenarios(jj).name=sprintf('external_%d',jj); end
+    end
+end
+
 results = struct([]);
 for ss = 1:numel(scenarios)
-    paramsV.enable_surface_reflection = scenarios(ss).enable_surface_reflection;
-    channel = vertical_channel_model(paramsV);
+    if use_external_channels
+        [channel,external_h_t]=local_external_channel(external_channels(ss),paramsV.f_ref_hz);
+    else
+        paramsV.enable_surface_reflection = scenarios(ss).enable_surface_reflection;
+        channel = vertical_channel_model(paramsV); external_h_t=[];
+    end
 
     h = channel.h_total;
     if abs(h) < 1e-12
@@ -99,9 +124,14 @@ for ss = 1:numel(scenarios)
         error('Unsupported isi_mode: %s', isi_mode);
     end
 
-    [f_bb_axis, H_baseband_shifted] = local_build_baseband_response( ...
-        channel.f_axis, channel.H_f, channel.idx_f_ref, symbol_rate_hz, n_sym);
-    [h_bb, n_tap_eff, energy_kept] = local_build_channel_taps(H_baseband_shifted, 0.999);
+    if isempty(external_h_t)
+        [f_bb_axis, H_baseband_shifted] = local_build_baseband_response( ...
+            channel.f_axis, channel.H_f, channel.idx_f_ref, symbol_rate_hz, n_sym);
+        [h_bb, n_tap_eff, energy_kept] = local_build_channel_taps(H_baseband_shifted, 0.999);
+    else
+        h_bb=external_h_t(:); n_tap_eff=numel(h_bb); energy_kept=1;
+        f_bb_axis=[]; H_baseband_shifted=[];
+    end
     [rx_clean, h_eq, receive_meta] = local_apply_channel_window(tx_symbols, h_bb, receive_window_mode);
     noise_signal_ref = local_select_noise_reference(noise_control.ebn0_reference, tx_symbols, rx_clean);
 
@@ -186,6 +216,23 @@ legend(results(1).name, results(2).name, 'Location', 'southwest')
 
 save('psk_comm_result.mat', ...
      'paramsV', 'scenarios', 'results', 'noise_control', 'EbN0_dB_list', 'M', 'n_sym')
+
+function [channel,h_t]=local_external_channel(ext,f_ref_hz)
+h_t=[];
+if isfield(ext,'H_f') && ~isempty(ext.H_f)
+    if ~isfield(ext,'f_axis_hz'), error('External H_f requires f_axis_hz.'); end
+    f=ext.f_axis_hz(:); H=ext.H_f(:); if numel(f)~=numel(H), error('External H_f/f_axis_hz mismatch.'); end
+    [~,idx]=min(abs(f-f_ref_hz));
+elseif isfield(ext,'h_t') && ~isempty(ext.h_t)
+    h_t=ext.h_t(:); H=fftshift(fft(h_t)); f=(1:numel(H)).'; idx=ceil(numel(H)/2);
+else
+    error('Each external channel requires H_f+f_axis_hz or h_t.');
+end
+channel=struct('H_f',H,'H_direct_f',complex(zeros(size(H))), ...
+    'H_reflect_f',H,'f_axis',f,'idx_f_ref',idx,'h_total',H(idx), ...
+    'h_direct',0,'h_reflect',H(idx),'fd_hz_used',0,'rx_state_used',struct(), ...
+    'external_input',true,'noise_included',false);
+end
 
 function [rx_clean, h_eq, meta] = local_apply_channel_window(tx_symbols, h_bb, receive_window_mode)
 tx_symbols = tx_symbols(:);
