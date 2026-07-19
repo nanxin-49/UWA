@@ -70,4 +70,13 @@ Reusable interfaces are `build_communication_taps_vertical`, `evaluate_mpsk_chan
 
 This v1 path is limited to uniform sound speed, CPU double, fixed grids and frequency axis, one nearest-grid receiver, no bubbles, and no Doppler. It does not change the public propagator, default surface model, or communication entrypoint.
 
+## PE Propagation Visual Atlas
+
+- `reporting/generate_pe_propagation_atlas_vertical.m` is the report-only entrypoint. It assembles the Tx-to-surface and surface-to-Rx center slices, surface and receiver planes, physical boundary branches, exact-adjoint sensitivity, accepted receiver `C/P`, wind-node statistics, and a signal-free carrier-reconstruction animation.
+- `reporting/plot_pe_propagation_atlas_vertical.m` renders the fixed 14-item atlas. Spatial panels use a shared amplitude reference and a `[-50,0] dB` scale; phase is masked below `-40 dB`.
+- Run `set PE_ATLAS_MODE=smoke` before MATLAB for the PE 64² / PM 128² / F=9 check. With the variable unset, the formal run reads the accepted PE 128² / PM 256² / F=64 adjoint and conditional-model results.
+- Outputs are written to `results/visualization/pe_propagation_atlas/`, including a reusable MAT file, source/normalization manifest, numerical-closure summary, 13 PNG figures, and one MP4.
+
+The atlas distinguishes physical boundary models from computational acceleration paths. `q` is an exact receiver-sensitivity kernel, not a physical reverse-propagated pressure field. LFM is applied only after obtaining `H(f)` and is shown without noise, modulation, synchronization, or equalization.
+
 Use environment variables already supported by individual scripts to reduce grid size, seed count, or output file names for quick checks.

@@ -974,6 +974,16 @@ P_H(i,j)=a_{{\rm PM},i}^H P_{\delta G,ij}a_{{\rm PM},j}^*.
 
 完整验收的最大伴随/投影误差为 `7.77e-15`/`5.10e-15`，dense/FFT 的 `C/P` 误差为 `6.18e-16`/`9.35e-16`，同 realization 的 cached-forward/projection 误差在 F=9 和 F=64 下分别为 `2.52e-13` 和 `1.07e-13`。F=9 的 4096 条样本和 F=64 的 512 条样本均使解析/样本 `C/P` 误差落在 `1.25x` split-sample floor 内。F=64、PE 128²、PM 256² 时，主要解析成本来自 `F²` 频率对的 PM FFT/收缩。详细设置、reflected-only 通信派生指标、时间、内存、限制和接入判断见 `reports/adjoint_pe_receiver_projection_feasibility_report.md`。
 
+## 专题：PE 全传播过程可视化图册
+
+`scripts/reporting/generate_pe_propagation_atlas_vertical.m` 是独立报告入口。正式案例固定使用 uniform、CPU double、U=5 m/s、Tx 深度 100 m、Rx 深度 3 m、PE 50 m/128²、PM 100 m/256²；空间主图取 6 kHz，接收统计读取现有 4--8 kHz、F=64 验收结果。它不改变任何公共默认配置。
+
+图册首先展示复包络的 Tx→Surface 与 Surface→Rx PE 中心剖面，再展示海面高度、入射/相干/完整/散射边界场和接收平面。所有空间面板共用坐标、幅度参考与 `[-50,0] dB` 色限；低于公共参考 `-40 dB` 的相位被掩膜。接收平面是某一频率的二维复场，而 `H(f)` 是在最近网格点采样后形成的宽带标量序列，两者不能混称。
+
+分支语义如下：flat、explicit Kirchhoff、joint-kstat 和 SSA1 是海面边界模型；cached forward PE、精确伴随投影和解析 FFT `C/P` 是传播/收缩计算路径；条件统计生成器只生成接收端 `H/C/P/CIR/PDP`。其中 `q=A^Hr` 表示接收灵敏度核，不表示真实反向声压场。explicit 与 joint 的独立 realization 只作形态展示，不能做像素点对点误差验收；二者的有效比较量是 ensemble 均值、协方差、PDP、LFM 与分布。
+
+图册主体不需要通信信号。LFM 仅在得到 `H(f)` 后作为无噪声线性探针，不作为 PE 空间源，也不加入调制、AWGN、同步或均衡。MP4 由复包络乘载波相位重构，只用于解释载波相位演化，并非时域 PE 数值求解。全部图、轻量 MAT、清单和数值闭合摘要位于 `results/visualization/pe_propagation_atlas/`。
+
 ## 15. 两节点条件统计信道的通信接入与验证
 
 `comm_main_vertical_psk.m` 现在提供默认关闭的外部信道验证入口。仅当设置环境变量 `COMM_EXTERNAL_CHANNEL_FILE` 时，脚本才从 MAT 文件中的 `external_channels` 或 `external_channel` 读取 `H_f/f_axis_hz` 或 `h_t`；未设置该变量时仍执行原来的 PE 信道路径，公共默认配置和输出结构不变。外部信道不包含噪声，AWGN 仍由通信接收端在卷积之后单独注入。
