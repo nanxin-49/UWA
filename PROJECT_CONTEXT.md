@@ -11,6 +11,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - `H_f = H_direct_f + H_reflect_f`
   - `h_total = H_f(idx_f_ref)`
 - Current propagation engine: the project still uses the vertical WAPE/PE-style split-step propagation path for acoustic channel generation. Surface boundary models only replace the sea-surface reflection/scattering operator between the upward incident march and the downward reflected march.
+- Current external propagation cross-validation: `validate_pe_bellhop_flat_surface_vertical.m` runs a deterministic uniform-SSP, flat pressure-release surface case through the unchanged PE public API and the external Bellhop executable. The accepted reduced case resolves one direct and one single-surface-bounce path; it restores the PE carrier phase only in the validation layer and does not change `H_direct_f`, `H_reflect_f`, or `H_f` semantics.
 - Current communication policy after the D2 update:
   - receive-window mode defaults to `peak_sync`, which aligns the effective equalizer taps to the dominant baseband tap and then keeps the first `N` samples from a full convolution;
   - Eb/N0 noise reference defaults to `rx_clean`, i.e. receiver-side clean waveform power.
@@ -2474,3 +2475,133 @@ The 14 outputs cover geometry, direct and reflected PE marching, surface compone
 Comparison semantics are intentionally restricted. Flat and explicit Kirchhoff fields may be compared for the same incident field; cached PE and adjoint projection use the same `deltaG` and are compared numerically. Independent explicit and joint-kstat realizations are compared only at ensemble/statistical level. Analytic FFT `C/P` and the conditional generator produce receiver statistics or channels, not spatial propagation fields. Acceptance metrics remain reflected-scatter based; total-channel plots are contextual only.
 
 This atlas does not modify `vertical_channel_model`, `vertical_wape_propagator`, the default surface model, or `comm_main_vertical_psk`. Its scope remains uniform sound speed, CPU double, fixed grids/frequencies, one nearest-grid receiver, and no bubbles or Doppler. Outputs and provenance are under `results/visualization/pe_propagation_atlas/`.
+
+## 2026-07-19 Stage-1 PE/Bellhop Flat-Surface Cross-Validation
+
+`scripts/validation/validate_pe_bellhop_flat_surface_vertical.m` adds an external-model validation layer without changing the PE propagation core or public output fields. It locates Bellhop through the optional function override, `BELLHOP_EXE`, the MATLAB path, or the operating-system path; writes a standard Bellhop ASCII-arrivals `.env`; runs the executable in the result directory; parses the `.arr`; and compares it with the existing `vertical_channel_model` direct and reflected components.
+
+The shared deterministic environment is a 100 m isovelocity water column with (c=1500\ \mathrm{m/s}), a flat pressure-release sea surface, transmitter at ([0,0,80]\ \mathrm{m}), receiver at ([5,0,10]\ \mathrm{m}), and center frequency 4 kHz. The 5 m horizontal offset avoids the degenerate zero-range ray geometry while retaining near-vertical propagation. PE uses CPU double, a (128\times128) grid over (32\times32\ \mathrm{m}), `stepz_lamb=0.5`, `sea_hs_target=0`, `surface_reflect_coeff=-1`, `surface_boundary_model='kirchhoff_spatial'`, bubbles off, and 65 equally spaced frequencies from 3--5 kHz. Bellhop uses 5001 geometric hat beams in an angle fan restricted to the direct and one-surface-bounce paths. Bottom-bounce arrivals are excluded from the stage-1 comparison.
+
+The PE outputs are reduced envelopes, so the validation layer reconstructs physical path phase separately:
+
+\[
+H_{\rm PE}^{\rm phys}(f)=
+H_{\rm dir}(f)e^{-i2\pi fL_{\rm dir}/c}
++H_{\rm ref}(f)e^{-i2\pi fL_{\rm surf}/c},
+\]
+
+with (L_{\rm dir}=\sqrt{r^2+(z_{\rm tx}-z_{\rm rx})^2}) and (L_{\rm surf}=\sqrt{r^2+(z_{\rm tx}+z_{\rm rx})^2}). A Hann-windowed, 8-times-zero-padded CIR is used to extract component/PDP peak times. Zero padding interpolates the delay grid but does not improve the 0.5 ms physical resolution set by the 2 kHz bandwidth. The reconstruction exists only in the validator; the public PE arrays and `build_physical_cir_vertical` convention are unchanged.
+
+The accepted run found two main paths in both models. Direct arrival was 46.785563 ms in both to reported precision; the single surface arrival was 60.016332 ms for PE and 60.092516 ms for Bellhop, a 0.076184 ms difference. Maximum reconstructed-PDP peak difference was 0.061538 ms. Raw PE TL was 33.9582/35.7698 dB for direct/reflected paths, while Bellhop was 36.9241/39.0982 dB. The approximately 3 dB common offset is consistent with the finite-width PE Gaussian initial-field normalization versus Bellhop's unit point source. After a single direct-path amplitude calibration, the reflected-path TL residual was 0.3625 dB; this calibration is reported but never written back to PE outputs.
+
+Regression checks also ran a scalar-frequency direct-only case, a scalar flat-reflection case, and the 65-frequency reflected case. `H_f=H_direct_f+H_reflect_f` held to (1.73\times10^{-18}), disabling reflection produced exactly zero reflected response and no direct-path change, and both scalar and wideband 1/R checks passed. Acceptance limits were two paths exactly, arrival/PDP peak error no more than 0.75 ms, raw TL error no more than 6 dB, relative-path and direct-calibrated reflected TL error no more than 3 dB, and channel invariant error no more than (10^{-10}).
+
+Artifacts are written to `results/validation/pe_bellhop_flat_surface/`: Bellhop input/raw arrivals/print output, comparison CSV, MAT result, PDP/TL PNG, and `pe_bellhop_flat_surface_report.md`. This first stage does not validate rough surfaces, Kirchhoff/SSA scattering, stochastic channels, bottom interaction, modulation, or communication performance. The remaining visible PE PDP sidelobe structure is attributable to finite-band reconstruction and frequency-dependent PE envelope amplitude/phase and must not be counted as additional Bellhop eigenrays.
+
+## 2026-07-20 PE Phase Audit and Bellhop Geometry/Convergence Matrix
+
+Two validation-only entrypoints now qualify the 2026-07-19 result without
+changing `vertical_channel_model`, `vertical_wape_propagator`,
+`build_physical_cir_vertical`, or the communication chain. The phase audit
+`scripts/validation/validate_pe_phase_convention_uniform_vertical.m` derives
+the reduced PE operator identity
+
+\[
+\exp\!\left[-i d\frac{\kappa^2}{\sqrt{k^2-\kappa^2}+k}\right]
+=\exp[i d(k_z-k)]
+\]
+
+and compares the marched direct envelope with an independent one-step
+discrete angular-spectrum propagation of the same Gaussian source. Under the
+validation synthesis convention `exp(-i*omega*t)`, the correct physical
+carrier is `exp(+i*k*d)`. The audit suppresses sponge influence with the
+smallest validation-compatible positive coefficient (`1e-14`); it does not
+relax the public API validation. At receiver offsets 3/6/9 m, the maximum
+operator error was `2.2741e-13`, positive-carrier phase RMS was
+`3.1021e-11 rad`, PE/reference group-delay difference was
+`1.2768e-12 ms`, and validation-local CIR peak differences were exactly zero
+on the sampled delay grid. No-carrier and negative-carrier candidates were
+worse by many orders of magnitude.
+
+The follow-on
+`scripts/validation/validate_pe_bellhop_flat_surface_matrix_vertical.m` uses
+the unchanged flat pressure-release PE path with the same 100 m isovelocity
+environment and an open Bellhop launch fan of -89.5 to -60 degrees with
+10001 beams. Bellhop arrivals are classified after the run by bottom/top
+bounce count and 0.1 ms delay clustering; the validator does not preselect
+exactly two launch angles. It tests offsets 3/6/9 m and restores only the
+nominal longitudinal carriers: `exp(+ik(z_tx-z_rx))` for the direct component
+and `exp(+ik(z_tx+z_rx))` for the image-source component. This makes the
+remaining transverse phase, and therefore the extracted path delay, a PE
+prediction rather than injected full-path geometry.
+
+Timing and algebra passed the prescribed strict checks. Across all six paths,
+the maximum PE-versus-analytic/Bellhop delay difference was `0.027285 ms`;
+Bellhop-versus-analytic error was `4.0135e-06 ms`. Each expected Bellhop path
+formed one classified cluster. `H_f=H_direct_f+H_reflect_f` held within
+`3.5762e-18`, the scalar direct-only response had exactly zero reflection,
+and all 1/R checks passed.
+
+Amplitude and one convergence criterion did not meet the deliberately strict
+targets, so the matrix result is recorded as `passed=false` rather than being
+retuned after inspection. One global direct-path amplitude scale left a
+`1.6540 dB` scale spread across geometry (limit 1 dB); reflected-path TL
+residual RMS/max were `1.6295/2.0751 dB` (limits 1/2 dB). These trends are
+consistent with comparing the finite-width PE Gaussian initial field against
+Bellhop's unit point source, especially at the 9 m off-axis receiver, but they
+remain a measured model mismatch rather than a proven normalization constant.
+
+The x=6 m PE convergence matrix used C0=128^2/32 m/0.5 lambda,
+C1=256^2/32 m/0.5 lambda, C2=256^2/64 m/0.5 lambda,
+C3=128^2/32 m/0.25 lambda, and C4=256^2/32 m/0.25 lambda. All reconstructed
+arrival changes were zero on the interpolated delay grid; the maximum
+direct/reflected relative-TL change was `0.14445 dB`. C1, C3, and C4 phase
+RMS values were at most `0.00201 rad`, while the doubled-window C2 reflected
+phase RMS was `0.22559 rad`, exceeding the 0.15 rad target. This isolates the
+remaining numerical concern to transverse-window/sponge sensitivity rather
+than longitudinal step size or transverse sampling density.
+
+Reports and machine-readable outputs are under
+`results/validation/pe_phase_convention_uniform/` and
+`results/validation/pe_bellhop_flat_surface_matrix/`. The earlier
+single-geometry 2026-07-19 arrival times used a full geometric carrier and a
+restricted launch fan; they remain useful historical smoke results but must
+not be cited as an independent PE delay validation. The 2026-07-20 matrix is
+the authoritative phase/timing result. The appropriate next work is a
+validation-only study of source normalization/directivity and transverse
+window/sponge placement, not a change to the main PE propagation framework.
+
+## 2026-07-21 Bellhop Flat-Surface Visualization Layer
+
+`scripts/reporting/generate_bellhop_flat_surface_visuals_vertical.m` adds an
+independent Bellhop display and consistency-check entrypoint. It reads the
+saved 3/6/9 m PE/Bellhop matrix, writes and runs standard Bellhop `R`, `C`, and
+`I` environments, and parses ASCII `.ray` plus binary two-dimensional
+rectilinear `.shd` files without adding the Acoustic Toolbox MATLAB plotting
+directories to the path. No propagation-core, public-channel, CIR-builder, or
+communication-chain file is modified.
+
+The representative environment remains the 100 m isovelocity (1500 m/s)
+water column, 80 m transmitter depth, 10 m receiver depth, and 4 kHz
+frequency. The ray fan uses 51 beams over -89.5 to -60 degrees. The coherent
+and incoherent TL fields use 5001 and 10001 beams on a 199-depth by 241-range
+grid spanning 0.5--99.5 m and 0.25--12 m. The formal figures use 10001 beams,
+a shared 20--80 dB color scale, and a 1 m source mask. `ZBOX=99.9 m`, together
+with a 0.01 m ray-display step, prevents displayed seabed reflections while
+retaining direct and pressure-release surface-reflected rays.
+
+All visualization-layer checks passed. The 5001-to-10001-beam coherent and
+incoherent TL RMS differences were 0.19041 and 0.10193 dB; their 95th
+percentile absolute differences were 1.0183e-5 and 9.0626e-7 dB. At the
+3/6/9 m receiver points, the maximum coherent `.shd` versus saved Bellhop
+arrival-synthesis TL difference was 0.04491 dB. The saved PE invariant
+`H_f=H_direct_f+H_reflect_f` remained within 3.5762e-18. These successful
+display checks do not override the strict cross-geometry matrix result, which
+remains `passed=false` because of its documented PE/Bellhop amplitude and C2
+window-phase criteria.
+
+Outputs are under `results/visualization/bellhop_flat_surface/`: three PNG
+figures, all `.env/.ray/.shd/.prt` files, convergence and receiver CSV tables,
+a reusable MAT file, and `bellhop_flat_surface_visual_report.md`. The PE
+overlay is restricted to the three saved, globally scaled receiver responses;
+the visualization does not invent a PE two-dimensional field.

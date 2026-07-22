@@ -39,6 +39,57 @@ comm_main_vertical_psk
 run('scripts/validation/validate_surface_wavefield_visualization_vertical.m')
 ```
 
+Flat-surface PE/Bellhop stage-1 cross-validation (requires the external
+Acoustics Toolbox `bellhop.exe`):
+
+```matlab
+setenv('BELLHOP_EXE', 'C:/path/to/bellhop.exe')
+addpath('scripts/validation')
+validate_pe_bellhop_flat_surface_vertical
+```
+
+This deterministic validator uses the existing PE API, a uniform SSP, and a
+flat pressure-release surface. It writes the Bellhop environment, arrivals,
+PDP/TL figure, comparison table, MAT result, and Markdown report under
+`results/validation/pe_bellhop_flat_surface/`.
+
+The stricter follow-on audit keeps the main PE code unchanged and writes to
+separate result directories:
+
+```matlab
+validate_pe_phase_convention_uniform_vertical
+validate_pe_bellhop_flat_surface_matrix_vertical
+```
+
+The first entry verifies the reduced-envelope carrier sign against an
+independent angular-spectrum reference. The second uses an open Bellhop angle
+fan at 3/6/9 m offsets and runs the C0--C4 PE grid/window/step convergence
+matrix. Its current timing and algebra checks pass, while strict cross-geometry
+amplitude and doubled-window phase checks remain flagged; see the generated
+matrix report rather than treating the earlier single-geometry timing as an
+independent delay validation.
+
+Bellhop flat-surface ray and TL displays can be generated independently from
+the saved 3/6/9 m matrix result:
+
+```matlab
+setenv('BELLHOP_EXE', 'C:/path/to/bellhop.exe')
+addpath('scripts/reporting')
+generate_bellhop_flat_surface_visuals_vertical
+```
+
+This entrypoint runs Bellhop `R`, coherent `C`, and incoherent `I` modes,
+checks 5001/10001-beam convergence, and writes ray geometry, shared-scale TL
+fields, and a receiver-depth TL slice under
+`results/visualization/bellhop_flat_surface/`. It reuses saved PE receiver
+points and does not construct a PE range-depth field or alter the strict
+matrix conclusion.
+
+The complete consolidated record of the single-geometry smoke case, phase
+audit, 3/6/9 m strict matrix, Bellhop R/C/I visualization, regressions, and
+remaining limitations is in
+`reports/pe_bellhop_flat_surface_cross_validation_complete_report.md`.
+
 For quick validation, prefer reduced grids (`nx=128` or `nx=256`, `ny=128` or `ny=256`) and `show_figures=false`.
 
 ## Surface Boundary Models

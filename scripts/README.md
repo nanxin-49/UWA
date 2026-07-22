@@ -79,4 +79,29 @@ This v1 path is limited to uniform sound speed, CPU double, fixed grids and freq
 
 The atlas distinguishes physical boundary models from computational acceleration paths. `q` is an exact receiver-sensitivity kernel, not a physical reverse-propagated pressure field. LFM is applied only after obtaining `H(f)` and is shown without noise, modulation, synchronization, or equalization.
 
+## PE/Bellhop Flat-Surface Cross-Validation
+
+- `validation/validate_pe_bellhop_flat_surface_vertical.m` generates and runs a standard Bellhop ASCII-arrivals case matched to the existing PE model in a uniform medium with a flat pressure-release surface.
+- `validation/validate_pe_phase_convention_uniform_vertical.m` independently checks the PE reduced-envelope operator, longitudinal carrier sign, group delay, and validation-local FFT convention against one-step angular-spectrum propagation.
+- `validation/validate_pe_bellhop_flat_surface_matrix_vertical.m` runs the authoritative 3/6/9 m analytic--PE--Bellhop timing/amplitude comparison with an open Bellhop fan, plus the C0--C4 PE grid/window/step convergence matrix.
+- `reporting/generate_bellhop_flat_surface_visuals_vertical.m` reuses that saved matrix, runs Bellhop `R`/`C`/`I`, parses `.ray`/`.shd` locally, checks 5001/10001-beam convergence, and creates ray, shared-scale TL-field, and receiver-depth slice figures.
+- Set `BELLHOP_EXE` when `bellhop.exe` is not already on the MATLAB or system path.
+- The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
+- Outputs are written to `results/validation/pe_bellhop_flat_surface/`; the Markdown report records exact parameters, formulas, thresholds, results, and limitations.
+
+This stage deliberately excludes rough-surface scattering, bottom bounces, stochastic channels, and communication processing. Carrier restoration is performed only in the validator and does not change the public PE response convention.
+
+Run the phase audit before the matrix validator; the latter refuses to run
+unless the saved audit passed with carrier sign `+1`. The current matrix result
+passes timing and public-interface invariants but intentionally retains failed
+strict checks for cross-geometry source normalization and the doubled-window
+C2 phase comparison. Reports are under
+`results/validation/pe_phase_convention_uniform/` and
+`results/validation/pe_bellhop_flat_surface_matrix/`.
+
+Visualization outputs, including the original Bellhop files, CSV tables, MAT
+result, three PNG figures, and Markdown report, are under
+`results/visualization/bellhop_flat_surface/`. The display checks pass without
+changing the matrix `passed=false` status or any PE/communication source file.
+
 Use environment variables already supported by individual scripts to reduce grid size, seed count, or output file names for quick checks.

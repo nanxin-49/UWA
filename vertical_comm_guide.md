@@ -995,3 +995,129 @@ P_H(i,j)=a_{{\rm PM},i}^H P_{\delta G,ij}a_{{\rm PM},j}^*.
 共享潜变量的 128 对 full-rank/99.9% 低秩样本显示：U=8 的所有 Eb/N0 点差值置信区间包含零；U=5 仅 20 dB 出现约 `1.08e-4` 的小幅显著 BER 增量。因此 full-rank 仍是参考模型，99.9% 低秩可作为压缩候选，不能据此自动推广到更激进的 99% 截断。
 
 当前已均衡 BER 在高 Eb/N0 出现约 `2e-3`--`7e-3` 的误码平台，无噪声运行也存在同量级残余误码。其主要来源是现有有限线性卷积块与循环 FFT 均衡器之间没有 CP、保护间隔或 overlap-save，以及固定正则化和有限 taps 截断。因此两节点库可用于同一接收机下的相对算法比较和趋势研究，但现阶段不应把该平台解释为信道物理模型的绝对高信噪比性能极限。完整设置、置信区间和结果路径见 `reports/two_node_statistical_channel_communication_validation_report.md`。
+
+## 16. PE 与 Bellhop 第一阶段平面海面交叉验证
+
+第一阶段只检查均匀介质中的直达与一次平面海面反射，不涉及粗糙海面、SSA、Kirchhoff 随机相位屏、气泡、随机信道或通信链路。自动入口为 `scripts/validation/validate_pe_bellhop_flat_surface_vertical.m`。Bellhop 可执行程序通过显式 override、环境变量 `BELLHOP_EXE`、MATLAB path 或系统 path 定位；第三方二进制不纳入本仓库。
+
+共同环境为水深 100 m、(c=1500\ \mathrm{m/s})、发射点 ([0,0,80]\ \mathrm{m})、接收点 ([5,0,10]\ \mathrm{m})、中心频率 4 kHz。5 m 水平偏移用于避开 Bellhop 零水平距离的退化射线几何，发射角仍约为 (-86^\circ)，属于近垂直上行。PE 平面海面设置为
+
+```matlab
+paramsV.sea_hs_target = 0;
+paramsV.surface_reflect_coeff = -1;
+paramsV.surface_boundary_model = 'kirchhoff_spatial';
+paramsV.enable_bubbles = false;
+```
+
+`kirchhoff_spatial` 在 (H_s=0) 时退化为常数压力释放反射系数，不生成粗糙相位扰动。因此此处的“Kirchhoff”只是复用现有边界代码路径，不能把该案例表述为 Kirchhoff 粗糙面验证。
+
+当前 PE 的 `H_direct_f` 和 `H_reflect_f` 是去除名义纵向载波的复包络，不能直接把其相位斜率解释为绝对传播时间。比较层分别按几何路径恢复载波：
+
+\[
+L_{\rm dir}=\sqrt{r^2+(z_{\rm tx}-z_{\rm rx})^2},\qquad
+L_{\rm surf}=\sqrt{r^2+(z_{\rm tx}+z_{\rm rx})^2},
+\]
+
+\[
+H_{\rm PE}^{\rm phys}(f)=
+H_{\rm dir}(f)e^{-i2\pi fL_{\rm dir}/c}
++H_{\rm ref}(f)e^{-i2\pi fL_{\rm surf}/c}.
+\]
+
+Bellhop 则由 ASCII arrivals 直接给出复幅度、传播时间、发射/接收角及海面/海底反射次数，并用
+
+\[
+H_{\rm BH}(f)=\sum_p A_p e^{-i2\pi f\tau_p}
+\]
+
+构造等效宽带响应。两者使用相同 Hann 窗和零填充获得可视化 CIR/PDP。3--5 kHz 的 2 kHz 物理带宽决定约 0.5 ms 的真实时延分辨率；8 倍零填充只把时延轴插值到更密，不提高物理分辨率。
+
+2026-07-19 的正式 reduced run 使用 PE (128\times128)、(32\times32\ \mathrm{m})、65 个频点和 Bellhop 5001 条受限角度射线。两者都得到两条主要路径。直达到达时间均为 46.785563 ms；一次海面反射为 PE 60.016332 ms、Bellhop 60.092516 ms，差 0.076184 ms；PDP 峰位最大差 0.061538 ms。PE 原始 TL 为 33.9582/35.7698 dB，Bellhop 为 36.9241/39.0982 dB。约 3 dB 的共同偏差主要对应 PE 有限宽度高斯初场与 Bellhop 单位点源归一化不同。用直达幅度作一次公共标定后，反射路径 TL 残差为 0.3625 dB；该标定仅用于诊断，不修改公共信道结果。
+
+同时通过的回归包括：标量 `direct_only` 与 `direct_plus_reflect` 均执行；禁用反射时 `H_reflect_f=0` 且直达项完全不变；宽带 (H_f=H_{\rm dir}+H_{\rm ref}) 最大误差 (1.73\times10^{-18})；标量和宽带 1/R 检查均通过。报告和图位于 `results/validation/pe_bellhop_flat_surface/`。
+
+解释图时应注意：PE 总 PDP 的峰间旁瓣来自有限带宽窗函数及 PE 包络随频率的幅相变化，不应自动计为额外物理路径。当前“主要路径数量”由已分离的 `H_direct_f`、`H_reflect_f` 和 Bellhop bounce count 共同定义。本阶段只支持“直达/一次平面海面反射的位置和幅度量级合理”的结论，不支持粗糙面、多次反射或一般声速剖面的外推。
+
+### 16.1 相位约定审计与多几何复核（2026-07-20）
+
+上一节的 2026-07-19 脚本按完整几何路径写入载波，并把 Bellhop 发射角扇区限制在两条目标路径附近。因此它适合作为接口、路径分类和幅度量级的 smoke test，但其 PE 到达时间部分包含已知几何时间，不能单独证明 PE 横向相位给出了正确时延。后续验证保留该历史结果，不覆盖原文件，并用两个新入口补足这一点：
+
+```matlab
+addpath('scripts/validation')
+validate_pe_phase_convention_uniform_vertical
+validate_pe_bellhop_flat_surface_matrix_vertical
+```
+
+由当前 WAPE 离散算子可直接得到
+
+\[
+\exp\left[-i d\frac{\kappa^2}{\sqrt{k^2-\kappa^2}+k}\right]
+=\exp[i d(k_z-k)].
+\]
+
+因此，在验证层采用 `exp(-i*omega*t)` 合成约定时，恢复纵向参考载波应使用正号：
+
+\[
+H_{\rm dir}^{\rm phys}(f)=H_{\rm dir}(f)
+\exp\left[+i2\pi f\frac{z_{\rm tx}-z_{\rm rx}}{c}\right],
+\]
+
+\[
+H_{\rm ref}^{\rm phys}(f)=H_{\rm ref}(f)
+\exp\left[+i2\pi f\frac{z_{\rm tx}+z_{\rm rx}}{c}\right].
+\]
+
+此处只恢复纵向参考距离，没有把
+\(\sqrt{x^2+d^2}/c\) 的完整几何时延写入 PE。剩余横向相位由 PE 自身给出，再由验证专用 FFT（正相位斜率映射到正时延）提取 CIR 峰。Bellhop 等效频响在同一约定下写成
+
+\[
+H_{\rm BH}(f)=\sum_p A_p\exp(+i2\pi f\tau_p).
+\]
+
+这些公式只用于新增验证脚本，不改变 `build_physical_cir_vertical` 或任何公共输出语义。不同模块的时域约定仍必须显式记录，不能混用正负号。
+
+相位审计在无反射、均匀声速、3/6/9 m 偏移下，把主线逐步 PE 与相同离散高斯初场的一步精确角谱传播比较。为排除海绵层这一不同算子，验证参数使用 API 允许的数值可忽略正吸收系数 `alpha_max_np_per_m=1e-14`。结果为：算子恒等误差 `2.2741e-13`，正确正号载波的最大相位 RMS `3.1021e-11 rad`，PE/角谱群时延差最大 `1.2768e-12 ms`，CIR 峰差为 0。无载波和负号载波均显著更差。因此载波方向和验证层 FFT 方向已经独立闭合。
+
+多几何脚本恢复正常海绵层参数 `alpha_max_np_per_m=0.15`，使用 3--5 kHz、33 个频点、平面压力释放海面。Bellhop 使用 `[-89.5,-60]` 度开放角扇区和 10001 条射线；运行后才按 `bottom_bounce_count=0`、`top_bounce_count=0/1` 以及 0.1 ms 时延簇分类。三种偏移下直达和一次海面反射各形成一个簇。PE 相对解析/Bellhop 的最大峰时延误差为 `0.027285 ms`，Bellhop 相对解析像源解的最大误差为 `4.0135e-06 ms`。
+
+幅度比较只允许一个跨几何公共直达标定系数 `0.79467637`，不按路径单独拟合，也不回写 PE。实际逐几何标定量跨度为 `1.6540 dB`，反射 TL 残差 RMS/最大值为 `1.6295/2.0751 dB`，略高于预先设定的 1 dB 跨几何、1 dB RMS 和 2 dB 最大阈值。因此当前结论是：路径位置和幅度量级一致，但有限宽 PE 高斯源与 Bellhop 单位点源之间仍有可测的离轴归一化/指向性差异，不能宣称绝对 TL 已通过严格多几何验收。
+
+x=6 m 的收敛矩阵定义为：
+
+| 案例 | 横向网格 | 窗口 | `stepz_lamb` |
+|---|---:|---:|---:|
+| C0 | 128² | 32 m | 0.5 |
+| C1 | 256² | 32 m | 0.5 |
+| C2 | 256² | 64 m | 0.5 |
+| C3 | 128² | 32 m | 0.25 |
+| C4 | 256² | 32 m | 0.25 |
+
+相对 C0，所有路径峰时延变化为 0（在当前零填充时延网格上），最大反射/直达相对 TL 变化为 `0.14445 dB`。C1、C3、C4 的最大相位 RMS 不超过 `0.00201 rad`，说明采样加密和纵向步长减半已稳定；C2 的反射相位 RMS 为 `0.22559 rad`，超过 0.15 rad 阈值，指出窗口宽度及随窗口移动的 sponge 区域仍需单独审计。
+
+所有运行仍满足 `H_f=H_direct_f+H_reflect_f`（最大误差 `3.5762e-18`）、标量 direct-only 反射项严格为零以及 1/R 回归。完整报告分别位于：
+
+- `results/validation/pe_phase_convention_uniform/pe_phase_convention_audit_report.md`
+- `results/validation/pe_bellhop_flat_surface_matrix/pe_bellhop_flat_surface_matrix_report.md`
+
+当前矩阵的总体布尔状态为 `false`，原因仅是上述严格幅度和 C2 相位阈值，不能把它改写成“全部通过”。下一步应继续新增验证脚本研究高斯源归一化/指向性，以及固定物理 sponge 宽度或关闭吸收后的窗口对照；不应据此替换或改写主线 PE。
+
+## Bellhop 平面海面展示结果的解释
+
+验证层入口 `scripts/reporting/generate_bellhop_flat_surface_visuals_vertical.m`
+使用三种标准 Bellhop 运行类型：`R` 输出中心声线几何；`C` 计算相干复声压场，
+其 TL 保留多径相位干涉；`I` 计算非相干能量叠加的 TL 包络。因此相干 TL 和
+非相干 TL 表示不同物理量，不能互相替代。
+
+展示环境固定为水深 100 m、均匀声速 1500 m/s、Tx 深度 80 m、Rx 深度
+10 m、频率 4 kHz。TL 网格含 241 个 0.25--12 m 距离点和 199 个
+0.5--99.5 m 深度点，两幅场图共用 20--80 dB 色标，并屏蔽 Tx 周围 1 m。
+`R` 使用 51 条声线，`C`/`I` 分别比较 5001 与 10001 条波束，角扇区均为
+-89.5 至 -60 度。`ZBOX=99.9 m` 配合展示声线的 0.01 m 显式步长，使声线在
+100 m 海底之前终止；本阶段不包含海底相互作用。
+
+接收深度切片只叠加矩阵结果中已保存的 3/6/9 m PE 总响应点，并沿用矩阵定义的
+单一全局直达路径幅度标定。这些离散标记不是 PE 距离-深度二维声场的采样，脚本
+也没有构造不存在的 PE 二维场。展示层的声线解析、声场解析、波束数收敛、
+`.shd`/arrival 闭合、有限值、坐标轴以及保存信道不变量检查均已通过；但权威严格
+矩阵仍为 `passed=false`。展示成功不表示此前记录的 PE 幅度和横向窗口差异已经
+消失。
