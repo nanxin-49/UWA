@@ -18,7 +18,9 @@ seed=struct('kdomain_train',1100001+(0:L_train-1),'kdomain_test',1200001+(0:L_te
     'joint_train_base',1300000,'joint_test_base',1400000, ...
     'independent_train_base',1500000,'independent_test_base',1600000, ...
     'generator_base',1700000,'properness_base',1800000,'public',1900001);
-tau_ref_signed=-(cfg.z_tx+cfg.z_rx)/cfg.c0;
+cir_common_shift_s=0;
+validation_run_meta=pe_phase_release_run_meta_vertical(root_dir,struct( ...
+    'frequency_axis_hz',f_axis,'seed_definition',seed));
 
 cache_file=fullfile(out_dir,'f64_joint_pe_cache.mat');
 if exist(cache_file,'file')
@@ -28,12 +30,22 @@ else
     pm_spec=raw_pm_spectrum_grid_vertical(U,256,256,100,100);
     cache=build_cached_joint_kstat_pe_executor_vertical(cfg,pm_spec);
     joint_model=build_kirchhoff_kstat_joint_model_vertical(pm_spec,f_axis,cfg.c0,cfg.reflect_coeff,1-1e-7);
-    save(cache_file,'pm_spec','cache','joint_model','-v7.3');
+    schema_version='2.0.0'; phase_reference_meta=struct('target_reference','phase_neutral');
+    save(cache_file,'pm_spec','cache','joint_model','schema_version', ...
+        'phase_reference_meta','validation_run_meta','-v7.3');
 end
+phase_neutral_cache_audit=validate_phase_neutral_pe_cache_vertical(cache,pm_spec,joint_model, ...
+    struct('f_axis_hz',f_axis,'nx',128,'ny',128,'pm_nx',256,'pm_ny',256, ...
+    'z_tx',100,'z_rx',3,'c0',1500));
+phase_geometry=struct('z_tx',cfg.z_tx,'z_rx',cfg.z_rx,'z_surface',0,'c0',cfg.c0);
+[deterministic,phase_meta]=apply_pe_channel_phase_reference_vertical(f_axis, ...
+    struct('direct_f',cache.H_direct_f,'reflect_coh_f',cache.H_ref_coh_f), ...
+    phase_geometry,'direct_dsp');
 
 ensemble_file=fullfile(out_dir,['f64_' mode '_ensembles.mat']);
 if exist(ensemble_file,'file')
     fprintf('Loading checkpointed %s ensembles...\n',mode); load(ensemble_file,'ensemble');
+    assert_pe_phase_release_artifact_vertical(ensemble,validation_run_meta.run_id,'U=5 ensemble checkpoint');
 else
     fprintf('Generating %s kdomain/joint/independent train/test ensembles...\n',mode);
     [Hkd_train,t_kd_train,map_train,e1]=generate_cached_kdomain_ensemble_vertical(cache,pm_spec,seed.kdomain_train,batch_size);
@@ -46,8 +58,17 @@ else
         'Hi_train',Hi_train,'Hi_test',Hi_test,'timing',struct('kdomain_train',t_kd_train, ...
         'kdomain_test',t_kd_test,'joint_train',t_j_train,'joint_test',t_j_test, ...
         'independent_train',t_i_train,'independent_test',t_i_test), ...
-        'mapping_train',map_train,'mapping_test',map_test,'component_error',max([e1,e2,e3,e4,e5,e6]));
-    save(ensemble_file,'ensemble','-v7.3');
+        'mapping_train',map_train,'mapping_test',map_test,'component_error',max([e1,e2,e3,e4,e5,e6]), ...
+        'phase_reference_meta',phase_meta,'schema_version','2.0.0', ...
+        'validation_run_meta',validation_run_meta);
+    schema_version=ensemble.schema_version; phase_reference_meta=phase_meta;
+    save(ensemble_file,'ensemble','schema_version','phase_reference_meta', ...
+        'validation_run_meta','-v7.3');
+end
+if ~isfield(ensemble,'phase_reference_meta')
+    names={'Hkd_train','Hkd_test','Hj_train','Hj_test','Hi_train','Hi_test'};
+    for kk=1:numel(names), ensemble.(names{kk})=phase_meta.reflect_dsp_factor_f.*ensemble.(names{kk}); end
+    ensemble.phase_reference_meta=phase_meta;
 end
 Hkd_train=ensemble.Hkd_train; Hkd_test=ensemble.Hkd_test;
 Hj_train=ensemble.Hj_train; Hj_test=ensemble.Hj_test; Hi_train=ensemble.Hi_train; Hi_test=ensemble.Hi_test;
@@ -60,11 +81,11 @@ properness.joint=properness_null_test_vertical(stats.joint_train.C,Hj_test,2000,
 properness.independent=properness_null_test_vertical(stats.independent_train.C,Hi_test,2000,seed.properness_base+3);
 
 receiver=struct();
-receiver.joint=local_compare(stats.joint_test,stats.kdomain_test,Hj_test,Hkd_test,f_axis,tau_ref_signed);
-receiver.independent=local_compare(stats.independent_test,stats.kdomain_test,Hi_test,Hkd_test,f_axis,tau_ref_signed);
-receiver.kdomain_temporal=local_temporal(Hkd_test,f_axis,tau_ref_signed);
-receiver.joint_temporal=local_temporal(Hj_test,f_axis,tau_ref_signed);
-receiver.independent_temporal=local_temporal(Hi_test,f_axis,tau_ref_signed);
+receiver.joint=local_compare(stats.joint_test,stats.kdomain_test,Hj_test,Hkd_test,f_axis,cir_common_shift_s);
+receiver.independent=local_compare(stats.independent_test,stats.kdomain_test,Hi_test,Hkd_test,f_axis,cir_common_shift_s);
+receiver.kdomain_temporal=local_temporal(Hkd_test,f_axis,cir_common_shift_s);
+receiver.joint_temporal=local_temporal(Hj_test,f_axis,cir_common_shift_s);
+receiver.independent_temporal=local_temporal(Hi_test,f_axis,cir_common_shift_s);
 
 condition=struct('wind_speed_mps',U,'wind_convention',pm_spec.wind_definition, ...
     'Hs_implied_m',pm_spec.Hs_implied_discrete_m, ...
@@ -72,17 +93,17 @@ condition=struct('wind_speed_mps',U,'wind_convention',pm_spec.wind_definition, .
     'surface_mode','raw_pm','surface_model','kirchhoff_kstat_joint_frequency', ...
     'bubbles','off','doppler','off','sound_speed','uniform', ...
     'pm_grid','100 m / 256 x 256','pe_grid','50 m / 128 x 128');
-options=struct('frequency_axis_hz',f_axis,'H_direct_f',cache.H_direct_f, ...
-    'H_ref_coh_f',cache.H_ref_coh_f,'shrinkage_parameter',0, ...
+options=struct('frequency_axis_hz',f_axis,'H_direct_f',deterministic.direct_f, ...
+    'H_ref_coh_f',deterministic.reflect_coh_f,'shrinkage_parameter',0, ...
     'properness_result',properness.joint,'train_seed_list',seed.joint_train_base+(1:ceil(L_train/batch_size)), ...
-    'condition',condition,'reference_delay_s',tau_ref_signed,'rank_selection','full');
+    'condition',condition,'reference_delay_s',0,'phase_reference_meta',phase_meta,'rank_selection','full');
 model=estimate_conditional_channel_stats_vertical(Hj_train,options);
 
 rank_names={'full','99.9','99'}; generator=struct();
 for rr=1:numel(rank_names)
     name=rank_names{rr}; field=local_rank_field(name);
     [draw,tm]=sample_conditional_channel_vertical(model,M_gen,seed.generator_base+rr,struct('path','proper','rank',name));
-    generator.(field)=local_generator_validation(draw.H_ref_sca_f,Hkd_test,Hj_test,f_axis,tau_ref_signed);
+    generator.(field)=local_generator_validation(draw.H_ref_sca_f,Hkd_test,Hj_test,f_axis,cir_common_shift_s);
     generator.(field).timing=tm; generator.(field).rank_name=name; generator.(field).rank_used=tm.rank_used;
 end
 [~,improper_meta]=sample_conditional_channel_vertical(model,32,seed.generator_base+10,struct('path','improper','rank','full'));
@@ -99,7 +120,7 @@ for kk=1:numel(counts)
     [draw,tm]=sample_conditional_channel_vertical(model,counts(kk),seed.generator_base+100+kk, ...
         struct('path','proper','rank',selected));
     performance.sample_wall_s(kk)=tm.elapsed_s;
-    cc=build_physical_cir_vertical(draw.H_total_f,f_axis,tau_ref_signed,'none',1);
+    cc=build_channel_cir_vertical(draw.H_total_f,f_axis,struct('input_reference','direct_dsp'));
     performance.cir_wall_s(kk)=cc.ifft_elapsed_s;
 end
 performance.sample_per_channel_s=performance.sample_wall_s./counts;
@@ -133,15 +154,21 @@ pass=struct('proper_joint_not_rejected',~properness.joint.reject_proper_at_5pct_
 pass.all=all(structfun(@(x)logical(x),pass));
 
 model.timing=performance; model.validation.receiver=receiver; model.validation.properness=properness;
+model.validation_run_meta=validation_run_meta;
 model_file=fullfile(out_dir,['u5_conditional_channel_model_f64_' mode '.mat']);
-save(model_file,'model','-v7.3'); info=dir(model_file); performance.model_file_bytes=info.bytes;
+schema_version=model.schema_version; phase_reference_meta=model.phase_reference_meta;
+save(model_file,'model','schema_version','phase_reference_meta','validation_run_meta','-v7.3'); info=dir(model_file); performance.model_file_bytes=info.bytes;
 result=struct('mode',mode,'config',cfg,'condition',condition,'L_train',L_train,'L_test',L_test, ...
     'M_gen',M_gen,'seeds',seed,'stats',stats,'properness',properness,'receiver',receiver, ...
     'generator',generator,'rank_selected',selected,'mapping',mapping,'performance',performance, ...
     'component_sum_max_abs_error',ensemble.component_error,'pass',pass, ...
     'delay_resolution_s',1/(f_axis(end)-f_axis(1)),'Tmax_s',1/mean(diff(f_axis)));
+result.schema_version='2.0.0'; result.phase_reference_meta=phase_meta;
+result.validation_run_meta=validation_run_meta;
+result.phase_neutral_cache_audit=phase_neutral_cache_audit;
 result_file=fullfile(out_dir,['u5_conditional_channel_validation_f64_' mode '.mat']);
-save(result_file,'result','-v7.3');
+schema_version=result.schema_version; phase_reference_meta=result.phase_reference_meta;
+save(result_file,'result','schema_version','phase_reference_meta','validation_run_meta','-v7.3');
 local_plots(result,out_dir); local_summary(result,fullfile(out_dir,['summary_f64_' mode '.txt']));
 fprintf('F=64 %s complete. joint PDP %.4f, LFM %.4f, tail/T %.4f, selected %s, pass %d\n', ...
     mode,receiver.joint.pdp_correlation,receiver.joint.lfm_correlation, ...
@@ -166,7 +193,9 @@ m=struct('covariance_relative_error',norm(a.C-b.C,'fro')/max(norm(b.C,'fro'),eps
 end
 
 function t=local_temporal(H,f,tref)
-c=build_physical_cir_vertical(H,f,tref,'none',1); p=abs(c.h_physical_tau).^2; pdp=mean(p,2); pdp=pdp/max(sum(pdp),eps);
+c=build_channel_cir_vertical(H,f,struct('input_reference','direct_dsp', ...
+    'time_origin_shift_s',tref));
+p=abs(c.h_tau).^2; pdp=mean(p,2); pdp=pdp/max(sum(pdp),eps);
 tau=c.delay_axis_s; L=size(H,2); N=numel(tau); dt=c.delay_axis_spacing_s;
 signed_tau=((-floor(N/2)):(ceil(N/2)-1)).'*dt;
 mean_delay=zeros(L,1); rms_delay=zeros(L,1); tail=zeros(L,1);

@@ -1,11 +1,16 @@
 %% Exact discrete-adjoint PE receiver-projection feasibility validation
 clear; close all; clc;
 root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir);
+addpath(fullfile(root_dir,'scripts','reporting'));
 out_dir=fullfile(root_dir,'results','validation','adjoint_pe_receiver_projection');
 if ~exist(out_dir,'dir'), mkdir(out_dir); end
 mode=lower(strtrim(getenv('ADJOINT_PE_VALIDATION_MODE')));
 if isempty(mode), mode='full'; end
 if ~ismember(mode,{'smoke','full'}), error('Mode must be smoke or full.'); end
+validation_run_meta=pe_phase_release_run_meta_vertical(root_dir,struct( ...
+    'frequency_axis_hz',linspace(4000,8000,64).', ...
+    'seed_definition',struct('adjoint',710001,'projection',720001, ...
+    'f9_ensemble',730001,'f64_ensemble',740001)));
 
 fprintf('Adjoint PE receiver validation mode=%s\n',mode);
 validation=struct('mode',mode,'created_at',char(datetime('now')), ...
@@ -66,7 +71,7 @@ if strcmp(mode,'full'), M9=4096; else, M9=64; end
 [analytic9,analytic9_meta]=contract_kstat_receiver_stats_vertical( ...
     spec9,projection9,struct('method','fft'));
 statistics9=local_statistical_comparison( ...
-    ensemble9.H_projection_fm,analytic9,cfg9,-(cfg9.z_tx+cfg9.z_rx)/cfg9.c0);
+    ensemble9.H_projection_fm,analytic9,cfg9,0);
 statistics9.forward_projection_max_relative_error=ensemble9.max_relative_error;
 statistics9.pass_forward_projection=ensemble9.max_relative_error<=1e-10;
 statistics9.pass_split_floor=local_split_floor_pass(statistics9,M9>=512);
@@ -89,7 +94,7 @@ if strcmp(mode,'full')
     [analytic64,analytic64_meta]=contract_kstat_receiver_stats_vertical( ...
         spec64,projection64,struct('method','fft'));
     statistics64=local_statistical_comparison(ensemble64.H_projection_fm,analytic64, ...
-        cache64.cfg,-(cache64.cfg.z_tx+cache64.cfg.z_rx)/cache64.cfg.c0);
+        cache64.cfg,0);
     statistics64.forward_projection_max_relative_error=ensemble64.max_relative_error;
     statistics64.pass_forward_projection=ensemble64.max_relative_error<=1e-10;
     statistics64.pass_split_floor=local_split_floor_pass(statistics64,true);
@@ -113,7 +118,13 @@ validation.pass=struct('exact_adjoint_projection',pass_exact, ...
     'f64',strcmp(mode,'smoke')||(...
         validation.f64.comparison.pass_forward_projection&&validation.f64.comparison.pass_split_floor));
 validation.pass.all=all(structfun(@(x)logical(x),validation.pass));
-save(fullfile(out_dir,['adjoint_pe_receiver_projection_' mode '.mat']),'validation','-v7.3');
+validation.schema_version='2.0.0';
+validation.phase_reference_meta=projection3.phase_reference_meta;
+validation.validation_run_meta=validation_run_meta;
+schema_version=validation.schema_version;
+phase_reference_meta=validation.phase_reference_meta;
+save(fullfile(out_dir,['adjoint_pe_receiver_projection_' mode '.mat']),'validation', ...
+    'schema_version','phase_reference_meta','validation_run_meta','-v7.3');
 local_make_figures(validation,out_dir,mode);
 local_write_summary(validation,fullfile(out_dir,['summary_' mode '.txt']));
 fprintf('Saved adjoint PE validation outputs to %s\n',out_dir);
@@ -169,7 +180,7 @@ for ii=1:F
     end
 end
 [legacy,new_result]=local_legacy_runner_comparison(cache,delta_joint);
-legacy_error=norm(legacy.H_ref_sca_fm-new_result.H_ref_sca_fm,'fro')/max(norm(legacy.H_ref_sca_fm,'fro'),eps);
+legacy_error=norm(legacy.H_ref_sca_fm-new_result.H_ref_sca_reduced_fm,'fro')/max(norm(legacy.H_ref_sca_fm,'fro'),eps);
 result=struct('labels',{labels},'relative_error',errors, ...
     'max_relative_error',max(errors(:)),'legacy_runner_relative_error',legacy_error);
 end
@@ -228,8 +239,9 @@ C_floor=norm(one.C-two.C,'fro')/Cden;
 P_floor=norm(one.P-two.P,'fro')/Pden;
 P_Cfloor=norm(one.P-two.P,'fro')/Cden;
 sample_power=mean(abs(H).^2,2); power_error=norm(sample_power-analytic.E_abs_H2_f)/max(norm(analytic.E_abs_H2_f),eps);
-cir_basis=build_physical_cir_vertical(eye(size(H,1)),analytic.f_axis_hz,reference_delay,'none',1);
-B=cir_basis.h_physical_tau;
+cir_basis=build_channel_cir_vertical(eye(size(H,1)),analytic.f_axis_hz, ...
+    struct('input_reference','direct_dsp','time_origin_shift_s',reference_delay));
+B=cir_basis.h_tau;
 pdp_analytic=real(diag(B*analytic.C_H*B')); pdp_sample=mean(abs(B*H).^2,2);
 [R,G]=local_lfm_operators(analytic.f_axis_hz);
 lfm_analytic=real(diag(R*analytic.C_H*R')); lfm_sample=mean(abs(R*H).^2,2);

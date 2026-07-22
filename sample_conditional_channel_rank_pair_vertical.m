@@ -9,6 +9,7 @@ arguments
     seed (1,1) double {mustBeFinite}
     low_rank (1,:) char {mustBeMember(low_rank,{'99.9','99'})} = '99.9'
 end
+model=upgrade_conditional_channel_phase_vertical(model,struct());
 s=model.stats; rfull=s.rank_candidates.full;
 if strcmp(low_rank,'99.9'), rlow=s.rank_candidates.variance_999;
 else, rlow=s.rank_candidates.variance_99; end

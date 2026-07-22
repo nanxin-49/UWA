@@ -451,8 +451,6 @@ rows = repmat(struct('offset_m', NaN, 'field_range_m', NaN, ...
     'incoherent_field_tl_db', NaN, 'arrival_synthesis_tl_db', NaN, ...
     'field_minus_arrival_tl_db', NaN, 'pe_scaled_total_tl_db', NaN), n, 1);
 f = cfg.frequency_hz;
-td0 = (cfg.z_tx_m - cfg.z_rx_m) / cfg.c0_mps;
-tr0 = (cfg.z_tx_m + cfg.z_rx_m) / cfg.c0_mps;
 for ii = 1:n
     x = cfg.receiver_offsets_m(ii);
     [~, ir] = min(abs(coherent.receiver_range_m - x));
@@ -465,8 +463,7 @@ for ii = 1:n
     pe = validation.cases(ii).pe;
     [~, ifref] = min(abs(pe.f_axis(:) - f));
     pressure_pe = validation.global_direct_scale * ( ...
-        pe.H_direct_f(ifref) * exp(1i * 2*pi*f*td0) + ...
-        pe.H_reflect_f(ifref) * exp(1i * 2*pi*f*tr0));
+        pe.H_direct_physical_f(ifref) + pe.H_reflect_physical_f(ifref));
     field_tl = -20*log10(max(abs(pressure_c), realmin));
     arrival_tl = -20*log10(max(abs(pressure_arrival), realmin));
     rows(ii) = struct('offset_m', x, ...
@@ -708,4 +705,3 @@ fprintf(fid, ['Only the three saved PE receiver responses are overlaid on ', ...
     'energy envelope; they are not interchangeable.\n']);
 clear cleanup
 end
-

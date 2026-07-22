@@ -9,6 +9,7 @@ arguments
     seed (1,1) double {mustBeFinite}
     options (1,1) struct = struct()
 end
+[library,library_migration]=upgrade_conditional_channel_phase_vertical(library,struct());
 if ~isfield(library,'conditions') || isempty(library.conditions)
     error('The conditional channel library has no condition nodes.');
 end
@@ -26,4 +27,5 @@ meta.library_schema_version=library.schema_version;
 meta.condition_index=idx;
 meta.wind_speed_mps=wind_speed_mps;
 meta.interpolation_used=false;
+meta.library_phase_migration=library_migration;
 end

@@ -18,7 +18,7 @@ All spatial magnitude panels use a common `[-50,0] dB` envelope reference. Phase
 | `10_receiver_cp_heatmaps.png` | Analytic/sample covariance and pseudo-covariance. | Accepted adjoint F=64 validation; common absolute `|C|` reference. |
 | `11_pdp_eigenspectrum_distribution.png` | PDP, covariance modes, IQ and amplitude distribution. | Accepted analytic/projected PDP and deterministic conditional U=5 samples. |
 | `12_u5_u8_statistical_contrast.png` | Validated U=5/U=8 receiver statistics; no wind interpolation. | Saved full conditional models and validation results. |
-| `13_lfm_and_matched_filter.png` | Noiseless channel-level LFM and matched-filter diagnostics. | Prior public LFM validation plus current accepted joint analytic/sample statistics. |
+| `13_lfm_and_matched_filter.png` | Noiseless channel-level LFM and matched-filter diagnostics. | Current-run F=64 U=5 ensemble plus current accepted joint analytic/sample statistics. |
 | `14_pe_carrier_reconstruction.mp4` | Nominal-c0 carrier reconstruction; not time-domain PE. | Stored complex-envelope center slices multiplied by carrier phase. |
 
 Explicit and joint single realizations are illustrative and are not compared pointwise. The adjoint kernel is receiver sensitivity, not reciprocal or inverse propagation. Analytic FFT C/P and conditional models are receiver-statistics paths, not spatial-field generators. Total-channel panels are contextual; validation metrics remain reflected-scatter based.

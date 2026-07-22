@@ -142,10 +142,12 @@ end
 function local_adjoint(a,out_dir)
 f=a.cfg.f_axis_hz(:)/1000; hc=a.projection.H_cached_scatter_f(:); hp=a.projection.H_projected_scatter_f(:);
 err=abs(hc-hp)./max(abs(hc),eps); q=a.projection.q_xy; w=a.projection.a_xy;
+hrc=a.projection.H_cached_scatter_reduced_f(:); hrp=a.projection.H_projected_scatter_reduced_f(:);
+err_reduced=abs(hrc-hrp)./max(abs(hrc),eps);
 qref=max(abs(q(:))); wref=max(abs(w(:)));
 fig=local_figure([30 30 1500 850]); tiledlayout(fig,2,3,'TileSpacing','compact','Padding','compact');
 ax=nexttile; plot(ax,f,abs(hc),'o-','LineWidth',1.2); hold(ax,'on'); plot(ax,f,abs(hp),'--','LineWidth',1.2); grid(ax,'on'); xlabel(ax,'frequency (kHz)'); ylabel(ax,'|H_{sca}|'); legend(ax,'cached PE','adjoint projection'); title(ax,'Same-input receiver response');
-ax=nexttile; semilogy(ax,f,max(err,eps),'o-'); grid(ax,'on'); xlabel(ax,'frequency (kHz)'); ylabel(ax,'relative error'); title(ax,sprintf('max %.3g',max(err)));
+ax=nexttile; semilogy(ax,f,max(err_reduced,eps),'o-'); hold(ax,'on'); semilogy(ax,f,max(err,eps),'--'); grid(ax,'on'); xlabel(ax,'frequency (kHz)'); ylabel(ax,'relative error'); legend(ax,'reduced','direct-DSP'); title(ax,sprintf('max %.3g / %.3g',max(err_reduced),max(err)));
 ax=nexttile; local_xy_db(ax,a,q,qref); title(ax,'|q| sensitivity kernel (dB)');
 ax=nexttile; local_xy_phase(ax,a,q,qref); title(ax,'phase(q), not physical back-propagated pressure');
 ax=nexttile; local_xy_db(ax,a,w,wref); title(ax,'|a| = |conj(psi_{inc})q| (dB)');
@@ -156,6 +158,7 @@ end
 
 function local_frequency_response(a,out_dir)
 f=a.cfg.f_axis_hz(:); he=a.projection.H_explicit_reflect_f(:); hj=a.projection.H_joint_reflect_f(:);
+he_red=a.projection.H_explicit_reflect_reduced_f(:); hj_red=a.projection.H_joint_reflect_reduced_f(:);
 coh=a.projection.H_ref_coh_f(:); rms_sca=sqrt(max(real(diag(a.stats.analytic_stats.C_H)),0));
 tau_e=local_group_delay(f,he); tau_j=local_group_delay(f,hj);
 db_floor=-120;
@@ -165,7 +168,8 @@ coh_db=max(20*log10(max(abs(coh),eps)),db_floor);
 rms_db=max(20*log10(max(rms_sca,eps)),db_floor);
 fig=local_figure([70 70 1400 780]); tiledlayout(fig,3,1,'TileSpacing','compact','Padding','compact');
 ax=nexttile; plot(ax,f/1000,he_db,'LineWidth',1.2); hold(ax,'on'); plot(ax,f/1000,hj_db,'--','LineWidth',1.2); plot(ax,f/1000,coh_db,':','LineWidth',1.2); plot(ax,f/1000,rms_db,'-.','LineWidth',1.2); grid(ax,'on'); ylim(ax,[db_floor 0]); ylabel(ax,'magnitude (dB)'); legend(ax,'explicit realization','joint realization','coherent mean','analytic scatter RMS','Location','eastoutside'); title(ax,sprintf('Reflected-only response (display floor %g dB)',db_floor));
-ax=nexttile; plot(ax,f/1000,unwrap(angle(he)),'LineWidth',1.2); hold(ax,'on'); plot(ax,f/1000,unwrap(angle(hj)),'--','LineWidth',1.2); grid(ax,'on'); ylabel(ax,'unwrapped phase (rad)'); legend(ax,'explicit','joint','Location','eastoutside');
+theory=-2*pi*f*a.phase_reference_meta.relative_delay_s;
+ax=nexttile; plot(ax,f/1000,unwrap(angle(he_red)),'LineWidth',1.0); hold(ax,'on'); plot(ax,f/1000,unwrap(angle(hj_red)),'--','LineWidth',1.0); plot(ax,f/1000,unwrap(angle(he)),'LineWidth',1.4); plot(ax,f/1000,unwrap(angle(hj)),'--','LineWidth',1.4); plot(ax,f/1000,theory-theory(1)+unwrap(angle(he_red(1))),':k','LineWidth',1.1); grid(ax,'on'); ylabel(ax,'unwrapped phase (rad)'); legend(ax,'explicit reduced','joint reduced','explicit direct-DSP','joint direct-DSP','nominal -2\pi f\Delta\tau_0','Location','eastoutside');
 ax=nexttile; plot(ax,f(2:end)/1000,tau_e*1e3,'LineWidth',1.2); hold(ax,'on'); plot(ax,f(2:end)/1000,tau_j*1e3,'--','LineWidth',1.2); grid(ax,'on'); ylabel(ax,'group delay (ms)'); xlabel(ax,'frequency (kHz)'); legend(ax,'explicit','joint','Location','eastoutside');
 local_export(fig,out_dir,'09_receiver_frequency_response.png');
 end
@@ -184,13 +188,15 @@ end
 
 function local_pdp_distribution(a,out_dir)
 m=a.model5; H=a.distribution.H_scatter_fm; [~,idx]=min(abs(m.frequency_axis-6000)); h=H(idx,:);
-fig=local_figure([40 40 1450 900]); tiledlayout(fig,2,2,'TileSpacing','compact','Padding','compact');
+fig=local_figure([40 40 1550 900]); tiledlayout(fig,2,3,'TileSpacing','compact','Padding','compact');
 pdp_a=a.stats.comparison.pdp_analytic(:); pdp_s=a.stats.comparison.pdp_sample(:);
 delay_bin=(0:numel(pdp_a)-1).';
 ax=nexttile; plot(ax,delay_bin,pdp_a/max(pdp_a),'LineWidth',1.3); hold(ax,'on'); plot(ax,delay_bin,pdp_s/max(pdp_s),'--','LineWidth',1.2); grid(ax,'on'); xlabel(ax,'delay-bin index'); ylabel(ax,'normalized power'); legend(ax,'analytic FFT C/P','projected realizations'); title(ax,sprintf('Reflected-scatter PDP, correlation %.4f',a.stats.comparison.pdp_correlation));
 ax=nexttile; ev=max(real(m.eigenvalues(:)),0); yyaxis(ax,'left'); semilogy(ax,max(ev/ max(ev),eps),'o-'); ylabel(ax,'normalized eigenvalue'); yyaxis(ax,'right'); plot(ax,cumsum(ev)/sum(ev),'LineWidth',1.4); ylabel(ax,'cumulative variance'); grid(ax,'on'); xlabel(ax,'mode'); title(ax,sprintf('Covariance modes: selected %d',m.rank_selected));
 ax=nexttile; scatter(ax,real(h),imag(h),8,'filled','MarkerFaceAlpha',0.25); axis(ax,'equal'); grid(ax,'on'); xlabel(ax,'Re H_{sca}'); ylabel(ax,'Im H_{sca}'); title(ax,'6 kHz scatter IQ, conditional full rank');
 ax=nexttile; histogram(ax,abs(h),40,'Normalization','pdf'); grid(ax,'on'); xlabel(ax,'|H_{sca}|'); ylabel(ax,'density'); title(ax,sprintf('Amplitude distribution, P/C %.3g',m.properness_ratio));
+q=a.phase_audit; ax=nexttile; plot(ax,q.delay_axis_s*1e3,abs(q.direct_cir)/max(abs(q.direct_cir)),'LineWidth',1.2); hold(ax,'on'); plot(ax,q.delay_axis_s*1e3,abs(q.reflect_cir)/max(abs(q.reflect_cir)),'--','LineWidth',1.2); grid(ax,'on'); xlabel(ax,'delay (ms)'); ylabel(ax,'normalized |h|'); legend(ax,'direct','reflected'); title(ax,sprintf('F=65 two-ray: \Delta\tau_0=%.3f ms',1e3*q.relative_delay_s));
+ax=nexttile; axis(ax,'off'); text(ax,0.02,0.78,sprintf('F=9 spacing: 0.5 kHz\nUnambiguous window: %.1f ms\n4 ms aliases to zero phase\n6 kHz: %.0f carrier cycles',1e3*q.f9_unambiguous_window_s,q.six_khz_cycle_count),'FontSize',12,'VerticalAlignment','top'); title(ax,'Phase-audit interpretation');
 local_export(fig,out_dir,'11_pdp_eigenspectrum_distribution.png');
 end
 
@@ -208,11 +214,10 @@ local_export(fig,out_dir,'12_u5_u8_statistical_contrast.png');
 end
 
 function local_lfm(a,out_dir)
-l=a.lfm_saved; cr=l.case_results; kd=find([cr.branch_code]==1,1); ks=find([cr.branch_code]==2,1);
-t=l.lfm.t_s(:)*1e3; tx=l.lfm.tx_bb(:);
+l=a.lfm_saved; t=l.t_s(:)*1e3; tx=l.tx_bb(:);
 fig=local_figure([30 30 1450 880]); tiledlayout(fig,2,2,'TileSpacing','compact','Padding','compact');
-ax=nexttile; plot(ax,t,abs(tx)/max(abs(tx)),'k','LineWidth',1.1); hold(ax,'on'); plot(ax,t,abs(cr(kd).rx_reflect)/max(abs(cr(kd).rx_reflect)),'LineWidth',1.1); plot(ax,t,abs(cr(ks).rx_reflect)/max(abs(cr(ks).rx_reflect)),'--','LineWidth',1.1); grid(ax,'on'); xlabel(ax,'time (ms)'); ylabel(ax,'normalized envelope'); legend(ax,'TX LFM','public kdomain RX','public kstat RX'); title(ax,'Noiseless reflected-only LFM');
-ax=nexttile; plot(ax,t,abs(cr(kd).rx_total)/max(abs(cr(kd).rx_total)),'LineWidth',1.1); hold(ax,'on'); plot(ax,t,abs(cr(ks).rx_total)/max(abs(cr(ks).rx_total)),'--','LineWidth',1.1); grid(ax,'on'); xlabel(ax,'time (ms)'); ylabel(ax,'normalized envelope'); legend(ax,'kdomain total','kstat total'); title(ax,'Total channel shown separately');
+ax=nexttile; plot(ax,t,abs(tx)/max(abs(tx)),'k','LineWidth',1.1); hold(ax,'on'); plot(ax,t,abs(l.rx_reflect_kdomain)/max(abs(l.rx_reflect_kdomain)),'LineWidth',1.1); plot(ax,t,abs(l.rx_reflect_joint)/max(abs(l.rx_reflect_joint)),'--','LineWidth',1.1); grid(ax,'on'); xlabel(ax,'time (ms)'); ylabel(ax,'normalized envelope'); legend(ax,'TX LFM','kdomain RX','joint RX'); title(ax,'Current-run noiseless reflected-only LFM');
+ax=nexttile; plot(ax,t,abs(l.rx_total_kdomain)/max(abs(l.rx_total_kdomain)),'LineWidth',1.1); hold(ax,'on'); plot(ax,t,abs(l.rx_total_joint)/max(abs(l.rx_total_joint)),'--','LineWidth',1.1); grid(ax,'on'); xlabel(ax,'time (ms)'); ylabel(ax,'normalized envelope'); legend(ax,'kdomain total','joint total'); title(ax,'Total channel shown separately');
 ax=nexttile; plot(ax,a.stats.comparison.lfm_analytic,'LineWidth',1.2); hold(ax,'on'); plot(ax,a.stats.comparison.lfm_sample,'--','LineWidth',1.2); grid(ax,'on'); xlabel(ax,'sample'); ylabel(ax,'power'); legend(ax,'analytic','sample'); title(ax,sprintf('Current joint LFM power, corr %.5f',a.stats.comparison.lfm_correlation));
 ax=nexttile; plot(ax,a.stats.comparison.matched_filter_analytic,'LineWidth',1.2); hold(ax,'on'); plot(ax,a.stats.comparison.matched_filter_sample,'--','LineWidth',1.2); grid(ax,'on'); xlabel(ax,'sample'); ylabel(ax,'power'); legend(ax,'analytic','sample'); title(ax,sprintf('Matched-filter power, corr %.5f',a.stats.comparison.matched_filter_correlation));
 sgtitle(fig,'LFM is a channel-level linear probe: no noise, modulation, synchronization, or equalization');

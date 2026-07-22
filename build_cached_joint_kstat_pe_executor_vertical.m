@@ -74,6 +74,10 @@ cache.kind='cached_joint_kstat_pe_executor_uniform_v1';
 cache.cfg=cfg; cache.f_axis_hz=f_axis; cache.x=x; cache.y=y;
 cache.ix_rx=ix_rx; cache.iy_rx=iy_rx;
 cache.incident_surface_xy_f=incident_surface_xy_f;
+cache.H_direct_reduced_f=H_direct_f;
+cache.H_ref_coh_reduced_f=H_ref_coh_f;
+% Legacy cache fields remain reduced so older validation scripts can load
+% existing caches without changing the stored PE operator semantics.
 cache.H_direct_f=H_direct_f;
 cache.H_ref_coh_f=H_ref_coh_f;
 cache.R_coh_f=R_coh_f;
@@ -81,13 +85,21 @@ cache.surface_rx_fr=surface_rx_fr;
 cache.surface_rx_screen=surface_rx_screen;
 cache.surface_rx_nstep=surface_rx_nstep;
 cache.pm_mapping=mapping;
+cache.phase_geometry=struct('z_tx',cfg.z_tx,'z_rx',cfg.z_rx, ...
+    'z_surface',0,'c0',cfg.c0);
+[deterministic_dsp,phase_meta]=apply_pe_channel_phase_reference_vertical( ...
+    f_axis,struct('direct_f',H_direct_f,'reflect_coh_f',H_ref_coh_f), ...
+    cache.phase_geometry,'direct_dsp');
+cache.H_direct_dsp_f=deterministic_dsp.direct_f;
+cache.H_ref_coh_dsp_f=deterministic_dsp.reflect_coh_f;
+cache.phase_reference_meta=phase_meta;
 cache.build_time_s=build_time_s;
 cache.cache_array_bytes=numel(incident_surface_xy_f)*16+ ...
     numel(surface_rx_fr)*16+numel(surface_rx_screen)*8+ ...
     numel(H_direct_f)*16+numel(H_ref_coh_f)*16;
 cache.memory_snapshot_bytes=local_memory_used_bytes();
 cache.limitations=['Uniform c, no bubbles, no Doppler, CPU double PE only. ', ...
-    'Validation interface; public vertical_wape_propagator is unchanged.'];
+    'Validation interface; cached PE arrays remain reduced-envelope operators.'];
 end
 
 function psi_end=local_march_uniform(psi_start,z_start,z_end,k0,f_hz,cfg,kappa2,alpha_xy) %#ok<INUSD>

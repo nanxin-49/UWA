@@ -35,8 +35,16 @@ M=128; batch=4;
 timer=tic; sample_kirchhoff_kstat_factor_model_vertical(optimized,8,2100001,'joint'); opt_sample_s=toc(timer);
 [Hopt,topt,component_error]=generate_cached_kstat_ensemble_vertical(cache,optimized,M,2200000,'joint',batch);
 E=load(fullfile(folder,'f64_full_ensembles.mat'),'ensemble'); Hold=E.ensemble.Hj_train;
+if ~isfield(E.ensemble,'phase_reference_meta')
+    geometry=struct('z_tx',cache.cfg.z_tx,'z_rx',cache.cfg.z_rx, ...
+        'z_surface',0,'c0',cache.cfg.c0);
+    [~,phase_meta]=apply_pe_channel_phase_reference_vertical(cache.f_axis_hz(:), ...
+        struct('direct_f',cache.H_direct_f,'reflect_coh_f',cache.H_ref_coh_f), ...
+        geometry,'direct_dsp');
+    Hold=phase_meta.reflect_dsp_factor_f.*Hold;
+end
 S0=local_stats(Hold); S1=local_stats(Hopt);
-t0=local_temporal(Hold,cache.f_axis_hz,-103/1500); t1=local_temporal(Hopt,cache.f_axis_hz,-103/1500);
+t0=local_temporal(Hold,cache.f_axis_hz,0); t1=local_temporal(Hopt,cache.f_axis_hz,0);
 receiver=struct('covariance_relative_error',norm(S1.C-S0.C,'fro')/norm(S0.C,'fro'), ...
     'correlation_relative_error',norm(S1.R-S0.R,'fro')/norm(S0.R,'fro'), ...
     'pdp_correlation',local_corr(t1.pdp,t0.pdp), ...
@@ -64,7 +72,9 @@ X=H-mean(H,2); C=(X*X')/(size(H,2)-1); d=sqrt(max(real(diag(C)),0));
 s=struct('C',C,'R',C./max(d*d.',eps),'eig',sort(max(real(eig(0.5*(C+C'))),0),'descend'));
 end
 function t=local_temporal(H,f,tref)
-c=build_physical_cir_vertical(H,f,tref,'none',1); p=abs(c.h_physical_tau).^2; p=mean(p,2); t=struct('pdp',p/sum(p));
+c=build_channel_cir_vertical(H,f,struct('input_reference','direct_dsp', ...
+    'time_origin_shift_s',tref));
+p=abs(c.h_tau).^2; p=mean(p,2); t=struct('pdp',p/sum(p));
 end
 function env=local_lfm(H,f)
 fs=12000; N=512; tt=(0:N-1).'/fs; D=.02; active=tt<D; tx=zeros(N,1);

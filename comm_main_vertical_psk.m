@@ -221,9 +221,27 @@ function [channel,h_t]=local_external_channel(ext,f_ref_hz)
 h_t=[];
 if isfield(ext,'H_f') && ~isempty(ext.H_f)
     if ~isfield(ext,'f_axis_hz'), error('External H_f requires f_axis_hz.'); end
+    phase_reference='external_dsp_assumed';
+    if isfield(ext,'phase_reference_meta') && isstruct(ext.phase_reference_meta) && ...
+            isfield(ext.phase_reference_meta,'target_reference')
+        phase_reference=lower(char(ext.phase_reference_meta.target_reference));
+    elseif isfield(ext,'phase_reference')
+        phase_reference=lower(char(ext.phase_reference));
+    end
+    if strcmp(phase_reference,'legacy_reduced')
+        error('comm_main_vertical_psk:LegacyReducedExternalH', ...
+            'External project H_f must be converted from legacy_reduced to direct_dsp first.');
+    elseif strcmp(phase_reference,'absolute_physical')
+        error('comm_main_vertical_psk:PhysicalExternalH', ...
+            'External absolute_physical H_f is not valid for the MATLAB-IFFT communication path.');
+    elseif ~ismember(phase_reference,{'direct_dsp','external_dsp_assumed'})
+        error('comm_main_vertical_psk:UnknownExternalPhaseReference', ...
+            'Unsupported external H_f phase reference: %s.',phase_reference);
+    end
     f=ext.f_axis_hz(:); H=ext.H_f(:); if numel(f)~=numel(H), error('External H_f/f_axis_hz mismatch.'); end
     [~,idx]=min(abs(f-f_ref_hz));
 elseif isfield(ext,'h_t') && ~isempty(ext.h_t)
+    phase_reference='time_response';
     h_t=ext.h_t(:); H=fftshift(fft(h_t)); f=(1:numel(H)).'; idx=ceil(numel(H)/2);
 else
     error('Each external channel requires H_f+f_axis_hz or h_t.');
@@ -231,7 +249,7 @@ end
 channel=struct('H_f',H,'H_direct_f',complex(zeros(size(H))), ...
     'H_reflect_f',H,'f_axis',f,'idx_f_ref',idx,'h_total',H(idx), ...
     'h_direct',0,'h_reflect',H(idx),'fd_hz_used',0,'rx_state_used',struct(), ...
-    'external_input',true,'noise_included',false);
+    'phase_reference',phase_reference,'external_input',true,'noise_included',false);
 end
 
 function [rx_clean, h_eq, meta] = local_apply_channel_window(tx_symbols, h_bb, receive_window_mode)

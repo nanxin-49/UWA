@@ -21,6 +21,9 @@ timer=tic;
 for mm=1:L
     if isfield(channel_set,'H_fm')
         input=struct('H_f',channel_set.H_fm(:,mm),'f_axis_hz',channel_set.f_axis_hz);
+        if isfield(channel_set,'phase_reference_meta')
+            input.phase_reference_meta=channel_set.phase_reference_meta;
+        end
     else
         input=struct('h_t',channel_set.h_tm(:,mm));
     end

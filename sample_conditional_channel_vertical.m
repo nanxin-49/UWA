@@ -10,6 +10,7 @@ end
 if ~isfield(options,'path'), options.path='auto'; end
 if ~isfield(options,'rank'), options.rank='selected'; end
 if ~isfield(options,'return_total'), options.return_total=true; end
+[model,migration]=upgrade_conditional_channel_phase_vertical(model,struct());
 required={'frequency_axis','H_direct_f','H_ref_coh_f','stats'};
 for ii=1:numel(required), if ~isfield(model,required{ii}), error('Missing model.%s.',required{ii}); end, end
 rng(mod(round(seed),2^32),'twister'); timer=tic;
@@ -35,11 +36,13 @@ if options.return_total, Htotal=model.H_direct_f+model.H_ref_coh_f+Hsca; else, H
 sample=struct('sample_id',(1:n_samples).','seed',mod(round(seed),2^32), ...
     'wind_speed_mps',local_condition_value(model.condition,'wind_speed_mps',NaN), ...
     'Hs_implied_m',local_condition_value(model.condition,'Hs_implied_m',NaN), ...
-    'H_ref_sca_f',Hsca,'H_total_f',Htotal,'model_version',model.schema_version);
+    'H_ref_sca_f',Hsca,'H_total_f',Htotal,'model_version',model.schema_version, ...
+    'phase_reference_meta',model.phase_reference_meta);
 elapsed=toc(timer);
 meta=struct('path',path,'rank_used',r,'variance_retained',retained, ...
     'n_samples',n_samples,'elapsed_s',elapsed, ...
-    'per_sample_s',elapsed/n_samples,'output_bytes',numel(Hsca)*16+numel(Htotal)*16);
+    'per_sample_s',elapsed/n_samples,'output_bytes',numel(Hsca)*16+numel(Htotal)*16, ...
+    'phase_migration',migration);
 end
 
 function path=local_resolve_path(requested,test)

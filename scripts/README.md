@@ -41,7 +41,7 @@ The receiver report is `reports/cached_joint_kstat_pe_receiver_validation_report
 - `validation/generate_u5_f64_sample_bundle_vertical.m`: saves generated H, total H, physical CIR, delay axis, labels, and timing without PE calls.
 - `reporting/plot_u5_f64_conditional_validation_vertical.m`: produces QQ, correlation-matrix, eigenvalue, and LFM diagnostics.
 
-Reusable root interfaces are `estimate_conditional_channel_stats_vertical`, `sample_conditional_channel_vertical`, `build_physical_cir_vertical`, and `properness_null_test_vertical`. Full results are under `results/validation/u5_conditional_channel_f64/`; interpretation is in `reports/u5_conditional_channel_generator_f64_report.md`.
+Reusable root interfaces are `estimate_conditional_channel_stats_vertical`, `sample_conditional_channel_vertical`, `build_channel_cir_vertical`, and `properness_null_test_vertical`. `build_physical_cir_vertical` remains only as the legacy common-time-shift wrapper. Full results are under `results/validation/u5_conditional_channel_f64/`; interpretation is in `reports/u5_conditional_channel_generator_f64_report.md`.
 
 ## Optimized Joint Builder and U=8 Node
 
@@ -60,7 +60,67 @@ The reusable library interfaces are `build_conditional_channel_library_vertical`
 
 Reusable interfaces are `build_communication_taps_vertical`, `evaluate_mpsk_channel_ensemble_vertical`, and `sample_conditional_channel_rank_pair_vertical`. See `reports/two_node_statistical_channel_communication_validation_report.md`.
 
+## PE Carrier-Phase Release Candidate Workflow
+
+The formal workflow is destructive only in the narrow archival sense: the
+preparation step moves registered phase-sensitive results to a timestamped
+folder under `results/archive/pe_phase_reference_pre_rc/`. It never deletes
+or overwrites them. Run the stages in this order:
+
+```matlab
+run('scripts/validation/prepare_pe_phase_reference_release_candidate_vertical.m')
+run('scripts/validation/validate_pe_channel_phase_reference_vertical.m')
+run('scripts/validation/validate_pe_phase_convention_uniform_vertical.m')
+
+setenv('ADJOINT_PE_VALIDATION_MODE','full')
+run('scripts/validation/validate_adjoint_pe_receiver_projection_vertical.m')
+setenv('U5_CONDITIONAL_MODE','full')
+run('scripts/validation/validate_u5_conditional_channel_generator_vertical.m')
+setenv('U8_CONDITIONAL_MODE','full')
+run('scripts/validation/validate_u8_conditional_channel_generator_vertical.m')
+run('scripts/validation/build_u5_u8_conditional_library_vertical.m')
+
+setenv('TWO_NODE_COMM_MODE','full')
+run('scripts/validation/validate_two_node_communication_vertical.m')
+run('scripts/validation/validate_public_channel_modes_vertical.m')
+run('scripts/validation/validate_cached_pe_public_consistency_vertical.m')
+
+setenv('PE_ATLAS_MODE','full')
+run('scripts/reporting/generate_pe_propagation_atlas_vertical.m')
+run('scripts/validation/finalize_pe_phase_reference_release_candidate_vertical.m')
+```
+
+`audit_phase_reference_artifacts_vertical.m` is the read-only inventory
+entrypoint and may be run separately. The active run metadata is stored in
+`results/validation/pe_phase_release_candidate/current_run.mat`. A stopped
+run may resume only when its code fingerprint is unchanged. If a
+fingerprint-covered source changes, rerun the preparation step: it archives
+the partial run and creates a new `run_id`.
+
+The formal adjoint configuration is PE `128^2` / PM `256^2`; the U=8
+conditional node intentionally uses its separately audited PE `128^2` / PM
+`384^2` aperture. F=9 uses 4096 realizations, F=64 uses 512, and these runs
+are expensive. The atlas must be last because it rejects validation inputs
+whose `run_id` does not match the active release run. The finalizer reports
+only `PASS`, `FAIL`, or `INCOMPLETE` and writes
+`reports/pe_phase_reference_release_candidate_report.md`.
+
+The completed reference run is `phase_rc_20260722_174945` and is `PASS`.
+
 ## Exact Adjoint PE Receiver Projection
+
+Before the adjoint suite, the receiver carrier-reference integration can be
+checked independently:
+
+```matlab
+run('scripts/validation/validate_pe_channel_phase_reference_vertical.m')
+```
+
+This reduced-cost audit uses F=65 for the unaliased 4 ms delay test, exercises
+the four public surface branches, checks `legacy_reduced`, compares cached and
+adjoint receiver outputs in both reduced/direct-DSP form, validates dense/FFT
+`C/P`, and tests schema-1 conditional-model migration. Outputs are under
+`results/validation/pe_channel_phase_reference/`.
 
 - `validation/validate_adjoint_pe_receiver_projection_vertical.m`: validates the exact discrete conjugate transpose of the cached uniform surface-to-receiver PE, receiver projection, PM-to-PE embedding, dense/FFT receiver statistics, realization statistics, performance, and public regressions.
 - Set `ADJOINT_PE_VALIDATION_MODE=smoke` for the reduced run or `full` for the accepted F=9/4096 and F=64/512 validation.
@@ -68,7 +128,7 @@ Reusable interfaces are `build_communication_taps_vertical`, `evaluate_mpsk_chan
 - `reporting/plot_adjoint_pe_receiver_projection_validation_vertical.m` regenerates the adjoint error, covariance/pseudo-covariance, PDP, LFM/matched-filter, augmented-eigenvalue, and timing/memory figures from a saved validation result.
 - Outputs are written to `results/validation/adjoint_pe_receiver_projection/`; measured results and the integration decision are in `reports/adjoint_pe_receiver_projection_feasibility_report.md`.
 
-This v1 path is limited to uniform sound speed, CPU double, fixed grids and frequency axis, one nearest-grid receiver, no bubbles, and no Doppler. It does not change the public propagator, default surface model, or communication entrypoint.
+This v1 path is limited to uniform sound speed, CPU double, fixed grids and frequency axis, one nearest-grid receiver, no bubbles, and no Doppler. Its PE operator remains a validation path; receiver outputs now use the same central phase-reference layer as the public API. The default surface model is unchanged.
 
 ## PE Propagation Visual Atlas
 
@@ -89,7 +149,7 @@ The atlas distinguishes physical boundary models from computational acceleration
 - The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
 - Outputs are written to `results/validation/pe_bellhop_flat_surface/`; the Markdown report records exact parameters, formulas, thresholds, results, and limitations.
 
-This stage deliberately excludes rough-surface scattering, bottom bounces, stochastic channels, and communication processing. Carrier restoration is performed only in the validator and does not change the public PE response convention.
+This stage deliberately excludes rough-surface scattering, bottom bounces, stochastic channels, and communication processing. Validators now consume the public `H_*_reduced_f` and `H_*_physical_f` fields instead of applying an independent hidden carrier convention.
 
 Run the phase audit before the matrix validator; the latter refuses to run
 unless the saved audit passed with carrier sign `+1`. The current matrix result
@@ -105,3 +165,18 @@ result, three PNG figures, and Markdown report, are under
 changing the matrix `passed=false` status or any PE/communication source file.
 
 Use environment variables already supported by individual scripts to reduce grid size, seed count, or output file names for quick checks.
+
+## Li et al. (2009) Explicit Rough-Surface Validation
+
+```matlab
+run('scripts/validation/validate_li2009_explicit_surface_vertical.m')
+```
+
+This independent pure-acoustic workflow uses one shared raw-PM realization
+across the full 12 kHz, 6 ms CW frequency synthesis, applies only the explicit
+pressure-release Kirchhoff `2*k*eta` screen, and projects the reflected field
+through a monostatic bottom--surface--bottom PE path. It excludes noise,
+electronics, SSA, kstat, modulation, and BER. Outputs are under
+`results/validation/li2009_explicit_surface/`; interpretation and unresolved
+transverse-grid sensitivity are documented in
+`reports/li2009_explicit_surface_validation_report.md`.

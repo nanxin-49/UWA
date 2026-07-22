@@ -58,8 +58,8 @@ for ii = 1:case_count
 
     td0 = (cfg.z_tx_m - cfg.z_rx_m) / cfg.c0_mps;
     tr0 = (cfg.z_tx_m + cfg.z_rx_m) / cfg.c0_mps;
-    Hd = pe.H_direct_f(:) .* exp(1i * 2 * pi * f_hz * td0);
-    Hr = pe.H_reflect_f(:) .* exp(1i * 2 * pi * f_hz * tr0);
+    Hd = pe.H_direct_physical_f(:);
+    Hr = pe.H_reflect_physical_f(:);
     [td_pe, cir_d] = local_path_peak(Hd, f_hz, td0, g.direct_time_s, cfg);
     [tr_pe, cir_r] = local_path_peak(Hr, f_hz, tr0, g.surface_time_s, cfg);
     [delay_axis_s, pe_total_power] = local_total_pdp(Hd + Hr, f_hz, td0, cfg);
@@ -309,14 +309,14 @@ for ii=2:numel(grids)
     pe=vertical_channel_model(local_pe_params(cfg,f.',cfg.convergence_offset_m,grids(ii)));
     records(ii).grid=grids(ii); records(ii).pe=local_compact(pe);
 end
-base=records(1).pe; Hd0=base.H_direct_f(:).*exp(1i*2*pi*f*td0); Hr0=base.H_reflect_f(:).*exp(1i*2*pi*f*tr0);
+base=records(1).pe; Hd0=base.H_direct_physical_f(:); Hr0=base.H_reflect_physical_f(:);
 g=local_geometry(cfg,cfg.convergence_offset_m); [td_base,~]=local_path_peak(Hd0,f,td0,g.direct_time_s,cfg); [tr_base,~]=local_path_peak(Hr0,f,tr0,g.surface_time_s,cfg);
 [~,ir]=min(abs(f-cfg.f_ref_hz)); rel0=20*log10(abs(Hd0(ir))/max(abs(Hr0(ir)),realmin));
 row=repmat(struct('case_name',"",'nx',0,'ny',0,'width_m',0,'stepz_lamb',0, ...
     'direct_time_change_ms',0,'reflection_time_change_ms',0,'relative_tl_change_db',0, ...
     'direct_phase_rms_rad',0,'reflection_phase_rms_rad',0,'invariant_error',0),numel(grids),1);
 for ii=1:numel(grids)
-    pe=records(ii).pe; Hd=pe.H_direct_f(:).*exp(1i*2*pi*f*td0); Hr=pe.H_reflect_f(:).*exp(1i*2*pi*f*tr0);
+    pe=records(ii).pe; Hd=pe.H_direct_physical_f(:); Hr=pe.H_reflect_physical_f(:);
     [td,~]=local_path_peak(Hd,f,td0,g.direct_time_s,cfg); [tr,~]=local_path_peak(Hr,f,tr0,g.surface_time_s,cfg);
     rel=20*log10(abs(Hd(ir))/max(abs(Hr(ir)),realmin));
     row(ii)=struct('case_name',grids(ii).name,'nx',grids(ii).nx,'ny',grids(ii).ny, ...
@@ -365,6 +365,8 @@ end
 
 function c=local_compact(p)
 c=struct('H_direct_f',p.H_direct_f,'H_reflect_f',p.H_reflect_f,'H_f',p.H_f, ...
+    'H_direct_physical_f',p.H_direct_physical_f, ...
+    'H_reflect_physical_f',p.H_reflect_physical_f, ...
     'f_axis',p.f_axis,'idx_f_ref',p.idx_f_ref,'h_direct',p.h_direct, ...
     'h_reflect',p.h_reflect,'h_total',p.h_total,'pass_1_over_R',p.pass_1_over_R, ...
     'fit_slope',p.fit_slope,'fit_err_rms',p.fit_err_rms,'config',p.config);

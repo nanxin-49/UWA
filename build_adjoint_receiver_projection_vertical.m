@@ -44,18 +44,33 @@ total_s = toc(total_timer);
 
 projection = struct();
 projection.kind = 'adjoint_pe_receiver_projection_uniform_v1';
-projection.schema_version = '1.0.0';
+projection.schema_version = '2.0.0';
 projection.f_axis_hz = cache.f_axis_hz(:);
 projection.q_surface_xy_f = q_surface_xy_f;
 projection.a_pe_xy_f = a_pe_xy_f;
-projection.H_direct_f = cache.H_direct_f(:);
-projection.H_ref_coh_f = cache.H_ref_coh_f(:);
+projection.H_direct_reduced_f = local_cache_field(cache, ...
+    'H_direct_reduced_f','H_direct_f');
+projection.H_ref_coh_reduced_f = local_cache_field(cache, ...
+    'H_ref_coh_reduced_f','H_ref_coh_f');
 projection.mu_scatter_f = complex(zeros(F,1));
-projection.mu_total_f = projection.H_direct_f + projection.H_ref_coh_f;
+projection.mu_total_reduced_f = projection.H_direct_reduced_f + ...
+    projection.H_ref_coh_reduced_f;
 projection.pm_mapping = cache.pm_mapping;
 projection.receiver_grid_index = [cache.iy_rx, cache.ix_rx];
 projection.c0_mps = cache.cfg.c0;
 projection.reflect_coeff = cache.cfg.reflect_coeff;
+projection.phase_geometry = struct('z_tx',cache.cfg.z_tx, ...
+    'z_rx',cache.cfg.z_rx,'z_surface',0,'c0',cache.cfg.c0);
+[deterministic_dsp,phase_meta] = apply_pe_channel_phase_reference_vertical( ...
+    projection.f_axis_hz,struct('direct_f',projection.H_direct_reduced_f, ...
+    'reflect_coh_f',projection.H_ref_coh_reduced_f), ...
+    projection.phase_geometry,'direct_dsp');
+projection.H_direct_dsp_f = deterministic_dsp.direct_f;
+projection.H_ref_coh_dsp_f = deterministic_dsp.reflect_coh_f;
+projection.H_direct_f = projection.H_direct_dsp_f;
+projection.H_ref_coh_f = projection.H_ref_coh_dsp_f;
+projection.mu_total_f = projection.H_direct_dsp_f+projection.H_ref_coh_dsp_f;
+projection.phase_reference_meta = phase_meta;
 projection.deltaG_definition = ...
     'deltaG_i=R0_i*exp(1i*alpha_i*eta)-R_coh_i; C_deltaG and P_deltaG include R0';
 projection.weight_definition = 'a_pe_i=conj(psi_inc_i).*q_i; no extra R0 factor';
@@ -74,6 +89,14 @@ meta = struct('per_frequency_s',per_frequency_s, 'total_s',total_s, ...
     'adjoint_kind','exact_discrete_conjugate_transpose', ...
     'memory_snapshot_bytes',local_memory_used_bytes());
 projection.build_meta = meta;
+end
+
+function value = local_cache_field(cache,preferred,legacy)
+if isfield(cache,preferred)
+    value = cache.(preferred)(:);
+else
+    value = cache.(legacy)(:);
+end
 end
 
 function local_validate_scope(cache, pm_spec)

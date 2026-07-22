@@ -1,126 +1,133 @@
-# Vertical Underwater Acoustic Channel Project
+# Vertical Underwater Acoustic Channel
 
-This repository contains a MATLAB vertical underwater acoustic channel and MPSK communication model. The core path is PE/WAPE-style propagation to obtain channel frequency responses, followed by optional surface reflection/scattering diagnostics and communication metrics.
+MATLAB project for a seabed-to-near-surface vertical underwater acoustic
+channel. The active path uses PE/WAPE-style propagation, optional rough
+sea-surface reflection/scattering, receiver-side statistical models, and an
+MPSK communication consumer.
 
-## Core Files
+## Start Here
 
-- `vertical_channel_model.m`: public channel API, `output = vertical_channel_model(paramsV)`.
-- `vertical_wape_propagator.m`: upward-marching propagation core and frequency loop.
-- `pm_surface_boundary_model.m`: rough sea-surface boundary and statistical scattering model.
-- `comm_main_vertical_psk.m`: end-to-end MPSK communication demo using `H_f`.
-- `modem_psk.m`, `noise_inject_vertical.m`: communication helpers.
-- `bubble_effective_medium.m`, `bubble_environment_vertical.m`, `bubble_hall_spectrum.m`: bubble-layer physics helpers.
-- `build_surface_empirical_channel_model_vertical.m`, `sample_surface_empirical_channel_vertical.m`: empirical channel-model helpers.
-- `main_vertical.m`: channel-only demo.
-- `explain_main_vertical.m`: compatibility alias for the channel-only demo.
+The public channel API is:
 
-Longer implementation notes remain in `PROJECT_CONTEXT.md`, `vertical_comm_guide.md`, `SSA.md`, `BUBBLE_EXTENSION_SPEC.md`, and `README_CODE_STRUCTURE_AND_OUTPUTS.md`.
+```matlab
+output = vertical_channel_model(paramsV);
+```
 
-## Directory Layout
-
-- `scripts/validation/`: reduced-grid regression and diagnostic checks.
-- `scripts/comparisons/`: model-to-model comparison studies.
-- `scripts/experiments/`: sweeps, Monte Carlo runs, and calibration studies.
-- `scripts/reporting/`: figure/report generation scripts.
-- `results/`: local generated artifacts, grouped by purpose.
-- `reports/`: Markdown research notes and narrative reports.
-- `old/`: legacy reference code kept out of the active execution path.
-
-Scripts under `scripts/` call `scripts/bootstrap_project.m`, which adds the project root to the MATLAB path and routes relative output files into the matching `results/` subfolder.
-
-## Quick Runs
-
-From MATLAB:
+Minimal entrypoints:
 
 ```matlab
 cd('E:/MISC/CARPE3D_matlab/Explain')
-explain_main_vertical
-comm_main_vertical_psk
-run('scripts/validation/validate_surface_wavefield_visualization_vertical.m')
+explain_main_vertical       % channel demonstration
+comm_main_vertical_psk      % end-to-end MPSK demonstration
 ```
 
-Flat-surface PE/Bellhop stage-1 cross-validation (requires the external
-Acoustics Toolbox `bellhop.exe`):
+For quick checks, use reduced even grids such as `64^2` or `128^2`, set
+`show_figures=false`, and disable the expensive features that are not under
+test.
+
+## Current Channel Semantics
+
+The public default is `paramsV.channel_phase_reference='direct_dsp'`.
+`H_direct_f`, `H_reflect_f`, and `H_f` therefore share one receiver phase
+reference and are ready for the MATLAB-IFFT communication path:
 
 ```matlab
-setenv('BELLHOP_EXE', 'C:/path/to/bellhop.exe')
-addpath('scripts/validation')
-validate_pe_bellhop_flat_surface_vertical
+H_f = H_direct_f + H_reflect_f;
 ```
 
-This deterministic validator uses the existing PE API, a uniform SSP, and a
-flat pressure-release surface. It writes the Bellhop environment, arrivals,
-PDP/TL figure, comparison table, MAT result, and Markdown report under
-`results/validation/pe_bellhop_flat_surface/`.
+The raw PE envelopes remain available as `H_*_reduced_f`; absolute physical
+phasors under `exp(-1i*omega*t)` are available as `H_*_physical_f`.
+`phase_reference_meta` records the geometry, nominal delays, convention, and
+frequency-dependent phase factors. `legacy_reduced` remains available only
+for regression and migration.
 
-The stricter follow-on audit keeps the main PE code unchanged and writes to
-separate result directories:
+For the standard `z_tx=100 m`, `z_rx=3 m`, `c0=1500 m/s` geometry, the
+nominal direct/reflected longitudinal spans are 97/103 m and their reference
+delay difference is 4 ms. This deterministic reference is not a per-sample
+PDP peak alignment.
+
+## Core Code
+
+- `vertical_channel_model.m`: public configuration and output boundary.
+- `vertical_wape_propagator.m`: direct and reflected PE/WAPE propagation.
+- `pm_surface_boundary_model.m`: explicit Kirchhoff, joint K-stat, and SSA
+  research surface boundaries.
+- `apply_pe_channel_phase_reference_vertical.m`: central receiver phase
+  reference conversion.
+- `build_channel_cir_vertical.m`: convention-explicit direct-DSP or physical
+  CIR reconstruction with only a common time-origin shift.
+- `comm_main_vertical_psk.m`: reference communication consumer of `H_f`.
+- `build_cached_joint_kstat_pe_executor_vertical.m`: fixed uniform cached PE
+  validation path.
+- `build_adjoint_receiver_projection_vertical.m`: exact discrete-adjoint
+  single-receiver projection prototype.
+- `contract_kstat_receiver_stats_vertical.m`: dense/FFT receiver `C/P`
+  contraction on the PM grid.
+- `estimate_conditional_channel_stats_vertical.m` and
+  `sample_conditional_channel_vertical.m`: receiver statistical generator.
+
+The public default surface model remains `kirchhoff_spatial`. Adjoint and
+cached routines are validation/research interfaces; they do not replace the
+public PE propagator for unsupported environments.
+
+## Repository Layout
+
+- `scripts/validation/`: deterministic regression and statistical checks.
+- `scripts/comparisons/`: model-to-model studies.
+- `scripts/experiments/`: sweeps and Monte Carlo experiments.
+- `scripts/reporting/`: plots, reports, and propagation atlas generation.
+- `reports/`: detailed validation evidence and feasibility conclusions.
+- `results/`: generated MAT, text, table, figure, animation, and external-tool
+  artifacts; large generated files are normally ignored by Git.
+- `old/`: legacy reference code outside the active execution path.
+
+## Documentation Map
+
+| Document | Audience | Purpose |
+|---|---|---|
+| `README.md` | New repository reader | Quick entrypoint, active code, and navigation |
+| `vertical_comm_guide.md` | Researchers and developers | Current physics, phase, statistics, interfaces, and interpretation |
+| `PROJECT_CONTEXT.md` | Future coding models and maintainers | Authoritative current index plus append-only project log |
+| `scripts/README.md` | Validation operator | Script catalogue, prerequisites, cost, and outputs |
+| `reports/` | Technical reviewer | Configuration-specific evidence and decisions |
+
+Do not infer current behavior from an old dated report without checking the
+current-state index in `PROJECT_CONTEXT.md` and the implementation.
+
+## Key Validation
+
+Carrier-phase release candidate `phase_rc_20260722_174945` completed with
+decision **PASS**. It includes the formal F=65 delay/sign audit, full F=9 and
+F=64 adjoint/statistical suites, U=5/U=8 conditional models, two-node
+communication, public/cached regression, and a same-run propagation atlas.
+See `reports/pe_phase_reference_release_candidate_report.md` for the gate
+table and `results/visualization/pe_propagation_atlas/` for the figures.
+
+Run the carrier-phase and branch integration audit:
 
 ```matlab
-validate_pe_phase_convention_uniform_vertical
-validate_pe_bellhop_flat_surface_matrix_vertical
+run('scripts/validation/validate_pe_channel_phase_reference_vertical.m')
 ```
 
-The first entry verifies the reduced-envelope carrier sign against an
-independent angular-spectrum reference. The second uses an open Bellhop angle
-fan at 3/6/9 m offsets and runs the C0--C4 PE grid/window/step convergence
-matrix. Its current timing and algebra checks pass, while strict cross-geometry
-amplitude and doubled-window phase checks remain flagged; see the generated
-matrix report rather than treating the earlier single-geometry timing as an
-independent delay validation.
-
-Bellhop flat-surface ray and TL displays can be generated independently from
-the saved 3/6/9 m matrix result:
+Run the exact-adjoint reduced smoke test:
 
 ```matlab
-setenv('BELLHOP_EXE', 'C:/path/to/bellhop.exe')
-addpath('scripts/reporting')
-generate_bellhop_flat_surface_visuals_vertical
+setenv('ADJOINT_PE_VALIDATION_MODE','smoke')
+run('scripts/validation/validate_adjoint_pe_receiver_projection_vertical.m')
 ```
 
-This entrypoint runs Bellhop `R`, coherent `C`, and incoherent `I` modes,
-checks 5001/10001-beam convergence, and writes ray geometry, shared-scale TL
-fields, and a receiver-depth TL slice under
-`results/visualization/bellhop_flat_surface/`. It reuses saved PE receiver
-points and does not construct a PE range-depth field or alter the strict
-matrix conclusion.
+Additional commands, expected runtimes, external Bellhop prerequisites, and
+output locations are maintained in `scripts/README.md`.
 
-The complete consolidated record of the single-geometry smoke case, phase
-audit, 3/6/9 m strict matrix, Bellhop R/C/I visualization, regressions, and
-remaining limitations is in
-`reports/pe_bellhop_flat_surface_cross_validation_complete_report.md`.
+## Active Limits
 
-For quick validation, prefer reduced grids (`nx=128` or `nx=256`, `ny=128` or `ny=256`) and `show_figures=false`.
-
-## Surface Boundary Models
-
-`surface_boundary_model` currently supports:
-
-- `kirchhoff_spatial`: default explicit PM sea-surface realization and spatial phase screen.
-- `kirchhoff_kdomain`: FFT k-domain interface for the same explicit Kirchhoff phase screen.
-- `kirchhoff_kstat`: Kirchhoff statistical phase-screen branch. It does not generate a concrete `eta(x,y)`; it builds `C_eta`, `S_deltaG`, coherent reflection, incoherent scatter power, and optional random reflected spectra from the PM height spectrum.
-- `ssa_stat_kernel`: SSA-oriented statistical research branch used as a weak-roughness/small-angle reference.
-
-Roughness amplitude scaling is controlled by `surface_roughness_scale_mode`:
-
-- `target_hs` (default): scale the PM surface spectrum or realization to `sea_hs_target`.
-- `raw_pm`: use the PM spectrum amplitude implied directly by `sea_wind_speed`; metadata records `sigma_eta_raw_m`, `Hs_raw_m`, `Hs_target_m`, and `scale_factor`.
-
-Quick kstat validation:
-
-```matlab
-run('scripts/validation/validate_kirchhoff_kstat_vertical.m')
-```
-
-Raw-PM wind-driven comparison between the explicit `kirchhoff_kdomain` and statistical `kirchhoff_kstat` branches:
-
-```matlab
-run('scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m')
-```
-
-It writes the MAT/CSV summary and figures under `results/comparisons/`.
-See `vertical_comm_guide.md` for the discrete raw-PM variance convention used to align `kirchhoff_kdomain` and `kirchhoff_kstat`.
-
-## Output Policy
-
-Generated `.mat`, `.png`, `.csv`, `.mp4`, `.log`, and similar run artifacts belong under `results/`. Large binary outputs are intentionally ignored by Git; the committed source of truth is the MATLAB code and Markdown documentation.
+- The exact-adjoint/cached v1 path is uniform sound speed, CPU double, fixed
+  grids/frequencies, one nearest-grid receiver, and no bubbles or Doppler.
+- `kirchhoff_kstat` is a near-vertical Gaussian/Kirchhoff statistical phase
+  screen, not a complete rough-surface scattering theory.
+- Conditional wind libraries use validated discrete nodes; no silent wind
+  interpolation is performed.
+- Unknown external `H(f)` without project phase metadata is assumed to be
+  DSP-ready and is not silently rotated.
+- The F=9 grid `4:0.5:8 kHz` cannot resolve the standard 4 ms reference delay:
+  its unambiguous delay is 2 ms. Use the F=65, 62.5 Hz audit grid for this test.

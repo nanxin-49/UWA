@@ -1,8 +1,84 @@
 ﻿# PROJECT_CONTEXT.md
 
 ## Purpose
-This file records the current code structure, execution paths, and data flow of the MATLAB vertical underwater acoustic channel and MPSK communication project.
-It is intended as a code-first reference for future maintenance and feature work.
+This file is the append-only project log and long-term model memory for the
+MATLAB vertical underwater acoustic channel and MPSK communication project.
+Future coding models should read the current-state index first, then consult
+the dated log for provenance. Historical entries are retained even when
+superseded; a newer explicitly marked entry is authoritative.
+
+## Authoritative Current-State Index / 权威当前状态索引（2026-07-22）
+
+### Active core
+
+- Public channel: `vertical_channel_model.m` -> `vertical_wape_propagator.m`.
+- Surface boundary: `pm_surface_boundary_model.m`; public default remains
+  `kirchhoff_spatial`.
+- Receiver phase reference: `apply_pe_channel_phase_reference_vertical.m`.
+- Fixed-path research acceleration: cached joint-kstat PE, exact discrete
+  adjoint receiver projection, PM-grid FFT `C/P`, and conditional receiver
+  statistics.
+- Communication consumer: `comm_main_vertical_psk.m` and
+  `build_communication_taps_vertical.m`.
+
+### Public receiver phase semantics
+
+- Default `paramsV.channel_phase_reference='direct_dsp'`.
+- `H_direct_f/H_reflect_f/H_f` now share the direct receiver reference and
+  are ready for the MATLAB-IFFT communication path.
+- `H_*_reduced_f` preserves the raw PE envelopes; `H_*_physical_f` restores
+  absolute longitudinal carriers under `exp(-i*omega*t)`.
+- For the standard 100 m Tx / 3 m Rx / 1500 m/s geometry, the nominal direct
+  and reflected spans are 97/103 m and the relative reference delay is 4 ms.
+  This is not a per-realization PDP peak alignment.
+- `legacy_reduced` is retained only for migration and regression.
+
+### Current validation status
+
+- Release candidate `phase_rc_20260722_174945` is **PASS**. The authoritative
+  decision and per-gate evidence are in
+  `reports/pe_phase_reference_release_candidate_report.md`.
+- The independent F=65 phase audit recovered the nominal 4 ms relative delay
+  within the delay grid, with operator error `2.2741e-13`, positive-carrier
+  phase RMS `3.1007e-11 rad`, and group-delay difference
+  `1.2768e-12 ms`.
+- The full adjoint suite passed: exact adjoint `7.7684e-15`, receiver
+  projection `5.0950e-15`, dense/FFT `C/P`
+  `5.7693e-16/1.0052e-15`; F=9 and F=64 analytic/sample ratios to their
+  split-sample floors were `0.593078` and `0.850502`.
+- U=5 and U=8 full conditional models, the exact-node library, and the
+  two-node full communication validation passed with schema 2.x,
+  `target_reference='direct_dsp'`, and zero common CIR shift.
+- The F=64 public/cached double consistency error was `9.88957e-16`.
+- The same-run propagation atlas contains 13 PNG files, one MP4, MAT,
+  manifest, and summary. MATLAB static parsing found no RC-source syntax
+  errors.
+- F=9 (`df=500 Hz`) aliases a 4 ms delay and is not a phase-delay acceptance
+  grid. The authoritative delay audit uses F=65 (`df=62.5 Hz`, 16 ms
+  unambiguous window).
+
+### Known limits and next checks
+
+- Exact-adjoint/cached v1 remains uniform, CPU double, fixed grid/frequency,
+  one nearest-grid receiver, and no bubble/Doppler path.
+- The formal adjoint configuration uses PE `128^2` / PM `256^2`; the accepted
+  U=8 conditional branch deliberately retains its separately audited
+  PE `128^2` / PM `384^2` aperture.
+- Bellhop source-normalization and doubled-window phase sensitivities remain
+  independent open validation issues.
+- The atlas emitted one cosmetic MATLAB title-format warning for `\Delta`;
+  the saved fields, checks, and artifact counts are unaffected.
+- See `vertical_comm_guide.md` for current formulas,
+  `scripts/README.md` for commands, and
+  `reports/pe_phase_reference_release_candidate_report.md` for the release
+  decision. Older combined reduced-envelope phase conclusions are
+  **Superseded** by this release-candidate run.
+
+## Detailed Snapshot and Historical Reference
+
+> Entries below this point predate or accompany later changes. When a phase
+> or output-semantic statement conflicts with the current-state index above,
+> the 2026-07-22 index and log entry are authoritative.
 
 ## Current Snapshot / 当前状态摘要
 
@@ -11,7 +87,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - `H_f = H_direct_f + H_reflect_f`
   - `h_total = H_f(idx_f_ref)`
 - Current propagation engine: the project still uses the vertical WAPE/PE-style split-step propagation path for acoustic channel generation. Surface boundary models only replace the sea-surface reflection/scattering operator between the upward incident march and the downward reflected march.
-- Current external propagation cross-validation: `validate_pe_bellhop_flat_surface_vertical.m` runs a deterministic uniform-SSP, flat pressure-release surface case through the unchanged PE public API and the external Bellhop executable. The accepted reduced case resolves one direct and one single-surface-bounce path; it restores the PE carrier phase only in the validation layer and does not change `H_direct_f`, `H_reflect_f`, or `H_f` semantics.
+- Current external propagation cross-validation: `validate_pe_bellhop_flat_surface_vertical.m` runs a deterministic uniform-SSP, flat pressure-release surface case through the PE public API and the external Bellhop executable. Historical runs restored PE carriers only in the validator; since 2026-07-22 the public API exposes explicit reduced, direct-DSP, and absolute-physical fields, and validators consume those fields directly.
 - Current communication policy after the D2 update:
   - receive-window mode defaults to `peak_sync`, which aligns the effective equalizer taps to the dominant baseband tap and then keeps the first `N` samples from a full convolution;
   - Eb/N0 noise reference defaults to `rx_clean`, i.e. receiver-side clean waveform power.
@@ -615,6 +691,12 @@ It is intended as a code-first reference for future maintenance and feature work
   - `idx_f_ref`
   - `h_total`
 - Breaking these semantics will break the communication demo even if the channel demo still runs.
+
+## Chronological Project Log / 按时间追加的项目日志
+
+Historical entries are evidence of what was implemented or concluded at that
+time. They are not silently rewritten when later work changes the public
+semantics. Superseding entries explicitly identify the affected conclusion.
 
 ## 2026-06-10 Kirchhoff k-domain Boundary Validation
 
@@ -2500,6 +2582,12 @@ Artifacts are written to `results/validation/pe_bellhop_flat_surface/`: Bellhop 
 
 ## 2026-07-20 PE Phase Audit and Bellhop Geometry/Convergence Matrix
 
+**Superseded in implementation status by the 2026-07-22 carrier-phase
+unification entry below.** The carrier-sign and Bellhop timing measurements
+remain valid historical evidence, but statements that carrier restoration is
+validation-only or that the public/CIR/communication path is unchanged no
+longer describe the current code.
+
 Two validation-only entrypoints now qualify the 2026-07-19 result without
 changing `vertical_channel_model`, `vertical_wape_propagator`,
 `build_physical_cir_vertical`, or the communication chain. The phase audit
@@ -2605,3 +2693,217 @@ figures, all `.env/.ray/.shd/.prt` files, convergence and receiver CSV tables,
 a reusable MAT file, and `bellhop_flat_surface_visual_report.md`. The PE
 overlay is restricted to the three saved, globally scaled receiver responses;
 the visualization does not invent a PE two-dimensional field.
+
+## 2026-07-22 PE Carrier-Phase Reference Unification
+
+> **Superseded validation status:** the implementation description below
+> remains valid, but its reduced-grid-only validation status and stated need
+> to rerun F=64 were superseded later on 2026-07-22 by the release-candidate
+> closure entry and `reports/pe_phase_reference_release_candidate_report.md`.
+
+### Objective
+
+The direct and surface-reflected PE paths previously removed their own
+nominal longitudinal carriers and then added the two reduced envelopes at the
+receiver. For the standard geometry the nominal spans are 97 and 103 m, so
+the missing relative reference delay is 4 ms. This entry supersedes all prior
+statements that public `H_direct_f` and `H_reflect_f` remain unaligned reduced
+envelopes or that carrier restoration occurs only inside validators.
+
+### Changed implementation
+
+- Added `apply_pe_channel_phase_reference_vertical.m` as the single
+  post-propagation conversion layer.
+- Added `paramsV.channel_phase_reference`, default `direct_dsp`, with
+  `legacy_reduced` retained for regression.
+- Public output now includes selected `H_direct_f/H_reflect_f/H_f`, explicit
+  `H_*_reduced_f`, explicit `H_*_physical_f`, reference-frequency scalars,
+  and `phase_reference_meta`.
+- Cached forward and adjoint runners return reduced, direct-DSP, and physical
+  receiver components without changing their PE operators or `q/a` weights.
+- Analytic receiver statistics retain reduced `C/P` and expose direct-DSP
+  defaults using `C=D*C_red*D^H` and `P=D*P_red*D^T`.
+- Conditional models/libraries use schema `2.0.0` / `2.0.0-discrete`.
+  `upgrade_conditional_channel_phase_vertical.m` rotates legacy project
+  means, `C/P`, complex eigenvectors, and augmented-real structures.
+- Added `build_channel_cir_vertical.m`; the old
+  `build_physical_cir_vertical.m` remains a common-shift compatibility
+  wrapper. Unknown external `H(f)` without project metadata is assumed
+  DSP-ready rather than silently rotated.
+
+The joint-kstat definition remains
+`deltaG=R0*exp(1i*alpha*eta)-R_coh`; no additional `R0` or deterministic
+path carrier is inserted into `deltaG`, the PM lag covariance, `q`, or `a`.
+
+### Validation
+
+`scripts/validation/validate_pe_channel_phase_reference_vertical.m` covers
+the F=65 analytic delay audit, all four public surface branches, scalar
+direct-only, legacy reproduction, cached/adjoint projection, PM 16^2 dense
+versus FFT statistics, schema-1 migration, and unknown-external-H policy.
+The generated summary reports:
+
+- nominal/measured relative delay: `4/4 ms`;
+- cached/adjoint direct-DSP error: `3.75814e-16`;
+- dense/FFT `C/P`: `3.64406e-16/4.16399e-16`;
+- migration `C/P`: `3.61301e-16/4.26365e-16`;
+- all gates passed.
+
+The existing adjoint smoke also passed its mathematical gates: exact
+adjoint `7.77e-15`, projection `5.10e-15`, dense/FFT approximately `1e-15`,
+and F=9 split-floor statistics accepted. The reporting helper path was added
+to that validator so the smoke run now completes. The F=32 public/cached
+double regression passed with `6.9292e-16` total error, and the minimal
+wideband communication validation completed. The two-node communication
+smoke was then regenerated with explicit direct-DSP metadata for U=5/U=8
+cached PE, joint PE, full-rank, and 99.9% conditional sources; total-only
+legacy ensemble caches are rejected for reuse because their direct and
+reflected components cannot be migrated separately.
+
+### Outputs, documentation, and remaining work
+
+Generated validation data is under
+`results/validation/pe_channel_phase_reference/`. The implementation and
+compatibility decision are summarized in
+`reports/pe_channel_phase_reference_migration_report.md`. `README.md` is now
+the concise repository entrypoint; `vertical_comm_guide.md` is the current
+technical reference; this file remains the full append-only model log.
+
+The expensive F=64/512 ensemble was not regenerated during this migration.
+Its second-order conclusions are invariant under the unitary deterministic
+phase rotation, but a future release candidate should rerun the full suite
+before removing the `legacy_reduced` compatibility option. Bellhop amplitude
+normalization and transverse-window sensitivity remain separate open issues.
+
+## 2026-07-22 Li et al. (2009) Explicit Rough-Surface Validation
+
+An independent pure-acoustic validation path was added without changing the
+public PE, surface-boundary defaults, statistical channel generators, or
+communication entrypoint. `li2009_u10_to_u195.m` solves the paper's Charnock
+Eqs. (12)--(13). `li2009_explicit_surface_validation.m` generates one raw-PM
+surface per seed, shares that exact array across every frequency of a 12 kHz,
+6 ms CW pulse, applies only `G=-exp(i*2*k*eta)`, and evaluates a monostatic
+bottom--surface--bottom uniform split-step PE through an exact discrete
+receiver projection. The driver is
+`scripts/validation/validate_li2009_explicit_surface_vertical.m`.
+
+The 128-realization reduced baseline uses H=256 m, PE 100 m/128^2, PM
+200 m/256^2, dz=4 m, and 65 frequencies from 11.5--12.5 kHz. U10=5/10 m/s
+maps to U19.5=5.2684/10.6203 m/s. PM discrete/infinite variance coverage is
+0.9953/0.9911, and sample-mean Hs is 0.5908/2.3966 m. Flat pressure-release,
+local-amplitude, and `2*k*eta` phase checks are 0, 6.94e-18, and 2.78e-16 rad.
+
+The fixed 20% first-threshold travel-time width increases from 0.3208 to
+0.7238 ms, and its shifted-Rayleigh b increases from 0.5531 to 1.6110 ms.
+Peak-time width changes only from 2.0713 to 2.0801 ms and fails the 5 percent
+broadening gate. Sample convergence passes at 128 for both first-threshold
+conditions and the U10=5 peak, but not for the U10=10 peak. Step size,
+frequency count, sponge, and PE window comparisons are stable; transverse
+grid refinement from dx=0.78125 to 0.52083/0.390625 m remains nonconverged.
+The 1024 m/200 m/256^2 coarse-grid check gives the correct flat time but is
+not statistically accepted.
+
+Public direct-only/direct-plus-reflect regression passed with component error
+3.47e-18 and no direct-path drift. The minimal peak-synced QPSK regression
+also completed with zero noiseless and 20 dB BER/SER for the accepted cases.
+The full audit, figures, convergence table, interpretation boundaries, and
+remaining work are in
+`reports/li2009_explicit_surface_validation_report.md` and
+`results/validation/li2009_explicit_surface/`.
+
+## 2026-07-22 PE Carrier-Phase Release Candidate Closure
+
+### Goal and scope
+
+The carrier-reference fix was taken through a formal release-candidate
+closure without changing the PE marching operator, public surface default,
+or unsupported physics. The active run is `phase_rc_20260722_174945`, with
+source fingerprint
+`14ccc63217ae08a11948e9fb489f2abe8148331f079f6ec7a136a2e607712df1`.
+The final decision is **PASS: recommend main-branch integration**.
+
+### Interfaces and artifact policy
+
+- `pe_phase_release_run_meta_vertical.m` creates a reproducible run identity
+  containing revision/dirty state, MATLAB version, geometry, frequency axis,
+  seed definition, and SHA-256 source fingerprint. A partial run may resume
+  only when this fingerprint is unchanged.
+- `audit_phase_reference_artifacts_vertical.m` classifies registered MAT
+  files without modifying them. `prepare_pe_phase_reference_release_candidate_vertical.m`
+  archives phase-sensitive outputs by moving them under
+  `results/archive/pe_phase_reference_pre_rc/<timestamp>/`, preserving names
+  and relative paths, then creates migration-test copies where valid.
+- Required current MAT outputs carry `schema_version`,
+  `phase_reference_meta`, and `validation_run_meta`. The atlas refuses inputs
+  from a different run ID.
+- `finalize_pe_phase_reference_release_candidate_vertical.m` emits only
+  `PASS`, `FAIL`, or `INCOMPLETE` and writes the authoritative report at
+  `reports/pe_phase_reference_release_candidate_report.md`.
+
+Two archive batches were retained. The first prepared run was invalidated
+when the existing U=8 aperture contract was found to be PM `384^2`, not the
+adjoint suite's PM `256^2`; its partial results were archived before creating
+the final run. No old result was deleted or overwritten. Schema-1 migration
+copies were used only for closure tests, not as replacements for the newly
+trained schema-2 models.
+
+### Formula and convention
+
+The direct-DSP receiver representation remains
+
+\[
+H_{\rm dir}^{\rm dsp}=H_{\rm dir}^{\rm red},\qquad
+H_{\rm ref}^{\rm dsp}=e^{-i2\pi f\Delta\tau_0}H_{\rm ref}^{\rm red}.
+\]
+
+Receiver statistics are rotated after reduced-domain spatial contraction:
+
+\[
+\mu_{\rm dsp}=D\mu_{\rm red},\qquad
+C_{\rm dsp}=DC_{\rm red}D^H,\qquad
+P_{\rm dsp}=DP_{\rm red}D^T.
+\]
+
+No carrier factor enters the marching operator, sea-surface model,
+`deltaG`, adjoint kernel `q`, receiver weight `a`, or PM spatial covariance.
+The 4 ms standard-geometry delay is a deterministic longitudinal reference,
+not an alignment of realization-dependent peaks.
+
+### Formal configurations and results
+
+- F=65 phase audit: 4--8 kHz at 62.5 Hz spacing. Nominal/measured relative
+  delay closed within one sample; phase representation round trips and
+  migration closure passed.
+- Exact adjoint full: F=9 used 4096 realizations in batches of 16; F=64 used
+  512 realizations in batches of 8 on PE `128^2` / PM `256^2`. Exact-adjoint,
+  projection, dense/FFT `C/P`, and same-realization cached/projection checks
+  all passed. F=9 and F=64 analytic/sample covariance ratios to split floors
+  were `0.593078` and `0.850502`, both below `1.25`.
+- Conditional nodes: U=5 used 128/64 train/test; U=8 used 128/128 and its
+  audited PE `128^2` / PM `384^2` aperture. Full, 99.9%, and 99% variants and
+  10,000-sample generator checks passed; models are schema 2.x direct-DSP
+  with zero common CIR shift.
+- Two-node communication: all four channel sources completed at U=5 and U=8
+  with 32 channels per source and 8000 QPSK symbols. Full/low-rank paired
+  comparisons used the same latent variables and all inputs were finite,
+  direct-DSP tagged, and IFFT-consistent.
+- Public scalar/direct-only/direct-plus-reflect and F=64 cached/public
+  regressions passed. The F=64 total consistency error was
+  `9.88957e-16`; the public default remained `kirchhoff_spatial`.
+- The rebuilt same-run atlas passed its artifact checks and contains 13 PNG,
+  one MP4, MAT, manifest, and summary. Spatial panels remain reduced complex
+  envelopes; carrier reference is applied only to receiver combinations.
+
+### Architecture decision and remaining limitations
+
+The approved roles are: public PE for general propagation; cached forward as
+the fixed-path regression oracle; adjoint projection for exact fixed-environment
+receiver realizations; analytic FFT `C/P` for receiver second-order
+statistics; and the conditional generator for large communication Monte
+Carlo after physical/statistical validation. This does not extend the exact
+adjoint v1 beyond uniform CPU-double, fixed grids/frequencies, one
+nearest-grid receiver, or into bubbles/Doppler/layered/GPU modes.
+
+Bellhop source normalization and doubled-window sensitivity remain separate
+open studies. The atlas produced one harmless title-format warning involving
+`\Delta`; it did not affect saved data, validation checks, or deliverables.

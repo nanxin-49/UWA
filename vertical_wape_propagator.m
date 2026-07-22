@@ -3,7 +3,7 @@
           surface_elevation, delta_phi, psi_ref, roughness_meta, ...
           h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
           f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref, bubble_meta, ...
-          surface_wavefield_meta, surface_ssa_component_meta] = ...
+          surface_wavefield_meta, surface_ssa_component_meta, phase_reference_output] = ...
           vertical_wape_propagator(cfg)
 %VERTICAL_WAPE_PROPAGATOR
 % Upward marching PE in z (z axis is positive downward).
@@ -73,9 +73,8 @@ kappa2 = KX.^2 + KY.^2;
 % --- wideband frequency axis ---
 [f_axis, idx_f_ref] = local_resolve_frequency_axis(cfg, rx_state_used);
 Nf = numel(f_axis);
-H_direct_f = complex(zeros(Nf, 1));
-H_reflect_f = complex(zeros(Nf, 1));
-H_f = complex(zeros(Nf, 1));
+H_direct_reduced_f = complex(zeros(Nf, 1));
+H_reflect_reduced_f = complex(zeros(Nf, 1));
 
 % --- complex absorbing boundary ---
 alpha_xy = local_absorption_profile(x, y, cfg.xw, cfg.yw, cfg.sponge_ratio, cfg.alpha_max_np_per_m);
@@ -293,9 +292,8 @@ for ifq = 1:Nf
         end
     end
 
-    H_direct_f(ifq) = h_direct_fi;
-    H_reflect_f(ifq) = h_reflect_fi;
-    H_f(ifq) = h_direct_fi + h_reflect_fi;
+    H_direct_reduced_f(ifq) = h_direct_fi;
+    H_reflect_reduced_f(ifq) = h_reflect_fi;
 
     if capture_ref
         if save_slice || cfg.show_figures
@@ -332,9 +330,48 @@ if ~isfield(roughness_meta, 'enabled') || ~roughness_meta.enabled
     roughness_meta = local_disabled_roughness_meta(cfg);
 end
 
+geometry = struct('z_tx',cfg.z_tx,'z_rx',rx_state_used.z_rx, ...
+    'z_surface',0,'c0',cfg.c0);
+reduced = struct('direct_f',H_direct_reduced_f, ...
+    'reflect_fm',H_reflect_reduced_f);
+[selected,phase_meta] = apply_pe_channel_phase_reference_vertical( ...
+    f_axis,reduced,geometry,cfg.channel_phase_reference);
+[physical,~] = apply_pe_channel_phase_reference_vertical( ...
+    f_axis,reduced,geometry,'absolute_physical');
+H_direct_f = selected.direct_f;
+H_reflect_f = selected.reflect_fm;
+H_f = selected.total_fm;
 h_direct = H_direct_f(idx_f_ref);
 h_reflect = H_reflect_f(idx_f_ref);
 h_total = H_f(idx_f_ref);
+phase_reference_output = struct( ...
+    'H_direct_reduced_f',H_direct_reduced_f, ...
+    'H_reflect_reduced_f',H_reflect_reduced_f, ...
+    'H_total_reduced_f',H_direct_reduced_f+H_reflect_reduced_f, ...
+    'H_direct_physical_f',physical.direct_f, ...
+    'H_reflect_physical_f',physical.reflect_fm, ...
+    'H_physical_f',physical.total_fm, ...
+    'h_direct_reduced',H_direct_reduced_f(idx_f_ref), ...
+    'h_reflect_reduced',H_reflect_reduced_f(idx_f_ref), ...
+    'h_total_reduced',H_direct_reduced_f(idx_f_ref)+H_reflect_reduced_f(idx_f_ref), ...
+    'h_direct_physical',physical.direct_f(idx_f_ref), ...
+    'h_reflect_physical',physical.reflect_fm(idx_f_ref), ...
+    'h_total_physical',physical.total_fm(idx_f_ref), ...
+    'phase_reference_meta',phase_meta);
+
+if isfield(surface_ssa_component_meta,'recorded_frequency_mask') && ...
+        any(surface_ssa_component_meta.recorded_frequency_mask)
+    names = {'h_reflect_coh_f','h_reflect_sca_f','h_reflect_total_f'};
+    reduced_names = {'h_reflect_coh_reduced_f','h_reflect_sca_reduced_f', ...
+        'h_reflect_total_reduced_f'};
+    factor = phase_meta.reflect_factor_f;
+    for ii = 1:numel(names)
+        name = names{ii};
+        surface_ssa_component_meta.(reduced_names{ii}) = surface_ssa_component_meta.(name);
+        surface_ssa_component_meta.(name) = factor.*surface_ssa_component_meta.(name);
+    end
+    surface_ssa_component_meta.phase_reference = phase_meta.target_reference;
+end
 
 end
 

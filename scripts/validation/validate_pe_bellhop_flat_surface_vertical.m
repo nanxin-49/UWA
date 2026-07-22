@@ -400,11 +400,8 @@ end
 end
 
 function paths = local_build_pe_path_table(scalar, wideband, geometry)
-f = wideband.f_axis(:);
-carrier_direct = exp(-1i * 2 * pi * f * geometry.direct_time_s);
-carrier_surface = exp(-1i * 2 * pi * f * geometry.surface_time_s);
-H_direct_physical_f = wideband.H_direct_f(:) .* carrier_direct;
-H_surface_physical_f = wideband.H_reflect_f(:) .* carrier_surface;
+H_direct_physical_f = wideband.H_direct_physical_f(:);
+H_surface_physical_f = wideband.H_reflect_physical_f(:);
 paths = table(["direct"; "surface_reflection"], ...
     [geometry.direct_time_s; geometry.surface_time_s], ...
     [abs(scalar.h_direct); abs(scalar.h_reflect)], ...
@@ -441,20 +438,18 @@ end
 function [pdp, metrics] = local_build_pdp_comparison( ...
     pe, bellhop_paths, geometry, direct_scale, cfg)
 f = pe.f_axis(:);
-H_pe_f = direct_scale * ( ...
-    pe.H_direct_f(:) .* exp(-1i * 2 * pi * f * geometry.direct_time_s) + ...
-    pe.H_reflect_f(:) .* exp(-1i * 2 * pi * f * geometry.surface_time_s));
+H_pe_f = direct_scale * pe.H_physical_f(:);
 H_bellhop_f = complex(zeros(size(f)));
 for ii = 1:height(bellhop_paths)
     H_bellhop_f = H_bellhop_f + bellhop_paths.amplitude_complex(ii) .* ...
-        exp(-1i * 2 * pi * f * bellhop_paths.arrival_time_s(ii));
+        exp(1i * 2 * pi * f * bellhop_paths.arrival_time_s(ii));
 end
-reference_delay_s = -geometry.direct_time_s;
-pe_cir = build_physical_cir_vertical(H_pe_f, f, reference_delay_s, ...
-    cfg.cir_window, cfg.cir_zero_padding_factor);
-bellhop_cir = build_physical_cir_vertical(H_bellhop_f, f, reference_delay_s, ...
-    cfg.cir_window, cfg.cir_zero_padding_factor);
-delay_s = pe_cir.delay_axis_s + geometry.direct_time_s;
+reference_delay_s = 0;
+cir_options=struct('input_reference','absolute_physical', ...
+    'window_type',cfg.cir_window,'zero_padding_factor',cfg.cir_zero_padding_factor);
+pe_cir = build_channel_cir_vertical(H_pe_f,f,cir_options);
+bellhop_cir = build_channel_cir_vertical(H_bellhop_f,f,cir_options);
+delay_s = pe_cir.delay_axis_s;
 pe_power = abs(pe_cir.h_physical_tau).^2;
 bellhop_power = abs(bellhop_cir.h_physical_tau).^2;
 pdp = struct();
@@ -523,6 +518,12 @@ compact.h_total = channel.h_total;
 compact.H_direct_f = channel.H_direct_f;
 compact.H_reflect_f = channel.H_reflect_f;
 compact.H_f = channel.H_f;
+compact.H_direct_reduced_f = channel.H_direct_reduced_f;
+compact.H_reflect_reduced_f = channel.H_reflect_reduced_f;
+compact.H_direct_physical_f = channel.H_direct_physical_f;
+compact.H_reflect_physical_f = channel.H_reflect_physical_f;
+compact.H_physical_f = channel.H_physical_f;
+compact.phase_reference_meta = channel.phase_reference_meta;
 compact.f_axis = channel.f_axis;
 compact.idx_f_ref = channel.idx_f_ref;
 compact.path_loss_db = channel.path_loss_db;

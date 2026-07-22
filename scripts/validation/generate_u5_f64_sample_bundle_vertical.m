@@ -5,13 +5,16 @@ if nargin<2, seed=2700001; end
 root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
 folder=fullfile(root,'results','validation','u5_conditional_channel_f64');
 S=load(fullfile(folder,'u5_conditional_channel_model_f64_full.mat'),'model'); model=S.model;
+model=upgrade_conditional_channel_phase_vertical(model, ...
+    struct('z_tx',100,'z_rx',3,'z_surface',0,'c0',1500));
 timer=tic; [draw,sample_meta]=sample_conditional_channel_vertical(model,n_samples,seed, ...
     struct('path','auto','rank','selected')); sample_elapsed=toc(timer);
-timer=tic; cir=build_physical_cir_vertical(draw.H_total_f,model.frequency_axis, ...
-    model.reference_delay_s,'none',1); cir_elapsed=toc(timer);
+timer=tic; cir=build_channel_cir_vertical(draw.H_total_f,model.frequency_axis, ...
+    struct('input_reference','direct_dsp')); cir_elapsed=toc(timer);
 samples=draw; samples.h_physical_tau=cir.h_physical_tau;
 samples.delay_axis=cir.delay_axis_s; samples.frequency_axis=model.frequency_axis;
 samples.reference_delay_s=model.reference_delay_s;
+samples.phase_reference_meta=model.phase_reference_meta;
 samples.physical_delay_resolution_s=cir.physical_delay_resolution_s;
 samples.maximum_unambiguous_delay_s=cir.maximum_unambiguous_delay_s;
 samples.zero_padding_note=cir.zero_padding_note;

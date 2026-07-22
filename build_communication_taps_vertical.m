@@ -11,6 +11,14 @@ arguments
 end
 o=local_defaults(options);
 if isfield(channel_input,'H_f') && ~isempty(channel_input.H_f)
+    [phase_reference,phase_source]=local_phase_reference(channel_input);
+    if strcmp(phase_reference,'legacy_reduced')
+        error('build_communication_taps_vertical:LegacyReducedInput', ...
+            'Convert project legacy_reduced direct/reflected components to direct_dsp first.');
+    elseif strcmp(phase_reference,'absolute_physical')
+        error('build_communication_taps_vertical:PhysicalInput', ...
+            'The communication IFFT path requires direct_dsp H(f), not absolute_physical phasors.');
+    end
     if ~isfield(channel_input,'f_axis_hz'), error('H_f input requires f_axis_hz.'); end
     f=double(channel_input.f_axis_hz(:)); H=double(channel_input.H_f(:));
     if numel(f)~=numel(H) || numel(f)<2, error('f_axis_hz and H_f must have equal length >=2.'); end
@@ -29,6 +37,7 @@ if isfield(channel_input,'H_f') && ~isempty(channel_input.H_f)
     physical_resolution_s=1/(f(end)-f(1));
     maximum_unambiguous_delay_s=1/mean(df);
 elseif isfield(channel_input,'h_t') && ~isempty(channel_input.h_t)
+    phase_reference='time_response'; phase_source='explicit_time_response';
     h_full=double(channel_input.h_t(:)); Hbb=fftshift(fft(h_full));
     fbb=((0:numel(h_full)-1).'-floor(numel(h_full)/2))* ...
         (o.symbol_rate_hz/numel(h_full));
@@ -67,8 +76,22 @@ meta=struct('source',source,'symbol_rate_hz',o.symbol_rate_hz,'n_fft',numel(h_fu
     'frequency_ifft_closure_relative_error',closure, ...
     'physical_delay_resolution_s',physical_resolution_s, ...
     'maximum_unambiguous_delay_s',maximum_unambiguous_delay_s, ...
+    'phase_reference',phase_reference,'phase_reference_source',phase_source, ...
     'symbol_tap_spacing_s',1/o.symbol_rate_hz, ...
     'zero_padding_note','FFT grid density interpolates symbol-spaced taps; it does not improve 1/B physical resolution.');
+end
+
+function [reference,source]=local_phase_reference(channel_input)
+reference='external_dsp_assumed'; source='missing_metadata_assumed_dsp_ready';
+if isfield(channel_input,'phase_reference_meta') && ...
+        isstruct(channel_input.phase_reference_meta) && ...
+        isfield(channel_input.phase_reference_meta,'target_reference')
+    reference=lower(char(channel_input.phase_reference_meta.target_reference));
+    source='channel_input.phase_reference_meta';
+elseif isfield(channel_input,'phase_reference')
+    reference=lower(char(channel_input.phase_reference));
+    source='channel_input.phase_reference';
+end
 end
 
 function [best_start,best_length]=local_shortest_circular_window(power,target)

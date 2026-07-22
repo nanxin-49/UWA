@@ -1,7 +1,6 @@
 function audit = validate_pe_phase_convention_uniform_vertical(overrides)
 %VALIDATE_PE_PHASE_CONVENTION_UNIFORM_VERTICAL Audit PE carrier/time signs.
-% This validation-only entrypoint does not modify the public PE propagator or
-% build_physical_cir_vertical. It compares the marched reduced envelope with
+% This validation compares the public reduced and physical fields with
 % an independent one-step angular-spectrum reference for the same Gaussian
 % source and uses the exp(-i*omega*t) synthesis convention.
 
@@ -22,6 +21,8 @@ if ~exist(out_dir, 'dir'), mkdir(out_dir); end
 fprintf('PE uniform-medium phase convention audit\n');
 f_axis_hz = linspace(cfg.frequency_band_hz(1), ...
     cfg.frequency_band_hz(2), cfg.frequency_count).';
+validation_run_meta=pe_phase_release_run_meta_vertical(project_root,struct( ...
+    'frequency_axis_hz',f_axis_hz,'seed_definition',struct('deterministic',true)));
 case_count = numel(cfg.receiver_offsets_m);
 case_rows = repmat(local_empty_case_row(), case_count, 1);
 phase_records = repmat(struct(), case_count, 1);
@@ -44,9 +45,9 @@ for ii = 1:case_count
     carrier_negative = conj(carrier_positive);
     H_reference_physical_f = H_reduced_reference_f .* carrier_positive;
     candidate = struct();
-    candidate.positive_f = channel.H_direct_f(:) .* carrier_positive;
-    candidate.none_f = channel.H_direct_f(:);
-    candidate.negative_f = channel.H_direct_f(:) .* carrier_negative;
+    candidate.positive_f = channel.H_direct_physical_f(:);
+    candidate.none_f = channel.H_direct_reduced_f(:);
+    candidate.negative_f = channel.H_direct_reduced_f(:) .* carrier_negative;
 
     positive_metrics = local_frequency_metrics( ...
         candidate.positive_f, H_reference_physical_f, f_axis_hz, ...
@@ -91,7 +92,7 @@ for ii = 1:case_count
     phase_records(ii).positive_residual_phase_rad = positive_metrics.residual_phase_rad;
     phase_records(ii).none_residual_phase_rad = none_metrics.residual_phase_rad;
     phase_records(ii).negative_residual_phase_rad = negative_metrics.residual_phase_rad;
-    phase_records(ii).H_pe_reduced_f = channel.H_direct_f(:);
+    phase_records(ii).H_pe_reduced_f = channel.H_direct_reduced_f(:);
     phase_records(ii).H_reference_reduced_f = H_reduced_reference_f;
     phase_records(ii).H_pe_physical_f = candidate.positive_f;
     phase_records(ii).H_reference_physical_f = H_reference_physical_f;
@@ -122,9 +123,17 @@ audit.phase_records = phase_records;
 audit.channels = channels;
 audit.checks = checks;
 audit.passed = passed;
+audit.schema_version='2.0.0';
+audit.validation_run_meta=validation_run_meta;
+phase_geometry=struct('z_tx',cfg.z_tx_m,'z_rx',cfg.z_rx_m,'z_surface',0,'c0',cfg.c0_mps);
+[~,audit.phase_reference_meta]=apply_pe_channel_phase_reference_vertical( ...
+    f_axis_hz,struct('direct_f',ones(size(f_axis_hz)), ...
+    'reflect_fm',ones(size(f_axis_hz))),phase_geometry,'direct_dsp');
 audit.files = struct('csv', csv_file, 'mat', mat_file, ...
     'figure', figure_file, 'report', report_file);
-save(mat_file, 'audit');
+schema_version=audit.schema_version;
+phase_reference_meta=audit.phase_reference_meta;
+save(mat_file,'audit','schema_version','phase_reference_meta','validation_run_meta');
 local_write_report(report_file, audit);
 
 disp(case_table);
@@ -400,7 +409,8 @@ if fid < 0, error('Cannot create report: %s', report_file); end
 cleanup = onCleanup(@() fclose(fid));
 fprintf(fid, '# PE 均匀介质相位与载波约定审计\n\n');
 fprintf(fid, '## 结论\n\n');
-fprintf(fid, '审计状态：`%s`。该脚本只读取主线 PE 输出，没有修改传播器或公共 CIR 工具。\n\n', ...
+fprintf(fid, ['审计状态：`%s`。该脚本读取公共 PE 的显式 reduced/physical 字段，', ...
+    '并独立验证载波恢复符号；载波相位统一由公共相位参考层完成。\n\n'], ...
     string(audit.passed));
 fprintf(fid, ['PE 单步约化传播算子对应 `exp(i*d*(kz-k0))`；在 `exp(-i*omega*t)` ', ...
     '时间约定下，验证层选择正号参考载波 `exp(+i*k0*d)`，并用 FFT 将正相位斜率映射到正时延。\n\n']);
@@ -425,7 +435,7 @@ fprintf(fid, ['## 限制\n\n角谱参考使用相同离散高斯初场和无限�
     '`1e-14`，使海绵层在数值上可忽略而仍满足公共 API 的正数约束。', ...
     '表中的频率斜率群时延包含有限宽高斯波束的频率相关衍射，不应单独当作点源几何时延；', ...
     '本审计判断的是 PE 与同初场角谱参考的闭合，点路径位置另由 CIR 峰与解析解检查。', ...
-    '现有 `build_physical_cir_vertical` 未被修改，', ...
-    '本报告的 FFT 变换仅属于验证层。\n']);
+    '本报告内部的 FFT 只用于 `exp(-i*omega*t)` 物理相量审计；', ...
+    '面向 MATLAB IFFT 的公共信道应使用 `direct_dsp` 字段。\n']);
 clear cleanup
 end

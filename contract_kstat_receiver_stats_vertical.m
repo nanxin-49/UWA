@@ -42,8 +42,8 @@ alpha_f = 4*pi*projection.f_axis_hz(:)/projection.c0_mps;
 R0_f = repmat(complex(projection.reflect_coeff),F,1);
 R_coh_f = R0_f.*exp(-0.5*alpha_f.^2*sigma_eta2);
 
-C_H = complex(zeros(F,F));
-P_H = complex(zeros(F,F));
+C_H_reduced = complex(zeros(F,F));
+P_H_reduced = complex(zeros(F,F));
 pair_count = F*(F+1)/2;
 pair_time_s = zeros(pair_count,1);
 pair_index = 0;
@@ -82,26 +82,39 @@ for ii = 1:F
             C_value = ai'*(C_matrix*aj);
             P_value = ai'*(P_matrix*conj(aj));
         end
-        C_H(ii,jj) = C_value;
-        C_H(jj,ii) = conj(C_value);
-        P_H(ii,jj) = P_value;
-        P_H(jj,ii) = P_value;
+        C_H_reduced(ii,jj) = C_value;
+        C_H_reduced(jj,ii) = conj(C_value);
+        P_H_reduced(ii,jj) = P_value;
+        P_H_reduced(jj,ii) = P_value;
         pair_index = pair_index+1;
         pair_time_s(pair_index) = toc(pair_timer);
     end
 end
 total_s = toc(total_timer);
 
-hermitian_error_before = norm(C_H-C_H','fro')/max(norm(C_H,'fro'),eps);
-pseudo_symmetry_error_before = norm(P_H-P_H.','fro')/max(norm(P_H,'fro'),eps);
-C_H = 0.5*(C_H+C_H');
-P_H = 0.5*(P_H+P_H.');
+hermitian_error_before = norm(C_H_reduced-C_H_reduced','fro')/max(norm(C_H_reduced,'fro'),eps);
+pseudo_symmetry_error_before = norm(P_H_reduced-P_H_reduced.','fro')/max(norm(P_H_reduced,'fro'),eps);
+C_H_reduced = 0.5*(C_H_reduced+C_H_reduced');
+P_H_reduced = 0.5*(P_H_reduced+P_H_reduced.');
+geometry = local_projection_geometry(projection);
+H_direct_reduced_f = local_projection_field(projection, ...
+    'H_direct_reduced_f','H_direct_f');
+H_ref_coh_reduced_f = local_projection_field(projection, ...
+    'H_ref_coh_reduced_f','H_ref_coh_f');
+[deterministic_dsp,phase_meta] = apply_pe_channel_phase_reference_vertical( ...
+    projection.f_axis_hz(:),struct('direct_f',H_direct_reduced_f, ...
+    'reflect_coh_f',H_ref_coh_reduced_f),geometry,'direct_dsp');
+d = phase_meta.reflect_dsp_factor_f(:);
+C_H = d.*C_H_reduced.*conj(d.');
+P_H = d.*P_H_reduced.*d.';
 augmented = [C_H,P_H;conj(P_H),conj(C_H)];
 augmented = 0.5*(augmented+augmented');
 augmented_eigenvalues = real(eig(augmented));
 
-mu_scatter_f = complex(zeros(F,1));
-mu_total_f = projection.H_direct_f(:)+projection.H_ref_coh_f(:)+mu_scatter_f;
+mu_scatter_reduced_f = complex(zeros(F,1));
+mu_scatter_f = d.*mu_scatter_reduced_f;
+mu_total_reduced_f = H_direct_reduced_f+H_ref_coh_reduced_f+mu_scatter_reduced_f;
+mu_total_f = deterministic_dsp.direct_f+deterministic_dsp.reflect_coh_f+mu_scatter_f;
 stats = struct();
 stats.method = options.method;
 stats.f_axis_hz = projection.f_axis_hz(:);
@@ -109,13 +122,19 @@ stats.mu_scatter_f = mu_scatter_f;
 stats.mu_total_f = mu_total_f;
 stats.C_H = C_H;
 stats.P_H = P_H;
+stats.mu_scatter_reduced_f = mu_scatter_reduced_f;
+stats.mu_total_reduced_f = mu_total_reduced_f;
+stats.C_H_reduced = C_H_reduced;
+stats.P_H_reduced = P_H_reduced;
 stats.E_abs_H2_f = abs(mu_scatter_f).^2+real(diag(C_H));
+stats.E_abs_H2_reduced_f = abs(mu_scatter_reduced_f).^2+real(diag(C_H_reduced));
 stats.R_coh_f = R_coh_f;
 stats.sigma_eta2_m2 = sigma_eta2;
 stats.augmented_covariance_eigenvalues = augmented_eigenvalues;
 stats.augmented_covariance_min_eigenvalue = min(augmented_eigenvalues);
 stats.deltaG_definition = projection.deltaG_definition;
 stats.weight_definition = projection.weight_definition;
+stats.phase_reference_meta = phase_meta;
 
 dense_block_bytes = 2*Nxy^2*16;
 full_dense_cp_bytes = 2*F^2*Nxy^2*16;
@@ -140,6 +159,23 @@ meta.lag_origin = '[1,1], unshifted FFT order';
 meta.pseudo_k_coupling = 'B_j=fft2(conj(a_j)); equivalent K/-K coupling is retained explicitly';
 meta.memory_snapshot_bytes = local_memory_used_bytes();
 meta.options = options;
+end
+
+function value = local_projection_field(projection,preferred,legacy)
+if isfield(projection,preferred), value=projection.(preferred)(:); else, value=projection.(legacy)(:); end
+end
+
+function geometry = local_projection_geometry(projection)
+if isfield(projection,'phase_geometry')
+    geometry=projection.phase_geometry;
+elseif isfield(projection,'phase_reference_meta')
+    m=projection.phase_reference_meta;
+    geometry=struct('z_tx',m.z_tx_m,'z_rx',m.z_rx_m, ...
+        'z_surface',m.z_surface_m,'c0',m.c0_mps);
+else
+    error('contract_kstat_receiver_stats_vertical:MissingPhaseGeometry', ...
+        'projection.phase_geometry is required for direct-DSP statistics.');
+end
 end
 
 function options = local_options(options)
