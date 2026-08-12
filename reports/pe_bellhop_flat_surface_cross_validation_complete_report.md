@@ -1,3 +1,10 @@
+> **Superseded（2026-07-23）**：本报告保留为历史证据，包含当前相位接口
+> 发布前的描述。当前版本结论以 `bellhop_current_20260723_rc5` 和
+> `reports/pe_bellhop_flat_surface_current_validation_report.md` 为准。
+> 当前验证直接读取公共 physical/direct-DSP 字段，不再手工恢复载波；
+> 结论为 `FAIL_CORE / amplitude OPEN`，原因是无 sponge aperture 有效性
+> 前提未满足，而不是载波符号或路径时延失败。
+
 # PE 与 Bellhop 平面海面交叉验证完整汇总报告
 
 报告日期：2026-07-21  

@@ -14,15 +14,21 @@ addpath(project_root);
 cfg = local_defaults();
 cfg = local_overrides(cfg, overrides);
 local_validate_cfg(cfg);
-out_dir = fullfile(project_root, 'results', 'validation', ...
-    'pe_phase_convention_uniform');
+out_dir = cfg.output_dir;
+if isempty(out_dir)
+    out_dir = fullfile(project_root, 'results', 'validation', ...
+        'pe_phase_convention_uniform');
+end
 if ~exist(out_dir, 'dir'), mkdir(out_dir); end
 
 fprintf('PE uniform-medium phase convention audit\n');
 f_axis_hz = linspace(cfg.frequency_band_hz(1), ...
     cfg.frequency_band_hz(2), cfg.frequency_count).';
-validation_run_meta=pe_phase_release_run_meta_vertical(project_root,struct( ...
-    'frequency_axis_hz',f_axis_hz,'seed_definition',struct('deterministic',true)));
+validation_run_meta=cfg.validation_run_meta;
+if isempty(validation_run_meta)
+    validation_run_meta=pe_phase_release_run_meta_vertical(project_root,struct( ...
+        'frequency_axis_hz',f_axis_hz,'seed_definition',struct('deterministic',true)));
+end
 case_count = numel(cfg.receiver_offsets_m);
 case_rows = repmat(local_empty_case_row(), case_count, 1);
 phase_records = repmat(struct(), case_count, 1);
@@ -177,6 +183,8 @@ cfg.convention_margin_factor = 3;
 cfg.group_delay_tolerance_ms = 0.25;
 cfg.peak_time_tolerance_ms = 0.25;
 cfg.invariant_tolerance = 1e-10;
+cfg.output_dir = '';
+cfg.validation_run_meta = [];
 end
 
 function cfg = local_overrides(cfg, overrides)

@@ -7,7 +7,7 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-07-22）
+## Authoritative Current-State Index / 权威当前状态索引（2026-07-23）
 
 ### Active core
 
@@ -56,6 +56,16 @@ superseded; a newer explicitly marked entry is authoritative.
 - F=9 (`df=500 Hz`) aliases a 4 ms delay and is not a phase-delay acceptance
   grid. The authoritative delay audit uses F=65 (`df=62.5 Hz`, 16 ms
   unambiguous window).
+- Current flat/uniform PE--Bellhop run `bellhop_current_20260723_rc5` is
+  **FAIL_CORE / amplitude OPEN**. Phase conversion and component closure were
+  at `0` and `3.5762e-18`; PE--analytic/PE--Bellhop maximum delay residuals
+  were `0.027282/0.027281 ms`; Bellhop--analytic was
+  `3.9304e-06 ms`; coherent/incoherent 5001--10001 beam RMS differences were
+  `0.19041/0.10193 dB`. The only core failure was the no-sponge aperture
+  validity prerequisite: 32/64 m edge levels were `-1.087/-14.532 dB`, both
+  above the required `-40 dB`, and the 32--64 m phase/TL differences were
+  `3.526 rad/-3.896 dB`. The current report and ten-figure atlas supersede
+  the 2026-07-21 complete report for present-version conclusions.
 
 ### Known limits and next checks
 
@@ -64,8 +74,13 @@ superseded; a newer explicitly marked entry is authoritative.
 - The formal adjoint configuration uses PE `128^2` / PM `256^2`; the accepted
   U=8 conditional branch deliberately retains its separately audited
   PE `128^2` / PM `384^2` aperture.
-- Bellhop source-normalization and doubled-window phase sensitivities remain
-  independent open validation issues.
+- Bellhop absolute-amplitude source normalization remains open: one global
+  direct-path scale gave `1.654 dB` scale spread and reflected TL RMS/max
+  `1.629/2.075 dB`; Gaussian source-aware direct-only weighting reduced its
+  diagnostic RMS from `0.815` to `0.502 dB` but is not an acceptance path.
+- The current 32/64 m no-sponge fields do not meet the `-40 dB` edge-validity
+  prerequisite, so they cannot be used to claim PE aperture convergence.
+  Sampling/step and sponge location/strength checks themselves passed.
 - The atlas emitted one cosmetic MATLAB title-format warning for `\Delta`;
   the saved fields, checks, and artifact counts are unaffected.
 - See `vertical_comm_guide.md` for current formulas,
@@ -2907,3 +2922,203 @@ nearest-grid receiver, or into bubbles/Doppler/layered/GPU modes.
 Bellhop source normalization and doubled-window sensitivity remain separate
 open studies. The atlas produced one harmless title-format warning involving
 `\Delta`; it did not affect saved data, validation checks, or deliverables.
+
+## 2026-07-23 Current-Version PE/Bellhop Flat-Surface Revalidation
+
+### Task and implementation
+
+This task replaced the old mixed-version Bellhop interpretation with an
+independent, run-ID-scoped validation batch. New interfaces are
+`pe_bellhop_current_run_meta_vertical.m`,
+`run_bellhop_flat_surface_arrivals_vertical.m`,
+`scripts/validation/validate_pe_bellhop_flat_surface_current_vertical.m`, and
+`scripts/reporting/generate_pe_bellhop_comparison_atlas_vertical.m`. The
+existing phase validator now accepts an explicit output directory and shared
+run metadata; the old Bellhop smoke validator explicitly requests
+`direct_dsp` and documents the public physical-field sign. No public PE
+marching, default surface model, communication entry, or carrier formula was
+changed.
+
+Formal mode requires a stable absolute non-Temp `BELLHOP_EXE`. The accepted
+external executable was
+`E:/MISC/BELLHOP/AcousticsToolbox_2017/Bellhop/bellhop.exe`, size 683637 bytes,
+SHA-256
+`e6f9c1bcfd2b0945bfb59607909af589fa7b3f823df8bd5121425736eaebd796`.
+The wrapper writes standard uniform/flat pressure-release `.env` cases,
+parses `.arr`, and classifies direct and one-surface paths by top/bottom bounce
+count and 0.1 ms delay clusters. It rejects case roots with filename
+extensions to avoid Bellhop root-name truncation.
+
+### Configuration, formulas, and semantics
+
+The final run is `bellhop_current_20260723_rc5`: Tx `[0,0,80] m`, Rx depth
+10 m, 3/6/9 m baselines, 4 kHz, PE 3--5 kHz/33 frequencies, `128^2` over
+32 m, `stepz_lamb=0.5`, uniform 1500 m/s, flat pressure-release surface,
+CPU double. The independent phase audit used F=65. Small-offset cases were
+0/0.25/0.5/1/3 m; Bellhop was not called at strict zero range. Bellhop fields
+used R/C/I and 5001/10001 beams. The PE window audit separated sampling,
+no-sponge 32/64 m aperture, sponge ratio 0.10/0.12/0.15, and sponge strength
+0.05/0.15/0.30. Window cases used `save_mode='slice'` so edge amplitude was
+measured from an actual receiver plane.
+
+The validator never restores a carrier manually. Reduced fields are used
+only for conversion closure, public `H_*_physical_f` for physical-delay
+comparisons, and direct-DSP fields for public/IFFT regression. Bellhop's
+4 kHz arrivals are extended over the PE frequency band only for delay/PDP
+diagnostics, not presented as frequency-resolved Bellhop amplitudes.
+
+### Results and decision
+
+The final layered decision is **FAIL_CORE**, with
+`amplitude_status=OPEN`. Passed evidence includes: independent phase audit;
+reduced/physical/direct-DSP conversion; `H_f` component closure; direct and
+surface path classification; baseline and small-offset delays; Bellhop beam
+convergence; PE sampling/step; sponge location/strength; scalar direct-only,
+direct-plus-reflect, wideband closure; and unchanged public defaults.
+
+Maximum PE--analytic and PE--Bellhop delay errors were `0.027281981 ms` and
+`0.027280961 ms`; Bellhop--analytic was `3.930416e-06 ms`. Coherent and
+incoherent beam-count RMS differences were `0.190410/0.101930 dB`. Phase
+conversion error was zero and the maximum public component closure error was
+`3.576224e-18`.
+
+The failed core item is specifically aperture validity. With sponge disabled,
+the 32/64 m receiver-plane edge levels were `-1.087/-14.532 dB`, not below the
+required `-40 dB`; the 32--64 m phase RMS and relative TL difference were
+`3.526186 rad` and `-3.896489 dB`. These results cannot serve as an aperture
+convergence reference. This failure does not overturn the independently
+closed phase, path, delay, or Bellhop beam results and does not motivate a PE
+core or carrier-reference change.
+
+Raw amplitude remained open: one global direct scale produced `1.65401 dB`
+cross-geometry spread and reflected RMS/max residuals of
+`1.62948/2.07510 dB`. The Gaussian angular-spectrum direct-only diagnostic
+reduced RMS from `0.815` to `0.502 dB`, but it never replaces raw Bellhop point
+source values or changes acceptance.
+
+### Artifacts, documentation, and remaining work
+
+The final MAT/CSV/Bellhop artifacts are under
+`results/validation/pe_bellhop_flat_surface_current/bellhop_current_20260723_rc5/`.
+The same-run visualization directory contains 10 numbered PNGs, an atlas MAT
+with comparison tables/checks, manifest, summary, and raw R/C/I field evidence.
+The current report is
+`reports/pe_bellhop_flat_surface_current_validation_report.md`; the 2026-07-21
+complete report is retained and marked Superseded. README, technical guide,
+and script index were synchronized.
+
+Remaining Bellhop work is deliberately separate from this task: enlarge the
+no-sponge aperture until the edge prerequisite is met, then repeat the
+aperture comparison; establish a common point/finite-width source amplitude
+normalization. Rough surfaces, joint-kstat, bottom interaction, stochastic
+channels, and communication performance were not part of this validation.
+
+## 2026-08-12 Reflection-Free PE/Bellhop Free-Space Audit
+
+The validation layer now has an additive custom initial-field hook while the
+public default remains Gaussian. `source_mode='custom_field_fn'` is used only
+by the free-space validators to initialize a virtual point source on the PE
+plane. `alpha_max_np_per_m=0` is an explicit, valid sponge-off setting. The
+production marching equations, exported channel fields, reflection branches,
+and communication consumers are unchanged.
+
+The evidence chain is separated into four levels: Bellhop normalization,
+production multi-step PE versus an independently coded one-step exact
+discrete angular spectrum, source-referenced PE versus
+`exp(i*k*R)/(4*pi*R)`, and source-referenced PE versus converted Bellhop.
+The validation stores both `H_plane` and `H_source=exp(i*k*s0)*H_plane` so the
+virtual-source carrier is restored only for physical comparisons.
+
+Bellhop uses the matched upper/lower halfspace construction from its official
+free-space point-source example. The audit measures `|p|R`, spatial phase
+sign, one constant source phase, beam/step convergence, and zero-bounce delay.
+The `1/(4*pi)` conversion is fixed once for every distance and frequency; no
+pointwise calibration is permitted. Outputs are under
+`results/validation/pe_bellhop_freefield/formal/`, with the decision report in
+`reports/pe_bellhop_freefield_validation_report.md`.
+
+The formal run used 3/4/5 kHz, `s0=[5,10,20] m`, `L=[20,40,70,100] m`,
+offsets `[0,0.5,1,2] m`, and a 256-square PE grid over 64 m. PE--AS passed at
+`1.42870e-13` maximum relative L2 error. Bellhop normalization and analytic
+comparison passed (`1.99322e-6 dB` maximum TL error), but PE--Bellhop failed
+with `18.2012 dB` maximum TL error, `1.38356 rad` phase RMS, and a
+`3.76572 ms` representative group-delay residual. The 32-to-64 m field study
+improved but did not converge to the infinite-aperture spherical field. The
+status is therefore `passed=false`: the production propagation operator is
+verified, while validation-local finite-plane point-source reconstruction is
+not. No PE marching formula or threshold was changed to force acceptance.
+
+## 2026-08-12 Point-Source Window/Sponge Error Budget
+
+The PE square-root marching operator and public Gaussian source semantics were
+explicitly frozen. A validation-only fixed-`dx=0.25 m` series used 24, 32, 48,
+64, 80, and 100 m transverse windows with sponge disabled. Production PE and
+independent one-step AS continued to agree within `8.65585e-13`, but neither
+the spatially truncated spherical plane nor the discrete FFT-Weyl plane
+converged monotonically to the analytic point source. At the public 100 m
+limit the spatial-plane amplitude error remained `+12.8509 dB`, equivalently
+`TL_PE - TL_analytic = -12.8509 dB`; the last two discrete
+Weyl windows differed by `3.23331 dB`.
+
+The raw Weyl `1/kz` spectrum has a grazing-circle integrable singularity, so a
+separate continuous axisymmetric Weyl reference was implemented with
+propagating `kz` and evanescent `q` substitutions. It matched
+`exp(i*k*R)/(4*pi*R)` to `2.41716e-13` relative error and is the reliable
+free-space baseline. The discrete FFT-Weyl initializer remains an explicitly
+failed diagnostic rather than a replacement production source.
+
+The sponge audit now covers the complete 6-window x 3-ratio x 6-strength
+matrix (108 rows). It defines `dA=20*log10(|H_sponge|/|H_no_sponge|)` and
+`dTL=TL_sponge-TL_no_sponge=-dA`. Across the complete matrix the maximum
+on-axis additional loss is `35.6811 dB` (24 m, ratio 0.15, 0.3 Np/m); in the
+100 m window alone the maximum is `5.99769 dB` (ratio 0.15, 0.3 Np/m).
+
+In the final 4 kHz, `s0=10 m`, `L=70 m`, offset 0/0.5/1/2 m Bellhop rerun,
+finite-window amplitude errors are `+12.851/+5.520/-0.613/+9.612 dB`, hence
+the correctly signed TL errors are `-12.851/-5.520/+0.613/-9.612 dB`. For
+the selected ratio 0.12/strength 0.15 sponge, the amplitude changes are
+`-4.585/-16.223/-6.268/-5.092 dB`, equivalently additional TL values of
+`+4.585/+16.223/+6.268/+5.092 dB`. The axis phase change is `-0.980475 rad`.
+At the terminal plane, center (`rho<=2 m`), edge (ratio-defined sponge band),
+and total energies change by `-2.40739/-5.16144/-3.83990 dB`, respectively.
+Final PE--Bellhop TL errors are `-8.266/+10.703/+6.881/-4.520 dB`.
+Bellhop--analytic remained below `8e-7 dB`.
+The post-budget comparison therefore remains `passed=false`; its disagreement
+is quantitatively assigned to finite-plane/periodic-image and sponge effects,
+not to the already verified PE marching operator.
+
+## 2026-08-12 Production Gaussian Window/Sponge Audit
+
+This follow-up stops point-source/Bellhop expansion and freezes the square-root
+marching operator, FFT convention, Gaussian mathematics, surface model, and
+communication modulation. The exact production Gaussian expression was moved
+without algebraic change into `gaussian_source_initial_field_vertical.m` so
+production and validation call the same implementation; direct comparison to
+the old expression is exactly zero. Validation-only opt-ins permit 0.05--0.20
+sponge ratios and windows up to 200 m while normal public defaults and limits
+remain unchanged.
+
+The homogeneous direct-only audit uses 4 kHz, `sigma=0.3 m`, fixed
+`dx=50/256 m`, path lengths 20/40/70/97/100 m, and no bubbles, surface,
+Doppler, randomness, or communication processing. Gaussian PE--independent AS
+passed with maximum full/center complex L2 `2.56337e-13/1.45326e-13`.
+No-sponge 128 m converged to 160 m at 4 kHz, but 128 m had a 3--5 kHz maximum
+TL error of `0.100293 dB`, narrowly exceeding the preregistered 0.1 dB target.
+
+At the production 50 m/97 m case the no-sponge field reaches the FFT boundary:
+outer 5%/10% energy fractions are `0.1130/0.2176` and boundary amplitude is
+only `-1.2879 dB` relative to the plane maximum. The current ratio 0.12,
+alpha 0.15 sponge gives `dA=+0.62225 dB`, `dTL=-0.62225 dB`, axis phase
+change `-0.148555 rad`, center (`rho<=2 m`) energy change `-0.047554 dB`,
+edge change `-2.77763 dB`, and total change `-0.824556 dB`. None of the 126
+window/ratio/strength rows met all fixed center targets plus 3 dB edge
+suppression.
+
+Against 160 m/no-sponge over 3--5 kHz, production/default has maximum TL error
+`0.842225 dB`, phase RMS/max `0.131866/0.285952 rad`, and group-delay RMS/max
+`232.649/1326.814 us`. The 128 m/no-sponge compromise gives
+`0.100293 dB`, `0.003286/0.011962 rad`, and `8.636/33.558 us`.
+The strict recommendation is therefore 160 m/no-sponge; 128 m/no-sponge is a
+near-threshold cost option. No production default was changed. Full report and
+16 figures are under `reports/pe_gaussian_window_sponge_validation_report.md`
+and `results/validation/pe_gaussian_window_sponge/`.

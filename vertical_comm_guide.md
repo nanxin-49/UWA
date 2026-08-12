@@ -308,9 +308,93 @@ explicit Kirchhoff 与 joint-kstat 的独立 realization 不应做像素点对�
 - 精确伴随 v1 不覆盖 layered、bubble、Doppler、GPU、多接收机或插值采样。
 - absolute-physical 相量用于物理审计和展示；通信默认消费 direct-DSP。
 - Bellhop 严格矩阵仍保留其源归一化和横向窗口敏感性未通过项；载波相位修复不自动解决这些独立问题。
+
+### 当前 PE/Bellhop 平面海面复验（2026-07-23）
+
+当前权威批次为 `bellhop_current_20260723_rc5`。验证脚本显式使用
+`channel_phase_reference='direct_dsp'`，reduced 字段只用于算子闭合，
+`H_*_physical_f` 用于物理时延比较；脚本不再手工补第二次载波。
+相位转换误差为 0，公共分量闭合误差为 `3.5762e-18`。3/6/9 m 以及
+0.25/0.5/1 m 小偏移中，PE--解析和 PE--Bellhop 最大时延差分别为
+`0.027282 ms` 与 `0.027281 ms`，Bellhop--解析最大差为
+`3.9304e-06 ms`。目标直达/一次海面反射簇均存在且无海底反射混入。
+
+Bellhop 5001/10001 beams 的 coherent/incoherent TL 场 RMS 差为
+`0.19041/0.10193 dB`，通过门限。PE sampling、纵向步长、sponge 位置与
+强度也通过；但关闭 sponge 后，32 m 与 64 m 接收平面边缘仅为峰值的
+`-1.087/-14.532 dB`，没有达到 `-40 dB` 的有效 aperture 前提，且
+32--64 m 的相位/TL 差为 `3.526 rad/-3.896 dB`。因此当前分层结论必须
+保留为 `FAIL_CORE`，不能宣称横向 aperture 已收敛。这不否定已经独立
+闭合的载波符号、路径和时延，也不要求修改公共 PE marching 核。
+
+幅度结论独立为 `OPEN`：单一全局直达尺度后的跨几何跨度为
+`1.654 dB`，反射 TL RMS/最大误差为 `1.629/2.075 dB`。Gaussian
+angular-spectrum source-aware 结果只用于解释点源/有限宽源口径，不能
+替换原始 Bellhop 幅度或强制通过。完整门限表见
+`reports/pe_bellhop_flat_surface_current_validation_report.md`，10 张共享
+尺度对比图位于
+`results/visualization/pe_bellhop_flat_surface_current/bellhop_current_20260723_rc5/`。
 - 任何旧 MAT 若缺少可靠几何 metadata，都不得依据模糊 signed delay 静默迁移。
 
-## 13. Li et al. (2009) 独立显式海面验证
+## 13. 无反射自由场四层审计（2026-08-12）
+
+审计保留两个相位参考：初始平面量为
+`H_plane = Psi(L)*exp(i*k*L)`，物理虚拟点源量为
+`H_source = exp(i*k*s0)*H_plane`。PE--AS 使用前者；解析球面波和
+Bellhop 比较使用后者。验证初始场为
+`exp(i*k*(R0-s0))/(4*pi*R0)`，仅通过
+`source_mode='custom_field_fn'` 注入；公共 Gaussian 默认值不变。
+
+Bellhop 在匹配上下半空间中对 20/40/70/100 m 实测归一化。确认
+`|p_BH|R`、空间相位符号和唯一源相位常数后，所有距离和频率统一使用
+一次 `1/(4*pi)` 转换，绝不做逐距离或逐频率拟合。本审计排除海面、
+海底、粗糙度、气泡、Doppler、随机信道和通信处理。
+
+### 点源有限窗口与 sponge 误差预算
+
+后续审计冻结完整平方根 marching 和默认 Gaussian 语义。无 sponge、
+固定 `dx=0.25 m` 的 24--100 m 窗口中，PE 与同一离散初始场的一步 AS
+始终保持约 `1e-12`，但空间截断球面波和离散 FFT-Weyl 均未收敛到
+无限孔径点源。100 m 空间截断的幅度误差为 `+12.8509 dB`，按
+`TL_PE-TL_analytic` 定义则为 `-12.8509 dB`。
+
+连续 Weyl 积分使用传播谱 `kz` 和倏逝谱 `q` 的变量替换去除掠射
+`1/kz` 奇异性，与解析 Green 函数的相对误差为 `2.41716e-13`，因此
+它是可靠基准；离散 FFT-Weyl 只保留为失败诊断。100 m 窗口的独立
+sponge 的符号统一为 `dA=20log10(|H_sponge|/|H_no_sponge|)`、
+`dTL=TL_sponge-TL_no_sponge=-dA`。完整的 6 窗口 x 3 ratio x 6 强度
+扫描共 108 行；全矩阵 on-axis `dTL` 最大为 `35.6811 dB`，而仅在
+100 m 窗口内最大为 `5.99769 dB`。默认 100 m、ratio 0.12、
+`alpha_max=0.15 Np/m` 在轴上给出 `dA=-4.58501 dB`、
+`dTL=+4.58501 dB`、相位变化 `-0.980475 rad`；终端面中心圆盘
+(`rho<=2 m`)、sponge 边缘带和总能量分别变化
+`-2.40739/-5.16144/-3.83990 dB`。最终 0--2 m
+偏移复跑中，有限窗口、sponge 和总 PE--Bellhop TL 误差分别单独保存，
+总比较仍未通过。这些结果不授权修改 PE marching 核心。
+
+### 生产 Gaussian 有限窗口与 sponge 审计（2026-08-12）
+
+生产初场精确为
+`exp(-((x-x_tx)^2+(y-y_tx)^2)/(2*sigma_src_m^2))`，默认
+`sigma_src_m=0.3 m`，单位峰值、无额外归一化、初场不随频率变化。
+共享 helper 只是把原有表达式抽出供生产与验证共同调用，逐点差为 0。
+
+在固定生产采样 `dx=50/256 m` 下，Gaussian PE--独立 AS 全场最大误差
+为 `2.56337e-13`。4 kHz 的 128 m no-sponge 场已相对 160 m 收敛；但
+3--5 kHz 严格比较中，128 m 最大 TL 误差为 `0.100293 dB`，略高于
+预注册 0.1 dB 目标，因此严格推荐保留 160 m/no-sponge，128 m 仅为
+计算成本折中。
+
+生产 50 m、ratio 0.12、alpha 0.15 在 97 m/4 kHz 下给出
+`dA=+0.62225 dB`、`dTL=-0.62225 dB`、轴上相位变化
+`-0.148555 rad`、中心能量变化 `-0.047554 dB`，边缘能量仅降低
+`2.77763 dB`。无 sponge 时终端最外 5%%/10%% 能量占比为
+`11.30%%/21.76%%`，边界幅度仅比场峰低 `1.288 dB`，表明确有周期边界
+污染。完整非零 sponge 扫描中没有配置同时满足中心固定目标和至少
+3 dB 边缘抑制。因此当前默认 sponge 不推荐继续作为已验证生产配置，
+但本任务不自动修改默认值；变更应在计算成本及反射全链资格验证后评审。
+
+## 14. Li et al. (2009) 独立显式海面验证
 
 `li2009_explicit_surface_validation.m` 和
 `scripts/validation/validate_li2009_explicit_surface_vertical.m` 是独立的纯声学验证路径，

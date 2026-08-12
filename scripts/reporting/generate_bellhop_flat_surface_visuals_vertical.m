@@ -22,7 +22,11 @@ loaded = load(source_file, 'validation');
 if ~isfield(loaded, 'validation')
     error('source_validation_mat must contain validation.');
 end
-matrix_validation = loaded.validation;
+if isfield(loaded.validation,'matrix_validation')
+    matrix_validation = loaded.validation.matrix_validation;
+else
+    matrix_validation = loaded.validation;
+end
 
 cfg = local_defaults(project_root, source_file, matrix_validation);
 cfg = local_overrides(cfg, overrides);

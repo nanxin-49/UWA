@@ -3,7 +3,7 @@
           surface_elevation, delta_phi, psi_ref, roughness_meta, ...
           h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
           f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref, bubble_meta, ...
-          surface_wavefield_meta, surface_ssa_component_meta, phase_reference_output] = ...
+          surface_wavefield_meta, surface_ssa_component_meta, phase_reference_output, source_meta] = ...
           vertical_wape_propagator(cfg)
 %VERTICAL_WAPE_PROPAGATOR
 % Upward marching PE in z (z axis is positive downward).
@@ -60,9 +60,11 @@ if ~isempty(cfg.doppler_fn)
     end
 end
 
-% --- initial Gaussian source at z=z_tx ---
-psi_init_cpu = exp(-((X - cfg.x_tx).^2 + (Y - cfg.y_tx).^2) / (2*cfg.sigma_src_m^2));
-psi_init_cpu = complex(psi_init_cpu, 0);
+% --- default Gaussian source at z=z_tx ---
+psi_gaussian_cpu = [];
+if strcmp(cfg.source_mode,'gaussian')
+    psi_gaussian_cpu = gaussian_source_initial_field_vertical(X,Y,cfg);
+end
 
 % --- spectral grid ---
 kx = (2*pi/cfg.xw) * [0:(cfg.nx/2-1), -cfg.nx/2:-1];
@@ -110,6 +112,7 @@ roughness_meta = local_disabled_roughness_meta(cfg);
 bubble_meta = struct('enabled', false, 'model', 'off');
 surface_wavefield_meta = local_disabled_surface_wavefield_meta(cfg);
 surface_ssa_component_meta = local_disabled_surface_ssa_component_meta(cfg, f_axis);
+source_meta_by_frequency = cell(Nf,1);
 
 for ifq = 1:Nf
     f_hz = f_axis(ifq);
@@ -119,6 +122,28 @@ for ifq = 1:Nf
     numstep_f = max(1, ceil(path_span_used / dz_abs_f));
     dz_step_f = -path_span_used / numstep_f;
     ds = abs(dz_step_f);
+
+    if strcmp(cfg.source_mode,'gaussian')
+        psi_init_cpu = psi_gaussian_cpu;
+        [~,source_meta_by_frequency{ifq}] = gaussian_source_initial_field_vertical(X,Y,cfg);
+        source_meta_by_frequency{ifq}.frequency_hz=f_hz;
+    else
+        [psi_init_cpu,source_meta_by_frequency{ifq}] = ...
+            cfg.source_field_fn(X,Y,f_hz,cfg);
+        if ~(isnumeric(psi_init_cpu) && isequal(size(psi_init_cpu),[cfg.ny,cfg.nx]) && ...
+                all(isfinite(psi_init_cpu(:))))
+            error('source_field_fn must return a finite numeric ny-by-nx field.');
+        end
+        if isa(psi_init_cpu,'gpuArray')
+            error('source_field_fn must return a CPU array; GPU transfer is handled by the propagator.');
+        end
+        psi_init_cpu = double(psi_init_cpu);
+        if ~(isstruct(source_meta_by_frequency{ifq}) && isscalar(source_meta_by_frequency{ifq}))
+            error('source_field_fn metadata output must be a scalar struct.');
+        end
+        source_meta_by_frequency{ifq}.mode = 'custom_field_fn';
+        source_meta_by_frequency{ifq}.frequency_hz = f_hz;
+    end
 
     denom = sqrt(complex(k0^2 - kappa2, 0)) + k0;
     fr0_cpu = exp(-1i * 0.5 * ds * kappa2 ./ denom);
@@ -358,6 +383,8 @@ phase_reference_output = struct( ...
     'h_reflect_physical',physical.reflect_fm(idx_f_ref), ...
     'h_total_physical',physical.total_fm(idx_f_ref), ...
     'phase_reference_meta',phase_meta);
+source_meta = struct('mode',cfg.source_mode, ...
+    'frequency_hz',f_axis(:),'by_frequency',{source_meta_by_frequency});
 
 if isfield(surface_ssa_component_meta,'recorded_frequency_mask') && ...
         any(surface_ssa_component_meta.recorded_frequency_mask)

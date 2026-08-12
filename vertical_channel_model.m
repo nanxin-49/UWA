@@ -37,7 +37,7 @@ disp(['surface_reflect_coeff=', num2str(cfg.surface_reflect_coeff), ...
  surface_elevation, delta_phi, psi_ref, roughness_meta, ...
  h_direct, h_reflect, h_total, rx_state_used, fd_hz_used, ...
  f_axis, H_direct_f, H_reflect_f, H_f, idx_f_ref, bubble_meta, ...
- surface_wavefield_meta, surface_ssa_component_meta, phase_reference_output] = ...
+ surface_wavefield_meta, surface_ssa_component_meta, phase_reference_output, source_meta] = ...
     vertical_wape_propagator(cfg);
 
 if cfg.enforce_1_over_R
@@ -100,6 +100,7 @@ end
 output.bubble_meta = bubble_meta;
 output.surface_wavefield_meta = surface_wavefield_meta;
 output.surface_ssa_component_meta = surface_ssa_component_meta;
+output.source_meta = source_meta;
 output.config = cfg;
 
 if cfg.show_figures
@@ -133,9 +134,13 @@ defaults = struct( ...
     'doppler_fn', [], ...
     'nout', 6, ...
     'sigma_src_m', 0.3, ...
+    'source_mode', 'gaussian', ...
+    'source_field_fn', [], ...
     'taper_ratio', 0.12, ...
     'sponge_ratio', 0.12, ...
     'alpha_max_np_per_m', 0.15, ...
+    'validation_allow_extended_sponge_ratio', false, ...
+    'validation_allow_extended_window', false, ...
     'env_mode', 'uniform', ...
     'show_figures', true, ...
     'enforce_1_over_R', true, ...
@@ -257,8 +262,15 @@ end
 if cfg.xw <= 0 || cfg.yw <= 0
     error('xw and yw must be positive.');
 end
-if cfg.xw > 100 || cfg.yw > 100
-    error('xw and yw must be <= 100 m (kilometer-scale domains are forbidden in this mode).');
+if ~(isscalar(cfg.validation_allow_extended_window) && ...
+        (islogical(cfg.validation_allow_extended_window) || isnumeric(cfg.validation_allow_extended_window)))
+    error('validation_allow_extended_window must be a scalar logical flag.');
+end
+cfg.validation_allow_extended_window=logical(cfg.validation_allow_extended_window);
+window_limit_m=100;
+if cfg.validation_allow_extended_window, window_limit_m=200; end
+if cfg.xw > window_limit_m || cfg.yw > window_limit_m
+    error('xw and yw must be <= %.0f m for the selected mode.',window_limit_m);
 end
 
 if cfg.z_max <= 0
@@ -482,18 +494,38 @@ end
 
 cfg = local_validate_bubble_config(cfg);
 
-if cfg.sigma_src_m > 2
-    error('sigma_src_m > 2 m is not allowed: beam divergence becomes too small for this 100 m upward test.');
+cfg.source_mode = local_normalize_choice(cfg.source_mode, 'source_mode');
+if ~ismember(cfg.source_mode, {'gaussian','custom_field_fn'})
+    error('source_mode must be ''gaussian'' or ''custom_field_fn''.');
 end
-if cfg.sigma_src_m < 0.2 || cfg.sigma_src_m > 0.5
-    error('sigma_src_m must be in [0.2, 0.5] m for this v1 implementation.');
+if ~(isempty(cfg.source_field_fn) || isa(cfg.source_field_fn,'function_handle'))
+    error('source_field_fn must be empty or a function handle.');
+end
+if strcmp(cfg.source_mode,'custom_field_fn') && isempty(cfg.source_field_fn)
+    error('source_field_fn is required when source_mode=''custom_field_fn''.');
 end
 
-if cfg.sponge_ratio < 0.10 || cfg.sponge_ratio > 0.15
-    error('sponge_ratio must be in [0.10, 0.15].');
+if strcmp(cfg.source_mode,'gaussian')
+    if cfg.sigma_src_m > 2
+        error('sigma_src_m > 2 m is not allowed: beam divergence becomes too small for this 100 m upward test.');
+    end
+    if cfg.sigma_src_m < 0.2 || cfg.sigma_src_m > 0.5
+        error('sigma_src_m must be in [0.2, 0.5] m for this v1 implementation.');
+    end
 end
-if ~(isscalar(cfg.alpha_max_np_per_m) && isfinite(cfg.alpha_max_np_per_m) && cfg.alpha_max_np_per_m > 0)
-    error('alpha_max_np_per_m must be a positive finite scalar.');
+
+if ~(isscalar(cfg.validation_allow_extended_sponge_ratio) && ...
+        (islogical(cfg.validation_allow_extended_sponge_ratio) || isnumeric(cfg.validation_allow_extended_sponge_ratio)))
+    error('validation_allow_extended_sponge_ratio must be a scalar logical flag.');
+end
+cfg.validation_allow_extended_sponge_ratio=logical(cfg.validation_allow_extended_sponge_ratio);
+ratio_limits=[0.10 0.15];
+if cfg.validation_allow_extended_sponge_ratio, ratio_limits=[0.05 0.20]; end
+if cfg.sponge_ratio < ratio_limits(1) || cfg.sponge_ratio > ratio_limits(2)
+    error('sponge_ratio must be in [%.2f, %.2f] for the selected mode.',ratio_limits);
+end
+if ~(isscalar(cfg.alpha_max_np_per_m) && isfinite(cfg.alpha_max_np_per_m) && cfg.alpha_max_np_per_m >= 0)
+    error('alpha_max_np_per_m must be a nonnegative finite scalar.');
 end
 
 f_for_grid = cfg.f0(1);
@@ -523,7 +555,7 @@ if abs(cfg.x_rx) > 0.5*cfg.xw || abs(cfg.y_rx) > 0.5*cfg.yw
     error('Rx location (x_rx,y_rx) must lie inside the transverse domain.');
 end
 
-if cfg.sigma_src_m < max(cfg.dx, cfg.dy)
+if strcmp(cfg.source_mode,'gaussian') && cfg.sigma_src_m < max(cfg.dx, cfg.dy)
     error('sigma_src_m must be >= max(dx,dy) to avoid spatial aliasing.');
 end
 

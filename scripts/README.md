@@ -141,28 +141,109 @@ The atlas distinguishes physical boundary models from computational acceleration
 
 ## PE/Bellhop Flat-Surface Cross-Validation
 
+### Reflection-free four-level audit
+
+- `validation/validate_pe_as_freefield_vertical.m` compares production
+  multi-step marching with an independently coded one-step exact discrete
+  angular-spectrum propagator. The sponge is exactly off for this hard gate.
+- `validation/validate_bellhop_freefield_normalization_vertical.m` reproduces
+  the matched-halfspace construction of Bellhop's official free-space point
+  source example. It measures `|p|R`, spatial phase sign, the constant source
+  phase, beam/step convergence, and zero-bounce arrival delay before applying
+  the single global `1/(4*pi)` Green-function conversion.
+- `validation/validate_pe_bellhop_freefield_vertical.m` is the orchestration
+  entrypoint. It keeps explicit initial-plane and physical-source phase
+  references, compares PE/Bellhop/analytic complex fields, saves arrival and
+  convergence CSV files, and does not relax a failed tolerance.
+- `virtual_point_source_initial_field_vertical.m` is enabled only through the
+  additive `source_mode='custom_field_fn'` validation hook. Public defaults
+  remain `source_mode='gaussian'`.
+
+```matlab
+setenv('BELLHOP_EXE','E:/stable/path/to/bellhop.exe')
+addpath('scripts/validation')
+validation = validate_pe_bellhop_freefield_vertical();
+```
+
+Artifacts are under `results/validation/pe_bellhop_freefield/formal/`; the
+summary is `reports/pe_bellhop_freefield_validation_report.md`.
+
+### Point-source error-budget follow-up
+
+- `validation/validate_pe_point_source_error_budget_vertical.m` runs the
+  no-sponge fixed-`dx` window series, compares spatial truncation with a
+  discrete spectral-cell Weyl initializer, validates a separate continuous
+  Weyl integral, and then scans the complete window/thickness/strength matrix.
+  Its CSV explicitly reports `dA=20log10(|H_sponge|/|H_no_sponge|)` and
+  `dTL=-dA`, plus center (`rho<=2 m`), ratio-defined edge-band, and total
+  terminal-plane energies.
+- `weyl_point_source_reference_vertical.m` removes the grazing `1/kz`
+  singularity by separate propagating/evanescent substitutions; it is the
+  reliable free-space reference.
+- `weyl_point_source_initial_field_vertical.m` is the discrete FFT initializer
+  under test. Its failure to converge within the public 100 m window is
+  reported, not hidden.
+- `validation/rerun_pe_bellhop_point_source_postbudget_vertical.m` performs the
+  final representative Bellhop rerun only after the continuous Weyl gate.
+
+Outputs are in `results/validation/pe_point_source_error_budget/` and
+`results/validation/pe_bellhop_freefield/post_error_budget/`.
+
+### Production Gaussian window/sponge audit
+
+- `validation/validate_gaussian_window_convergence_vertical.m` calls the
+  production Gaussian path, performs the independent PE--AS hard gate, and
+  establishes a no-sponge reference using fixed production sampling.
+- `validation/validate_gaussian_sponge_vertical.m` evaluates the complete
+  50/80/128 m x 6-ratio x 7-strength matrix with explicit `dA`/`dTL`, center,
+  edge, total-energy, and edge-to-center diagnostic metrics.
+- `validation/validate_gaussian_sponge_wideband_vertical.m` compares the
+  3--5 kHz physical `H(f)`, unwrapped phase, and group delay for large
+  no-sponge, production/default, and recommended cases.
+- `reporting/generate_gaussian_sponge_validation_figures.m` emits the 15
+  requested figures plus an optional noiseless LFM diagnostic and the final
+  Q1--Q7 report.
+
+Outputs are under `results/validation/pe_gaussian_window_sponge/`; the report
+is `reports/pe_gaussian_window_sponge_validation_report.md`. Extended sponge
+ratios and windows are validation-only opt-ins; normal public limits and
+defaults are unchanged.
+
+- `validation/validate_pe_bellhop_flat_surface_current_vertical.m` is the
+  current formal entrypoint. It requires a stable absolute, non-Temp
+  `BELLHOP_EXE`, records the binary/source SHA-256 values, runs the independent
+  phase audit, 3/6/9 m paths, small-offset limit, source-aware diagnostic,
+  sampling/aperture/sponge matrix, public regressions, Bellhop R/C/I fields,
+  and the numbered ten-figure atlas.
 - `validation/validate_pe_bellhop_flat_surface_vertical.m` generates and runs a standard Bellhop ASCII-arrivals case matched to the existing PE model in a uniform medium with a flat pressure-release surface.
 - `validation/validate_pe_phase_convention_uniform_vertical.m` independently checks the PE reduced-envelope operator, longitudinal carrier sign, group delay, and validation-local FFT convention against one-step angular-spectrum propagation.
 - `validation/validate_pe_bellhop_flat_surface_matrix_vertical.m` runs the authoritative 3/6/9 m analytic--PE--Bellhop timing/amplitude comparison with an open Bellhop fan, plus the C0--C4 PE grid/window/step convergence matrix.
 - `reporting/generate_bellhop_flat_surface_visuals_vertical.m` reuses that saved matrix, runs Bellhop `R`/`C`/`I`, parses `.ray`/`.shd` locally, checks 5001/10001-beam convergence, and creates ray, shared-scale TL-field, and receiver-depth slice figures.
-- Set `BELLHOP_EXE` when `bellhop.exe` is not already on the MATLAB or system path.
+- Formal mode requires `BELLHOP_EXE` even if another Bellhop is on the MATLAB
+  or system path. Temporary paths and binary-hash changes are rejected.
 - The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
 - Outputs are written to `results/validation/pe_bellhop_flat_surface/`; the Markdown report records exact parameters, formulas, thresholds, results, and limitations.
 
 This stage deliberately excludes rough-surface scattering, bottom bounces, stochastic channels, and communication processing. Validators now consume the public `H_*_reduced_f` and `H_*_physical_f` fields instead of applying an independent hidden carrier convention.
 
-Run the phase audit before the matrix validator; the latter refuses to run
-unless the saved audit passed with carrier sign `+1`. The current matrix result
-passes timing and public-interface invariants but intentionally retains failed
-strict checks for cross-geometry source normalization and the doubled-window
-C2 phase comparison. Reports are under
-`results/validation/pe_phase_convention_uniform/` and
-`results/validation/pe_bellhop_flat_surface_matrix/`.
+Current formal command:
 
-Visualization outputs, including the original Bellhop files, CSV tables, MAT
-result, three PNG figures, and Markdown report, are under
-`results/visualization/bellhop_flat_surface/`. The display checks pass without
-changing the matrix `passed=false` status or any PE/communication source file.
+```matlab
+setenv('BELLHOP_EXE','E:/stable/path/to/bellhop.exe')
+addpath('scripts/validation')
+validation = validate_pe_bellhop_flat_surface_current_vertical();
+```
+
+The current run `bellhop_current_20260723_rc5` is `FAIL_CORE` with
+`amplitude_status=OPEN`: all phase/path/delay/beam/public checks pass, while
+the no-sponge aperture-only fields fail the `-40 dB` edge-validity prerequisite.
+Outputs are versioned under
+`results/validation/pe_bellhop_flat_surface_current/<run_id>/` and
+`results/visualization/pe_bellhop_flat_surface_current/<run_id>/`.
+
+The formal atlas contains 10 numbered PNGs plus MAT, CSV, manifest, and text
+summary. Older three-figure outputs remain historical evidence and do not
+override the current run ID.
 
 Use environment variables already supported by individual scripts to reduce grid size, seed count, or output file names for quick checks.
 

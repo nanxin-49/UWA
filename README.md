@@ -103,6 +103,50 @@ communication, public/cached regression, and a same-run propagation atlas.
 See `reports/pe_phase_reference_release_candidate_report.md` for the gate
 table and `results/visualization/pe_propagation_atlas/` for the figures.
 
+The current flat/uniform PE--Bellhop batch is
+`bellhop_current_20260723_rc5`. Phase reference, paths, delays, Bellhop beam
+convergence, PE sampling/step, sponge sensitivity, and public regressions
+passed. The layered decision remains **FAIL_CORE / amplitude OPEN** because
+the no-sponge 32/64 m aperture cases had edge levels of only
+`-1.09/-14.53 dB` versus the required `-40 dB`, so they cannot establish
+aperture convergence; raw source-normalized reflected TL also remains open.
+See `reports/pe_bellhop_flat_surface_current_validation_report.md` and the
+same-run ten-figure atlas under
+`results/visualization/pe_bellhop_flat_surface_current/`.
+
+The reflection-free source-matched audit is implemented separately by
+`scripts/validation/validate_pe_bellhop_freefield_vertical.m`. It uses a
+validation-only virtual point-source initial plane, an independent one-step
+angular-spectrum reference, a measured Bellhop free-space normalization, and
+an analytic `exp(i*k*R)/(4*pi*R)` reference. This audit does not modify the
+default Gaussian source or the production communication chain. Its report is
+`reports/pe_bellhop_freefield_validation_report.md`.
+
+The 2026-08-12 formal run passed the PE--AS implementation gate and the
+Bellhop--analytic free-space gate, but the overall decision is **FAIL** because
+the finite PE initial plane did not converge to the infinite-aperture point
+source. See the report before interpreting this as a PE marching error.
+
+The follow-up point-source error budget is
+`scripts/validation/validate_pe_point_source_error_budget_vertical.m`. It
+freezes the PE square-root marching operator and default Gaussian semantics,
+separates no-sponge finite-window error from sponge increments, and validates
+the continuous Weyl representation independently before the gated Bellhop
+rerun. Current results show that the public 100 m FFT window is not an
+infinite-aperture point-source benchmark. The sponge output now contains the
+complete 108-row window x ratio x alpha matrix and uses explicit, opposite-sign
+amplitude (`dA`) and transmission-loss (`dTL`) changes to prevent ambiguity.
+
+The production-Gaussian follow-up is
+`scripts/validation/validate_gaussian_window_convergence_vertical.m`,
+`validate_gaussian_sponge_vertical.m`, and
+`validate_gaussian_sponge_wideband_vertical.m`. At the 97 m production path,
+the current 50 m/default-sponge case is not center-neutral and the Gaussian
+field reaches the periodic boundary. The strict validation recommendation is
+160 m with sponge off; 128 m/no-sponge is a near-threshold cost compromise.
+No production default is changed automatically. See
+`reports/pe_gaussian_window_sponge_validation_report.md`.
+
 Run the carrier-phase and branch integration audit:
 
 ```matlab
