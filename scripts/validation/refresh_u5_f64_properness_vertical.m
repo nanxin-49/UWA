@@ -1,6 +1,6 @@
 function properness=refresh_u5_f64_properness_vertical()
 %REFRESH_U5_F64_PROPERNESS_VERTICAL Refresh prescribed-rule F=64 null test.
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 folder=fullfile(root,'results','validation','u5_conditional_channel_f64');
 rf=fullfile(folder,'u5_conditional_channel_validation_f64_full.mat');
 ef=fullfile(folder,'f64_full_ensembles.mat'); mf=fullfile(folder,'u5_conditional_channel_model_f64_full.mat');

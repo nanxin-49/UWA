@@ -1,6 +1,6 @@
 %% Exact discrete-adjoint PE receiver-projection feasibility validation
 clear; close all; clc;
-root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir);
+root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir); setup_vertical_project();
 addpath(fullfile(root_dir,'scripts','reporting'));
 out_dir=fullfile(root_dir,'results','validation','adjoint_pe_receiver_projection');
 if ~exist(out_dir,'dir'), mkdir(out_dir); end

@@ -1,6 +1,6 @@
 %% PE carrier-phase reference and migration validation
 clear; close all; clc;
-root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir);
+root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir); setup_vertical_project();
 out_dir=fullfile(root_dir,'results','validation','pe_channel_phase_reference');
 if ~exist(out_dir,'dir'), mkdir(out_dir); end
 validation_run_meta=pe_phase_release_run_meta_vertical(root_dir,struct( ...

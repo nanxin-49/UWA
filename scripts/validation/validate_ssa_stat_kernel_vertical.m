@@ -81,7 +81,7 @@ checks = local_add_check(checks, 'kirchhoff_normal_delta_phi_std_matches_2k_eta'
 
 flat_ssa1 = flat_ssa;
 flat_ssa1.surface_ssa_kernel_mode = 'ssa1_geometry';
-flat_ssa1.surface_ssa_geometry_source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+flat_ssa1.surface_ssa_geometry_source_id = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
     'Dirichlet SSA first-order / perturbation-limit geometry'];
 fprintf('Running Hs=0 ssa1_geometry flat-degeneration case.\n');
 channel_flat_ssa1 = vertical_channel_model(flat_ssa1);
@@ -243,7 +243,7 @@ checks = local_add_check(checks, 'ssa1_energy_limited', ssa1_energy_margin, 0, '
 checks = local_add_check(checks, 'ssa1_energy_conservation_error_small', ...
     meta_ssa1_energy.energy_conservation_error, tol_roundoff, '<=');
 checks = local_add_check(checks, 'ssa1_formula_source_recorded', ...
-    double(contains(meta_ssa1_energy.kernel_detail.formula_source, 'SSA.md')), 1, '==');
+    double(contains(meta_ssa1_energy.kernel_detail.formula_source, 'vertical_comm_guide.md')), 1, '==');
 checks = local_add_check(checks, 'ssa1_G_formula_recorded', ...
     double(contains(meta_ssa1_energy.kernel_detail.G_SSA1_formula, '4*gamma')), 1, '==');
 checks = local_add_check(checks, 'ssa1_boundary_condition_dirichlet', ...
@@ -363,7 +363,7 @@ validation_meta.tol_roundoff = tol_roundoff;
 validation_meta.all_passed = all(summary_table.passed);
 validation_meta.notes = ['SSA statistical kernel validation. pm_convolution remains ', ...
     'the engineering baseline; ssa1_geometry implements the Dirichlet first-order ', ...
-    'geometry factor from SSA.md but still does not cover NLSSA or calibration.'];
+    'geometry factor documented in vertical_comm_guide.md but still does not cover NLSSA or calibration.'];
 
 disp(summary_table(:, {'check_name', 'value', 'tolerance', 'comparison', 'passed'}))
 if ~validation_meta.all_passed

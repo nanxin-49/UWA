@@ -1,6 +1,6 @@
 %% Build the exact-node U=5/U=8 conditional receiver-channel library
 clear; clc;
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 validation_run_meta=pe_phase_release_run_meta_vertical(root,struct( ...
     'frequency_axis_hz',linspace(4000,8000,64).', ...
     'seed_definition',struct('library_u5',2500001,'library_u8',2500002)));

@@ -2,7 +2,7 @@
 % Set U5_CONDITIONAL_MODE=smoke or full. Public defaults remain unchanged.
 clear; close all; clc;
 root_dir=fileparts(fileparts(fileparts(mfilename('fullpath'))));
-addpath(root_dir); addpath(fileparts(mfilename('fullpath')));
+addpath(root_dir); setup_vertical_project();
 mode=lower(strtrim(getenv('U5_CONDITIONAL_MODE'))); if isempty(mode), mode='smoke'; end
 if ~ismember(mode,{'smoke','full'}), error('U5_CONDITIONAL_MODE must be smoke or full.'); end
 out_dir=fullfile(root_dir,'results','validation','u5_conditional_channel_f64');

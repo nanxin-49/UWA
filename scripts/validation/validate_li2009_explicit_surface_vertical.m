@@ -3,6 +3,7 @@
 clear; clc;
 root_dir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
 addpath(root_dir);
+setup_vertical_project();
 output_dir = fullfile(root_dir,'results','validation','li2009_explicit_surface');
 if ~exist(output_dir,'dir'), mkdir(output_dir); end
 

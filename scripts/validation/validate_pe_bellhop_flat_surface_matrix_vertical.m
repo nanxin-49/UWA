@@ -8,6 +8,7 @@ if nargin < 1 || isempty(overrides), overrides = struct(); end
 this_file = mfilename('fullpath');
 project_root = fileparts(fileparts(fileparts(this_file)));
 addpath(project_root);
+setup_vertical_project();
 
 cfg = local_defaults();
 cfg = local_overrides(cfg, overrides);

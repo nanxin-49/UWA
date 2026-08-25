@@ -1,418 +1,205 @@
-# 垂直水声 PE、海面统计与通信接口指南
+# 垂直水声 PE/WAPE 信道技术指南
 
-本文是当前实现的技术参考，面向需要审阅物理公式、代码数据流和结果语义的研究与开发人员。运行命令集中在 `scripts/README.md`，项目演进记录集中在 `PROJECT_CONTEXT.md`，具体实验数字和图表集中在 `reports/` 与 `results/`。
+本文件是当前实现的中文权威技术参考，说明物理约定、代码语义、公共字段、验证证据和已知限制。开发时间线保存在 `PROJECT_CONTEXT.md`，具体数值证据保存在 `reports/`；`docs/history/` 中的旧规格不是当前接口依据。
 
-## 1. 当前核心方案
+状态日期：2026-08-20。
 
-公共入口为：
+## 1. 坐标、时间与载波相位参考
 
-```matlab
-output = vertical_channel_model(paramsV);
-```
+- 海面为 `z=0`，深度向下为正。
+- 发射机满足 `z_tx>z_rx>=0`，向上传播对应 z 减小。
+- 物理相量约定为 `exp(-1i*omega*t)`；通信合成使用 MATLAB `ifft`。
+- PE 推进的是相对参考载波的复包络，不是逐周期求解的瞬时声压。
 
-核心数据流是：
-
-1. 在发射深度生成二维高斯复包络；
-2. PE/WAPE 向上传播到接收深度，得到直达 reduced envelope；
-3. 另一路传播到海面，应用海面边界，再传播到接收深度；
-4. 在接收端统一两条路径的载波相位参考；
-5. 形成宽带 (H(f))，供 CIR、LFM 或通信链消费。
-
-公共默认海面分支仍为 `kirchhoff_spatial`。cached PE、精确伴随投影、解析 FFT `C/P` 和条件统计生成器是研究/加速路径，不是新的海面物理模型。
-
-## 2. 坐标、时间与载波约定
-
-海面为 (z_s=0)，深度向下为正，且
+直达和海面反射的名义参考时延为
 
 \[
-0\le z_{\rm rx}<z_{\rm tx}.
-\]
-
-物理复相量采用
-
-\[
-p(t)=\Re\{P(f)e^{-i2\pi ft}\}.
-\]
-
-正传播时延在该物理相量约定下对应正频率相位斜率。MATLAB `ifft` 的 DSP 频响则采用相反符号：正相对时延对应
-
-\[
-e^{-i2\pi f\tau}.
-\]
-
-这两个符号分别服务于物理相量和 DSP 合成，不能混用。
-
-### 2.1 PE reduced envelope
-
-当前 split-step PE 的自由传播因子等价于
-
-\[
-e^{id(k_z-k_0)},
-\]
-
-因此 PE 数组保存的是去掉名义纵向载波 ($e^{ik_0d}$) 后的复包络。直达路径和海面反射路径具有不同的纵向跨度，二者的 raw PE 结果不能在没有统一参考的情况下直接解释为物理总信道。
-
-定义
-
-\[
-\tau_{\rm dir,0}=\frac{z_{\rm tx}-z_{\rm rx}}{c_0},
-\qquad
-\tau_{\rm ref,0}=\frac{z_{\rm tx}+z_{\rm rx}-2z_s}{c_0},
+\tau_{\mathrm{dir},0}=\frac{z_{\mathrm{tx}}-z_{\mathrm{rx}}}{c_0},\qquad
+\tau_{\mathrm{ref},0}=\frac{z_{\mathrm{tx}}+z_{\mathrm{rx}}-2z_s}{c_0},
 \]
 
 \[
-\Delta\tau_0=\tau_{\rm ref,0}-\tau_{\rm dir,0}.
+\Delta\tau_0=\tau_{\mathrm{ref},0}-\tau_{\mathrm{dir},0}.
 \]
 
-公共默认使用直达参考的 DSP 表示：
+标准几何 `z_tx=100 m`、`z_rx=3 m`、`z_s=0`、`c0=1500 m/s` 给出 `Delta tau0=4 ms`。这只是两条 PE 约化参考之间被消去的确定性载波延迟，不等于粗糙海面反射峰值的全部实际时延，也不允许分别把直达和反射峰“对齐”。
+
+公共默认 `paramsV.channel_phase_reference='direct_dsp'`：
 
 \[
-H_{\rm dir}^{\rm dsp}=H_{\rm dir}^{\rm red},
-\qquad
-H_{\rm ref}^{\rm dsp}
-=e^{-i2\pi f\Delta\tau_0}H_{\rm ref}^{\rm red}.
+H_{\mathrm{direct}}=H_{\mathrm{direct}}^{\mathrm{red}},\qquad
+H_{\mathrm{reflect}}=e^{-i2\pi f\Delta\tau_0}H_{\mathrm{reflect}}^{\mathrm{red}}.
 \]
 
-绝对物理相量为
+`legacy_reduced` 仅用于复现旧结果；它把分别约化的两条路径直接相加，不是统一物理相位的总信道。绝对物理相量另外保存为
 
 \[
-H_{\rm dir}^{\rm phys}
-=e^{+i2\pi f\tau_{\rm dir,0}}H_{\rm dir}^{\rm red},
+H_{\mathrm{dir}}^{\mathrm{phys}}=e^{+i2\pi f\tau_{\mathrm{dir},0}}H_{\mathrm{dir}}^{\mathrm{red}},\quad
+H_{\mathrm{ref}}^{\mathrm{phys}}=e^{+i2\pi f\tau_{\mathrm{ref},0}}H_{\mathrm{ref}}^{\mathrm{red}}.
 \]
 
-\[
-H_{\rm ref}^{\rm phys}
-=e^{+i2\pi f\tau_{\rm ref,0}}H_{\rm ref}^{\rm red}.
-\]
+载波相位只在各传播分量完成后转换，不进入 PE marching、海面边界、`deltaG`、伴随核或 PM 空间协方差。载波相位发布候选已通过，详见 `reports/pe_phase_reference_release_candidate_report.md`。
 
-标准几何 (z_{\rm tx}=100\rm,m)、(z_{\rm rx}=3\rm,m)、(c_0=1500\rm,m/s) 对应 97 m 直达跨度、103 m 海面反射跨度和 4 ms 名义相对参考延迟。
+## 2. PE/WAPE complex envelope
 
-4 ms 只恢复被两个 reduced PE 路径分别去除的确定性载波参考。PE 衍射、海面随机相位和有限带宽仍会改变实际 CIR/PDP 的峰值、展宽和群时延。程序不对每条 realization 的直达和反射峰分别对齐。
-
-## 3. 公共相位接口与输出
-
-输入项：
-
-```matlab
-paramsV.channel_phase_reference = 'direct_dsp';   % default
-paramsV.channel_phase_reference = 'legacy_reduced';
-```
-
-默认公共字段为 direct-DSP：
-
-- `H_direct_f`、`H_reflect_f`、`H_f`；
-- `h_direct`、`h_reflect`、`h_total`；
-- `H_f = H_direct_f + H_reflect_f`；
-- `h_total = H_f(idx_f_ref)`。
-
-附加的明确表示为：
-
-- `H_direct_reduced_f/H_reflect_reduced_f/H_total_reduced_f`；
-- `H_direct_physical_f/H_reflect_physical_f/H_physical_f`；
-- 对应参考频率标量；
-- `phase_reference_meta`。
-
-`legacy_reduced` 用于回归旧结果。`H_total_reduced_f` 是历史代数组合，不应再称为相位已经统一的物理总信道。
-
-## 4. PE/WAPE 推进
-
-发射平面采用二维高斯复包络
-
-\[
-\Psi_{\rm tx}(x,y)=
-\exp\left[-\frac{(x-x_{\rm tx})^2+(y-y_{\rm tx})^2}
-{2\sigma_{\rm src}^2}\right].
-\]
-
-一步 cached uniform 核心为：
+传播核心位于 `src/propagation/vertical_wape_propagator.m`。均匀介质的一步 cached transverse operator 保持以下顺序：
 
 ```matlab
 psi_k = fr .* fft2(screen .* ifft2(fr .* psi_k));
 ```
 
-`fr` 包含横向衍射的半步因子，`screen` 包含介质相位和 sponge 衰减。公共传播器还支持现有 layered/bubble/Doppler 配置；精确伴随原型仅覆盖已验证的 uniform CPU-double 固定路径。
-
-## 5. 海面边界模型
-
-### 5.1 显式 Kirchhoff
-
-`kirchhoff_spatial` 和 `kirchhoff_kdomain` 对具体海面 realization
-\(\eta(x,y)\) 应用近垂直相位屏：
+`fr` 表示半步横向谱传播，`screen` 包含该步介质相位和 sponge 衰减。输出空间图中的颜色通常表示复包络相对幅度，例如
 
 \[
-G_i(x,y)=R_{0,i}e^{i\alpha_i\eta(x,y)},
-\qquad
-\alpha_i=\frac{4\pi f_i}{c_0}=2k_{0,i}.
+20\log_{10}(|\psi|/|\psi|_{\mathrm{ref}}).
 \]
 
-压力释放面通常取 (R_0=-1)。`kirchhoff_kdomain` 是同一显式相位屏的波数域接口，不是另一套独立海面理论。
+它描述载波振幅和相位随传播的慢变结构；若展示 `real(psi*exp(-i2*pi*f*t))`，那只是单频载波重构动画，不是时域 PE 求解。
 
-### 5.2 joint-frequency Kirchhoff K-stat
-
-统计分支不需要显式海面 realization。其随机残差严格定义为
+公共实现逐频计算直达路径与“Tx→Surface→Rx”反射路径，并始终保持
 
 \[
-\delta G_i=R_{0,i}e^{i\alpha_i\eta}-R_{{\rm coh},i},
+H_f=H_{\mathrm{direct},f}+H_{\mathrm{reflect},f}.
 \]
+
+## 3. Gaussian 源、横向窗口与 sponge
+
+生产 Gaussian 初场由 `src/propagation/gaussian_source_initial_field_vertical.m` 构造。横向 FFT 网格是周期数值域，边缘能量会绕回中心；sponge 用于衰减边缘，但也可能改变目标接收响应，不能把 sponge 当成无限孔径的替代品。
+
+当前公共默认仍为 `xw=yw=50 m`、`sponge_ratio=0.12`、`alpha_max_np_per_m=0.15`，本次目录整理没有改变默认值。近期独立验证给出的严格建议是：
+
+- Gaussian 直达路径：`160 m / no-sponge`；
+- 完整反射链：实际 `192.1875 m / no-sponge`；
+- 4 kHz 随机海面集合中，192.1875 m 对 3 个海况、每个 5 个 seed 为 `15/15` 严格通过；
+- 160.15625 m 的接收频响近似收敛，但外围能量仍超门限，不能标记为严格通过。
+
+这些建议尚未自动成为生产默认。随机海面 3–5 kHz 的完整候选—参考成对集合没有跑完，因此不能声称已经获得 ensemble 最差群时延。证据见 `reports/pe_reflected_chain_window_validation_report.md` 和 `reports/pe_random_surface_window_robustness_report.md`。
+
+### 展开坐标 PE--Bellhop 验证
+
+平面、均匀介质的独立 Bellhop 对比入口为
+`scripts/validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m`。
+它把原竖直方向展开成 Bellhop 的水平距离：`z_tx=100 m`、`z_rx=3 m`
+分别对应 97 m 直达和 103 m 镜像反射路径，后者在展开接收端施加
+压力释放系数 `-1`。Bellhop 的 `.sbp` 由现有 unit-peak Gaussian 的角谱
+生成；主验收比较归一化横向场、`H_reflect/H_direct`、相位和群时延，
+不把 Bellhop 点源绝对幅度逐点拟合到 PE。该结论只覆盖均匀声速、平面
+海面和当前 Gaussian 源；更换换能器后必须重新生成源指向性并重新确认
+横向窗口。结果目录为
+`results/validation/pe_bellhop_unfolded_flat_gaussian/`。
+
+## 4. 海面边界、SSA 与 bubble
+
+海面实现位于 `src/surface/`。`paramsV.surface_boundary_model` 当前允许：
+
+- `kirchhoff_spatial`：生成显式 PM 海面 `eta(x,y)`，在空间域施加 Kirchhoff 相位反射；这是当前公共默认。
+- `kirchhoff_kdomain`：同一类显式海面反射在 k 域组织，适合与 joint 统计模型对照。
+- `kirchhoff_kstat`：不逐次传播显式海面，而按同一 PM/Kirchhoff 相位屏定义建立随机残差及其跨频统计。
+- `ssa_stat_kernel`：第一阶 Dirichlet SSA/微扰极限的统计核诊断分支，不等于 NLSSA 或完整高阶 SSA。
+
+joint-kstat 的随机变量是
 
 \[
-R_{{\rm coh},i}=R_{0,i}
-\exp\left(-\frac12\alpha_i^2\sigma_\eta^2\right).
+\delta G_i=R_{0,i}e^{i\alpha_i\eta}-R_{\mathrm{coh},i}.
 \]
 
-当前 $C_{\delta G,ij}$ 与 $P_{\delta G,ij}$ 已包含 $R_0$，接收权重中不得再次乘  $R_0$。joint model 保留跨频 covariance 和 pseudo-covariance；独立频点随机相位不是它的等价替代。
+它仍包含海面高度引起的相位，但“joint”表示同一随机海面在多个频率上的联合统计：代码构造或采样跨频 `C_deltaG` 与 `P_deltaG`，并非只做单频确定性相位计算。当前 `C_deltaG/P_deltaG` 已包含 `R0`，接收权重不得再次乘 `R0`。
 
-### 5.3 SSA research branch
-
-`ssa_stat_kernel` 提供 `pm_convolution` 工程基线与 `ssa1_geometry` 一阶 Dirichlet 几何核。它们用于物理趋势和模型敏感性研究，不代表已经实现完整 SSA2、多次散射或实验标定海面散射。
-
-## 6. cached forward 与精确离散伴随
-
-固定 uniform surface-to-receiver 算子记为 (A_i)。接收点单位源为 (r)，则
+SSA1 使用压力释放/Dirichlet 几何因子
 
 \[
-q_i=A_i^Hr.
+G_{\mathrm{SSA1}}(K,K';f)=4\gamma(K,f)\gamma(K',f),
 \]
 
-离散伴随反向遍历传播步，使用 `conj(fr)`、`conj(screen)`，sponge 保持相同衰减幅度，不取倒数，也不经验性补偿 FFT 尺度。
+并只保留已实现的一阶统计散射、传播波支和已声明的周期或零填充卷积。它不包括 NLSSA、多次散射、阻抗边界或实验标定。2k 诊断位于 `scripts/validation/validate_2k_phase_approx.m` 和 `scripts/validation/validate_2k_ocean_spectra.m`，只验证相位系数近似与最低阶 SSA 趋势，不等于 PE、KStat、真实海洋散射或高阶 SSA 验证。
 
-定义
+气泡实现位于 `src/bubble/`，支持 `off`、`level0_empirical`、`hall1d` 和已有 plume 配置接口。公共默认 `enable_bubbles=false`。Hall1D/Li2009 相关结果仍是部分复现：横向网格收敛、独立绝对幅度和完整外部交叉验证尚未全部闭环。
+
+## 5. cached forward、精确离散伴随与解析 C/P
+
+`cached forward` 是把固定频率、固定网格、固定均匀环境的 Surface→Rx PE 步进因子预先缓存，再对很多海面 realization 重复执行同一个前向算子。它不是近似传播器，而是固定路径的高可信回归 oracle。
+
+对应离散伴随位于 `src/receiver/`：
+
+```matlab
+q_k = conj(fr) .* fft2(conj(screen) .* ifft2(conj(fr) .* q_k));
+```
+
+它从接收平面单位源开始，反向遍历深度步，得到
 
 \[
-a_i=\operatorname{conj}(\psi_{{\rm inc},i})\odot q_i,
+q_i=A_i^Hr,\qquad
+a_i=\operatorname{conj}(\psi_{\mathrm{inc},i})\odot q_i.
 \]
 
-则 reduced scatter 接收值为
+`q` 是接收灵敏度核，不是真实反向声压场，也不是逆传播。对固定单接收机，可用 `q_i^H psi_surface` 精确替代每条 realization 的 Surface→Rx PE。当前 full 验证中 exact adjoint、投影、cached/adjoint、F=9/F=64 均通过；总体和单样本差异处于双精度量级。范围限定为 uniform、CPU double、固定 Tx/Rx、最近网格点采样、无 bubble/Doppler、固定 PE/PM 网格。
+
+PM 大网格到 PE 小网格使用现有中央裁剪 `E`，统计收缩必须把 PE 权重通过 `E^H` 零嵌回 PM 周期网格。接收统计为
 
 \[
-H_{{\rm sca},i}^{\rm red}=a_i^H\delta G_i.
+C_H(i,j)=\widetilde a_i^H C_{\delta G,ij}\widetilde a_j,\qquad
+P_H(i,j)=\widetilde a_i^H P_{\delta G,ij}\widetilde a_j^*.
 \]
 
-`q` 是接收灵敏度核，不是真实逆传播或反向声压场。相位参考转换在得到接收标量后统一施加，因此不改变精确伴随内积关系。
+`dense` 仅在 PM 不超过 32² 时作基准；正式方法逐频率对流式计算 FFT 收缩，不保存空间 `F^2` 协方差块。direct-DSP 统计由 reduced 统计经 `D=diag(exp(-i2*pi*f*Delta tau0))` 转换：`C_dsp=D*C_red*D'`，`P_dsp=D*P_red*D.'`。
 
-当前 v1 限制为：uniform sound speed、CPU double、固定 Tx、单个最近网格点 Rx、固定 PE/PM 网格与频率轴、无 bubbles/Doppler。
+## 6. 条件统计生成器
 
-## 7. PM→PE 映射与解析接收统计
+条件模型用已验证接收端样本或解析统计估计复均值、协方差 `C`、伪协方差 `P`，支持 full 与低秩采样。schema 2.x 明确记录 `target_reference='direct_dsp'`、几何和频率轴。旧 schema 1.x 只能在有可靠几何时迁移；只有旧总信道或缺少几何时不得猜测拆分或旋转。
 
-PM 大网格到 PE 小网格使用已有中央裁剪 (E)。解析收缩先把 PE 权重零嵌入 PM 网格：
+U=5/U=8、F=64 条件模型及 two-node 通信验证已纳入 2026-07-22 的 PASS 发布候选。其角色是经物理和统计验证后承担大规模通信 Monte Carlo，不替代 PE 物理回归，也不能插值成未验证风速的连续模型。
 
-\[
-\widetilde a_i=E^Ha_i.
-\]
+## 7. CIR、F=64/F=65、LFM 与通信链
 
-不得在 PE 小网格上直接假设循环平稳协方差。PM 周期网格上的 reduced 统计为
+F 表示频率采样点数。当前 F=64 主轴覆盖 4–8 kHz，共 64 个等间隔频点，用于宽带统计、条件模型和通信验证。它并不表示 64 条独立信道。
 
-\[
-C_H^{\rm red}(i,j)=\widetilde a_i^H
-C_{\delta G,ij}^{\rm PM}\widetilde a_j,
-\]
+相位验收另用 F=65、间隔 62.5 Hz，其无模糊时延窗为 16 ms，可显示标准几何的 4 ms 相对反射时延。F=9 smoke 的间隔为 0.5 kHz，无模糊窗仅 2 ms，4 ms 会混叠为零相位，不能用于相位验收。
 
-\[
-P_H^{\rm red}(i,j)=\widetilde a_i^H
-P_{\delta G,ij}^{\rm PM}\widetilde a_j^*.
-\]
+`src/channel/build_channel_cir_vertical.m` 区分 direct-DSP `H(f)` 的 IFFT 和绝对物理相量的展示性重构。时间窗移动只能作用于完整总信道，禁止分别对齐直达与反射。
 
-令
+LFM 是获得 `H(f)` 后的无噪声线性探针：频域输入乘以信道频响，再变换到时域。LFM 输出功率描述信道后扫频脉冲能量随时间的分布；匹配滤波输出功率描述接收 LFM 与已知发射模板相关后的压缩峰和旁瓣。二者可比较 reflected-only 的时延扩展与统计功率，但不构成新的 PE 空间源，也不自动包含同步、均衡或噪声。
 
-\[
-D=\operatorname{diag}
-\left(e^{-i2\pi f\Delta\tau_0}\right),
-\]
+通信模块位于 `src/communication/`。外部没有项目 metadata 的 `H(f)` 默认视为已经 DSP-ready，不静默旋转。
 
-则 direct-DSP 接收统计为
+## 8. 公共输入输出语义
 
-\[
-\mu_{\rm dsp}=D\mu_{\rm red},\qquad
-C_{\rm dsp}=DC_{\rm red}D^H,
-\qquad
-P_{\rm dsp}=DP_{\rm red}D^T.
-\]
+公共入口为 `vertical_channel_model(paramsV)`，实现位于 `src/channel/vertical_channel_model_impl.m`。原有字段保持：
 
-空间 dense/FFT 收缩仍在 reduced 层完成；确定性频率旋转不改变特征值、秩、每频功率或 properness 比率。
+- `output.H_direct_f`、`H_reflect_f`、`H_f`：按 `channel_phase_reference` 选择后的频响，默认 direct-DSP；
+- `output.h_direct`、`h_reflect`、`h_total`：上述数组在 `idx_f_ref` 的标量；
+- `output.f_axis`、`idx_f_ref`：频率轴及参考频点；
+- `output.H_direct_reduced_f`、`H_reflect_reduced_f`、`H_total_reduced_f`：约化 PE 分量，用于兼容/诊断；
+- `output.H_direct_physical_f`、`H_reflect_physical_f`、`H_physical_f`：绝对物理相量展示；
+- `output.phase_reference_meta`、`roughness_meta`、`bubble_meta`、`config`：语义和配置元数据。
 
-## 8. 条件统计生成器
+无论选择何种公共表示，都必须保持频域和参考频点的分量闭合。不得删除或重命名现有输出字段。
 
-schema 2.x 条件模型保存 direct-DSP 的确定性分量、均值、(C/P)、复 EVD 和增广实数 EVD，以及 `phase_reference_meta`。
+## 9. 验证证据边界
 
-旧项目 schema 1.x 被视为 `legacy_reduced`。迁移时除了旋转均值和 (C/P)，还要执行
+已通过：
 
-\[
-U_{\rm dsp}=DU_{\rm red},
-\]
+- direct-DSP 载波相位发布候选、F=65 名义 4 ms 时延和旧条件模型迁移闭合；
+- uniform CPU-double 的精确离散伴随、接收投影、PM 零嵌、dense/FFT `C/P`；
+- F=9/4096 与 F=64/512 的解析—样本统计在 split-sample floor 内；
+- U=5/U=8 条件模型、two-node 通信和已有 PE 图册；
+- 固定海面完整反射链 192.1875 m/no-sponge，以及 4 kHz 随机集合 15/15。
 
-以及增广实数变换
+开放或不完整：
 
-\[
-T=
-\begin{bmatrix}
-\Re D&-\Im D\\
-\Im D&\Re D
-\end{bmatrix}.
-\]
+- 公共默认窗口仍是兼容值，尚未切换到严格推荐窗口；
+- 随机海面宽带成对收敛没有完成，不能给出 ensemble 最差群时延；
+- Bellhop 的绝对幅度、点源无限孔径和源归一化仍开放；
+- Li2009/SSA 是部分复现，横向网格与高阶物理验证不完整；
+- 伴随统计原型不覆盖 layered、bubble、Doppler、GPU、多接收机和插值接收。
 
-迁移不会从旧的 signed `reference_delay_s` 猜测几何。已知项目模型从模型/library/cache metadata 或已登记的 U=5/U=8 固定验证几何取得参数；无法确认时明确报错。
+判断新结果时应把 `PASS`（满足预设门限）、`CONVERGED`（在已测数值配置收敛）、`OPEN`、`INCOMPLETE` 和“仅诊断”分开。不能用 total channel 掩盖 reflected-only 差异，也不能把 explicit Kirchhoff 与 joint-kstat 的独立 realization 做像素级误差验收。
 
-条件库只允许已经验证的离散风速节点，不做静默最近邻或插值。
+## 10. 推荐角色与配置
 
-旧 MAT 数据按“先审计、后归档、再重建”处理。相位中立的 PE cache、PM spectrum、中央裁剪映射和 joint factor 只有在频率、网格、几何、uniform CPU-double 约束通过核验后才可复用。分别保存直达/反射分量或完整统计且几何可靠的数据可生成 schema-2 迁移副本；只有旧总信道或几何不足的数据必须重建。迁移副本只服务闭合审计，不替代本次重新训练的规范模型。归档目录为 `results/archive/pe_phase_reference_pre_rc/<timestamp>/`，采用移动且保留原相对路径，不删除、不覆盖。所有正式 MAT 必须包含 `schema_version`、`phase_reference_meta` 和带 `run_id`、代码 revision/fingerprint、几何、频率轴、seed 定义的 `validation_run_meta`。
+- 公共 PE：通用传播入口。
+- cached forward：固定路径高可信数值 oracle。
+- 伴随投影：固定环境快速、精确地产生单接收端 realization。
+- 解析 FFT `C/P`：无需接收端 Monte Carlo 直接获得二阶统计。
+- 条件统计生成器：验证通过后的大规模通信抽样。
 
-## 9. CIR、LFM 与通信链
-
-`build_channel_cir_vertical` 要求显式声明输入表示：
-
-- `direct_dsp`：使用 MATLAB `ifft`；
-- `absolute_physical`：在 $e^{-i\omega t}$ 约定下使用 `fft/N` 展示物理时延；
-- `legacy_reduced`：拒绝把未统一的多路径总和直接转换为 CIR。
-
-`build_physical_cir_vertical` 仅作为旧接口包装器保留，其 `reference_delay_s` 现在只表示施加到完整信道的共同时间原点移动。
-
-未知外部 (H(f)) 若没有项目 `phase_reference_meta`，通信辅助函数将其视为已经 DSP-ready，不静默旋转；若 metadata 明确为 `legacy_reduced` 或 `absolute_physical`，通信 IFFT 路径会拒绝输入。
-
-LFM 是在得到 (H(f)) 后施加的线性探针，不是 PE 空间源。同步或接收窗口可以整体移动总信道，但不能分别移动直达与反射分量。
-
-## 10. 频率网格与时延解释
-
-等间隔频率轴的无模糊时延为
-
-\[
-T_{\rm amb}=\frac1{\Delta f},
-\]
-
-物理分辨率约为 (1/B)。零填充只细化绘图采样，不提高 (1/B) 分辨率。
-
-F=9 的 `4:0.5:8 kHz` 有 (Delta f=500\rm,Hz)，无模糊时延只有 2 ms。标准 4 ms 延迟在这些频点上恰好绕回单位相位，因此 F=9 不能用来验收该问题。
-
-专项相位测试使用 F=65、`4:0.0625:8 kHz`，无模糊时延为 16 ms，并包含准确 6 kHz。
-
-## 11. 验证解释
-
-主要验收层次为：
-
-1. reduced PE 离散伴随内积；
-2. cached forward 与 adjoint projection 的同 realization 一致性；
-3. PM 零嵌入后的 dense/FFT (C/P) 一致性；
-4. direct-DSP 相位旋转的解析/样本一致性；
-5. 公共四种海面分支、direct-only、宽带通信回归；
-6. F=65 解析两径的 4 ms CIR 验收。
-
-explicit Kirchhoff 与 joint-kstat 的独立 realization 不应做像素点对点验收；应比较 ensemble 均值、(C/P)、功率、PDP、LFM 和分布。所有主要统计指标应优先使用 reflected scatter，避免直达波掩盖反射差异。
-
-正式发布候选 `phase_rc_20260722_174945` 已通过全部门限。独立相位审计的算子误差为 (2.2741\times10^{-13})，正载波相位 RMS 为 (3.1007\times10^{-11}\,\mathrm{rad})，群时延差为 (1.2768\times10^{-12}\,\mathrm{ms})。完整伴随测试的离散内积误差为 (7.7684\times10^{-15})，接收投影误差为 (5.0950\times10^{-15})，dense/FFT 的 (C/P) 误差为 (5.7693\times10^{-16}) 和 (1.0052\times10^{-15})。F=9 与 F=64 的解析—样本 covariance 误差相对 split-sample floor 分别为 0.593078 和 0.850502，均小于 1.25。F=64 public/cached double consistency 为 (9.88957\times10^{-16})。正式判定和全部 gate 见 `reports/pe_phase_reference_release_candidate_report.md`；早期 reduced-grid 报告仅保留为迁移过程证据。
-
-正式 adjoint F=64 验证使用 PE (128^2)/PM (256^2)。U=8 条件节点沿用其独立 aperture audit 通过的 PE (128^2)/PM (384^2)，不能把两者误写为同一 PM 尺寸。正式图册由同一 `run_id` 的新结果生成：空间声场仍表示 reduced complex envelope；频率响应同时显示 reduced、direct-DSP 与理论 (-2\pi f\Delta\tau_0)；F=65 CIR 用于显示 4 ms，F=9 只作为传播 smoke；6 kHz 下 4 ms 等于 24 个载波周期，因此单频空间图不能发现旧相位问题。
-
-## 12. 当前限制
-
-- 公共 PE 仍不是全波、全角度或多次海面散射求解器。
-- joint-kstat 是近垂直 Gaussian/Kirchhoff phase-screen 统计模型。
-- 精确伴随 v1 不覆盖 layered、bubble、Doppler、GPU、多接收机或插值采样。
-- absolute-physical 相量用于物理审计和展示；通信默认消费 direct-DSP。
-- Bellhop 严格矩阵仍保留其源归一化和横向窗口敏感性未通过项；载波相位修复不自动解决这些独立问题。
-
-### 当前 PE/Bellhop 平面海面复验（2026-07-23）
-
-当前权威批次为 `bellhop_current_20260723_rc5`。验证脚本显式使用
-`channel_phase_reference='direct_dsp'`，reduced 字段只用于算子闭合，
-`H_*_physical_f` 用于物理时延比较；脚本不再手工补第二次载波。
-相位转换误差为 0，公共分量闭合误差为 `3.5762e-18`。3/6/9 m 以及
-0.25/0.5/1 m 小偏移中，PE--解析和 PE--Bellhop 最大时延差分别为
-`0.027282 ms` 与 `0.027281 ms`，Bellhop--解析最大差为
-`3.9304e-06 ms`。目标直达/一次海面反射簇均存在且无海底反射混入。
-
-Bellhop 5001/10001 beams 的 coherent/incoherent TL 场 RMS 差为
-`0.19041/0.10193 dB`，通过门限。PE sampling、纵向步长、sponge 位置与
-强度也通过；但关闭 sponge 后，32 m 与 64 m 接收平面边缘仅为峰值的
-`-1.087/-14.532 dB`，没有达到 `-40 dB` 的有效 aperture 前提，且
-32--64 m 的相位/TL 差为 `3.526 rad/-3.896 dB`。因此当前分层结论必须
-保留为 `FAIL_CORE`，不能宣称横向 aperture 已收敛。这不否定已经独立
-闭合的载波符号、路径和时延，也不要求修改公共 PE marching 核。
-
-幅度结论独立为 `OPEN`：单一全局直达尺度后的跨几何跨度为
-`1.654 dB`，反射 TL RMS/最大误差为 `1.629/2.075 dB`。Gaussian
-angular-spectrum source-aware 结果只用于解释点源/有限宽源口径，不能
-替换原始 Bellhop 幅度或强制通过。完整门限表见
-`reports/pe_bellhop_flat_surface_current_validation_report.md`，10 张共享
-尺度对比图位于
-`results/visualization/pe_bellhop_flat_surface_current/bellhop_current_20260723_rc5/`。
-- 任何旧 MAT 若缺少可靠几何 metadata，都不得依据模糊 signed delay 静默迁移。
-
-## 13. 无反射自由场四层审计（2026-08-12）
-
-审计保留两个相位参考：初始平面量为
-`H_plane = Psi(L)*exp(i*k*L)`，物理虚拟点源量为
-`H_source = exp(i*k*s0)*H_plane`。PE--AS 使用前者；解析球面波和
-Bellhop 比较使用后者。验证初始场为
-`exp(i*k*(R0-s0))/(4*pi*R0)`，仅通过
-`source_mode='custom_field_fn'` 注入；公共 Gaussian 默认值不变。
-
-Bellhop 在匹配上下半空间中对 20/40/70/100 m 实测归一化。确认
-`|p_BH|R`、空间相位符号和唯一源相位常数后，所有距离和频率统一使用
-一次 `1/(4*pi)` 转换，绝不做逐距离或逐频率拟合。本审计排除海面、
-海底、粗糙度、气泡、Doppler、随机信道和通信处理。
-
-### 点源有限窗口与 sponge 误差预算
-
-后续审计冻结完整平方根 marching 和默认 Gaussian 语义。无 sponge、
-固定 `dx=0.25 m` 的 24--100 m 窗口中，PE 与同一离散初始场的一步 AS
-始终保持约 `1e-12`，但空间截断球面波和离散 FFT-Weyl 均未收敛到
-无限孔径点源。100 m 空间截断的幅度误差为 `+12.8509 dB`，按
-`TL_PE-TL_analytic` 定义则为 `-12.8509 dB`。
-
-连续 Weyl 积分使用传播谱 `kz` 和倏逝谱 `q` 的变量替换去除掠射
-`1/kz` 奇异性，与解析 Green 函数的相对误差为 `2.41716e-13`，因此
-它是可靠基准；离散 FFT-Weyl 只保留为失败诊断。100 m 窗口的独立
-sponge 的符号统一为 `dA=20log10(|H_sponge|/|H_no_sponge|)`、
-`dTL=TL_sponge-TL_no_sponge=-dA`。完整的 6 窗口 x 3 ratio x 6 强度
-扫描共 108 行；全矩阵 on-axis `dTL` 最大为 `35.6811 dB`，而仅在
-100 m 窗口内最大为 `5.99769 dB`。默认 100 m、ratio 0.12、
-`alpha_max=0.15 Np/m` 在轴上给出 `dA=-4.58501 dB`、
-`dTL=+4.58501 dB`、相位变化 `-0.980475 rad`；终端面中心圆盘
-(`rho<=2 m`)、sponge 边缘带和总能量分别变化
-`-2.40739/-5.16144/-3.83990 dB`。最终 0--2 m
-偏移复跑中，有限窗口、sponge 和总 PE--Bellhop TL 误差分别单独保存，
-总比较仍未通过。这些结果不授权修改 PE marching 核心。
-
-### 生产 Gaussian 有限窗口与 sponge 审计（2026-08-12）
-
-生产初场精确为
-`exp(-((x-x_tx)^2+(y-y_tx)^2)/(2*sigma_src_m^2))`，默认
-`sigma_src_m=0.3 m`，单位峰值、无额外归一化、初场不随频率变化。
-共享 helper 只是把原有表达式抽出供生产与验证共同调用，逐点差为 0。
-
-在固定生产采样 `dx=50/256 m` 下，Gaussian PE--独立 AS 全场最大误差
-为 `2.56337e-13`。4 kHz 的 128 m no-sponge 场已相对 160 m 收敛；但
-3--5 kHz 严格比较中，128 m 最大 TL 误差为 `0.100293 dB`，略高于
-预注册 0.1 dB 目标，因此严格推荐保留 160 m/no-sponge，128 m 仅为
-计算成本折中。
-
-生产 50 m、ratio 0.12、alpha 0.15 在 97 m/4 kHz 下给出
-`dA=+0.62225 dB`、`dTL=-0.62225 dB`、轴上相位变化
-`-0.148555 rad`、中心能量变化 `-0.047554 dB`，边缘能量仅降低
-`2.77763 dB`。无 sponge 时终端最外 5%%/10%% 能量占比为
-`11.30%%/21.76%%`，边界幅度仅比场峰低 `1.288 dB`，表明确有周期边界
-污染。完整非零 sponge 扫描中没有配置同时满足中心固定目标和至少
-3 dB 边缘抑制。因此当前默认 sponge 不推荐继续作为已验证生产配置，
-但本任务不自动修改默认值；变更应在计算成本及反射全链资格验证后评审。
-
-## 14. Li et al. (2009) 独立显式海面验证
-
-`li2009_explicit_surface_validation.m` 和
-`scripts/validation/validate_li2009_explicit_surface_vertical.m` 是独立的纯声学验证路径，
-不接入通信主线或统计信道生成器。它采用论文式 (12)--(13) 将 U10 转为 U19.5，
-复用 raw-PM 海面约定，并保证同一 6 ms CW pulse 的所有频率显式共享一次生成的
-`eta(x,y)`。边界只有
-
-\[
-\Psi_{\rm ref}=-\Psi_{\rm inc}\exp(i2k\eta).
-\]
-
-海底同址收发几何不满足公共 API 的 `z_rx<z_tx` 约束，因此该验证在独立模块中复用
-同一 uniform split-step 核，并以精确离散伴随构造 surface-to-bottom 接收投影。
-该投影是计算加速，不是 kstat 或新的统计物理模型。
-
-128 样本缩减案例中，U10=5→10 m/s 的 20% 首阈值标准差由
-0.321 ms 增至 0.724 ms，shifted-Rayleigh `b` 由 0.553 ms 增至
-1.611 ms；峰值宽度只增加 0.4%，未达到 5% 趋势门槛。推进步长、频点、
-sponge 和窗口对照稳定，但横向网格尚未收敛，因此当前只能声明首阈值展宽趋势的
-部分复现，不能声明式 (23)--(25) 或论文完整 PIES 系统的定量复现。完整参数审计、
-结果和限制见 `reports/li2009_explicit_surface_validation_report.md`。
+研究级严格窗口当前优先采用 direct `160 m/no-sponge`、完整反射 `192.1875 m/no-sponge`；若使用公共 50 m/default sponge，必须明确它是兼容默认而非近期窗口收敛验证的推荐配置。

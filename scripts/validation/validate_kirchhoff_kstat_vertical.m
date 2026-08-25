@@ -121,7 +121,7 @@ weak_ssa1.surface_boundary_model = 'ssa_stat_kernel';
 weak_ssa1.surface_ssa_kernel_mode = 'ssa1_geometry';
 weak_ssa1.surface_ssa_random_scatter = false;
 weak_ssa1.sea_hs_target = weak_kstat.sea_hs_target;
-weak_ssa1.surface_ssa_geometry_source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+weak_ssa1.surface_ssa_geometry_source_id = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
     'Dirichlet SSA first-order / perturbation-limit geometry'];
 fprintf('Running weak-roughness kstat and SSA1 coherent-reference cases.\n');
 channel_weak_kstat = vertical_channel_model(weak_kstat);

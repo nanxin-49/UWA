@@ -90,8 +90,8 @@ else
     alpha_xy_work = alpha_xy;
 end
 
-save_mode = lower(char(cfg.save_mode));
-save_slice = strcmp(save_mode, 'slice');
+save_mode = char(cfg.save_mode);
+save_slice = strcmpi(save_mode, 'slice');
 
 % --- defaults for outputs (filled by reference frequency) ---
 psiout = complex(zeros(0, 0, 0));
@@ -236,6 +236,7 @@ for ifq = 1:Nf
         pm_cfg.Hs_target = cfg.sea_hs_target;
         pm_cfg.roughness_scale_mode = cfg.surface_roughness_scale_mode;
         pm_cfg.seed = cfg.sea_seed;
+        pm_cfg.surface_elevation_override_xy = cfg.surface_elevation_override_xy;
         pm_cfg.show_figure = cfg.show_figures && capture_ref;
         pm_cfg.reflect_coeff = cfg.surface_reflect_coeff;
         pm_cfg.phase_mode = cfg.surface_phase_mode;
@@ -837,8 +838,14 @@ for jj = 1:n_step
     psi_k = fr_local .* fft2(screen .* ifft2(fr_local .* psi_k));
     if local_slice_request_enabled(slice_request) && sample_lookup(jj + 1) > 0
         psi_step = ifft2(psi_k);
-        slice_meta.field_slice(:, sample_lookup(jj + 1)) = ...
+        sample_index = sample_lookup(jj + 1);
+        slice_meta.field_slice(:, sample_index) = ...
             local_extract_requested_slice(psi_step, slice_request, use_gpu);
+        if slice_meta.energy_trace.enabled
+            energy_stats = local_energy_stats(psi_step, slice_request, use_gpu);
+            slice_meta.energy_trace = local_set_energy_trace( ...
+                slice_meta.energy_trace, sample_index, energy_stats);
+        end
     end
 end
 
@@ -856,7 +863,11 @@ request = struct( ...
     'max_z_samples', cfg.surface_wavefield_max_z_samples, ...
     'fixed_index', NaN, ...
     'fixed_coordinate_m', NaN, ...
-    'transverse_coordinate_m', []);
+    'transverse_coordinate_m', [], ...
+    'energy_diagnostics', logical(capture_ref && cfg.surface_wavefield_diagnostics), ...
+    'x_m', x(:).', ...
+    'y_m', y(:).', ...
+    'center_radius_m', 2);
 if ~request.enabled
     return
 end
@@ -883,7 +894,8 @@ slice_meta = struct( ...
     'transverse_coordinate_m', [], ...
     'z_m', [], ...
     'sample_step_index', [], ...
-    'field_slice', complex(zeros(0, 0)));
+    'field_slice', complex(zeros(0, 0)), ...
+    'energy_trace', local_empty_energy_trace());
 end
 
 function slice_meta = local_initialize_march_slice(request, psi_start, z_samples, sample_steps)
@@ -896,6 +908,8 @@ slice_meta.field_slice = complex(zeros( ...
     numel(slice_meta.transverse_coordinate_m), numel(slice_meta.z_m)));
 slice_meta.field_slice(:, 1) = local_extract_requested_slice( ...
     psi_start, request, isa(psi_start, 'gpuArray'));
+slice_meta.energy_trace = local_initialize_energy_trace( ...
+    request, psi_start, z_samples, isa(psi_start, 'gpuArray'));
 end
 
 function field_slice = local_extract_requested_slice(psi_xy, request, use_gpu)
@@ -917,6 +931,64 @@ else
 end
 end
 
+function trace = local_empty_energy_trace()
+trace = struct('enabled',false,'z_m',[],'total_energy',[], ...
+    'center_energy_rho_le_2m',[],'edge5_energy',[],'edge10_energy',[], ...
+    'edge5_fraction',[],'edge10_fraction',[],'boundary_max_relative_db',[]);
+end
+
+function trace = local_initialize_energy_trace(request, psi_start, z_samples, use_gpu)
+trace = local_empty_energy_trace();
+if ~local_request_field(request,'energy_diagnostics',false)
+    return
+end
+n = numel(z_samples);
+trace.enabled = true;
+trace.z_m = z_samples(:).';
+fields = {'total_energy','center_energy_rho_le_2m','edge5_energy', ...
+    'edge10_energy','edge5_fraction','edge10_fraction','boundary_max_relative_db'};
+for ii = 1:numel(fields)
+    trace.(fields{ii}) = nan(1,n);
+end
+trace = local_set_energy_trace(trace,1,local_energy_stats(psi_start,request,use_gpu));
+end
+
+function trace = local_set_energy_trace(trace, index, stats)
+fields = fieldnames(stats);
+for ii = 1:numel(fields)
+    trace.(fields{ii})(index) = stats.(fields{ii});
+end
+end
+
+function stats = local_energy_stats(psi_xy, request, use_gpu)
+if use_gpu
+    psi_xy = gather(psi_xy);
+end
+x = request.x_m(:).';
+y = request.y_m(:);
+[X,Y] = meshgrid(x,y);
+p = abs(psi_xy).^2;
+dx = abs(x(2)-x(1));
+dy = abs(y(2)-y(1));
+full_width_x = max(x)-min(x)+dx;
+full_width_y = max(y)-min(y)+dy;
+center = hypot(X,Y) <= request.center_radius_m;
+edge5 = abs(X) >= 0.45*full_width_x | abs(Y) >= 0.45*full_width_y;
+edge10 = abs(X) >= 0.40*full_width_x | abs(Y) >= 0.40*full_width_y;
+boundary = false(size(p));
+boundary([1 end],:) = true;
+boundary(:,[1 end]) = true;
+power_sum = sum(p(:));
+peak = max(abs(psi_xy(:)));
+stats = struct('total_energy',power_sum*dx*dy, ...
+    'center_energy_rho_le_2m',sum(p(center))*dx*dy, ...
+    'edge5_energy',sum(p(edge5))*dx*dy, ...
+    'edge10_energy',sum(p(edge10))*dx*dy, ...
+    'edge5_fraction',sum(p(edge5))/max(power_sum,eps), ...
+    'edge10_fraction',sum(p(edge10))/max(power_sum,eps), ...
+    'boundary_max_relative_db',20*log10(max(abs(psi_xy(boundary)))/max(peak,eps)));
+end
+
 function meta = local_build_surface_wavefield_meta( ...
     cfg, x, y, f_hz, k0, psi_surface_inc, psi_surface_ref, psi_ref_at_rx, ...
     incident_slice, reflected_slice)
@@ -935,6 +1007,9 @@ meta.incident_field_slice = incident_slice.field_slice;
 meta.reflected_field_slice = reflected_slice.field_slice;
 meta.surface_incident_xy = psi_surface_inc;
 meta.surface_reflected_xy = psi_surface_ref;
+meta.receiver_reflected_xy = psi_ref_at_rx;
+meta.incident_energy_trace = incident_slice.energy_trace;
+meta.reflected_energy_trace = reflected_slice.energy_trace;
 meta.x_m = x(:).';
 meta.y_m = y(:).';
 meta.surface_boundary_model = cfg.surface_boundary_model;
@@ -988,6 +1063,9 @@ meta = struct( ...
     'reflected_field_slice', complex(zeros(0, 0)), ...
     'surface_incident_xy', complex(zeros(0, 0)), ...
     'surface_reflected_xy', complex(zeros(0, 0)), ...
+    'receiver_reflected_xy', complex(zeros(0, 0)), ...
+    'incident_energy_trace', local_empty_energy_trace(), ...
+    'reflected_energy_trace', local_empty_energy_trace(), ...
     'x_m', [], ...
     'y_m', [], ...
     'surface_boundary_model', cfg.surface_boundary_model, ...
@@ -1132,6 +1210,10 @@ delta_tau = max(delta_tau, 1e-6);
 end
 
 function alpha_xy = local_absorption_profile(x, y, xw, yw, sponge_ratio, alpha_max)
+if sponge_ratio <= 0 || alpha_max <= 0
+    alpha_xy = zeros(numel(y), numel(x));
+    return
+end
 Lsponge_x = sponge_ratio * xw;
 Lsponge_y = sponge_ratio * yw;
 if Lsponge_x <= 0 || Lsponge_y <= 0
@@ -1157,7 +1239,6 @@ alpha_xy = alpha_y(:) * ones(1, numel(x_abs)) + ones(numel(y_abs), 1) * alpha_x(
 end
 
 function tf = local_has_gpu()
-tf = false;
 try
     tf = (gpuDeviceCount("available") > 0);
 catch

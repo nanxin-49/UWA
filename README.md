@@ -1,177 +1,91 @@
-# Vertical Underwater Acoustic Channel
+# 垂直水声 PE/WAPE 信道与通信项目
 
-MATLAB project for a seabed-to-near-surface vertical underwater acoustic
-channel. The active path uses PE/WAPE-style propagation, optional rough
-sea-surface reflection/scattering, receiver-side statistical models, and an
-MPSK communication consumer.
+本仓库用于研究海底发射机到近海面接收机的垂直水声传播。公共模型以 PE/WAPE 计算直达与海面反射频响，并提供粗糙海面、joint-kstat、接收端精确离散伴随、二阶统计和 MPSK 通信验证工具。
 
-## Start Here
+## 快速开始
 
-The public channel API is:
-
-```matlab
-output = vertical_channel_model(paramsV);
-```
-
-Minimal entrypoints:
+在 MATLAB 中先初始化一次路径：
 
 ```matlab
 cd('E:/MISC/CARPE3D_matlab/Explain')
-explain_main_vertical       % channel demonstration
-comm_main_vertical_psk      % end-to-end MPSK demonstration
+setup_vertical_project;
 ```
 
-For quick checks, use reduced even grids such as `64^2` or `128^2`, set
-`show_figures=false`, and disable the expensive features that are not under
-test.
-
-## Current Channel Semantics
-
-The public default is `paramsV.channel_phase_reference='direct_dsp'`.
-`H_direct_f`, `H_reflect_f`, and `H_f` therefore share one receiver phase
-reference and are ready for the MATLAB-IFFT communication path:
+最短调用：
 
 ```matlab
-H_f = H_direct_f + H_reflect_f;
+paramsV = struct('f0',6000,'enable_wideband',false, ...
+    'enable_surface_reflection',true,'show_figures',false);
+output = vertical_channel_model(paramsV);
 ```
 
-The raw PE envelopes remain available as `H_*_reduced_f`; absolute physical
-phasors under `exp(-1i*omega*t)` are available as `H_*_physical_f`.
-`phase_reference_meta` records the geometry, nominal delays, convention, and
-frequency-dependent phase factors. `legacy_reduced` remains available only
-for regression and migration.
+也可以运行兼容入口：
 
-For the standard `z_tx=100 m`, `z_rx=3 m`, `c0=1500 m/s` geometry, the
-nominal direct/reflected longitudinal spans are 97/103 m and their reference
-delay difference is 4 ms. This deterministic reference is not a per-sample
-PDP peak alignment.
+```matlab
+main_vertical              % 信道演示
+explain_main_vertical      % main_vertical 的兼容别名
+comm_main_vertical_psk     % MPSK 通信演示
+```
 
-## Core Code
+这些名称保持不变；实际演示脚本位于 `examples/`，核心实现位于 `src/`。
 
-- `vertical_channel_model.m`: public configuration and output boundary.
-- `vertical_wape_propagator.m`: direct and reflected PE/WAPE propagation.
-- `pm_surface_boundary_model.m`: explicit Kirchhoff, joint K-stat, and SSA
-  research surface boundaries.
-- `apply_pe_channel_phase_reference_vertical.m`: central receiver phase
-  reference conversion.
-- `build_channel_cir_vertical.m`: convention-explicit direct-DSP or physical
-  CIR reconstruction with only a common time-origin shift.
-- `comm_main_vertical_psk.m`: reference communication consumer of `H_f`.
-- `build_cached_joint_kstat_pe_executor_vertical.m`: fixed uniform cached PE
-  validation path.
-- `build_adjoint_receiver_projection_vertical.m`: exact discrete-adjoint
-  single-receiver projection prototype.
-- `contract_kstat_receiver_stats_vertical.m`: dense/FFT receiver `C/P`
-  contraction on the PM grid.
-- `estimate_conditional_channel_stats_vertical.m` and
-  `sample_conditional_channel_vertical.m`: receiver statistical generator.
+## 公共入口与目录
 
-The public default surface model remains `kirchhoff_spatial`. Adjoint and
-cached routines are validation/research interfaces; they do not replace the
-public PE propagator for unsupported environments.
+| 路径 | 用途 |
+|---|---|
+| `vertical_channel_model.m` | 稳定公共 API 包装；初始化路径并调用信道实现 |
+| `main_vertical.m` / `explain_main_vertical.m` | 信道演示兼容入口 |
+| `comm_main_vertical_psk.m` | 通信演示兼容入口 |
+| `setup_vertical_project.m` | 幂等加入 `src/`、示例和必要脚本目录，不改变工作目录 |
+| `src/` | 可复用生产实现，按 channel/propagation/surface/receiver/statistics/communication/bubble 划分 |
+| `examples/` | 演示脚本实际内容 |
+| `scripts/` | 验证、比较、实验和报告入口 |
+| `reports/` | 一次性验证报告和当前状态报告 |
+| `results/` | MAT、CSV、图片、视频及检查点 |
+| `docs/history/` | 非权威历史规格与旧说明，仅供追溯 |
 
-## Repository Layout
+模块和依赖方向见 `src/README.md`，脚本命令见 `scripts/README.md`。
 
-- `scripts/validation/`: deterministic regression and statistical checks.
-- `scripts/comparisons/`: model-to-model studies.
-- `scripts/experiments/`: sweeps and Monte Carlo experiments.
-- `scripts/reporting/`: plots, reports, and propagation atlas generation.
-- `reports/`: detailed validation evidence and feasibility conclusions.
-- `results/`: generated MAT, text, table, figure, animation, and external-tool
-  artifacts; large generated files are normally ignored by Git.
-- `old/`: legacy reference code outside the active execution path.
+## 当前能力与边界
 
-## Documentation Map
+| 项目 | 当前状态 |
+|---|---|
+| uniform CPU-double PE/WAPE，直达与海面反射 | 可用；公共默认相位参考为 `direct_dsp` |
+| Kirchhoff spatial/k-domain 与 joint-kstat | 可用；公共默认 surface model 未改变 |
+| cached forward、精确离散伴随、PM 周期 FFT `C/P` | 固定环境、单最近网格点接收机原型已验证 |
+| U=5/U=8 条件统计生成器 | 已有 F=64 验证证据；适用于已登记固定条件 |
+| bubble、SSA 诊断分支 | 已实现，但适用范围和验证强度不同，见技术指南 |
+| layered、Doppler、GPU、多接收机、插值接收的伴随统计链 | 尚未纳入当前原型 |
 
-| Document | Audience | Purpose |
+当前公共窗口参数仍保持兼容默认值，并未自动切换到近期收敛验证的推荐窗口。正式研究运行前请阅读技术指南中的窗口建议和证据边界。
+
+## 文档导航
+
+| 文档 | 主要读者 | 内容 |
 |---|---|---|
-| `README.md` | New repository reader | Quick entrypoint, active code, and navigation |
-| `vertical_comm_guide.md` | Researchers and developers | Current physics, phase, statistics, interfaces, and interpretation |
-| `PROJECT_CONTEXT.md` | Future coding models and maintainers | Authoritative current index plus append-only project log |
-| `scripts/README.md` | Validation operator | Script catalogue, prerequisites, cost, and outputs |
-| `reports/` | Technical reviewer | Configuration-specific evidence and decisions |
+| `README.md` | 初次进入仓库的人 | 快速入口、目录和导航 |
+| `vertical_comm_guide.md` | 研究与开发人员 | 当前物理、接口、结果语义和限制的权威说明 |
+| `PROJECT_CONTEXT.md` | 后续模型与维护任务 | 顶部当前索引和完整追加式项目日志 |
+| `scripts/README.md` | 运行验证的人 | 脚本入口、环境变量、成本和输出位置 |
+| `reports/current_project_status_20260820.md` | 项目审阅者 | 已完成、部分完成、开放问题和推荐配置差异 |
+| `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 
-Do not infer current behavior from an old dated report without checking the
-current-state index in `PROJECT_CONTEXT.md` and the implementation.
+历史文件原文保存在 `docs/history/`，不得作为当前 API、默认值或验证状态的唯一依据。
 
-## Key Validation
+## 结果存放规则
 
-Carrier-phase release candidate `phase_rc_20260722_174945` completed with
-decision **PASS**. It includes the formal F=65 delay/sign audit, full F=9 and
-F=64 adjoint/statistical suites, U=5/U=8 conditional models, two-node
-communication, public/cached regression, and a same-run propagation atlas.
-See `reports/pe_phase_reference_release_candidate_report.md` for the gate
-table and `results/visualization/pe_propagation_atlas/` for the figures.
+- 验证结果：`results/validation/<case>/`
+- 可视化结果：`results/visualization/<case>/`
+- 一次性报告：`reports/`
+- 大型正式结果不放回根目录，也不由目录整理任务自动删除或重算。
 
-The current flat/uniform PE--Bellhop batch is
-`bellhop_current_20260723_rc5`. Phase reference, paths, delays, Bellhop beam
-convergence, PE sampling/step, sponge sensitivity, and public regressions
-passed. The layered decision remains **FAIL_CORE / amplitude OPEN** because
-the no-sponge 32/64 m aperture cases had edge levels of only
-`-1.09/-14.53 dB` versus the required `-40 dB`, so they cannot establish
-aperture convergence; raw source-normalized reflected TL also remains open.
-See `reports/pe_bellhop_flat_surface_current_validation_report.md` and the
-same-run ten-figure atlas under
-`results/visualization/pe_bellhop_flat_surface_current/`.
+当前技术状态日期为 2026-08-20。目录迁移仅改变文件位置和初始化方式，没有改变 PE marching、相位公式、海面统计公式或公共默认配置。
 
-The reflection-free source-matched audit is implemented separately by
-`scripts/validation/validate_pe_bellhop_freefield_vertical.m`. It uses a
-validation-only virtual point-source initial plane, an independent one-step
-angular-spectrum reference, a measured Bellhop free-space normalization, and
-an analytic `exp(i*k*R)/(4*pi*R)` reference. This audit does not modify the
-default Gaussian source or the production communication chain. Its report is
-`reports/pe_bellhop_freefield_validation_report.md`.
+## PE--Bellhop 展开坐标验证
 
-The 2026-08-12 formal run passed the PE--AS implementation gate and the
-Bellhop--analytic free-space gate, but the overall decision is **FAIL** because
-the finite PE initial plane did not converge to the infinite-aperture point
-source. See the report before interpreting this as a PE marching error.
-
-The follow-up point-source error budget is
-`scripts/validation/validate_pe_point_source_error_budget_vertical.m`. It
-freezes the PE square-root marching operator and default Gaussian semantics,
-separates no-sponge finite-window error from sponge increments, and validates
-the continuous Weyl representation independently before the gated Bellhop
-rerun. Current results show that the public 100 m FFT window is not an
-infinite-aperture point-source benchmark. The sponge output now contains the
-complete 108-row window x ratio x alpha matrix and uses explicit, opposite-sign
-amplitude (`dA`) and transmission-loss (`dTL`) changes to prevent ambiguity.
-
-The production-Gaussian follow-up is
-`scripts/validation/validate_gaussian_window_convergence_vertical.m`,
-`validate_gaussian_sponge_vertical.m`, and
-`validate_gaussian_sponge_wideband_vertical.m`. At the 97 m production path,
-the current 50 m/default-sponge case is not center-neutral and the Gaussian
-field reaches the periodic boundary. The strict validation recommendation is
-160 m with sponge off; 128 m/no-sponge is a near-threshold cost compromise.
-No production default is changed automatically. See
-`reports/pe_gaussian_window_sponge_validation_report.md`.
-
-Run the carrier-phase and branch integration audit:
-
-```matlab
-run('scripts/validation/validate_pe_channel_phase_reference_vertical.m')
-```
-
-Run the exact-adjoint reduced smoke test:
-
-```matlab
-setenv('ADJOINT_PE_VALIDATION_MODE','smoke')
-run('scripts/validation/validate_adjoint_pe_receiver_projection_vertical.m')
-```
-
-Additional commands, expected runtimes, external Bellhop prerequisites, and
-output locations are maintained in `scripts/README.md`.
-
-## Active Limits
-
-- The exact-adjoint/cached v1 path is uniform sound speed, CPU double, fixed
-  grids/frequencies, one nearest-grid receiver, and no bubbles or Doppler.
-- `kirchhoff_kstat` is a near-vertical Gaussian/Kirchhoff statistical phase
-  screen, not a complete rough-surface scattering theory.
-- Conditional wind libraries use validated discrete nodes; no silent wind
-  interpolation is performed.
-- Unknown external `H(f)` without project phase metadata is assumed to be
-  DSP-ready and is not silently rotated.
-- The F=9 grid `4:0.5:8 kHz` cannot resolve the standard 4 ms reference delay:
-  its unambiguous delay is 2 ms. Use the F=65, 62.5 Hz audit grid for this test.
+当前新增的验证入口
+`scripts/validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m`
+采用镜像展开：直达路径对应 Bellhop 97 m，平面压力释放反射路径对应
+103 m 的镜像接收端并乘以 `-1`。该入口使用现有生产 Gaussian 源的角谱
+指向性生成 `.sbp`，不修改 PE 核心或生产默认窗口；正式输出位于
+`results/validation/pe_bellhop_unfolded_flat_gaussian/`。

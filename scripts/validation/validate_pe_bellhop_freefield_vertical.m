@@ -3,7 +3,7 @@ function validation = validate_pe_bellhop_freefield_vertical(overrides)
 % No surface reflection, bottom reflection, bubbles, Doppler, or comm chain.
 
 if nargin<1 || isempty(overrides), overrides=struct(); end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); addpath(fileparts(mfilename('fullpath')));
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 cfg=local_defaults(root); cfg=local_overrides(cfg,overrides);
 if ~exist(cfg.output_dir,'dir'), mkdir(cfg.output_dir); end
 

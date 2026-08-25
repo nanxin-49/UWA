@@ -4,6 +4,7 @@
 clear; close all; clc;
 root_dir=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 addpath(root_dir);
+setup_vertical_project();
 addpath(fileparts(mfilename('fullpath')));
 out_dir=fullfile(root_dir,'results','validation','cached_joint_kstat_pe_receiver');
 if ~exist(out_dir,'dir'), mkdir(out_dir); end

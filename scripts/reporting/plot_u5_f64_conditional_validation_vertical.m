@@ -1,6 +1,6 @@
 function plot_u5_f64_conditional_validation_vertical()
 %PLOT_U5_F64_CONDITIONAL_VALIDATION_VERTICAL Receiver-generator diagnostics.
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 folder=fullfile(root,'results','validation','u5_conditional_channel_f64');
 M=load(fullfile(folder,'u5_conditional_channel_model_f64_full.mat'),'model'); model=M.model;
 E=load(fullfile(folder,'f64_full_ensembles.mat'),'ensemble'); e=E.ensemble;

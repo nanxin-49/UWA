@@ -8,6 +8,7 @@ if nargin < 1 || isempty(overrides), overrides = struct(); end
 this_file = mfilename('fullpath');
 project_root = fileparts(fileparts(fileparts(this_file)));
 addpath(project_root);
+setup_vertical_project();
 
 default_source = fullfile(project_root, 'results', 'validation', ...
     'pe_bellhop_flat_surface_matrix', 'pe_bellhop_flat_surface_matrix.mat');

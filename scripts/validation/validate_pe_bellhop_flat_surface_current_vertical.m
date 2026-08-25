@@ -5,7 +5,7 @@ function validation = validate_pe_bellhop_flat_surface_current_vertical(override
 if nargin<1 || isempty(overrides), overrides=struct(); end
 this_file=mfilename('fullpath');
 project_root=fileparts(fileparts(fileparts(this_file)));
-addpath(project_root); addpath(fullfile(project_root,'scripts','validation'));
+addpath(project_root); setup_vertical_project();
 addpath(fullfile(project_root,'scripts','reporting'));
 cfg=local_defaults(); cfg=local_overrides(cfg,overrides); local_validate_cfg(cfg);
 

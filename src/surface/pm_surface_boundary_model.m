@@ -18,6 +18,9 @@ end
 if ~isfield(pm_cfg, 'seed') || isempty(pm_cfg.seed)
     pm_cfg.seed = 12345;
 end
+if ~isfield(pm_cfg, 'surface_elevation_override_xy')
+    pm_cfg.surface_elevation_override_xy = [];
+end
 if ~isfield(pm_cfg, 'show_figure') || isempty(pm_cfg.show_figure)
     pm_cfg.show_figure = true;
 end
@@ -135,6 +138,17 @@ end
 boundary_model = local_normalize_choice(pm_cfg.boundary_model, 'pm_cfg.boundary_model');
 if ~any(strcmp(boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain', 'ssa_stat_kernel', 'kirchhoff_kstat'}))
     error('pm_cfg.boundary_model must be ''kirchhoff_spatial'', ''kirchhoff_kdomain'', ''ssa_stat_kernel'', or ''kirchhoff_kstat''.');
+end
+surface_override = pm_cfg.surface_elevation_override_xy;
+if ~isempty(surface_override)
+    if ~(isnumeric(surface_override) && isreal(surface_override) && ...
+            isequal(size(surface_override), size(psi_inc)) && all(isfinite(surface_override(:))))
+        error('pm_cfg.surface_elevation_override_xy must match psi_inc and contain finite real values.');
+    end
+    if ~any(strcmp(boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain'}))
+        error('Surface elevation override is supported only for Kirchhoff boundary models.');
+    end
+    surface_override = double(surface_override);
 end
 roughness_scale_mode = local_normalize_choice(pm_cfg.roughness_scale_mode, 'pm_cfg.roughness_scale_mode');
 if ~any(strcmp(roughness_scale_mode, {'target_hs', 'raw_pm'}))
@@ -270,38 +284,45 @@ kstat_disabled_roughness_mode = roughness_scale_mode;
 ssa_meta = local_disabled_ssa_stat_kernel_meta(Hs_target, ssa_seed_offset, roughness_scale_mode);
 kstat_meta = local_disabled_kirchhoff_kstat_meta(Hs_target, kstat_seed_offset, ...
     kstat_conv_padding, kstat_trusted_angle_deg, kstat_disabled_roughness_mode);
-sigma_eta_raw_m = NaN;
-Hs_raw_m = NaN;
-
 % -----------------------------
 % 2) Surface boundary operator
 % -----------------------------
-surface_realization_generated = any(strcmp(boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain'}));
-if surface_realization_generated
-    A = sqrt(Phi2D .* dkx .* dky);
-    rng(pm_cfg.seed, 'twister')
-    N = (randn(size(K)) + 1i*randn(size(K))) / sqrt(2);
-    Zk = A .* N;
+surface_realization_used = any(strcmp(boundary_model, {'kirchhoff_spatial', 'kirchhoff_kdomain'}));
+surface_realization_generated = surface_realization_used && isempty(surface_override);
+surface_realization_overridden = surface_realization_used && ~isempty(surface_override);
+if surface_realization_used
+    if surface_realization_overridden
+        surface_elevation = surface_override;
+        Hs_raw = NaN;
+        scale_factor = 1;
+        sigma_eta_raw_m = NaN;
+        Hs_raw_m = NaN;
+    else
+        A = sqrt(Phi2D .* dkx .* dky);
+        rng(pm_cfg.seed, 'twister')
+        N = (randn(size(K)) + 1i*randn(size(K))) / sqrt(2);
+        Zk = A .* N;
 
-    eta_raw = real(ifft2(Zk));
-    eta_raw = eta_raw * numel(eta_raw); % compensate MATLAB ifft2 normalization
-    eta_raw = sqrt(2) * eta_raw; % real part of unconstrained complex spectrum carries half the target variance
+        eta_raw = real(ifft2(Zk));
+        eta_raw = eta_raw * numel(eta_raw); % compensate MATLAB ifft2 normalization
+        eta_raw = sqrt(2) * eta_raw; % real part of unconstrained complex spectrum carries half the target variance
 
-    % Calibrate to target Hs by default; raw_pm keeps the PM realization amplitude.
-    Hs_raw = 4 * std(eta_raw(:));
-    switch roughness_scale_mode
-        case 'target_hs'
-            if Hs_raw > 0
-                scale_factor = Hs_target / Hs_raw;
-            else
-                scale_factor = 0;
-            end
-        case 'raw_pm'
-            scale_factor = 1;
+        % Calibrate to target Hs by default; raw_pm keeps the PM realization amplitude.
+        Hs_raw = 4 * std(eta_raw(:));
+        switch roughness_scale_mode
+            case 'target_hs'
+                if Hs_raw > 0
+                    scale_factor = Hs_target / Hs_raw;
+                else
+                    scale_factor = 0;
+                end
+            case 'raw_pm'
+                scale_factor = 1;
+        end
+        sigma_eta_raw_m = Hs_raw / 4;
+        Hs_raw_m = Hs_raw;
+        surface_elevation = eta_raw * scale_factor;
     end
-    sigma_eta_raw_m = Hs_raw / 4;
-    Hs_raw_m = Hs_raw;
-    surface_elevation = eta_raw * scale_factor;
     Hs_scaled = 4 * std(surface_elevation(:));
 
     % Kirchhoff phase screen: delta_phi = k0*(cos_i+cos_r)*eta.
@@ -393,7 +414,7 @@ end
 if pm_cfg.show_figure
     figure(15); clf
     subplot(1,2,1)
-    if surface_realization_generated
+    if surface_realization_used
         surf(X, Y, surface_elevation, 'EdgeColor', 'none')
         view(40, 35)
         axis tight
@@ -454,6 +475,10 @@ meta.scale_factor = scale_factor;
 meta.seed = pm_cfg.seed;
 meta.reflection_coeff_used = pm_cfg.reflect_coeff;
 meta.surface_realization_generated = surface_realization_generated;
+meta.surface_realization_overridden = surface_realization_overridden;
+meta.surface_realization_source = local_surface_realization_source( ...
+    surface_realization_generated, surface_realization_overridden);
+meta.surface_override_stats = local_surface_override_stats(surface_override);
 meta.phase_mode_used = phase_mode;
 meta.phase_factor_stats = struct( ...
     'min', min(phase_factor(:)), ...
@@ -478,7 +503,7 @@ meta.boundary_redistribution_debug = redistribution_debug;
 meta.boundary_debug_stats = boundary_meta.boundary_debug_stats;
 meta.ssa_stat_kernel_meta = ssa_meta;
 meta.kirchhoff_kstat_meta = kstat_meta;
-if surface_realization_generated
+if surface_realization_used
     meta.W_eta = local_field_stats([]);
 else
     meta.W_eta = local_field_stats(W_eta(mask));
@@ -1108,7 +1133,7 @@ switch kernel_mode
             'kernel_formula', ['ssa1_geometry: P_sca_raw(K)=4*C_norm*gamma(K)*', ...
                 'circconv(W_eta,gamma(Kprime)*abs(Psi_inc(Kprime))^2)*dkx*dky, ', ...
                 'with C_norm=surface_ssa_scatter_scale.'], ...
-            'limitations', ['First-order Dirichlet SSA / perturbation-limit geometry from SSA.md. ', ...
+            'limitations', ['First-order Dirichlet SSA / perturbation-limit geometry documented in vertical_comm_guide.md. ', ...
                 'No NLSSA, multiple scattering, impedance boundary, experimental calibration, or evanescent scattering is included.']);
     case 'ssa1_debug_dense'
         if ~strcmp(conv_padding, 'periodic')
@@ -1245,7 +1270,7 @@ function local_require_dirichlet_reflect_coeff(R0, kernel_mode)
 if abs(R0 + 1) > 1e-12
     error('pm_surface_boundary_model:SsaDirichletReflectCoeffRequired', ...
         ['surface_ssa_kernel_mode=''%s'' uses the pressure-release / Dirichlet ', ...
-         'SSA1 geometry from SSA.md and currently requires surface_reflect_coeff=-1.'], ...
+         'SSA1 geometry documented in vertical_comm_guide.md and currently requires surface_reflect_coeff=-1.'], ...
         kernel_mode);
 end
 end
@@ -1260,7 +1285,7 @@ end
 
 function source = local_ssa1_formula_source(geometry_source_id)
 if nargin < 1 || isempty(geometry_source_id)
-    source = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+    source = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
         'Dirichlet SSA first-order / perturbation-limit geometry'];
 else
     source = geometry_source_id;
@@ -2036,6 +2061,30 @@ if ~ischar(v)
     error('%s must be a string or char.', name);
 end
 out = lower(v);
+end
+
+function source = local_surface_realization_source(generated, overridden)
+if overridden
+    source = 'surface_elevation_override_xy';
+elseif generated
+    source = 'internal_seeded_pm';
+else
+    source = 'not_applicable';
+end
+end
+
+function stats = local_surface_override_stats(surface_override)
+if isempty(surface_override)
+    stats = struct('enabled',false,'ny',0,'nx',0,'mean_m',NaN, ...
+        'std_m',NaN,'Hs_m',NaN,'min_m',NaN,'max_m',NaN, ...
+        'sum_m',NaN,'sum_squares_m2',NaN);
+    return
+end
+stats = struct('enabled',true,'ny',size(surface_override,1), ...
+    'nx',size(surface_override,2),'mean_m',mean(surface_override(:)), ...
+    'std_m',std(surface_override(:)),'Hs_m',4*std(surface_override(:)), ...
+    'min_m',min(surface_override(:)),'max_m',max(surface_override(:)), ...
+    'sum_m',sum(surface_override(:)),'sum_squares_m2',sum(surface_override(:).^2));
 end
 
 function out = local_force_int(v, name)

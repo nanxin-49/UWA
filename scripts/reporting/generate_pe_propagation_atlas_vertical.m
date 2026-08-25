@@ -6,6 +6,7 @@ function atlas = generate_pe_propagation_atlas_vertical()
 root_dir = fileparts(fileparts(fileparts(mfilename('fullpath'))));
 addpath(root_dir, fullfile(root_dir,'scripts'), ...
     fullfile(root_dir,'scripts','validation'), fullfile(root_dir,'scripts','reporting'));
+setup_vertical_project();
 mode = lower(strtrim(getenv('PE_ATLAS_MODE')));
 if isempty(mode), mode = 'full'; end
 if ~ismember(mode,{'smoke','full'})
@@ -237,7 +238,7 @@ if strcmp(model,'ssa1_geometry')
     params.surface_ssa_random_scatter = true;
     params.surface_ssa_conv_padding = 'zero_padded';
     params.surface_ssa_geometry_source_id = ...
-        'SSA.md; first-order pressure-release / Dirichlet geometry';
+        'vertical_comm_guide.md; first-order pressure-release / Dirichlet geometry';
 else
     params.surface_boundary_model = 'kirchhoff_kdomain';
 end

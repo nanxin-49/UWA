@@ -1,22 +1,38 @@
-# Script Directory
+# 脚本与验证运行索引
 
-Scripts are grouped by role and are meant to run from any MATLAB current folder. Each script starts with `bootstrap_project.m`, which adds the project root and script folders to the MATLAB path and changes the working output directory to `results/<category>`.
+脚本按职责分组，入口应能从任意 MATLAB 当前目录运行。推荐先执行根目录 `setup_vertical_project`；它只初始化路径，不改变当前工作目录。仍使用 `scripts/bootstrap_project.m` 的旧脚本会先委托给统一 setup，再按既有规则切换到 `results/<category>`。新入口应优先使用绝对项目根和明确输出目录，不依赖当前目录。
 
-## Subdirectories
+## 目录
 
 - `validation/`: smoke tests, invariants, communication-chain checks, and disabled-path regressions.
 - `comparisons/`: surface-model, bubble-model, and coherent/incoherent comparison studies.
 - `experiments/`: Monte Carlo runs, parameter sweeps, and calibration scripts.
 - `reporting/`: figure generation, summary tables, visualizations, and report builders.
+- `validation/support/`: Bellhop/Weyl/Li2009、properness、发布元数据和 artifact 检查等验证专用辅助函数；不属于公共 API。
 
-## Running Examples
+## 运行方式
 
 ```matlab
+setup_vertical_project
 run('scripts/validation/validate_surface_wavefield_visualization_vertical.m')
 run('scripts/comparisons/compare_specular_incoherent_surface_reflection_vertical.m')
 run('scripts/experiments/sweep_monte_carlo_surface_channel_vertical.m')
 run('scripts/reporting/plot_c35_core_heatmaps_vertical.m')
 ```
+
+公共可复用实现已移到 `src/`。下文脚本名仍按 `validation/`、`reporting/` 等相对于 `scripts/` 的短路径描述。
+
+## 2k 相位与海谱诊断
+
+```matlab
+run('scripts/validation/validate_2k_phase_approx.m')
+run('scripts/validation/validate_2k_ocean_spectra.m')
+```
+
+- PNG/CSV：`results/validation/ssa_2k_phase/`
+- 报告：`reports/validation_2k_phase_report.md`、`reports/validation_2k_ocean_spectra_report.md`
+
+这两项是相位系数近似和最低阶 SSA/海谱趋势诊断，不是完整 PE、KStat、真实海洋散射或高阶 SSA 的验收。
 
 ## Raw-PM and Joint-Frequency K-Stat Prerequisite Validation
 
@@ -41,7 +57,7 @@ The receiver report is `reports/cached_joint_kstat_pe_receiver_validation_report
 - `validation/generate_u5_f64_sample_bundle_vertical.m`: saves generated H, total H, physical CIR, delay axis, labels, and timing without PE calls.
 - `reporting/plot_u5_f64_conditional_validation_vertical.m`: produces QQ, correlation-matrix, eigenvalue, and LFM diagnostics.
 
-Reusable root interfaces are `estimate_conditional_channel_stats_vertical`, `sample_conditional_channel_vertical`, `build_channel_cir_vertical`, and `properness_null_test_vertical`. `build_physical_cir_vertical` remains only as the legacy common-time-shift wrapper. Full results are under `results/validation/u5_conditional_channel_f64/`; interpretation is in `reports/u5_conditional_channel_generator_f64_report.md`.
+Reusable interfaces are initialized by `setup_vertical_project` and implemented under `src/`（`properness_null_test_vertical` is validation support）: `estimate_conditional_channel_stats_vertical`, `sample_conditional_channel_vertical`, `build_channel_cir_vertical`, and `properness_null_test_vertical`. `build_physical_cir_vertical` remains only as the legacy common-time-shift wrapper. Full results are under `results/validation/u5_conditional_channel_f64/`; interpretation is in `reports/u5_conditional_channel_generator_f64_report.md`.
 
 ## Optimized Joint Builder and U=8 Node
 
@@ -90,7 +106,7 @@ run('scripts/reporting/generate_pe_propagation_atlas_vertical.m')
 run('scripts/validation/finalize_pe_phase_reference_release_candidate_vertical.m')
 ```
 
-`audit_phase_reference_artifacts_vertical.m` is the read-only inventory
+`validation/audit_phase_reference_artifacts_vertical.m` is the read-only inventory
 entrypoint and may be run separately. The active run metadata is stored in
 `results/validation/pe_phase_release_candidate/current_run.mat`. A stopped
 run may resume only when its code fingerprint is unchanged. If a
@@ -141,6 +157,24 @@ The atlas distinguishes physical boundary models from computational acceleration
 
 ## PE/Bellhop Flat-Surface Cross-Validation
 
+### Unfolded Gaussian-source comparison
+
+- `validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m` is the
+  current validation-only entrypoint for the accepted unfolded-coordinate
+  construction.  It maps the 100 m to 3 m vertical path to Bellhop ranges
+  97 m (direct) and 103 m (image/reflected), then applies the flat
+  pressure-release factor `-1` at the image receiver.
+- `validation/support/write_bellhop_unfolded_gaussian_env_vertical.m` writes
+  the per-frequency `.env` and `.sbp`; the `.sbp` pattern is derived from the
+  production Gaussian angular spectrum and is not a pointwise receiver fit.
+- `validation/support/run_bellhop_unfolded_gaussian_vertical.m` runs Bellhop
+  and reads the standard `.shd`/`.arr` outputs.  The primary acceptance uses
+  normalized reflected/direct responses; absolute source pressure is an
+  independent Weyl-reference diagnostic.
+- Outputs are written to
+  `results/validation/pe_bellhop_unfolded_flat_gaussian/` and the report is
+  `reports/pe_bellhop_unfolded_flat_gaussian_report.md`.
+
 ### Reflection-free four-level audit
 
 - `validation/validate_pe_as_freefield_vertical.m` compares production
@@ -155,7 +189,7 @@ The atlas distinguishes physical boundary models from computational acceleration
   entrypoint. It keeps explicit initial-plane and physical-source phase
   references, compares PE/Bellhop/analytic complex fields, saves arrival and
   convergence CSV files, and does not relax a failed tolerance.
-- `virtual_point_source_initial_field_vertical.m` is enabled only through the
+- `validation/support/virtual_point_source_initial_field_vertical.m` is enabled only through the
   additive `source_mode='custom_field_fn'` validation hook. Public defaults
   remain `source_mode='gaussian'`.
 
@@ -177,10 +211,10 @@ summary is `reports/pe_bellhop_freefield_validation_report.md`.
   Its CSV explicitly reports `dA=20log10(|H_sponge|/|H_no_sponge|)` and
   `dTL=-dA`, plus center (`rho<=2 m`), ratio-defined edge-band, and total
   terminal-plane energies.
-- `weyl_point_source_reference_vertical.m` removes the grazing `1/kz`
+- `validation/support/weyl_point_source_reference_vertical.m` removes the grazing `1/kz`
   singularity by separate propagating/evanescent substitutions; it is the
   reliable free-space reference.
-- `weyl_point_source_initial_field_vertical.m` is the discrete FFT initializer
+- `validation/support/weyl_point_source_initial_field_vertical.m` is the discrete FFT initializer
   under test. Its failure to converge within the public 100 m window is
   reported, not hidden.
 - `validation/rerun_pe_bellhop_point_source_postbudget_vertical.m` performs the
@@ -208,6 +242,46 @@ Outputs are under `results/validation/pe_gaussian_window_sponge/`; the report
 is `reports/pe_gaussian_window_sponge_validation_report.md`. Extended sponge
 ratios and windows are validation-only opt-ins; normal public limits and
 defaults are unchanged.
+
+### Full reflected PE -> surface -> PE window audit
+
+- `validation/validate_reflected_chain_window_convergence_vertical.m` creates
+  one maximum-domain PM surface, crops it without per-window Hs rescaling,
+  runs the adaptive 4 kHz no-sponge window sequence, and saves incident,
+  reflected, receiver, center, and edge diagnostics.
+- `validation/validate_reflected_chain_wideband_vertical.m` runs the gated
+  3--5 kHz/33-point reflected and total-channel comparison. Per-case MAT
+  checkpoints make the production-size run resumable.
+- `validation/validate_reflected_chain_diagnostics_regression_vertical.m`
+  checks seeded/override equality, diagnostics transparency, receiver-center
+  consistency, the phase-screen invariant, and channel closure.
+- `reporting/generate_reflected_chain_window_validation_figures.m` generates
+  the single-frequency field and convergence figures; the wideband validator
+  adds reflected and total-channel response figures.
+
+Formal outputs are under
+`results/validation/pe_reflected_chain_window/`; the reviewable conclusion is
+`reports/pe_reflected_chain_window_validation_report.md`. The validators use
+additive validation-only options and do not alter production defaults.
+
+### Random-surface reflected-chain window robustness
+
+- `validation/validate_random_surface_window_robustness_vertical.m` generates
+  each 256 m master surface once, takes unscaled 160/192 m central crops, and
+  runs the 4 kHz three-Hs-by-five-seed matrix with resumable per-case files.
+- `reporting/generate_random_surface_window_robustness_figures.m` creates the
+  gate scatter, edge-versus-response, pass-rate, and stage-energy figures.
+- `validation/validate_random_surface_window_robustness_wideband_vertical.m`
+  is a checkpointed 3--5 kHz follow-up for selected worst cases. The current
+  formal run was stopped before all candidate--256 m pairs completed; do not
+  use partial checkpoints as group-delay qualification evidence.
+
+Formal 4 kHz outputs are under
+`results/validation/pe_random_surface_window_robustness/`; the report is
+`reports/pe_random_surface_window_robustness_report.md`. The result is
+192.1875 m/no-sponge `15/15` strict passes, while 160.15625 m has `15/15`
+response/center passes but `0/15` complete edge passes. No production default
+is changed by these validators.
 
 - `validation/validate_pe_bellhop_flat_surface_current_vertical.m` is the
   current formal entrypoint. It requires a stable absolute, non-Temp

@@ -7,19 +7,26 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-07-23）
+## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
 ### Active core
 
-- Public channel: `vertical_channel_model.m` -> `vertical_wape_propagator.m`.
-- Surface boundary: `pm_surface_boundary_model.m`; public default remains
+- Public channel: root `vertical_channel_model.m` compatibility wrapper ->
+  `src/channel/vertical_channel_model_impl.m` ->
+  `src/propagation/vertical_wape_propagator.m`.
+- Surface boundary: `src/surface/pm_surface_boundary_model.m`; public default remains
   `kirchhoff_spatial`.
-- Receiver phase reference: `apply_pe_channel_phase_reference_vertical.m`.
+- Receiver phase reference:
+  `src/channel/apply_pe_channel_phase_reference_vertical.m`.
 - Fixed-path research acceleration: cached joint-kstat PE, exact discrete
   adjoint receiver projection, PM-grid FFT `C/P`, and conditional receiver
   statistics.
-- Communication consumer: `comm_main_vertical_psk.m` and
-  `build_communication_taps_vertical.m`.
+- Communication consumer: root `comm_main_vertical_psk.m` compatibility
+  wrapper, `examples/comm_main_vertical_psk_demo.m`, and
+  `src/communication/build_communication_taps_vertical.m`.
+- `setup_vertical_project.m` is the single idempotent path initializer. Core
+  reusable implementations are under `src/`; validation-only helpers are
+  under `scripts/validation/support/`.
 
 ### Public receiver phase semantics
 
@@ -66,6 +73,17 @@ superseded; a newer explicitly marked entry is authoritative.
   above the required `-40 dB`, and the 32--64 m phase/TL differences were
   `3.526 rad/-3.896 dB`. The current report and ten-figure atlas supersede
   the 2026-07-21 complete report for present-version conclusions.
+- Gaussian direct-field aperture study is **CONVERGED** at 160 m/no-sponge.
+  The complete reflected chain is strictly **CONVERGED** at actual
+  192.1875 m/no-sponge. The current public 50 m/default-sponge configuration
+  remains a compatibility default, not the validation recommendation.
+- The 4 kHz random-surface aperture set is **PASS** for 192.1875 m in 15/15
+  tested realizations. The paired 3--5 kHz random-surface qualification is
+  **INCOMPLETE**; no ensemble worst group-delay claim is authorized.
+- The 2k phase-coefficient and ocean-spectrum studies are **diagnostic only**.
+  They do not validate PE, KStat, realistic ocean scattering, or higher-order
+  SSA. Their scripts/results now live under `scripts/validation/` and
+  `results/validation/ssa_2k_phase/`.
 
 ### Known limits and next checks
 
@@ -88,12 +106,18 @@ superseded; a newer explicitly marked entry is authoritative.
   `reports/pe_phase_reference_release_candidate_report.md` for the release
   decision. Older combined reduced-envelope phase conclusions are
   **Superseded** by this release-candidate run.
+- Bellhop absolute amplitude, point-source infinite-aperture equivalence, and
+  source normalization remain **OPEN**. Li2009 remains a partial
+  reproduction without completed transverse-grid convergence.
+- Repository layout changed on 2026-08-20 without changing public call names,
+  formulas, defaults, or result schemas. Current code paths in this index and
+  the technical guide supersede root-level paths written in older log entries.
 
 ## Detailed Snapshot and Historical Reference
 
 > Entries below this point predate or accompany later changes. When a phase
 > or output-semantic statement conflicts with the current-state index above,
-> the 2026-07-22 index and log entry are authoritative.
+> the 2026-08-20 index and latest dated log entries are authoritative.
 
 ## Current Snapshot / 当前状态摘要
 
@@ -3122,3 +3146,201 @@ The strict recommendation is therefore 160 m/no-sponge; 128 m/no-sponge is a
 near-threshold cost option. No production default was changed. Full report and
 16 figures are under `reports/pe_gaussian_window_sponge_validation_report.md`
 and `results/validation/pe_gaussian_window_sponge/`.
+
+## 2026-08-13 Full Reflected-Chain Window Convergence
+
+The complete production Gaussian PE -> Kirchhoff surface -> PE chain was
+validated without changing the PE marching operator or defaults. A single
+seed-12345, U=5 m/s PM surface was generated on the maximum domain, normalized
+once to Hs=0.5 m, and centrally cropped at fixed `dx=50/256 m`; crops were
+never renormalized. The 4 kHz no-sponge sequence tested actual widths
+50.0000, 128.1250, 160.1563, and 192.1875 m.
+
+The 160-to-192 m comparison gave reflected TL/phase differences of
+`-0.0015395 dB / 0.0006122 rad` and receiver-center complex L2 `4.546e-4`.
+Nevertheless, 160 m had outer-5% energy fraction `1.1769e-4`, narrowly above
+the fixed `1e-4` gate. The 192.1875 m field passed with boundary amplitude
+`-52.29 dB` and outer-5% energy `1.7699e-5`; it is therefore the strict
+minimum qualified window. Edge tracking attributes the main contamination to
+the 100 m upward march, with only modest additional spreading after the
+Kirchhoff screen and 3 m downward march.
+
+Across 3--5 kHz/33 points, 160.1563 m/no-sponge versus 192.1875 m/no-sponge
+has maximum reflected TL, phase, and internal group-delay differences of
+`0.019205 dB`, `0.0023817 rad`, and `4.0507 us`. The 50 m/default-sponge case
+fails at `1.3203 dB`, `0.17782 rad`, and `70.943 us`; its total-channel TL and
+phase differences reach `8.4134 dB` and `0.64120 rad`. All complex component
+closures are below `3.9e-18`. The strict recommendation is therefore
+192.1875 m/no-sponge; 160 m is a response-accurate cost option but does not
+pass the preregistered edge gate. Production defaults were not changed.
+
+Implementation adds `surface_elevation_override_xy` and low-memory
+`surface_wavefield_meta` energy/receiver diagnostics as disabled-by-default
+interfaces. Formal evidence is in
+`reports/pe_reflected_chain_window_validation_report.md` and
+`results/validation/pe_reflected_chain_window/`.
+
+## 2026-08-13 Random-Surface Window Robustness
+
+The fixed-realization conclusion was extended at 4 kHz to three target sea
+surface strengths (`Hs=0.05/0.5/1.0 m`) and five seeds per strength. Each
+realization was generated and normalized once on a 255.8594 m master grid;
+160.1563 and 192.1875 m cases are exact central crops at fixed
+`dx=50/256 m` and are never renormalized. All paths use sponge off and the
+unchanged production Gaussian PE -> Kirchhoff spatial -> PE chain.
+
+Relative to the matching 256 m reference, 192 m passed all response,
+center-field, boundary, and outer-5% energy gates in `15/15` realizations.
+Its worst 4 kHz errors were `0.0185269 dB` TL, `0.000698941 rad` phase, and
+`8.02062e-4` receiver-center complex L2; worst outer-5% energy was
+`5.94925e-5`. The 160 m cases passed the response and center-field gates in
+`15/15`, but passed the full edge gate in `0/15`; worst outer-5% energy was
+`1.89970e-4`. Stronger Hs increased lateral spreading, but did not require a
+window larger than 192 m in this sample.
+
+The selected random-realization 3--5 kHz qualification was stopped before a
+complete set of candidate--256 m pairs was obtained, so no random-ensemble
+worst group-delay claim is made. The production recommendation remains
+192.1875 m with sponge off; 160 m is only a monitored cost option. Production
+defaults were not changed. See
+`reports/pe_random_surface_window_robustness_report.md` and
+`results/validation/pe_random_surface_window_robustness/`.
+
+## 2026-08-20 Repository Layout Migration and Documentation Consolidation
+
+### Goal and status
+
+Reorganized the repository with compatibility-first semantics after multiple
+validation windows had added files at the root. Status: **IMPLEMENTED** for
+layout and documentation; lightweight post-migration regression results are
+recorded in `reports/current_project_status_20260820.md`. No expensive
+F=64/512 ensemble, complete Bellhop matrix, or 192/256 m formal aperture run
+was repeated for this organizational change.
+
+### Changed paths and interfaces
+
+- Root public names remain `vertical_channel_model`, `main_vertical`,
+  `explain_main_vertical`, and `comm_main_vertical_psk`.
+- `vertical_channel_model.m` is now a short compatibility wrapper around
+  `src/channel/vertical_channel_model_impl.m`.
+- The three demonstration entrypoints run the corresponding scripts in
+  `examples/` and preserve script-workspace behavior.
+- Reusable code moved into `src/channel`, `src/propagation`, `src/surface`,
+  `src/receiver`, `src/statistics`, `src/communication`, and `src/bubble`.
+- Bellhop/Weyl/Li2009/properness/release-metadata helpers moved into
+  `scripts/validation/support/`.
+- `setup_vertical_project.m` is the idempotent initializer and does not
+  change the current directory. `scripts/bootstrap_project.m` delegates path
+  setup to it before applying the existing result-directory behavior.
+- The root 2k scripts moved to `scripts/validation/`; their PNG/CSV outputs
+  moved to `results/validation/ssa_2k_phase/`, and their reports moved to
+  `reports/`.
+- `SSA.md`, `BUBBLE_EXTENSION_SPEC.md`, and
+  `README_CODE_STRUCTURE_AND_OUTPUTS.md` moved verbatim to `docs/history/`.
+  They are explicitly non-authoritative. Active SSA metadata now refers to
+  `vertical_comm_guide.md` and the cited formal literature.
+
+The migration mapping and pre-migration SHA-256 evidence are recorded in
+`reports/repository_layout_migration_20260820.csv` and its Markdown summary.
+Dirty files were moved using their current contents; no reset, checkout,
+deletion of user work, or overwrite of prior validation results was used.
+
+### Physics and compatibility
+
+This change deliberately does not modify the PE split-step order, Gaussian
+source, sponge formula, surface reflection formula, joint-kstat `deltaG`,
+adjoint `q/a`, PM covariance contraction, carrier-phase conversion, public
+surface default, window default, or bubble default. Existing output field
+names and `H_f=H_direct_f+H_reflect_f` semantics remain required.
+
+### Documentation
+
+- `README.md` is now the concise Chinese repository entry and navigation.
+- `vertical_comm_guide.md` is the current Chinese technical authority for
+  coordinates, PE envelope, surfaces, adjoint/statistics, CIR/LFM,
+  communication outputs, validation boundaries, and recommendations.
+- `PROJECT_CONTEXT.md` remains append-only long-term model memory: history is
+  preserved and this top index points to current paths and conclusions.
+- `scripts/README.md`, `src/README.md`, `docs/history/README.md`, and the
+  dated status report define non-overlapping operational roles.
+
+### Post-migration validation
+
+- Root/external-directory setup and single-definition `which -all` checks
+  passed. Code Analyzer scanned 155 MATLAB files with zero parse errors.
+- Reduced scalar direct-only/direct-plus-reflect closure passed; wrapper vs
+  implementation difference was zero, total component closure was
+  `3.47e-18`, and seeded/override/diagnostic transparency passed.
+- PE 32^2 / PM 64^2, 4/6/8 kHz cached/adjoint smoke gave inner-product error
+  `3.35e-15` and reduced/direct-DSP projection errors
+  `1.04e-15/1.05e-15`.
+- The F=9, PE 64^2 QPSK/AWGN smoke had IFFT closure `2.96e-16`, channel
+  closure `5.55e-17`, and no NaN/Inf.
+- Both relocated 2k scripts completed; all five key CSV SHA-256 values were
+  identical to the pre-migration files.
+- Several MATLAB batches (including cold setup and FFT-heavy checks) printed
+  passing assertions and then hit a local R2025b DDUX/threadpool
+  `std::terminate` during process shutdown. Other batches exited normally;
+  the shutdown issue is recorded rather than reported as a clean process
+  exit.
+
+### Remaining issues
+
+- Public 50 m/default-sponge settings remain unchanged although the strict
+  complete-reflection recommendation is 192.1875 m/no-sponge.
+- Random-surface paired wideband convergence is incomplete.
+- Bellhop absolute amplitude/source normalization and infinite-aperture point
+  source equivalence remain open.
+- Li2009/SSA transverse convergence and higher-order validation remain open.
+- The exact-adjoint/statistics v1 scope is still uniform CPU double, fixed
+  grid/frequency, one nearest-grid receiver, and no bubble/Doppler.
+
+## 2026-08-20 Unfolded-coordinate Gaussian PE--Bellhop validator
+
+Added the validation-only entry
+`scripts/validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m`.
+It maps the vertical 100 m-to-3 m geometry to a Bellhop horizontal free-space
+case: the direct path is 97 m, while the pressure-release image path is 103 m
+and is multiplied by `-1` at the comparison stage. Bellhop uses matched upper
+and lower halfspaces, so the artificial depth boundaries do not add rays.
+
+The entry calls the existing production Gaussian source through
+`vertical_channel_model` (sigma `0.3 m`), keeps the converged PE aperture
+(`192.1875 m`, `N=984`) and sponge off by default, writes a frequency-dependent
+`.sbp` directionality from the Gaussian angular spectrum, and compares PE,
+independent one-step continuous Weyl/Hankel axis references, and Bellhop using
+relative quantities `G=H/H(0)`, `Q=H_reflect/H_direct`, and `1+Q`. It includes
+5001/10001 beam convergence checks, 4--8 kHz relative PDP/group-delay outputs,
+spatial profiles, the separate PE unfolded identity, and the existing small
+offset native-coordinate arrival regression. Bellhop SHD files with source
+beam patterns are parsed by the dedicated
+`scripts/validation/support/read_bellhop_shd_unfolded_vertical.m`; no external
+Acoustic Toolbox plotting path is retained.
+
+The 128x128, 32 m smoke run completed and correctly passed beam convergence,
+the PE unfolded identity (`2.51e-13`) and component closure
+(`3.47e-18`). Its spatial/wideband checks fail as expected because that small
+aperture is intentionally contaminated by periodic-window effects. The full
+984x984, 65-frequency run subsequently completed and saved 65 formal Bellhop
+shade files, 3 spatial-profile files, 6 beam-audit files, MAT/CSV/PNG output,
+and the generated report. Beam convergence, wideband TL/phase, group delay,
+PDP, the independent PE--AS identity (`4.74e-13`), native auxiliary arrivals,
+and `H_f=H_direct_f+H_reflect_f` closure (`3.88e-18`) passed. The only failed
+hard checks were the transverse profile phase (`0.0612 rad` versus `0.05`) and
+transverse profile complex L2 (`0.0613` versus `0.02`); axial/wideband relative
+channel agreement passed, so the validator remains `passed=false` and no
+threshold was relaxed. The point-source normalization layer used the prior
+validated saved audit because the installed legacy Bellhop executable crashed
+on a fresh ±180° point-source audit; this external limitation is recorded in
+the report. A 256x256, 8/16-frequency direct-plus-reflect communication smoke
+and the reduced reflected-chain diagnostic regression also completed
+successfully. No PE marching, Gaussian source, public window, or sponge
+defaults were changed.
+
+The detailed report now recommends a low-cost transverse three-way audit as
+the next action: compare the saved 4/6/8 kHz PE slices against an independent
+one-step exact angular-spectrum slice and then against Bellhop. This should
+separate PE extraction errors from Bellhop source-mapping/2D-ray-beam phase
+effects without rerunning the 65-frequency production PE batch. Until that
+audit explains the `0.0612 rad` outer-profile discrepancy, the formal status
+remains failed even though the axial 4--8 kHz relative channel passed.

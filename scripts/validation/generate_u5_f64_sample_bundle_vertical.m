@@ -2,7 +2,7 @@ function meta=generate_u5_f64_sample_bundle_vertical(n_samples,seed)
 %GENERATE_U5_F64_SAMPLE_BUNDLE_VERTICAL Save H and physical CIR without PE.
 if nargin<1, n_samples=10000; end
 if nargin<2, seed=2700001; end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 folder=fullfile(root,'results','validation','u5_conditional_channel_f64');
 S=load(fullfile(folder,'u5_conditional_channel_model_f64_full.mat'),'model'); model=S.model;
 model=upgrade_conditional_channel_phase_vertical(model, ...

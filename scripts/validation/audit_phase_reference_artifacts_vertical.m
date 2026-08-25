@@ -1,6 +1,7 @@
 function audit = audit_phase_reference_artifacts_vertical(root_dir,run_meta,out_dir)
 %AUDIT_PHASE_REFERENCE_ARTIFACTS_VERTICAL Read-only registered MAT audit.
 if nargin<1 || isempty(root_dir), root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); end
+addpath(root_dir); setup_vertical_project();
 if nargin<2 || isempty(run_meta), run_meta=pe_phase_release_run_meta_vertical(root_dir); end
 if nargin<3 || isempty(out_dir)
     out_dir=fullfile(root_dir,'results','validation','pe_phase_release_candidate',run_meta.run_id);

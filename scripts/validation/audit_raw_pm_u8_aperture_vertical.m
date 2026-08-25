@@ -1,6 +1,6 @@
 %% U=8 raw-PM aperture convergence and center-crop audit
 clear; close all; clc;
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 folder=fullfile(root,'results','validation','u8_conditional_channel_f64');
 if ~exist(folder,'dir'), mkdir(folder); end
 U=8; aperture=[100,150,200]; grid=[256,384,512]; seeds=2300001+(0:127); pe_n=128; dx=50/128;

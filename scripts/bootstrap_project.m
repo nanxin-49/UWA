@@ -8,11 +8,7 @@ bootstrap_file = mfilename('fullpath');
 project_root = fileparts(fileparts(bootstrap_file));
 
 addpath(project_root);
-addpath(fullfile(project_root, 'scripts'));
-addpath(fullfile(project_root, 'scripts', 'validation'));
-addpath(fullfile(project_root, 'scripts', 'comparisons'));
-addpath(fullfile(project_root, 'scripts', 'experiments'));
-addpath(fullfile(project_root, 'scripts', 'reporting'));
+setup_vertical_project();
 
 stack_info = dbstack('-completenames');
 if numel(stack_info) >= 2
@@ -29,7 +25,7 @@ elseif contains(script_file, [filesep 'comparisons' filesep])
     script_category = 'comparisons';
 elseif strcmp(script_name, 'comm_main_vertical_psk') || startsWith(script_name, 'comm_')
     script_category = 'communication';
-elseif strcmp(script_name, 'main_vertical') || strcmp(script_name, 'explain_main_vertical') || ...
+elseif startsWith(script_name, 'main_vertical') || strcmp(script_name, 'explain_main_vertical') || ...
         strcmp(script_name, 'visualize_surface_reflection_wavefield_vertical')
     script_category = 'visualization';
 elseif strcmp(script_name, 'generate_ssa1_group_meeting_report_vertical')

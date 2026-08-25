@@ -2,7 +2,7 @@ function validation=validate_gaussian_sponge_wideband_vertical(overrides)
 %VALIDATE_GAUSSIAN_SPONGE_WIDEBAND_VERTICAL Direct-path Gaussian H(f) audit.
 
 if nargin<1, overrides=struct(); end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 cfg=local_defaults(root); cfg=local_overrides(cfg,overrides);
 sponge_file=fullfile(cfg.output_dir,'gaussian_sponge_validation.mat');
 if exist(sponge_file,'file')~=2, error('Run validate_gaussian_sponge_vertical first.'); end

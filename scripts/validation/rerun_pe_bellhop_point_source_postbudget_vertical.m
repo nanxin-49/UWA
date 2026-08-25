@@ -3,7 +3,7 @@ function validation=rerun_pe_bellhop_point_source_postbudget_vertical(overrides)
 % Runs only after the continuous Weyl reference gate is available.
 
 if nargin<1 || isempty(overrides), overrides=struct(); end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 cfg=local_defaults(root); cfg=local_overrides(cfg,overrides);
 budget_file=fullfile(cfg.error_budget_dir,'point_source_error_budget.mat');
 if exist(budget_file,'file')~=2, error('Run validate_pe_point_source_error_budget_vertical first.'); end

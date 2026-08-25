@@ -1,7 +1,7 @@
 %% U=5/U=8 physical, joint, and conditional-generator communication validation
 % Set TWO_NODE_COMM_MODE=smoke or full. Public communication defaults stay unchanged.
 clear; close all; clc;
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 mode=lower(strtrim(getenv('TWO_NODE_COMM_MODE'))); if isempty(mode), mode='smoke'; end
 if ~ismember(mode,{'smoke','full'}), error('TWO_NODE_COMM_MODE must be smoke or full.'); end
 out_dir=fullfile(root,'results','validation','two_node_communication'); if ~exist(out_dir,'dir'), mkdir(out_dir); end

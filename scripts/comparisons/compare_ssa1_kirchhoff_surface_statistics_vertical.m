@@ -151,7 +151,7 @@ paramsV.surface_ssa_conv_padding = 'periodic';
 end
 
 function specs = local_model_specs(include_pm)
-source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+source_id = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
     'pressure-release / Dirichlet first-order perturbation-limit geometry'];
 specs = struct([]);
 specs(1).model_name = 'kirchhoff_spatial';

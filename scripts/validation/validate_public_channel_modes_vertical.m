@@ -1,6 +1,6 @@
 %% Reduced-grid public direct-only / direct-plus-reflect regression
 clear; clc;
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 validation_run_meta=pe_phase_release_run_meta_vertical(root,struct( ...
     'frequency_axis_hz',6000,'seed_definition',struct('surface',34567)));
 p=struct('f0',6000,'enable_wideband',false,'c0',1500,'z_max',100, ...

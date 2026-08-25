@@ -2,7 +2,7 @@ function validation=validate_gaussian_window_convergence_vertical(overrides)
 %VALIDATE_GAUSSIAN_WINDOW_CONVERGENCE_VERTICAL Production Gaussian PE/AS/window audit.
 
 if nargin<1, overrides=struct(); end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 cfg=local_defaults(root); cfg=local_overrides(cfg,overrides);
 if ~exist(cfg.output_dir,'dir'), mkdir(cfg.output_dir); end
 

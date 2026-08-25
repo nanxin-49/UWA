@@ -1,6 +1,6 @@
 %% Validate streaming-series F=64 builder against the original full builder
 clear; close all; clc;
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 folder=fullfile(root,'results','validation','u5_conditional_channel_f64');
 load(fullfile(folder,'f64_joint_pe_cache.mat'),'cache','joint_model'); original=joint_model; clear joint_model
 load(fullfile(folder,'f64_joint_streaming_model_u5.mat'),'joint_model'); optimized=joint_model; clear joint_model

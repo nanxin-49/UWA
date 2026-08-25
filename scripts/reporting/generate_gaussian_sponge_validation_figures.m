@@ -2,7 +2,7 @@ function artifacts=generate_gaussian_sponge_validation_figures(overrides)
 %GENERATE_GAUSSIAN_SPONGE_VALIDATION_FIGURES Figures and final report.
 
 if nargin<1, overrides=struct(); end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 cfg=local_defaults(root); cfg=local_overrides(cfg,overrides);
 if ~exist(cfg.figure_dir,'dir'), mkdir(cfg.figure_dir); end
 g=load(fullfile(cfg.result_dir,'extended_window','gaussian_window_convergence.mat'),'validation'); gate=g.validation;

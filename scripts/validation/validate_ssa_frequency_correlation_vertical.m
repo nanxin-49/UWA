@@ -136,7 +136,7 @@ paramsV.surface_ssa_kernel_mode = 'ssa1_geometry';
 paramsV.surface_ssa_coherent_order = 'ssa1';
 paramsV.surface_ssa_frequency_correlation_mode = 'independent';
 paramsV.surface_ssa_frequency_correlation_rho = rho;
-paramsV.surface_ssa_geometry_source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+paramsV.surface_ssa_geometry_source_id = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
     'pressure-release / Dirichlet first-order perturbation-limit geometry'];
 paramsV.surface_ssa_kz_branch = 'downward_positive_real';
 paramsV.surface_ssa_conv_padding = 'periodic';

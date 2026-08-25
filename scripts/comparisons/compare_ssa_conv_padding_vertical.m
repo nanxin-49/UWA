@@ -152,7 +152,7 @@ paramsV.surface_ssa_conv_padding = 'periodic';
 end
 
 function specs = local_kernel_specs()
-source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+source_id = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
     'Dirichlet SSA first-order / perturbation-limit geometry'];
 specs = struct([]);
 specs(1).kernel_mode = 'pm_convolution';

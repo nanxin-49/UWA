@@ -22,9 +22,9 @@ The long-term project context is a seabed-to-near-surface vertical underwater ac
 - Receiver depth must satisfy `0 <= z_rx < z_tx`.
 
 ## Files That Require Extra Caution
-- `vertical_channel_model.m`: public channel API and config validation boundary.
-- `vertical_wape_propagator.m`: propagation core and frequency loop.
-- `pm_surface_boundary_model.m`: rough-surface reflection model.
+- `vertical_channel_model.m`: public compatibility API wrapper; validated implementation is `src/channel/vertical_channel_model_impl.m`.
+- `src/propagation/vertical_wape_propagator.m`: propagation core and frequency loop.
+- `src/surface/pm_surface_boundary_model.m`: rough-surface reflection model.
 - `comm_main_vertical_psk.m`: communication-chain reference consumer of `H_f`.
 - Markdown method notes or research-summary documents that describe the implemented physics.
 

@@ -489,7 +489,7 @@ else
     paramsV.surface_ssa_scatter_scale = 1;
     paramsV.surface_ssa_conv_padding = 'periodic';
     paramsV.surface_ssa_geometry_source_id = ...
-        'SSA.md; first-order pressure-release / Dirichlet geometry';
+        'vertical_comm_guide.md; first-order pressure-release / Dirichlet geometry';
 end
 end
 

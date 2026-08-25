@@ -3,7 +3,7 @@ function validation = validate_bellhop_freefield_normalization_vertical(override
 % Uses the matched-halfspace construction from the official omni.env case.
 
 if nargin<1 || isempty(overrides), overrides=struct(); end
-root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root);
+root=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root); setup_vertical_project();
 cfg=local_defaults(root); cfg=local_overrides(cfg,overrides); local_validate(cfg);
 if ~exist(cfg.output_dir,'dir'), mkdir(cfg.output_dir); end
 rows=repmat(local_row(),numel(cfg.frequencies_hz)*numel(cfg.beam_counts)*numel(cfg.step_values_m),1);

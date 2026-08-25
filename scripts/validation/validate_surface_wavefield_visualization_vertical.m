@@ -109,7 +109,7 @@ paramsV.surface_ssa_kernel_mode = 'ssa1_geometry';
 paramsV.surface_ssa_random_scatter = true;
 paramsV.surface_ssa_conv_padding = 'periodic';
 paramsV.surface_ssa_geometry_source_id = ...
-    'SSA.md; first-order pressure-release / Dirichlet geometry';
+    'vertical_comm_guide.md; first-order pressure-release / Dirichlet geometry';
 paramsV.sea_wind_speed = 5;
 paramsV.sea_hs_target = 0.2;
 paramsV.sea_seed = 12345;

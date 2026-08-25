@@ -144,7 +144,7 @@ end
 end
 
 function model_specs = local_model_specs()
-source_id = ['SSA.md; Thorsos & Broschat 1995 JASA, ', ...
+source_id = ['vertical_comm_guide.md; Thorsos & Broschat 1995 JASA, ', ...
     'Dirichlet SSA first-order / perturbation-limit geometry'];
 model_specs = struct([]);
 model_specs(1).model_name = 'kirchhoff_spatial';

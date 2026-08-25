@@ -1,6 +1,6 @@
 function preparation = prepare_pe_phase_reference_release_candidate_vertical()
 %PREPARE_PE_PHASE_REFERENCE_RELEASE_CANDIDATE_VERTICAL Audit and archive old outputs.
-root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir);
+root_dir=fileparts(fileparts(fileparts(mfilename('fullpath')))); addpath(root_dir); setup_vertical_project();
 f64=linspace(4000,8000,64).';
 seed_definition=struct('phase',810001,'adjoint','script_fixed_seeds', ...
     'u5','1100001..1900001','u8','2100001..2900001','two_node','script_fixed_seeds');

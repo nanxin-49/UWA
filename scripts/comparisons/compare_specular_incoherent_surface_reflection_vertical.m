@@ -134,7 +134,7 @@ paramsV.surface_ssa_random_scatter = true;
 paramsV.surface_ssa_scatter_scale = scatter_scale;
 paramsV.surface_ssa_seed_offset = 100000;
 paramsV.surface_ssa_geometry_source_id = ...
-    'SSA.md; first-order pressure-release / Dirichlet geometry';
+    'vertical_comm_guide.md; first-order pressure-release / Dirichlet geometry';
 paramsV.surface_ssa_kz_branch = 'downward_positive_real';
 paramsV.surface_ssa_conv_padding = char(conv_padding);
 paramsV.surface_ssa_frequency_correlation_mode = 'independent';
