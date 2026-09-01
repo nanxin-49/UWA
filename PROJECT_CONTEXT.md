@@ -147,6 +147,23 @@ this is a visualization/filtering result rather than a new PE validation.
   backward-range `ScalePressure` diagnostic. No p/q or phase correction was
   introduced, and PM random-wall work remains a separate future validation.
 
+### Bellhop 2020 fixed-seed 1-D PM internal-wall validation（2026-09-01）
+
+- `validate_bellhop_internal_pm_wall` and its isolated Bellhop 2020 overlay
+  generate one seeded 1-D PM Fourier realization and write the same samples to
+  native C-ATI and rotated `.iwpm` cases. The overlay keeps native
+  `Reflect2D`, `Dss`, pressure-release phase, p/q state, and proper pi rotation;
+  PE and communication code are untouched.
+- The binary builds and internal-wall smoke runs complete with exact
+  intersection, one phase jump, preserved q/p under rotation, and positive
+  transformed range. The requested native-ATI `z=eta(r)` versus rotated
+  backward-range return branch is not a convergent equivalent chart for the
+  frozen zero-clearance receiver pairing; unfiltered PM samples additionally
+  produce grazing-sensitive `Dss`/`RN` kicks as profile density changes.
+- Therefore the PM stage is recorded as **NOT_FEASIBLE for the requested
+  native↔rotated hard comparison** and is stopped before any PE rough-wall
+  cross-validation. See `reports/bellhop_internal_pm_wall_validation_report.md`.
+
 ### Active core
 
 - Public channel: root `vertical_channel_model.m` compatibility wrapper ->

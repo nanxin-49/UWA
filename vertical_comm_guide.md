@@ -121,7 +121,15 @@ sinusoidal 或 PM 粗糙墙。
 total-minus-direct 配对后，反射场 phase 差约 `1.02e-5 rad`，剩余约
 `-0.2606 dB` 为 backward-range `ScalePressure` 诊断偏差。详见
 `reports/bellhop_curved_wall_beam_frame_audit_report.md`。本任务仍未实现
-sinusoidal/PM 随机墙。
+PM 随机墙；PM 阶段的结果与限制见下文。
+
+固定 seed 的 1-D PM internal-wall validation-only overlay 随后已加入
+`scripts/validation/validate_bellhop_internal_pm_wall.m`。它只复用原生
+`Reflect2D`/`InfluenceGeoHatCart`，不修改 PE；standalone internal smoke
+通过，但 native `z=eta(r)` 与 rotated backward-range branch 无法构成
+收敛的等价返回路径，未滤波 PM polyline 的 `Dss`/grazing kick 也随采样密度
+敏感。该阶段按 `reports/bellhop_internal_pm_wall_validation_report.md`
+停止，未进入 PE rough-wall 交叉验证。
 
 2026-08-27 起，正常坐标粗糙海面 Bellhop 任务按用户要求重建为平均水深
 100 m、物理源离底 0 m、Rx 深度 3 m。海底测试模型暂定均匀流体半空间：

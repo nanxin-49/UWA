@@ -262,6 +262,26 @@ The atlas distinguishes physical boundary models from computational acceleration
   receiver-column indexing artifact; correctly paired reflected-field phase
   differs by only `1.02e-5 rad`. No PM random wall is implemented here.
 
+### Bellhop 2020 fixed-seed 1-D PM internal-wall validation
+
+- `validation/validate_bellhop_internal_pm_wall.m` generates one deterministic
+  1-D Pierson--Moskowitz Fourier realization per profile density and writes the
+  same samples to native C-ATI and to the validation-only rotated wall. It
+  scans a small profile/step/beam matrix at 4 kHz and records wall geometry,
+  signed C-ATI curvature, native `Reflect2D` p/q state, phase, delay and
+  post-rotation range monotonicity.
+- `validation/support/sample_fixed_pm_profile_vertical.m` is the sole seeded
+  profile generator; it performs no per-case smoothing, normalization or
+  scattering calculation. The isolated overlay is under
+  `validation/support/bellhop_internal_pm_wall_poc/`, and its `.iwpm` sidecar
+  contains the shared `(r,z)` samples and seed.
+- Outputs belong under `results/validation/bellhop_internal_pm_wall_poc/`; the
+  report is `reports/bellhop_internal_pm_wall_validation_report.md`. The stage
+  remains Bellhop-only and does not modify PE, `Reflect2D`,
+  `InfluenceGeoHatCart`, or the official executable. Native backward-range
+  amplitude is diagnostic only; geometry, phase, delay and beam-state checks
+  are the hard gates.
+
 ### Bellhop curved-wall beam/frame covariance audit
 
 - `validation/validate_bellhop_curved_wall_beam_frame_audit.m` runs the
