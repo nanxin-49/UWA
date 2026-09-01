@@ -43,6 +43,7 @@ comm_main_vertical_psk     % MPSK 通信演示
 | `reports/` | 一次性验证报告和当前状态报告 |
 | `results/` | MAT、CSV、图片、视频及检查点 |
 | `docs/history/` | 非权威历史规格与旧说明，仅供追溯 |
+| `cash/` | 已退役数据的本地隔离区；不参与正常读取/检索/运行，Git 忽略全部内容 |
 
 模块和依赖方向见 `src/README.md`，脚本命令见 `scripts/README.md`。
 
@@ -78,10 +79,23 @@ comm_main_vertical_psk     % MPSK 通信演示
 - 可视化结果：`results/visualization/<case>/`
 - 一次性报告：`reports/`
 - 大型正式结果不放回根目录，也不由目录整理任务自动删除或重算。
+- `cash/` 仅在用户明确要求归档操作时访问；禁止日常自动读取或恢复。用途及约束见 `AGENTS.md`（`AGENT.md` 为说明入口）。
 
 当前技术状态日期为 2026-08-20。目录迁移仅改变文件位置和初始化方式，没有改变 PE marching、相位公式、海面统计公式或公共默认配置。
 
 ## PE--Bellhop 展开坐标验证
+
+正常坐标粗糙海面实验现按用户决定采用 **100 m 水深、物理源离底1 m（Tx99 m）**，
+Rx仍为3 m。当前独立绘图入口为 `generate_bellhop_100m_source1m_visuals_vertical`，
+先做4 kHz/89.5°代表案例，显示全部有限范围内的接收贡献和完整发射扇区。
+见 [执行计划](reports/bellhop_100m_rebaseline_plan.md)。旧500 m结果已隔离；
+[边界源实测报告](reports/bellhop_100m_boundary_source_report.md)保留为历史诊断，
+不再继续微小离底极限扫描。没有修改PE生产默认收发位置。
+两类图与范围说明见 [离底1 m展示报告](reports/bellhop_100m_source1m_visuals_report.md)。
+若只查看与当前PE拓扑相同的路径，运行
+`generate_bellhop_pe_equivalent_ray_paths_vertical`；该入口仅绘制一条直达和
+一条“一次海面、零海底”Bellhop轨迹，不把含底或高阶多次反射纳入图片。
+以下镜像展开证据仍在其原限定环境内保留。
 
 当前新增的验证入口
 `scripts/validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m`

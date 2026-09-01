@@ -370,3 +370,68 @@ PE 的 `|Q|` 位于 `0.941744--0.941801`，Bellhop 位于
 - 正式执行日志：`formal_unfolded_run.log`、`formal_unfolded_run.err.log`
 
 ![正式验证汇总图](../results/validation/pe_bellhop_unfolded_flat_gaussian/pe_bellhop_unfolded_flat_gaussian.png)
+
+## 12. 后续独立 AS 横向审计结果
+
+在正式结果基础上，已完成低成本的独立横向角谱审计。该审计读取正式 MAT，
+不重新运行 65 点 PE，也不调用 Bellhop；对 `4/6/8 kHz` 的直达 `97 m`
+和反射 `103 m` 分别计算一步独立二维角谱，并在原有六个横向采样点上比较：
+
+| 比较 | 最大 TL 差 | 最大 phase 差 | 最大复场误差 | 判定 |
+|---|---:|---:|---:|:---:|
+| PE--AS 直达 | `3.55e-12 dB` | `3.05e-13 rad` | `5.10e-13` | PASS |
+| PE--AS 反射 | `1.88e-12 dB` | `1.59e-13 rad` | `2.43e-13` | PASS |
+| Bellhop--AS 直达 | `0.01582 dB` | `0.06120 rad` | `0.06117` | FAIL |
+| Bellhop--AS 反射 | `0.01274 dB` | `0.05167 rad` | `0.05165` | FAIL |
+
+最差点仍为 `8 kHz、19.53125 m`。因此三方比较已经完成了关键归因：
+
+> PE 与独立 AS 在横向采样点上达到数值精度一致；原来的 PE--Bellhop
+> 横向差异由 Bellhop/源指向性映射/二维射线束场表示造成，而不是 PE
+> marching 算子或 PE 横向场提取错误。
+
+该审计的正式产物位于：
+
+- `results/validation/pe_as_bellhop_transverse/pe_as_bellhop_transverse_audit.mat`
+- `results/validation/pe_as_bellhop_transverse/pe_as_bellhop_transverse.csv`
+- `results/validation/pe_as_bellhop_transverse/pe_as_bellhop_transverse_checks.csv`
+- `results/validation/pe_as_bellhop_transverse/pe_as_bellhop_transverse.png`
+- `reports/pe_as_bellhop_transverse_audit_report.md`
+
+因此下一步不再需要检查 PE 核心，应转入低成本 Bellhop-only 扫描和
+2D/3D Gaussian 源映射审计。原正式状态仍保留 `passed=false`，因为
+Bellhop 横向复场 hard check 本身尚未通过；轴向宽带信道结论不受影响。
+
+## 13. Bellhop-only 参数扫描结果
+
+随后只对 Bellhop 做了 `8 kHz` 横向扫描，没有重新运行 PE。扫描固定
+`10001` 条波束，组合测试了 `step_m={0.1,0.05,0.025}` m、角半宽
+`{20,30,45}` deg 和 `.sbp` 采样数 `{1201,2401,4801}`，共 27 个 case。
+Bellhop 输出先按正式验证使用的横向相位约定取共轭，再与同一独立 AS 参考比较；
+这一步是相位约定转换，不是逐点拟合。
+
+| 指标 | 最优扫描值 | 正式门槛 |
+|---|---:|---:|
+| direct 最大 TL 差 | `0.015867 dB` | `0.25 dB` |
+| reflect 最大 TL 差 | `0.012777 dB` | `0.25 dB` |
+| direct 最大 phase 差 | `0.061204 rad` | `0.05 rad` |
+| reflect 最大 phase 差 | `0.051673 rad` | `0.05 rad` |
+| 最大复场误差 | `0.061166` | `0.02` |
+| 通过 case | `0/27` | — |
+
+改变步长、角扇区和 `.sbp` 采样只影响约 `1e-4 dB` 量级的幅度尾数，不能消除
+约 `0.061 rad` 的远轴相位曲率差。因此当前剩余差异不由这些 Bellhop 数值参数
+不足造成，正式状态仍保持 `passed=false`，也没有修改 PE 或生产配置。
+
+扫描产物：
+
+- `results/validation/pe_as_bellhop_transverse/bellhop_scan/bellhop_transverse_parameter_scan.mat`
+- `results/validation/pe_as_bellhop_transverse/bellhop_scan/bellhop_transverse_parameter_scan.csv`
+- `results/validation/pe_as_bellhop_transverse/bellhop_scan/bellhop_transverse_parameter_scan_checks.csv`
+- `results/validation/pe_as_bellhop_transverse/bellhop_scan/bellhop_transverse_parameter_scan.png`
+- `reports/bellhop_transverse_parameter_scan_report.md`
+
+下一步应进入 2D/3D Gaussian 源映射审计：明确 Bellhop `.sbp` 是二维射线平面
+中的指向性、功率指向性还是包含 Jacobian 的等效权重，并与 PE 的完整径向
+Weyl 角谱逐项对齐。在该映射闭环前，不应把横向 hard check 标记为通过，也不应
+据此修改 PE marching、窗口或 sponge。
