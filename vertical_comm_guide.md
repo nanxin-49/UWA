@@ -88,6 +88,83 @@ H_f=H_{\mathrm{direct},f}+H_{\mathrm{reflect},f}.
 横向窗口。结果目录为
 `results/validation/pe_bellhop_unfolded_flat_gaussian/`。
 
+在此基础上，validation-only 的 Bellhop 2020 flat internal-wall POC 位于
+`scripts/validation/validate_bellhop_internal_flat_wall_poc.m`。它让射线在
+`r=100 m` 的真实交点调用原生 2D `Reflect2D`，随后绕 `(100,0)` 旋转 pi，
+并只把单调增加的 transformed post-wall branch 交给未修改的
+`InfluenceGeoHatCart`。4 kHz 的 `step=0.2/0.1/0.05 m`、
+`Nbeam=2001/5001/10001` 九项检查全部恢复
+`H_wall=-P_BH(103 m)`；本结论仅批准进入 tilted straight-wall 的独立验证，
+不能外推到曲面、PM 粗糙面、分层 SSP、3D 或多次反射。详见
+`reports/bellhop_internal_flat_wall_poc_report.md`。
+
+随后完成的 tilted straight-wall validation-only POC 使用
+`r=100+0.005*z`，在 `Step2D/ReduceStep2D` 中解析求交，采用
+`t=(a,1)/sqrt(1+a^2)`、`n=(1,-a)/sqrt(1+a^2)`、`kappa=0`，并直接复用
+Bellhop 2020 原生 `Reflect2D`。反射后的分支仍绕 `(100,0)` 做 proper pi
+rotation，再交给未修改的 `InfluenceGeoHatCart`。4 kHz 的 3×3
+step/beam 扫描显示几何、pressure-release 相位、Amp、p/q、travel time 和
+正 range 均通过；同一物理直线的 native ATI arrival 在反射点、方向和时延上
+一致。native 原坐标的 backward-range Cartesian 场保留约 0.286 dB 的稳定
+幅度偏移（phase 约 0.003 rad），没有人为校正。结果详见
+`reports/bellhop_internal_tilted_wall_poc_report.md`；本阶段尚未实现
+sinusoidal 或 PM 粗糙墙。
+
+随后进行的 smooth sinusoidal internal-wall validation-only POC 使用同一组
+采样点同时构造 native C-ATI 与内部墙 `r=100-A sin(Kz)`，在两次
+`ReduceStep2D` 中解析截断，并直接调用原生 `Reflect2D` 的局部 tangent、normal
+与 `Dss` 曲率路径。wall hit 后仍只做绕 `(100,0)` 的 proper pi rotation，再交给
+未修改的 `InfluenceGeoHatCart`。小振幅/长波长扫描中交点、局部几何、非零
+`kappa`、pressure-release pi 相位、Amp、p/q curvature kick、时延及正 range
+均稳定。后续 beam/frame covariance audit 发现此前约 `2.095 rad` 的读数是
+把 rotated SHD 的 102 m 首列误当成 103 m 目标列；按显式目标列并用 native
+total-minus-direct 配对后，反射场 phase 差约 `1.02e-5 rad`，剩余约
+`-0.2606 dB` 为 backward-range `ScalePressure` 诊断偏差。详见
+`reports/bellhop_curved_wall_beam_frame_audit_report.md`。本任务仍未实现
+sinusoidal/PM 随机墙。
+
+2026-08-27 起，正常坐标粗糙海面 Bellhop 任务按用户要求重建为平均水深
+100 m、物理源离底 0 m、Rx 深度 3 m。海底测试模型暂定均匀流体半空间：
+1800 m/s、2000 kg/m³、0.5 dB/波长；这是可复现测试参数，不是实测底质。
+原 500 m 粗糙海面试验和完整声线图已退役，不能作为 100 m 全多途信道的证据。
+旧运行与绘图代码保留，但不得按其 500 m 默认设置继续当前任务。
+
+**最新决定覆盖上述贴底安装：用户已接受实际离底1 m，Tx改为99 m，Rx仍为3 m。**
+以下epsilon诊断仅保留为历史，不再继续。新入口
+`generate_bellhop_100m_source1m_visuals_vertical`仅用于Bellhop代表案例及声线图，
+不改变PE默认配置。接收A/E与重建R使用12 m水平范围；展示发射扇区使用120 m，
+两者不能混称为同范围多途全集。完整扇区保留触面后的回程、底反射及已保存多次
+反射；Bellhop终止规则及轨迹存储上限仍适用，不延长或补造射线。
+
+用户已接受以 epsilon=1e-3/1e-4/1e-5 m 检查水侧极限，物理离底字段仍为 0。
+安装版本不仅不支持精确边界源，还会按 SSP 下界自动上移过近的源。本轮使用
+显式平底 BTY 固定物理海底 100 m，只延伸均匀 SSP 0.1 m，绕过输入层限制；
+不是加深海底。整体输入坐标下移 1 m，海面、海底、Tx、Rx 一起移动，绘图应
+再还原至实际 0–100 m。请求最小 epsilon 的 ARR 记录值约为 8e-6 m。
+
+4 kHz、89.5°、10001 波束、步长 0.02 m 的平面/固定粗糙面六项检查已完成。
+1e-4→1e-5 m 的四个直达/一次海面类别均满足 0.01 dB、0.002 rad、1 us；
+粗糙面高阶含底类别未通过，所以没有继续角度/频率扩展。粗糙面全部 ARR
+合成响应变化为 -0.0385556 dB TL、+0.0103577 rad；不能宣称全信道已收敛。
+平面 D+S 因强相消，合成变化也大于单条路径误差，详见报告。
+
+随后对同一粗糙面两个 epsilon 运行 Bellhop C 模式并与 ARR 重建比较，C/ARR
+复比值的差异仅为 0.000533 dB TL、2.29e-5 rad。这说明高阶路径的 epsilon
+敏感性已存在于相干场本身，而不是 ARR 后处理单独制造；该结果仍不批准
+完整含底多途。报告见 `reports/bellhop_100m_arrival_field_audit_report.md`。
+
+ARR 按安装版本公式重建 U_native=sum A exp(i phi-i omega tau)，再取共轭
+得到项目 exp(-i omega t) convention。Delta TL=TL_new-TL_old，幅度变化
+为其相反数；本轮 arrival 加权时延不是宽带群时延。该实验的 X 线源不等于
+PE Gaussian 源，绝对输出级不能混比。
+报告见 `reports/bellhop_100m_boundary_source_report.md` 和
+`reports/bellhop_100m_rough_surface_report.md`；计划及归档清单见
+`reports/bellhop_100m_rebaseline_plan.md`。`cash/` 不参与正常读取或自动恢复。
+
+后续图仍区分 A 合并后的 arrival 与 E 接收贡献波束，E 轨迹用独立 R 重建，
+不把射线端点人为接到 Rx。比较时分别报告直达、一次海面和含海底的多途；
+Bellhop 含海底的全响应不能直接等同于目前 PE 的直达加海面反射响应。
+
 ## 4. 海面边界、SSA 与 bubble
 
 海面实现位于 `src/surface/`。`paramsV.surface_boundary_model` 当前允许：

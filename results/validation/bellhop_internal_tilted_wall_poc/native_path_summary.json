@@ -1,0 +1,16 @@
+{
+  "native_source_angle_deg": -0.0167267192,
+  "analytic_target_source_angle_deg": -0.016687697758462,
+  "source_angle_error_deg": -3.90214415378e-05,
+  "native_receiver_angle_deg": 179.442093,
+  "native_delay_s": 0.0686666891,
+  "analytic_path_length_m": 102.99985437247,
+  "native_delay_path_length_m": 103.00003365,
+  "native_delay_path_error_m": 0.00017927753,
+  "native_arrival_amplitude": 0.010033899,
+  "rotated_wall_field_amplitude": 0.00970872876,
+  "native_arrival_phase_deg": 180.0,
+  "rotated_wall_field_phase_deg": 120.13989440401214,
+  "native_arrival_top_bounces": 1,
+  "native_arrival_bottom_bounces": 0
+}

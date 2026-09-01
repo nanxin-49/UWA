@@ -1,0 +1,54 @@
+function result = run_bellhop_internal_sinusoidal_wall_poc_vertical(cfg)
+%RUN_BELLHOP_INTERNAL_SINUSOIDAL_WALL_POC_VERTICAL Run the sinusoidal-wall binary.
+arguments
+    cfg (1,1) struct
+end
+required={'bellhop_exe','case_root','run_type','wall_r0_m','wall_amplitude_m', ...
+    'wall_wavenumber_per_m','wall_profile_r_m','wall_profile_z_m','mapped_receiver_range_m'};
+for ii=1:numel(required)
+    if ~isfield(cfg,required{ii}), error('Missing cfg.%s.',required{ii}); end
+end
+if exist(cfg.bellhop_exe,'file')~=2
+    error('Bellhop internal-wall validation executable is missing: %s',cfg.bellhop_exe);
+end
+[env_file,sbp_file]=write_bellhop_unfolded_gaussian_env_vertical(cfg.case_root,cfg);
+iw3_file=[cfg.case_root '.iw3'];
+fid=fopen(iw3_file,'w');
+if fid<0, error('Cannot create %s.',iw3_file); end
+cleanup=onCleanup(@()fclose(fid));
+fprintf(fid,'%.17g\n%.17g\n%.17g\n%.17g\n%d\n',cfg.wall_r0_m,cfg.wall_amplitude_m, ...
+    cfg.wall_wavenumber_per_m,cfg.mapped_receiver_range_m,numel(cfg.wall_profile_r_m));
+fprintf(fid,'%.17g %.17g\n',[cfg.wall_profile_r_m(:) cfg.wall_profile_z_m(:)].');
+clear cleanup
+
+extensions={'.arr','.shd','.ray','.prt','.iwdiag'};
+for ii=1:numel(extensions)
+    target=[cfg.case_root extensions{ii}];
+    if exist(target,'file')==2, delete(target); end
+end
+out_dir=fileparts(cfg.case_root); old=pwd; cleanup=onCleanup(@()cd(old)); cd(out_dir);
+[~,name]=fileparts(cfg.case_root);
+data_file=[cfg.case_root '.shd']; diag_file=[cfg.case_root '.iwdiag']; prt_file=[cfg.case_root '.prt'];
+[status,command_output]=system(sprintf('"%s" "%s"',cfg.bellhop_exe,name));
+clear cleanup
+if status~=0, error('Internal sinusoidal-wall Bellhop failed for %s: %s',name,command_output); end
+for path={data_file,diag_file,prt_file}
+    if exist(path{1},'file')~=2, error('Bellhop did not create %s.',path{1}); end
+end
+data=read_bellhop_shd_unfolded_vertical(data_file);
+diag_matrix=readmatrix(diag_file,'FileType','text','CommentStyle','#');
+diag_matrix=diag_matrix(~all(isnan(diag_matrix),2),:);
+names={'alpha_deg','hit_r','hit_z','wall_residual','wall_t_r','wall_t_z','wall_n_r','wall_n_z', ...
+    'tangent_error','normal_error','inc_ur','inc_uz','ref_ur','ref_uz','rot_ur','rot_uz', ...
+    'specular_error','rotation_error','phase_in','phase_ref','phase_delta','amp_in','amp_ref','amp_delta', ...
+    'p1_in','p2_in','p1_ref','p2_ref','p_ref_error','q1_in','q2_in','q1_ref','q2_ref', ...
+    'q_ref_error','p_rot_error','q_rot_error','tau_wall_real','tau_wall_imag', ...
+    'tau_receiver_real','tau_receiver_imag','min_post_dr','n_post','kappa'};
+if size(diag_matrix,2)~=numel(names)
+    error('Expected %d internal-wall diagnostic columns, found %d.',numel(names),size(diag_matrix,2));
+end
+diagnostics=array2table(diag_matrix,'VariableNames',names);
+result=struct('config',cfg,'data',data,'diagnostics',diagnostics,'command_output',command_output, ...
+    'files',struct('env',env_file,'sbp',sbp_file,'iw3',iw3_file,'data',data_file, ...
+    'diagnostics',diag_file,'prt',prt_file));
+end

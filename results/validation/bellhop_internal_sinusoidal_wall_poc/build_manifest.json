@@ -1,0 +1,12 @@
+{
+  "purpose": "Bellhop 2020 validation-only smooth sinusoidal internal wall POC",
+  "official_toolbox_root": "E:\\MISC\\BELLHOP\\AcousticsToolbox_2020",
+  "official_bellhop_sha256": "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
+  "official_step_sha256": "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
+  "overlay_bellhop_sha256": "59E85DFBBF314B5658F4FA6F96E6AE505C086D3D87880478FAD3E4A0ABAB0931",
+  "overlay_step_sha256": "E50A5E054B88362FE4B7EA4B5987C772876A73A18BB464BFA9A329ECCC17735E",
+  "validation_executable": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_sinusoidal_wall_poc\\bin\\bellhop_iwall_sinusoidal_2020.exe",
+  "validation_executable_sha256": "AA2DA9E8828AED6C69D5A486525D53896E80045B3A8278D3D58D78CD65F884E3",
+  "compiler_root": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_sinusoidal_wall_poc\\toolchain_tmp\\mingw64",
+  "compiler_version": "GNU Fortran (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r2) 15.1.0"
+}

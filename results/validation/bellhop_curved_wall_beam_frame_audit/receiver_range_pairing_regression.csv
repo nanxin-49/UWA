@@ -1,0 +1,2 @@
+rotated_range_m,native_range_m,rotated_range_index,native_total_range_index,native_direct_range_index,correct_phase_difference_rad,wrong_102m_phase_difference_rad,tl_difference_db,complex_relative_error,passed
+103,97,2,1,1,1.02193740554557e-05,-2.09458288962205,-0.260643912319784,0.0295619787584646,1

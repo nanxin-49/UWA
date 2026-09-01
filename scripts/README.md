@@ -10,7 +10,43 @@
 - `reporting/`: figure generation, summary tables, visualizations, and report builders.
 - `validation/support/`: Bellhop/Weyl/Li2009、properness、发布元数据和 artifact 检查等验证专用辅助函数；不属于公共 API。
 
+## PE--Bellhop 展开坐标横向审计
+
+本节中的早期PE–Bellhop、epsilon诊断和历史绘图入口已按用户要求移入
+`../cash/pe_bellhop_validation_scripts_2026-09-01/`。完整文件清单及归档原因见
+`../reports/pe_bellhop_validation_archive_manifest_2026-09-01.md`；归档内容不应从活动目录调用。
+
+- `../reports/pe_bellhop_complete_validation_overview.md`: 当前 PE--Bellhop
+  平面海面验证链的总报告，汇总早期原坐标、自由场、Gaussian 窗口、正式
+  展开坐标、横向三方审计、参数扫描和坐标极限结果；旧的“完整汇总”仅作
+  历史证据。
+- `validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m`: 正式的展开坐标平面海面 PE--Bellhop 对比，读取/生成 4--8 kHz Gaussian 直达、镜像反射、波束收敛和 PDP 结果。
+- `validation/validate_pe_as_bellhop_transverse_vertical.m`: 只读取正式 MAT，在 4/6/8 kHz 的六个横向采样点上计算独立一步角谱，分离 PE--AS 与 Bellhop--AS 的误差来源，不重新运行完整 PE 或 Bellhop。
+- `validation/validate_bellhop_transverse_parameter_scan_vertical.m`: 只运行 Bellhop，在 8 kHz 扫描步长、角扇区和 `.sbp` 采样密度，检查这些数值设置能否解释横向相位差。
+- `validation/validate_bellhop_rotation_limit_vertical.m`: Bellhop-only 坐标极限审计，比较当前展开坐标、原坐标 `-89°` 和 `-89.5°` 的同源 Gaussian 直达/海面反射路径。
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/validate_bellhop_rough_surface_near_vertical_limit.m`: **已归档**的历史500 m入口。
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/reporting/plot_bellhop_rough_surface_near_vertical_rays.m`: **已归档**的历史代表性绘图入口。
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/reporting/plot_bellhop_rough_surface_full_paths.m`: **已归档**的历史500 m全路径绘图入口；正常检索不读取`cash/`。
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/validate_bellhop_100m_boundary_source_vertical.m`: **已归档**的100 m水侧边界源epsilon检查。
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/validate_bellhop_100m_arrival_field_audit_vertical.m`: **已归档**的粗糙面arrival/C场诊断。
+- `reporting/generate_bellhop_100m_source1m_visuals_vertical.m`: **当前代表绘图入口。** 用户改为实际离底1 m（Tx99 m、水深100 m、Rx3 m），停止epsilon诊断。独立A/E/R显示全部接收贡献及1001条发射声线；接收范围12 m，展示扇区范围120 m，绘图还原物理深度。`render_only=true`仅重绘本轮MAT，不运行Bellhop或读取退役数据。
+- `reporting/generate_bellhop_pe_equivalent_ray_paths_vertical.m`: 从当前离底1 m结果中选择A模式唯一的0/0直达和1/0一次海面arrival，以其发射角单独运行两条R声线，并在最接近Rx的位置截断；不显示任何海底或高阶多次反射路径。结果位于当前案例的 `pe_equivalent_paths/` 子目录。
+- `../reports/bellhop_100m_rebaseline_plan.md`: 当前 100 m 水深、物理源离底1 m的计划；旧零离底内容仅为历史记录。
+
+正式结果位于 `results/validation/pe_bellhop_unfolded_flat_gaussian/`；横向审计结果位于 `results/validation/pe_as_bellhop_transverse/`，解释报告为 `reports/pe_as_bellhop_transverse_audit_report.md`。
+Bellhop-only 扫描结果位于 `results/validation/pe_as_bellhop_transverse/bellhop_scan/`，报告为 `reports/bellhop_transverse_parameter_scan_report.md`。
+坐标极限审计结果位于 `results/validation/bellhop_rotation_limit/`，报告为 `reports/bellhop_rotation_limit_report.md`。
+旧 500 m 粗糙海面结果已按用户要求移入不参与正常读取的 `cash/` 隔离区，原报告路径仅保留迁移提示。新边界源结果位于 `results/validation/bellhop_100m_rough_surface/boundary_source/explicit_bty/`；父目录中的初次隐式平底诊断不能用作收敛证据。当前状态见 `reports/bellhop_100m_rough_surface_report.md`；归档清单见新计划，不需要打开归档目录。
+
+边界源检查入口已归档（当前活动目录不再提供复现命令）；结果状态、参数和失败原因保留在
+`../reports/bellhop_100m_boundary_source_report.md`及归档清单中。
+
 ## 运行方式
+
+当前离底1 m代表图的已完成结果及限制见
+`../reports/bellhop_100m_source1m_visuals_report.md`：193条ARR、199条E贡献、1001条
+扇区；接收范围12 m、展示范围120 m，33条展示轨迹到达内部存储上限。
+同一报告也记录只保留PE直达和一次海面反射拓扑的两条Bellhop轨迹图。
 
 ```matlab
 setup_vertical_project
@@ -175,6 +211,71 @@ The atlas distinguishes physical boundary models from computational acceleration
   `results/validation/pe_bellhop_unfolded_flat_gaussian/` and the report is
   `reports/pe_bellhop_unfolded_flat_gaussian_report.md`.
 
+### Bellhop 2020 internal flat-wall POC
+
+- `validation/validate_bellhop_internal_flat_wall_poc.m` compares a
+  validation-only Bellhop 2020 internal wall at `r=100 m` against the official
+  unfolded free-field pressure at 103 m. It runs a 3-by-3 ray-step/beam-count
+  convergence matrix and audits the native reflection and post-reflection
+  coordinate state.
+- `validation/support/bellhop_internal_flat_wall_poc/` contains the two-source
+  overlay and isolated Windows build script. The official Bellhop 2020 source
+  and executable are copied/read only and are never replaced.
+- `validation/support/run_bellhop_internal_flat_wall_poc_vertical.m` writes the
+  required `.iw2` sidecar, runs the isolated binary, and reads its `.shd` and
+  per-ray `.iwdiag` diagnostics. The existing `.sbp` writer and
+  `InfluenceGeoHatCart` implementation are unchanged.
+- Outputs are under `results/validation/bellhop_internal_flat_wall_poc/`; the
+  acceptance report is `reports/bellhop_internal_flat_wall_poc_report.md`.
+
+### Bellhop 2020 internal tilted-wall POC
+
+- `validation/validate_bellhop_internal_tilted_wall_poc.m` extends the isolated
+  flat-wall overlay to the fixed straight line `r=100+0.005*z` (m). It uses
+  analytic line intersection in both `ReduceStep2D` reductions, the native
+  TOP `Reflect2D`, and the same proper pi rotation before the unchanged
+  `InfluenceGeoHatCart` call.
+- `validation/support/bellhop_internal_tilted_wall_poc/` contains the separate
+  Bellhop 2020 source overlay and build script; the native ATI comparison
+  helper is `validation/support/run_bellhop_native_tilted_wall_vertical.m`.
+- The 3-by-3 step/beam scan and native-vs-rotated diagnostics are stored under
+  `results/validation/bellhop_internal_tilted_wall_poc/`; the report is
+  `reports/bellhop_internal_tilted_wall_poc_report.md`. This stage does not
+  implement sinusoidal or PM walls.
+
+### Bellhop 2020 internal sinusoidal-wall POC
+
+- `validation/validate_bellhop_internal_sinusoidal_wall_poc.m` exercises a
+  sampled smooth wall `r=100-A*sin(K*z)` in a validation-only Bellhop 2020
+  overlay. The same profile samples feed native C-ATI and the internal wall;
+  analytic segment crossing is included in both `ReduceStep2D` calls, and the
+  accepted hit calls the native TOP `Reflect2D` with Bellhop's sampled tangent,
+  normal, and C-ATI `Dss` curvature.
+- The reflected branch is rotated by the validated proper pi transform about
+  `(100,0)` before the unchanged `InfluenceGeoHatCart` call. No PE, scattering
+  phase screen, p/q reset, or formal `bellhop.exe` modification is involved.
+- The small amplitude/step/beam/profile-density scan is stored under
+  `results/validation/bellhop_internal_sinusoidal_wall_poc/`; the report is
+  `reports/bellhop_internal_sinusoidal_wall_poc_report.md`. The follow-up
+  beam/frame audit in `reports/bellhop_curved_wall_beam_frame_audit_report.md`
+  shows that the earlier `2.095 rad` observation was a rotated SHD
+  receiver-column indexing artifact; correctly paired reflected-field phase
+  differs by only `1.02e-5 rad`. No PM random wall is implemented here.
+
+### Bellhop curved-wall beam/frame covariance audit
+
+- `validation/validate_bellhop_curved_wall_beam_frame_audit.m` runs the
+  Bellhop 2020 validation overlay with reflection, proper-rotation and
+  `InfluenceGeoHatCart` contribution logging. It compares a native C-ATI
+  sinusoid with the rotated internal-wall case and writes the compact frame
+  and beam-fan tables under
+  `results/validation/bellhop_curved_wall_beam_frame_audit/`.
+- `validation/validate_bellhop_shd_receiver_range_pairing_vertical.m` is the
+  permanent receiver-column regression. It requires exact 103 m rotated and
+  97 m native matches, verifies that native total/direct use the same column,
+  and uses the 102 m rotated column as a negative control that must retain the
+  former approximately `-2.095 rad` phase error.
+
 ### Reflection-free four-level audit
 
 - `validation/validate_pe_as_freefield_vertical.m` compares production
@@ -204,6 +305,9 @@ summary is `reports/pe_bellhop_freefield_validation_report.md`.
 
 ### Point-source error-budget follow-up
 
+以下段落中的Bellhop重跑入口已移入
+`../cash/pe_bellhop_validation_scripts_2026-09-01/`；对应命令仅作历史记录，当前活动目录不再提供这些入口。
+
 - `validation/validate_pe_point_source_error_budget_vertical.m` runs the
   no-sponge fixed-`dx` window series, compares spatial truncation with a
   discrete spectral-cell Weyl initializer, validates a separate continuous
@@ -217,7 +321,7 @@ summary is `reports/pe_bellhop_freefield_validation_report.md`.
 - `validation/support/weyl_point_source_initial_field_vertical.m` is the discrete FFT initializer
   under test. Its failure to converge within the public 100 m window is
   reported, not hidden.
-- `validation/rerun_pe_bellhop_point_source_postbudget_vertical.m` performs the
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/rerun_pe_bellhop_point_source_postbudget_vertical.m` performs the
   final representative Bellhop rerun only after the continuous Weyl gate.
 
 Outputs are in `results/validation/pe_point_source_error_budget/` and
@@ -283,29 +387,33 @@ Formal 4 kHz outputs are under
 response/center passes but `0/15` complete edge passes. No production default
 is changed by these validators.
 
-- `validation/validate_pe_bellhop_flat_surface_current_vertical.m` is the
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/validate_pe_bellhop_flat_surface_current_vertical.m` is the
   current formal entrypoint. It requires a stable absolute, non-Temp
   `BELLHOP_EXE`, records the binary/source SHA-256 values, runs the independent
   phase audit, 3/6/9 m paths, small-offset limit, source-aware diagnostic,
   sampling/aperture/sponge matrix, public regressions, Bellhop R/C/I fields,
   and the numbered ten-figure atlas.
-- `validation/validate_pe_bellhop_flat_surface_vertical.m` generates and runs a standard Bellhop ASCII-arrivals case matched to the existing PE model in a uniform medium with a flat pressure-release surface.
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/validate_pe_bellhop_flat_surface_vertical.m` generates and runs the historical standard Bellhop ASCII-arrivals case matched to the existing PE model in a uniform medium with a flat pressure-release surface.
 - `validation/validate_pe_phase_convention_uniform_vertical.m` independently checks the PE reduced-envelope operator, longitudinal carrier sign, group delay, and validation-local FFT convention against one-step angular-spectrum propagation.
-- `validation/validate_pe_bellhop_flat_surface_matrix_vertical.m` runs the authoritative 3/6/9 m analytic--PE--Bellhop timing/amplitude comparison with an open Bellhop fan, plus the C0--C4 PE grid/window/step convergence matrix.
-- `reporting/generate_bellhop_flat_surface_visuals_vertical.m` reuses that saved matrix, runs Bellhop `R`/`C`/`I`, parses `.ray`/`.shd` locally, checks 5001/10001-beam convergence, and creates ray, shared-scale TL-field, and receiver-depth slice figures.
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/validation/validate_pe_bellhop_flat_surface_matrix_vertical.m` runs the historical 3/6/9 m analytic--PE--Bellhop timing/amplitude comparison with an open Bellhop fan, plus the C0--C4 PE grid/window/step convergence matrix.
+- `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/reporting/generate_bellhop_flat_surface_visuals_vertical.m` is the archived historical matrix plotting entry.
 - Formal mode requires `BELLHOP_EXE` even if another Bellhop is on the MATLAB
   or system path. Temporary paths and binary-hash changes are rejected.
+- The current local baseline is OALIB `2020_11_4` at
+  `E:/MISC/BELLHOP/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe`.
+  The retained 2017 directory is historical and must be selected explicitly
+  only when reproducing a run whose metadata records that binary.
 - The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
 - Outputs are written to `results/validation/pe_bellhop_flat_surface/`; the Markdown report records exact parameters, formulas, thresholds, results, and limitations.
 
 This stage deliberately excludes rough-surface scattering, bottom bounces, stochastic channels, and communication processing. Validators now consume the public `H_*_reduced_f` and `H_*_physical_f` fields instead of applying an independent hidden carrier convention.
 
-Current formal command:
+Historical formal command (archived; not runnable from the active tree):
 
 ```matlab
-setenv('BELLHOP_EXE','E:/stable/path/to/bellhop.exe')
+setenv('BELLHOP_EXE','E:/MISC/BELLHOP/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe')
 addpath('scripts/validation')
-validation = validate_pe_bellhop_flat_surface_current_vertical();
+% validate_pe_bellhop_flat_surface_current_vertical is archived.
 ```
 
 The current run `bellhop_current_20260723_rc5` is `FAIL_CORE` with

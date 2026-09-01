@@ -9,6 +9,144 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Bellhop task supersession / 当前任务补充（2026-08-27）
+
+**Latest user decision:** use a physical 1 m source clearance, i.e. water
+depth 100 m, Tx depth 99 m, Rx depth 3 m. Stop epsilon-limit investigation.
+`generate_bellhop_100m_source1m_visuals_vertical` is the isolated current entry
+for 4 kHz / 89.5-degree representative A/E/R figures. Receiver runs use a
+12 m range box; the illustrative 1001-ray fan uses 120 m to show returns.
+The old zero-clearance results below remain historical and do not certify
+or invalidate this changed physical installation. PE defaults are untouched.
+
+The representative run and both PNGs are complete: 193 A arrivals, 199 E
+contribution records (all retraced using 167 launch angles), and 1001 fan rays.
+All fan rays touch the sea surface; 961 touch the 100 m bottom. The fan has
+33 storage-limited trajectories; receiver A/E/R have no such warnings.
+E prefixes are not exact point-hit rays (maximum closest-prefix distance
+10.0569 m). See `reports/bellhop_100m_source1m_visuals_report.md`; these figures
+do not certify rough multipath convergence or equivalence to 90 degrees.
+
+On 2026-09-01 the user archived 12 historical PE–Bellhop validation/plotting
+scripts (including the dedicated `pe_bellhop_current_run_meta_vertical` helper)
+under the Git-ignored `cash/pe_bellhop_validation_scripts_2026-09-01/` directory.
+The exact list and reason are recorded in
+`reports/pe_bellhop_validation_archive_manifest_2026-09-01.md`. These files are
+not active entrypoints; the archive is not read during normal project searches.
+
+The PE-topology-only display is now provided by
+`generate_bellhop_pe_equivalent_ray_paths_vertical`. It selects the unique
+0-top/0-bottom and 1-top/0-bottom A arrivals, retraces their launch angles in
+R mode, and truncates each stored ray at its closest approach to Rx. At 4 kHz
+the delays are 64.0024394 ms and 67.9360554 ms; the closest-point residuals are
+approximately 5.61e-9 m and 6.25e-3 m. No bottom-reflected ray is plotted, and
+this is a visualization/filtering result rather than a new PE validation.
+
+- The previous zero-clearance normal-coordinate task required mean water depth
+  100 m, physical source clearance 0 m and receiver depth 3 m. The proposed
+  fluid bottom uses 1800 m/s, 2000 kg/m^3 and 0.5 dB/wavelength attenuation.
+- The user accepted water-side epsilon=[1e-3,1e-4,1e-5] m. Read
+  `reports/bellhop_100m_rough_surface_report.md` for the current status and
+  `reports/bellhop_100m_boundary_source_report.md` for the six 4 kHz trials.
+  Direct/one-surface classes passed all four final-pair checks; rough-surface
+  higher bottom-bounce classes failed. Angle/frequency expansion is paused,
+  not completed. The full channel is NOT approved by this check.
+- The installed input reader clamps near-bottom sources using the SSP limit.
+  Explicit flat BTY at physical 100 m plus a homogeneous SSP-only extension
+  of 0.1 m avoids that clamp without moving the actual bottom. All six source
+  preflights passed; requested 1e-5 m is recorded as approximately 8e-6 m.
+  The unclamped flat 1e-3 m ARR is byte-identical before/after this input change.
+- Final-pair rough total ARR-synthesized response changes by -0.0385556 dB TL
+  and +0.0103577 rad. Primary classes passing does not validate coherent totals:
+  the flat D+S sum near cancellation changes by +0.0132625 dB/-0.0106057 rad.
+  Results are Bellhop-only unit Cartesian line-source diagnostics, not a new
+  Gaussian PE comparison. No bottom-inclusive production recommendation yet.
+- A follow-up C-vs-ARR audit on rough 89.5 degrees at 4 kHz (epsilon 1e-4 versus
+  1e-5) found C and ARR complex-ratio changes within 0.000533 dB TL and
+  2.29e-5 rad. Epsilon sensitivity is therefore already present in Bellhop's
+  coherent field; ARR single-precision storage/merging is not its sole cause.
+  This remains a diagnostic, not full multipath acceptance or a PE comparison.
+- The historical 500 m rough-surface audit, full-ray plots and trial outputs
+  have been moved to `cash/`. Entries below describing them are historical,
+  not active result locations or evidence for the 100 m channel. Do not read
+  or auto-recover `cash/`; the external manifest is in the new plan.
+- Keep PE/AS, Gaussian-window and unfolded flat-surface evidence. No PE core,
+  source definition, communication code or production default was changed.
+
+### Bellhop executable baseline / Bellhop 执行版本（2026-08-31）
+
+- New Bellhop runs use the official OALIB Windows package `2020_11_4`,
+  installed at `E:/MISC/BELLHOP/AcousticsToolbox_2020/`. The executable is
+  `windows-bin-20201102/bellhop.exe` (1,273,704 bytes, SHA-256
+  `7E7809A64C3BF734AFF6D28D0D4D52B1B4BD203D81676E3241FFD3189941B505`).
+- The current Windows user `BELLHOP_EXE` and all active script fallbacks that
+  previously named `AcousticsToolbox_2017` now select this 2020 executable.
+- The 2017 installation remains in place for reproducibility. Historical
+  reports and saved run metadata keep their recorded 2017 path and hashes;
+  do not reinterpret those artifacts as 2020 reruns.
+- The bundled Munk ray case completed with exit code 0. This installation
+  change does not alter PE marching, the Gaussian source, communication code,
+  validation thresholds, or previously generated outputs.
+
+### Bellhop 2020 internal flat-wall POC（2026-08-31）
+
+- `validate_bellhop_internal_flat_wall_poc` implements only the approved flat
+  `r=100 m` validation stage in an isolated Bellhop 2020 binary. `Step2D` limits
+  the accepted step at the actual wall crossing, the existing internal 2D
+  `Reflect2D` performs a single vacuum/TOP reflection, and the reflected branch
+  is then rotated by pi about `(100,0)` and packed before the unchanged
+  `InfluenceGeoHatCart` call.
+- The 4 kHz matrix used steps `0.2/0.1/0.05 m` and `2001/5001/10001` beams. All
+  nine cases reproduced `H_wall=-P_BH(103 m)` exactly at stored SHD precision;
+  maximum wall residual was `3.5385e-12 m`, maximum travel-time error was
+  `9.7145e-16 s`, and reflection/rotation `p/q` errors were zero.
+- This result approves proceeding to a separate tilted-straight-wall
+  validation. It does not validate curved/rough walls, PM surfaces, layered
+  SSP, 3D, multiple reflections, or PE. The official 2020 executable is
+  unchanged; the isolated binary and evidence are under
+  `results/validation/bellhop_internal_flat_wall_poc/`.
+
+### Bellhop 2020 internal tilted-wall POC（2026-08-31）
+
+- `validate_bellhop_internal_tilted_wall_poc` adds only the fixed line
+  `r=100+0.005*z` to a new validation-only Bellhop 2020 binary. The analytic
+  `F=r-R0-a*z` crossing is included in both `ReduceStep2D` calls; the wall
+  frame is `t=(a,1)/sqrt(1+a^2)`, `n=(1,-a)/sqrt(1+a^2)`, `kappa=0`, and
+  physical reflection calls the unchanged native `Reflect2D` with TOP/vacuum
+  semantics. The reflected node is then rotated by pi about `(100,0)` and
+  only that monotone branch reaches `InfluenceGeoHatCart`.
+- The 4 kHz 3-by-3 scan gives machine-precision wall residual, tangent/normal
+  and specular-direction errors, one pi phase jump, unchanged `Amp` and `p/q`,
+  and positive transformed range increments. The equivalent native ATI case
+  agrees in reflection angle, point and delay; its backward-range Cartesian
+  amplitude has a repeatable ~0.286 dB offset while phase agrees within
+  0.003 rad, so amplitude is recorded as a Bellhop range-chart limitation,
+  not corrected or fitted.
+- This is a straight-wall geometry/state validation only. It does not modify
+  PE, communication code, `InfluenceGeoHatCart`, the official executable, or
+  implement sinusoidal/PM walls, layered SSP, 3D, or multiple reflections.
+
+### Bellhop 2020 internal sinusoidal-wall POC（2026-08-31）
+
+- `validate_bellhop_internal_sinusoidal_wall_poc` adds a validation-only smooth
+  sampled wall `r=100-A*sin(K*z)` to a Bellhop 2020 overlay. Native C-ATI and
+  internal geometry use the same profile samples, node-frame interpolation,
+  and Bellhop `Dss` curvature path; wall crossings are reduced in both
+  `ReduceStep2D` calls and the accepted hit invokes the unchanged native TOP
+  `Reflect2D`.
+- For `A=0.25/0.5 m`, signed `K=-0.01 1/m`, profile counts `41/81/161`,
+  steps `0.2/0.1/0.05 m`, and `2001/5001` beams, wall residuals, local
+  tangent/normal, specular direction, pressure-release phase, Amp, p/q
+  curvature kick, travel time, and proper-rotation monotonicity are stable.
+- The follow-up beam/frame covariance audit
+  (`reports/bellhop_curved_wall_beam_frame_audit_report.md`) supersedes the
+  earlier phase conclusion: the apparent `2.095 rad` offset came from reading
+  the rotated 102 m SHD column instead of the explicit 103 m target column.
+  With native total-minus-direct pairing, reflected-field phase agrees to
+  `1.02e-5 rad`; the stable `-0.2606 dB` amplitude offset is the known
+  backward-range `ScalePressure` diagnostic. No p/q or phase correction was
+  introduced, and PM random-wall work remains a separate future validation.
+
 ### Active core
 
 - Public channel: root `vertical_channel_model.m` compatibility wrapper ->
@@ -127,6 +265,8 @@ superseded; a newer explicitly marked entry is authoritative.
   - `h_total = H_f(idx_f_ref)`
 - Current propagation engine: the project still uses the vertical WAPE/PE-style split-step propagation path for acoustic channel generation. Surface boundary models only replace the sea-surface reflection/scattering operator between the upward incident march and the downward reflected march.
 - Current external propagation cross-validation: `validate_pe_bellhop_flat_surface_vertical.m` runs a deterministic uniform-SSP, flat pressure-release surface case through the PE public API and the external Bellhop executable. Historical runs restored PE carriers only in the validator; since 2026-07-22 the public API exposes explicit reduced, direct-DSP, and absolute-physical fields, and validators consume those fields directly.
+- Bellhop rough-surface near-vertical limit audit (2026-08-26): `validate_bellhop_rough_surface_near_vertical_limit.m` is a validation-only Bellhop entrypoint. It fixes one deterministic three-cosine 1-D altimetry profile (`CVW *`/`.ati`), uses a Cartesian line source, and changes only the Tx--Rx horizontal offset for `85, 87, 88, 89, 89.5, 89.75, 89.875, 89.9375, 89.96875, 89.99` degrees at 4 kHz. Direct and one-top-bounce arrivals plus `.ray` reflection diagnostics are saved under `results/validation/bellhop_rough_surface_near_vertical/`. The selected primary comparison excludes bottom bounces; the unfiltered arrival files do contain bottom/multiple-bounce paths. The near-vertical coherent reflected response is not continuous under the configured `0.1 dB/0.02 rad/10 us` checks and the 89.99-degree case is not captured as a one-top-bounce arrival by the installed Bellhop build. Therefore no finite angle is currently approved as a strict 90-degree substitute for this rough profile; this result does not change PE marching or production defaults.
+- Complete Bellhop path display (2026-08-27): `plot_bellhop_rough_surface_full_paths.m` adds all receiver-contributing E records (including bottom/multiple bounces), independently retraced in R mode, and the entire 1001-ray emitted fan in a common 12 m / 500 m box. Historical launch limits are recovered from original `.prt` logs; A replay must reproduce original arrivals. E beams are not exact point-intersecting rays and may be merged in A output. New figures/CSV/MAT live in `bellhop_rough_surface_near_vertical/full_paths/`; original figures, PE code, defaults and validation status are preserved.
 - Current communication policy after the D2 update:
   - receive-window mode defaults to `peak_sync`, which aligns the effective equalizer taps to the dominant baseband tap and then keeps the first `N` samples from a full convolution;
   - Eb/N0 noise reference defaults to `rx_clean`, i.e. receiver-side clean waveform power.
@@ -3344,3 +3484,72 @@ separate PE extraction errors from Bellhop source-mapping/2D-ray-beam phase
 effects without rerunning the 65-frequency production PE batch. Until that
 audit explains the `0.0612 rad` outer-profile discrepancy, the formal status
 remains failed even though the axial 4--8 kHz relative channel passed.
+
+## 2026-08-25 Independent PE--AS transverse audit and Bellhop scan
+
+The follow-up entry `scripts/validation/validate_pe_as_bellhop_transverse_vertical.m`
+now reads the saved formal result and independently computes one-step discrete
+angular-spectrum propagation at 4/6/8 kHz for the 97 m direct and 103 m image
+paths. PE--AS agrees to numerical precision: the maximum complex errors are
+`5.10e-13` (direct) and `2.43e-13` (reflected). Bellhop--AS retains the formal
+outer-profile discrepancy: `0.01582 dB / 0.06120 rad / 0.06117` direct and
+`0.01274 dB / 0.05167 rad / 0.05165` reflected (TL/phase/complex). This
+independently rules out the PE marching operator and field extraction as the
+source of the failed transverse hard check.
+
+The validation-only entry
+`scripts/validation/validate_bellhop_transverse_parameter_scan_vertical.m`
+then ran 27 Bellhop-only cases at 8 kHz, varying step (`0.1/0.05/0.025 m`),
+angle half-width (`20/30/45 deg`), and SBP sampling (`1201/2401/4801`) with
+10001 beams. All 27 `.env/.sbp/.shd/.prt` cases parsed successfully, but no
+case passed the transverse limits. The best maximum complex error was
+`0.061166`, with phase still `0.061204 rad`; numerical step, angle, and SBP
+sampling therefore do not explain the discrepancy. Bellhop outputs were
+conjugated once to match the formally selected spatial phase convention; no
+frequency- or distance-dependent fit was used.
+
+Artifacts are under `results/validation/pe_as_bellhop_transverse/` and the
+reports are `reports/pe_as_bellhop_transverse_audit_report.md` and
+`reports/bellhop_transverse_parameter_scan_report.md`. The formal unfolded
+validator remains `passed=false` solely because its transverse phase/complex
+hard checks fail. The next investigation is the 2-D/3-D Gaussian source
+mapping (`.sbp` amplitude/Jacobian/phase interpretation), not PE core changes,
+window changes, sponge changes, or threshold relaxation.
+
+## 2026-08-25 Bellhop unfolded-coordinate rotation-limit audit
+
+Added the Bellhop-only entry
+`scripts/validation/validate_bellhop_rotation_limit_vertical.m`. It compares
+the current unfolded geometry (97/103 m direct/image ranges) with native flat
+pressure-release-surface cases whose direct rays are `-89` and `-89.5` degrees.
+All three cases use the same 4 kHz, c=1500 m/s, Tx=100 m, Rx=3 m Gaussian
+`.sbp` pattern; native horizontal offsets are 1.69314 m and 0.846506 m.
+The native bottom is placed far away and no bottom-bounce arrival is accepted.
+
+The run found two required paths in every case. Maximum analytic delay error was
+`3.13 ns`; after removing the known geometric path length and rotated Gaussian
+directivity, native-vs-unfolded amplitude differences were below `1.23e-6 dB`
+and phase differences below `9.30e-5 rad`. The corrected reflection coefficient
+was within `1.23e-4` of `-1`. All five structural/consistency checks passed.
+This supports the unfolded construction as a near-vertical limit for the
+uniform flat-surface Bellhop case only; it does not extend to rough surfaces,
+depth-dependent SSPs, or actual-transducer source patterns.
+
+## 2026-08-26 Current PE--Bellhop validation overview
+
+`reports/pe_bellhop_complete_validation_overview.md` is now the current
+cross-stage summary for the uniform, flat pressure-release-surface comparison.
+It links the historical native-coordinate path matrix, Bellhop free-space
+normalization, independent PE--AS checks, production-Gaussian aperture work,
+the 4--8 kHz unfolded comparison, the transverse three-way audit, the 27-case
+Bellhop numerical scan, and the 89/89.5-degree coordinate-limit result.
+
+The summary deliberately retains both parts of the current decision: axial
+relative `Q(f)`, `1+Q(f)`, delay, group delay, and PDP checks pass, and PE--AS
+agrees at about `1e-13`; however, the formal unfolded validator remains
+`passed=false` because the 8 kHz outer transverse phase (`0.061204 rad`) and
+complex error (`0.061277`) exceed their fixed hard limits. The three-way audit
+assigns that residual to the Bellhop/source-mapping or 2-D/3-D representation
+side rather than the PE marching operator. The overview supersedes the old
+2026-07 “complete” report only as a status summary; historical files and raw
+results remain unchanged.
