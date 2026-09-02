@@ -104,12 +104,33 @@ flat、tilted、smooth sinusoidal 与半径 100 m 的 vertical-tangent circle �
 错误 SHD range column，不是 reflection/frame 缺陷。native backward-range
 Cartesian amplitude 的 `-0.2606` 至 `-0.286 dB` 偏差仍只作 diagnostic，未拟合。
 
-旧 strict-90-degree PM native ATI 与 rotated returned branch 不是同一个物理
-问题，相关阶段入口已退役。下一步只能使用同一 fixed-seed、fixed-`Kmax`、
-band-limited high-resolution PM realization，并以全系统 89 度 proper rotation
-同时变换 Tx/Rx/source/profile；所有 density cases 从同一 `eta_ref` 插值得到。
-该 Bellhop-only finite-angle PM POC 尚未运行，因此当前状态为
-**PASS_WITH_LIMITS**，不得进入 PE rough-wall 对比或 Monte Carlo。
+固定 PM realization 的 internal-wall density convergence 已完成，报告为
+阶段性报告已归档于 `cash/bellhop_internal_wall_superseded_20260902/reports/bellhop_internal_pm_fixed_realization_convergence_report.md`，结果位于
+`results/validation/bellhop_internal_pm_fixed_realization/`。seed `260001`、
+`U=6 m/s`、span `160 m`、`N_master=4097` 的同一 band-limited realization
+生成 `N=513/1025/2049/4097` 四档 profile。preflight 通过（最小
+`|u·n|=0.8022`、`lambda max|kappa|=0.01672`），2001/2001 rays 全部成功，
+交点、frame、曲率、反射方向、RN、路径和 phase 随密度收敛。该阶段仍为
+Bellhop-only；旧 strict-90-degree native ATI 对照不是等价物理问题并已退役。
+随后已完成 Bellhop-only 的 fixed-PM local native↔internal Reflect2D
+coordinate-covariance：同一 seed-260001 master realization 在 `phi=89` 和
+`89.5` 度、`N=2049/4097`、三条精确配对 ray 上通过交点、frame、共同曲率
+参考、反射方向、RN/p/q、pressure-release phase 和 internal half-turn 检查。
+详见权威汇总 `reports/bellhop_internal_wall_implementation_report.md`（完整阶段报告已归档于 `cash/bellhop_internal_wall_superseded_20260902/reports/`）；硬门截止
+Reflect2D 出口，receiver coherent field 仍是 diagnostic-only。PE rough-wall
+对比和 Monte Carlo 尚未开始。
+
+下一阶段的 PE rough-PM ↔ Bellhop rough-PM 方案已在
+`reports/pe_bellhop_pm_comparison_design_audit_report.md` 中冻结，结论为
+`FEASIBLE_WITH_MINOR_PREPARATION`。主工况采用 exact 90-degree internal wall，
+同一 seed-260001 band-limited profile 在 PE 中映射为
+`eta(x,y)=eta_1D(x)`，在 Bellhop 中由同一 Fourier coefficients 生成参数墙；
+不得分别随机、归一化或平滑。主比较量是 reflected-only
+`G=H_ref_rough/H_ref_flat`。由于生产 PE 是两横向维 Gaussian 场而 Bellhop 是
+二维线源模型，严格同维主参考应先使用 validation-only 一横向维 PE/AS 或
+等价 `k_y=0` 投影；生产 PE 的 y-invariant surface/on-axis 结果作为第二层
+dimensionality sensitivity。第一轮只做 4 kHz、单轴接收和 flat/rough pair，
+继续使用 `192.1875 m` no-sponge 数值基线；总信道、6/8 kHz 和随机集合均后置。
 
 2026-08-27 起，正常坐标粗糙海面 Bellhop 任务按用户要求重建为平均水深
 100 m、物理源离底 0 m、Rx 深度 3 m。海底测试模型暂定均匀流体半空间：

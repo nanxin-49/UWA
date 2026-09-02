@@ -33,14 +33,16 @@ PROGRAM BELLHOP
   IMPLICIT NONE
   
   LOGICAL, PARAMETER   :: ThreeD = .FALSE., Inline = .FALSE.
-  INTEGER, PARAMETER   :: IWallDiagFile = 98
+  INTEGER, PARAMETER   :: IWallDiagFile = 98, ICovDiagFile = 99
   INTEGER              :: jj
   CHARACTER ( LEN=2  ) :: AttenUnit
   CHARACTER ( LEN=80 ) :: FileRoot
   REAL      ( KIND=8 ) :: IWallR0, IWallReceiverRange
   INTEGER             :: IWallSeed
   INTEGER             :: IWallNProfile
+  INTEGER             :: IWallMode = 1
   REAL      ( KIND=8 ), ALLOCATABLE :: IWallRProfile( : ), IWallZProfile( : )
+  REAL      ( KIND=8 ) :: IWallTgDiag, IWallThDiag, IWallRMDiag, IWallRNDiag
 
   ! get the file root for naming all input and output files
   ! should add some checks here ...
@@ -152,9 +154,16 @@ PROGRAM BELLHOP
        'tangent_error normal_error inc_ur inc_uz ref_ur ref_uz rot_ur rot_uz specular_error rotation_error ' // &
        'phase_in phase_ref phase_delta amp_in amp_ref amp_delta p1_in p2_in p1_ref p2_ref p_ref_error ' // &
        'q1_in q2_in q1_ref q2_ref q_ref_error p_rot_error q_rot_error tau_wall_real tau_wall_imag ' // &
-       'tau_receiver_real tau_receiver_imag min_post_dr n_post kappa'
+       'tau_receiver_real tau_receiver_imag min_post_dr n_post kappa wall_seg wall_lambda wall_tg wall_th wall_rm wall_rn'
+  OPEN( UNIT = ICovDiagFile, FILE = TRIM( FileRoot ) // '.covdiag', STATUS = 'REPLACE', ACTION = 'WRITE' )
+  WRITE( ICovDiagFile, '(A)' ) '# mode_code alpha_deg hit_r hit_z wall_residual wall_t_r wall_t_z wall_n_r wall_n_z ' // &
+       'inc_ur inc_uz ref_ur ref_uz rot_ur rot_uz specular_error rotation_error ' // &
+       'phase_in phase_ref phase_delta amp_in amp_ref amp_delta p1_in p2_in p1_ref p2_ref p_ref_error ' // &
+       'q1_in q2_in q1_ref q2_ref q_ref_error p_rot_error q_rot_error tau_wall_real tau_wall_imag ' // &
+       'kappa wall_seg wall_lambda wall_tg wall_th wall_rm wall_rn'
   CALL BellhopCore
   CLOSE( IWallDiagFile )
+  CLOSE( ICovDiagFile )
 
   CONTAINS
 
@@ -166,38 +175,73 @@ SUBROUTINE ReadInternalPMWall( FileRootIn )
   CHARACTER (LEN=*), INTENT( IN ) :: FileRootIn
   INTEGER                         :: IWallFile, IOS
   CHARACTER (LEN=256)             :: WallFile
-  INTEGER                         :: ii
+  INTEGER                         :: ii, ModeCode
+  LOGICAL                         :: CovFileExists
 
-  WallFile = TRIM( FileRootIn ) // '.iwpm'
-  OPEN( NEWUNIT = IWallFile, FILE = TRIM( WallFile ), STATUS = 'OLD', ACTION = 'READ', IOSTAT = IOS )
-  IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Missing validation-only .iwpm file' )
-  READ( IWallFile, *, IOSTAT = IOS ) IWallR0
-  IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read wall R0 from .iwpm' )
-  READ( IWallFile, *, IOSTAT = IOS ) IWallReceiverRange
-  IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read mapped receiver range from .iwpm' )
-  READ( IWallFile, *, IOSTAT = IOS ) IWallSeed
-  IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read profile seed from .iwpm' )
-  READ( IWallFile, *, IOSTAT = IOS ) IWallNProfile
-  IF ( IOS /= 0 .OR. IWallNProfile < 3 ) CALL ERROUT( 'BELLHOP-IWALL', 'Invalid profile count in .iwpm' )
-  ALLOCATE( IWallRProfile( IWallNProfile ), IWallZProfile( IWallNProfile ) )
-  DO ii = 1, IWallNProfile
-     READ( IWallFile, *, IOSTAT = IOS ) IWallRProfile( ii ), IWallZProfile( ii )
-     IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read profile point from .iwpm' )
-  END DO
-  CLOSE( IWallFile )
-
-  IF ( ABS( IWallR0 - 100.0d0 ) > 1.0d-12 ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall POC requires R0 = 100 m' )
-  IF ( ABS( IWallReceiverRange - 103.0d0 ) > 1.0d-12 ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall POC requires mapped receiver range = 103 m' )
-  IF ( ANY( IWallZProfile( 2:IWallNProfile ) <= IWallZProfile( 1:IWallNProfile-1 ) ) ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall profile depth samples must be strictly increasing' )
-  ! The internal wall is parameterized by the ordered profile samples; no
-  ! monotonic or nonzero-range condition is imposed on r.
-  CALL ConfigureWallProfile( IWallRProfile, IWallZProfile, IWallNProfile )
+  ! The legacy .iwpm format is retained for the fixed-realization POC. The
+  ! covariance audit uses a separate .iwcov sidecar so a native ATI run can
+  ! share this validation binary without enabling the internal wall.
+  INQUIRE( FILE = TRIM( FileRootIn ) // '.iwcov', EXIST = CovFileExists )
+  IF ( CovFileExists ) THEN
+     WallFile = TRIM( FileRootIn ) // '.iwcov'
+     OPEN( NEWUNIT = IWallFile, FILE = TRIM( WallFile ), STATUS = 'OLD', ACTION = 'READ', IOSTAT = IOS )
+     IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot open validation-only .iwcov file' )
+     READ( IWallFile, *, IOSTAT = IOS ) ModeCode
+     IF ( IOS /= 0 .OR. ( ModeCode /= 0 .AND. ModeCode /= 1 ) ) &
+          CALL ERROUT( 'BELLHOP-IWALL', 'Invalid .iwcov mode code' )
+     IWallMode = ModeCode
+     READ( IWallFile, *, IOSTAT = IOS ) IWallR0
+     READ( IWallFile, *, IOSTAT = IOS ) IWallReceiverRange
+     READ( IWallFile, *, IOSTAT = IOS ) IWallSeed
+     READ( IWallFile, *, IOSTAT = IOS ) IWallNProfile
+     IF ( IOS /= 0 .OR. IWallNProfile < 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Invalid .iwcov header' )
+     IF ( IWallMode == 1 .AND. IWallNProfile < 3 ) &
+          CALL ERROUT( 'BELLHOP-IWALL', 'Internal .iwcov profile needs at least three points' )
+     IF ( IWallNProfile > 0 ) THEN
+        ALLOCATE( IWallRProfile( IWallNProfile ), IWallZProfile( IWallNProfile ) )
+        DO ii = 1, IWallNProfile
+           READ( IWallFile, *, IOSTAT = IOS ) IWallRProfile( ii ), IWallZProfile( ii )
+           IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read profile point from .iwcov' )
+        END DO
+     END IF
+     CLOSE( IWallFile )
+     IF ( IWallMode == 1 ) THEN
+        IF ( ANY( IWallZProfile( 2:IWallNProfile ) <= IWallZProfile( 1:IWallNProfile-1 ) ) ) &
+             CALL ERROUT( 'BELLHOP-IWALL', 'Internal .iwcov parameter samples must increase' )
+        ! The internal wall is parameterized by ordered samples; no range
+        ! monotonicity condition is imposed on its first coordinate.
+        CALL ConfigureWallProfile( IWallRProfile, IWallZProfile, IWallNProfile )
+     END IF
+  ELSE
+     IWallMode = 1
+     WallFile = TRIM( FileRootIn ) // '.iwpm'
+     OPEN( NEWUNIT = IWallFile, FILE = TRIM( WallFile ), STATUS = 'OLD', ACTION = 'READ', IOSTAT = IOS )
+     IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Missing validation-only .iwpm file' )
+     READ( IWallFile, *, IOSTAT = IOS ) IWallR0
+     IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read wall R0 from .iwpm' )
+     READ( IWallFile, *, IOSTAT = IOS ) IWallReceiverRange
+     IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read mapped receiver range from .iwpm' )
+     READ( IWallFile, *, IOSTAT = IOS ) IWallSeed
+     IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read profile seed from .iwpm' )
+     READ( IWallFile, *, IOSTAT = IOS ) IWallNProfile
+     IF ( IOS /= 0 .OR. IWallNProfile < 3 ) CALL ERROUT( 'BELLHOP-IWALL', 'Invalid profile count in .iwpm' )
+     ALLOCATE( IWallRProfile( IWallNProfile ), IWallZProfile( IWallNProfile ) )
+     DO ii = 1, IWallNProfile
+        READ( IWallFile, *, IOSTAT = IOS ) IWallRProfile( ii ), IWallZProfile( ii )
+        IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read profile point from .iwpm' )
+     END DO
+     CLOSE( IWallFile )
+     IF ( ABS( IWallR0 - 100.0d0 ) > 1.0d-12 ) &
+          CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall POC requires R0 = 100 m' )
+     IF ( ABS( IWallReceiverRange - 103.0d0 ) > 1.0d-12 ) &
+          CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall POC requires mapped receiver range = 103 m' )
+     IF ( ANY( IWallZProfile( 2:IWallNProfile ) <= IWallZProfile( 1:IWallNProfile-1 ) ) ) &
+          CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall profile depth samples must be strictly increasing' )
+     CALL ConfigureWallProfile( IWallRProfile, IWallZProfile, IWallNProfile )
+  END IF
 
   WRITE( PRTFile, * )
-  WRITE( PRTFile, * ) 'Validation-only internal fixed-seed PM wall enabled'
+  WRITE( PRTFile, * ) 'Validation-only wall covariance mode = ', IWallMode
   WRITE( PRTFile, * ) 'Wall R0 (m)               = ', IWallR0
   WRITE( PRTFile, * ) 'Wall profile seed         = ', IWallSeed
   WRITE( PRTFile, * ) 'Wall profile points       = ', IWallNProfile
@@ -229,9 +273,11 @@ SUBROUTINE BellhopCore
   IF ( Pos%NSz /= 1 .OR. Pos%Sz( 1 ) <= Bdry%Top%HS%Depth .OR. &
        Pos%Sz( 1 ) >= Bdry%Bot%HS%Depth ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'POC requires one source inside the matched free-space domain' )
-  IF ( .NOT. ANY( ABS( Pos%Rr( 1 : Pos%NRr ) - IWallReceiverRange ) <= 1.0d-10 ) .OR. &
-       MINVAL( Pos%Rr( 1 : Pos%NRr ) ) <= IWallR0 ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'POC requires post-wall receiver ranges including 103 m' )
+  IF ( IWallMode == 1 ) THEN
+     IF ( .NOT. ANY( ABS( Pos%Rr( 1 : Pos%NRr ) - IWallReceiverRange ) <= 1.0d-3 ) .OR. &
+          MINVAL( Pos%Rr( 1 : Pos%NRr ) ) <= IWallR0 ) &
+          CALL ERROUT( 'BELLHOP-IWALL', 'Internal-wall POC requires a post-wall receiver range' )
+  END IF
   IF ( SSP%Type /= 'C' .OR. MAXVAL( ABS( REAL( SSP%c( 1 : SSP%NPts ) ) - 1500.0d0 ) ) > 1.0d-10 .OR. &
        MAXVAL( ABS( AIMAG( SSP%c( 1 : SSP%NPts ) ) ) ) > 1.0d-12 ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'POC requires uniform lossless c = 1500 m/s' )
@@ -500,7 +546,8 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
   REAL     (KIND=8), INTENT( IN ) :: xs( 2 )      ! x-y coordinate of the source
   REAL     (KIND=8), INTENT( IN ) :: alpha, Amp0  ! initial angle, amplitude
   INTEGER           :: is, is1, jStep, NPost, WallBranchStart, WallSeg ! index for a step along the ray
-  LOGICAL           :: WallActive, WallHit, WallDidReflect, ReceiverTauFound
+  INTEGER           :: CovMode, CovWallSeg
+  LOGICAL           :: WallActive, WallHit, WallDidReflect, ReceiverTauFound, CovReflectionWritten, NativeStopAfterReflection
   TYPE( ray2DPt )   :: IncidentState, ReflectedState, RotatedState
   TYPE( HSInfo )    :: WallHS
   REAL     (KIND=8) :: c, cimag, gradc( 2 ), crr, crz, czz, rho
@@ -509,7 +556,9 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
   REAL     (KIND=8) :: sss, WallT( 2 ), WallN( 2 ), WallKappa, WallResidual, WallLambda, &
        MinPostDr, dr, sReceiver, PReflectError, QReflectError, PRotationError, QRotationError, &
        WallTError, WallNError, SpecularError, RotationError, ExpectedT( 2 ), ExpectedN( 2 ), &
-       IncUnit( 2 ), RefUnit( 2 ), RotUnit( 2 ), SpecUnit( 2 )
+       IncUnit( 2 ), RefUnit( 2 ), RotUnit( 2 ), SpecUnit( 2 ), CovT( 2 ), CovN( 2 ), CovKappa, CovResidual, CovLambda, &
+       CovPRotError, CovQRotError
+  TYPE( ray2DPt )   :: CovIncident, CovReflected, CovRotated
   COMPLEX  (KIND=8) :: TauReceiver
 
   ! Initial conditions
@@ -531,8 +580,17 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
   ! set I.C. to 0 in hopes of saving run time
   IF ( Beam%RunType( 2 : 2 ) == 'G' ) ray2D( 1 )%q = [ 0.0, 0.0 ]
 
-  WallActive      = .TRUE.
+  WallActive      = IWallMode == 1
   WallDidReflect  = .FALSE.
+  CovReflectionWritten = .FALSE.
+  CovMode         = IWallMode
+  CovWallSeg      = 0
+  CovLambda       = 0.0d0
+  CovKappa        = 0.0d0
+  CovResidual     = 0.0d0
+  CovT            = 0.0d0
+  CovN            = 0.0d0
+  NativeStopAfterReflection = .FALSE.
   ReceiverTauFound = .FALSE.
   WallBranchStart = 0
   WallT            = 0.0d0
@@ -609,6 +667,7 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
      CALL Distances2D( ray2D( is1 )%x, Top( IsegTop )%x, Bot( IsegBot )%x, dEndTop,    dEndBot,  &
           Top( IsegTop )%n, Bot( IsegBot )%n, DistEndTop, DistEndBot )
 
+     CovReflectionWritten = .FALSE.
      IF ( WallHit ) THEN
 
         IncidentState = ray2D( is1 )
@@ -621,12 +680,24 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
         ray2D( is + 1 )%NumTopBnc = ray2D( is )%NumTopBnc + 1
         ReflectedState = ray2D( is + 1 )
 
+        CovIncident = IncidentState
+        CovReflected = ReflectedState
+        CovMode      = 1
+        CovWallSeg   = WallSeg
+        CovLambda    = WallLambda
+        CovT         = WallT
+        CovN         = WallN
+        CovKappa     = WallKappa
+        CovResidual  = WallResidual
+        CovReflectionWritten = .TRUE.
+
         ! Fixed proper rotation by pi about (IWallR0,0). This is only a
         ! coordinate remapping; do not call Reflect2D or change beam state.
          ray2D( is + 1 )%x = [ 2.0d0 * IWallR0 - ray2D( is + 1 )%x( 1 ), &
                               -ray2D( is + 1 )%x( 2 ) ]
         ray2D( is + 1 )%t = -ray2D( is + 1 )%t
         RotatedState      = ray2D( is + 1 )
+        CovRotated        = RotatedState
         WallBranchStart   = is + 1
         WallActive        = .FALSE.
         WallDidReflect    = .TRUE.
@@ -647,8 +718,25 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
            ToptInt = Top( IsegTop )%t
         END IF
 
+        CovIncident = ray2D( is1 )
+        CovMode     = 0
+        CovWallSeg  = IsegTop
+        CovLambda   = sss
+        CovT        = ToptInt
+        CovN        = TopnInt
+        CovKappa    = Top( IsegTop )%kappa
+        CovResidual = ( ( CovIncident%x( 1 ) - Top( IsegTop )%x( 1 ) ) * ( Top( IsegTop + 1 )%x( 2 ) - Top( IsegTop )%x( 2 ) ) - &
+                        ( CovIncident%x( 2 ) - Top( IsegTop )%x( 2 ) ) * ( Top( IsegTop + 1 )%x( 1 ) - Top( IsegTop )%x( 1 ) ) ) / Top( IsegTop )%Len
         CALL Reflect2D( is, Bdry%Top%HS, 'TOP', ToptInt, TopnInt, Top( IsegTop )%kappa, RTop, NTopPTS )
         ray2D( is + 1 )%NumTopBnc = ray2D( is )%NumTopBnc + 1
+        CovReflected = ray2D( is + 1 )
+        CovRotated   = CovReflected
+        CovReflectionWritten = .TRUE.
+        WallDidReflect = .TRUE.
+
+        ! Native covariance mode needs only the first top reflection; stop
+        ! before later boundary interactions can enter the local audit.
+        IF ( IWallMode == 0 ) NativeStopAfterReflection = .TRUE.
 
         CALL Distances2D( ray2D( is + 1 )%x, Top( IsegTop )%x, Bot( IsegBot )%x, dEndTop,    dEndBot,  &
              Top( IsegTop )%n, Bot( IsegBot )%n, DistEndTop, DistEndBot )
@@ -671,6 +759,37 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
 
      END IF
 
+     IF ( CovReflectionWritten ) THEN
+        IncUnit = CovIncident%c * CovIncident%t
+        RefUnit = CovReflected%c * CovReflected%t
+        RotUnit = CovRotated%c * CovRotated%t
+        SpecUnit = IncUnit - 2.0d0 * DOT_PRODUCT( IncUnit, CovN ) * CovN
+        SpecularError = SQRT( SUM( ( RefUnit - SpecUnit ) ** 2 ) )
+        IF ( CovMode == 1 ) THEN
+           RotationError = SQRT( SUM( ( RotUnit + RefUnit ) ** 2 ) )
+        ELSE
+           RotationError = 0.0d0
+        END IF
+        CovPRotError = MAXVAL( ABS( CovRotated%p - CovReflected%p ) )
+        CovQRotError = MAXVAL( ABS( CovRotated%q - CovReflected%q ) )
+        WRITE( ICovDiagFile, '( *( ES25.16E3, 1X ) )' ) REAL( CovMode, KIND=8 ), RadDeg * alpha, &
+             CovIncident%x( 1 ), CovIncident%x( 2 ), CovResidual, CovT( 1 ), CovT( 2 ), CovN( 1 ), CovN( 2 ), &
+             IncUnit( 1 ), IncUnit( 2 ), RefUnit( 1 ), RefUnit( 2 ), RotUnit( 1 ), RotUnit( 2 ), &
+             SpecularError, RotationError, CovIncident%Phase, CovReflected%Phase, &
+             CovReflected%Phase - CovIncident%Phase, CovIncident%Amp, CovReflected%Amp, &
+             CovReflected%Amp - CovIncident%Amp, CovIncident%p( 1 ), CovIncident%p( 2 ), &
+             CovReflected%p( 1 ), CovReflected%p( 2 ), MAXVAL( ABS( CovReflected%p - CovIncident%p ) ), &
+             CovIncident%q( 1 ), CovIncident%q( 2 ), CovReflected%q( 1 ), CovReflected%q( 2 ), &
+             MAXVAL( ABS( CovReflected%q - CovIncident%q ) ), CovPRotError, CovQRotError, &
+             REAL( CovReflected%tau ), AIMAG( CovReflected%tau ), &
+             CovKappa, REAL( CovWallSeg, KIND=8 ), CovLambda, IWallTgDiag, IWallThDiag, IWallRMDiag, IWallRNDiag
+     END IF
+
+     IF ( NativeStopAfterReflection ) THEN
+        Beam%Nsteps = is + 1
+        EXIT Stepping
+     END IF
+
      ! Has the ray left the box, lost its energy, escaped the boundaries, or exceeded storage limit?
      IF ( ABS( ray2D( is + 1 )%x( 1 ) ) > Beam%Box%r .OR. &
           ABS( ray2D( is + 1 )%x( 2 ) ) > Beam%Box%z .OR. ray2D( is + 1 )%Amp < 0.005 .OR. &
@@ -689,6 +808,11 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
      DistBegBot = DistEndBot
 
   END DO Stepping
+
+  IF ( IWallMode == 0 ) THEN
+     IF ( .NOT. WallDidReflect ) CALL ERROUT( 'BELLHOP-IWALL', 'Native covariance ray terminated without top reflection' )
+     RETURN
+  END IF
 
   IF ( .NOT. WallDidReflect ) CALL ERROUT( 'BELLHOP-IWALL', 'Ray terminated without internal-wall reflection' )
   IF ( ray2D( Beam%Nsteps )%NumTopBnc /= 1 .OR. ray2D( Beam%Nsteps )%NumBotBnc /= 0 ) &
@@ -740,7 +864,8 @@ SUBROUTINE TraceRay2D( xs, alpha, Amp0 )
        IncidentState%p( 1 ), IncidentState%p( 2 ), ReflectedState%p( 1 ), ReflectedState%p( 2 ), PReflectError, &
        IncidentState%q( 1 ), IncidentState%q( 2 ), ReflectedState%q( 1 ), ReflectedState%q( 2 ), QReflectError, &
        PRotationError, QRotationError, REAL( IncidentState%tau ), AIMAG( IncidentState%tau ), &
-       REAL( TauReceiver ), AIMAG( TauReceiver ), MinPostDr, REAL( NPost, KIND=8 ), WallKappa
+       REAL( TauReceiver ), AIMAG( TauReceiver ), MinPostDr, REAL( NPost, KIND=8 ), WallKappa, &
+       REAL( WallSeg, KIND=8 ), WallLambda, IWallTgDiag, IWallThDiag, IWallRMDiag, IWallRNDiag
 
   ! Isolate the coordinate-chart seam: the existing influence routine sees
   ! only the transformed, monotonically increasing post-wall branch.
@@ -831,6 +956,13 @@ SUBROUTINE Reflect2D( is, HS, BotTop, tBdry, nBdry, kappa, RefC, Npts )
   CASE ( 'Z' )
      RN = 0.0
   END SELECT
+
+  ! Validation-only export of the native curvature update; the computed RN,
+  ! RM, Tg and Th are not altered and are applied below exactly as before.
+  IWallTgDiag = Tg
+  IWallThDiag = Th
+  IWallRMDiag = RM
+  IWallRNDiag = RN
   
   ray2D( is1 )%c   = c
   ray2D( is1 )%tau = ray2D( is )%tau

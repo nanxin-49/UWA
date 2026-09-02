@@ -15,6 +15,23 @@ are written to the rotated internal wall and the native C-ATI case. The
 internal wall uses only the finite sampled support; it does not add ATI-style
 constant-depth/infinite-range endpoint extensions.
 
+The completed fixed-realization convergence entrypoint (archived under
+`cash/bellhop_internal_wall_superseded_20260902/`) stored each case under
+`results/validation/bellhop_internal_pm_fixed_realization/` and obtained all
+profile densities by interpolation from one master Fourier realization. The
+validation-only `.iwdiag` log additionally exports the accepted segment and
+local interpolation parameter, plus the native `Tg`, `Th`, `RM` and applied
+`RN` values for density-to-density beam-state comparison.
+
+The same isolated binary retains the local covariance audit sidecar
+`.iwcov` for reproducibility. Mode `0` instruments a native C-ATI first top
+reflection and stops after that `Reflect2D` exit; mode `1` keeps the parametric
+internal wall and its existing proper half-turn. The one-off covariance runner
+and detailed stage report are archived under
+`cash/bellhop_internal_wall_superseded_20260902/`; the accepted conclusion is
+merged into the authoritative Bellhop implementation report. No receiver-field
+equality is implied by this local audit.
+
 At an accepted wall segment, the unit tangent is obtained from the ordered
 parametric polyline, the outward TOP normal is reconstructed from that tangent,
 and signed geometric curvature is computed from wrapped tangent turning over

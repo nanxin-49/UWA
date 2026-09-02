@@ -235,18 +235,43 @@ The atlas distinguishes physical boundary models from computational acceleration
   positive transformed range.
 - `validation/support/run_bellhop_internal_pm_wall_poc_vertical.m` and
   `validation/support/bellhop_internal_pm_wall_poc/` are retained as the
-  generic parametric-wall runner/build used by the vertical-tangent test and a
-  future finite-angle PM POC. The invalid strict-90-degree PM comparator and
-  its old profile generator are not retained as active entrypoints.
+  generic parametric-wall runner/build. The fixed-realization convergence
+  completed entrypoint is archived at
+  `../cash/bellhop_internal_wall_superseded_20260902/scripts/validation/validate_bellhop_internal_pm_fixed_realization_convergence.m`;
+  it wrote one master Fourier realization and interpolated `N=513/1025/2049/4097`
+  profiles from that same realization. Outputs remain under
+  `results/validation/bellhop_internal_pm_fixed_realization/`.
+- The invalid strict-90-degree PM comparator and its old profile generator are
+  archived. The fixed-PM result and the finite-angle native-ATI/local-wall
+  covariance audit are both Bellhop-only PASS results; PE comparison and Monte
+  Carlo remain out of scope.
+- The completed Bellhop-only fixed-realization local covariance audit is archived at
+  `../cash/bellhop_internal_wall_superseded_20260902/scripts/validation/validate_bellhop_pm_local_reflection_covariance.m`;
+  its one-off runner is archived at
+  `../cash/bellhop_internal_wall_superseded_20260902/scripts/validation/run_bellhop_pm_local_covariance_vertical.m`.
+  It reused the same seed-260001 master samples in native C-ATI and a
+  source-centered proper rotation at `phi=89` and `89.5` degrees, with
+  `N=2049/4097` and three exact paired rays. Results remain under
+  `results/validation/bellhop_pm_local_reflection_covariance/`; the detailed
+  stage report is archived under
+  `../cash/bellhop_internal_wall_superseded_20260902/reports/` and its valid
+  conclusion is merged into the authoritative Bellhop implementation report.
 - `validation/validate_bellhop_shd_receiver_range_pairing_vertical.m` is the
   permanent receiver-column regression. It requires exact 103 m rotated and
   97 m native matches, verifies that native total/direct use the same column,
   and keeps the 102 m rotated column as a negative control for the former
   approximately `-2.095 rad` indexing error.
-- Current status is **PASS_WITH_LIMITS**: flat, tilted, sinusoidal and vertical
-  tangent pass; the redesigned fixed-band-limited, finite-angle PM validation
-  has not yet run. No PE comparison or Monte Carlo is authorized by this
-  status.
+- Current status is **PASS_WITH_LIMITS**: flat, tilted, sinusoidal, vertical
+  tangent, fixed-realization PM density convergence, and the finite-angle local
+  native↔internal Reflect2D covariance audit pass. Complete receiver-field
+  equivalence, PE comparison and Monte Carlo remain out of scope.
+- The next PE rough-PM comparison is design-only at this point. Its frozen
+  scope and comparability matrix are in
+  `../reports/pe_bellhop_pm_comparison_design_audit_report.md`: exact 90-degree
+  internal wall, one shared seed-260001 profile, reflected-only rough/flat
+  ratio, 4 kHz first, and a validation-only one-transverse-dimensional PE or
+  `k_y=0` bridge before using the production on-axis 3-D field as a secondary
+  sensitivity. No runnable PM cross-comparison entrypoint has been added yet.
 
 ### Reflection-free four-level audit
 

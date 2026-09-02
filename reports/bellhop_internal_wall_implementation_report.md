@@ -117,11 +117,63 @@ native backward-range Cartesian influence 仍有约 `-0.2606` 至 `-0.286 dB` �
 
 旧 strict-90-degree 方案把 native `z=eta(r)` 与 rotated internal-wall returned branch 当作等价场景，但两者在 native range chart 中不是同一个物理问题；同时旧 density sweep 会随 `N` 改变 PM realization 的高波数内容。该方案及其 runner 已退役，不能作为当前失败或通过证据。
 
-下一步最小 POC 应当：
+固定 realization 的最小 POC 已完成。阶段性结果报告已归档至
+`cash/bellhop_internal_wall_superseded_20260902/reports/bellhop_internal_pm_fixed_realization_convergence_report.md`，输出位于
+`results/validation/bellhop_internal_pm_fixed_realization/`。固定 realization 的
+结果为 **PASS**：
+
+- seed `260001`、`U=6 m/s`、span `160 m`、`N_master=4097`，请求
+  `Kmax=0.5 rad/m`（周期网格可实现的最高模态为 `0.4712389 rad/m`）。
+- `N=513/1025/2049/4097` 全部来自同一 master Fourier coefficients；profile
+  density 只通过线性插值改变边界离散，不重生随机数、phase、系数或带宽。
+- preflight 通过：`min |u dot n|=0.8022`、`lambda max|kappa|=0.01672`、
+  最小曲率半径/波长 `59.8`，无重复点、非有限值或拒绝段。
+- 从 `N=513` 到 `2049`，hit error `5.17e-4 -> 3.10e-5 m`，tangent/normal
+  error `4.90e-4 -> 2.55e-5`，curvature error `2.36e-3 -> 3.38e-4 1/m`，
+  reflected-direction error `6.53e-7 -> 3.40e-8`，RN error
+  `3.21e-6 -> 4.58e-7`，path difference `1.47e-4 -> 1.98e-5 m`，receiver
+  phase `-5.70e-3 -> -3.11e-4 rad`，complex relative error
+  `6.07e-3 -> 8.39e-4`；所有 2001 rays 均成功且 transformed branch 正向。
+- 直接导出的 native RN/RM/Tg/Th、pressure-release phase、Amp 和 rotation
+  p/q diagnostics 均通过；receiver absolute amplitude 仍只作 diagnostic。
+
+本轮 fixed-PM local reflection covariance audit 已完成并通过；阶段性完整报告已归档至
+`cash/bellhop_internal_wall_superseded_20260902/reports/bellhop_pm_local_reflection_covariance_report.md`，输出位于
+`results/validation/bellhop_pm_local_reflection_covariance/`。它复用同一
+seed-260001 master profile，在 `phi=89` 与 `89.5` 度、`N=2049/4097`、三条
+精确配对 ray 上比较 native C-ATI 与 source-centered rigidly rotated
+parametric wall。交点、局部 frame、共同 master 曲率收敛、镜面方向协变、
+pressure-release phase、Amp、RN/p/q 与 internal half-turn 均通过；硬门截止
+Reflect2D 出口，receiver field 仍为 diagnostic-only。
+
+### 5.1 fixed-PM local reflection covariance（已合并）
+
+该审计的完整逐 ray 数据曾写入阶段性报告（现归档于 `cash/bellhop_internal_wall_superseded_20260902/reports/bellhop_pm_local_reflection_covariance_report.md`）；本节保留其当前有效结论。固定 realization 为 seed `260001`、`U=6 m/s`、span `160 m`、`N_master=4097`，请求 `Kmax=0.5 rad/m`、实际 `Kmax=0.4712389 rad/m`。对每个 `phi` 使用同一 source-centered proper rotation
+
+```text
+x_B = Tx_B + Q_phi (x_A - Tx_A), det(Q_phi)=+1,
+Gamma_A(s)=[s,eta(s)], Gamma_B(s)=T_phi(Gamma_A(s)),
+alpha_B = alpha_A + phi, range(Tx_B)=0.
+```
+
+Gaussian `.sbp` 也按相同的局部角度偏移刚体传输；不是只旋转 wall。native C-ATI 与 internal parametric wall 均使用同一 profile samples，internal 侧继续使用参数曲线的单位 tangent、TOP normal 和 signed geometric curvature，不接收 native `Dss`。
+
+| phi | N | hit err (m) | frame err | kappa native/internal err (1/m) | reflected direction err | RN diff | p-after diff | p noncurv resid | q-after diff | phase err (rad) | tau diff (s) | min mu | extension/NaN |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|
+| 89.0 | 2049 | `5.0e-7` | `1.48e-5` | `7.71e-4 / 3.80e-4` | `6.76e-6` | `5.93e-7` | `8.77e-2` | `3.22e-8` | `7.50e-4` | `7.1e-15` | `3.33e-10` | `0.998` | `0 / 0` |
+| 89.0 | 4097 | `5.0e-7` | `2.95e-6` | `3.82e-4 / 1.84e-4` | `1.98e-6` | `2.94e-7` | `4.35e-2` | `3.61e-8` | `7.50e-4` | `7.1e-15` | `3.33e-10` | `0.998` | `0 / 0` |
+| 89.5 | 2049 | `5.0e-7` | `1.48e-5` | `7.71e-4 / 3.80e-4` | `6.76e-6` | `5.93e-7` | `8.77e-2` | `3.22e-8` | `7.50e-4` | `7.1e-15` | `3.33e-10` | `0.998` | `0 / 0` |
+| 89.5 | 4097 | `5.0e-7` | `2.95e-6` | `3.82e-4 / 1.84e-4` | `1.98e-6` | `2.94e-7` | `4.35e-2` | `3.61e-8` | `7.50e-4` | `7.1e-15` | `3.33e-10` | `0.998` | `0 / 0` |
+
+三个精确配对 ray 均通过 intersection/frame、共同 master 曲率、镜面方向协变、pressure-release `pi`、Amp、RN/RM、p/q、delay 与 half-turn 检查；`N=2049 -> 4097` 时 frame、curvature、方向和 RN 差异均收敛。`p-after` 的有限差异由 `RN` 曲率离散差异定量解释，p 非曲率残差仅约 `3.6e-8`。因此该阶段分类为 **PASS**（局部 Reflect2D covariance）；它不等价于完整 receiver-field 或 PE rough-wall 验证，后者作为下一阶段独立任务。
+
+下一步若继续 PM 路线，应保持同一 fixed realization；不得把本次 local
+reflection covariance 误称为完整 receiver-field 等价或 PE rough-wall 验证。
+具体 PE 对照仍应：
 
 1. 只生成一次 fixed-seed、fixed-`Kmax`、高分辨率 band-limited `eta_ref`；所有 density cases 均从它采样/插值。
-2. 先用全系统 proper rotation `89 deg`，统一变换 Tx、Rx、source direction 和同一条 rough profile，使 native ATI 与 internal wall 表示完全相同的物理几何；通过后再测试 `89.5 deg`，`89.9 deg` 只作极限诊断。
-3. 推荐起始参数：seed `260001`、`U=6 m/s`、profile length `160 m`、reference samples `4097`、candidate `Kmax=0.5 rad/m`（须先通过 slope/curvature/grazing preflight）、density `513/1025/2049`、ray step `0.1 m`、beam count `2001`、4 kHz、显式 line source `X`。
+2. 若转入 PE 对照，继续使用已通过的全系统 proper rotation `89/89.5 deg`，统一变换 Tx、Rx、source direction 和同一条 rough profile；不要把严格 90 度的旧 native-ATI chart 作为等价场景。
+3. 使用本次 seed/profile/Kmax/master-grid 作为 canonical 输入；任何新增 density 仍只能从同一 `eta_ref` 插值。local covariance POC 的 accepted settings 为 `N=2049/4097`、step `0.05 m`、3 条显式配对 ray、4 kHz；完整 receiver field 仍不作 hard gate。
 4. 先验收 intersection、`t/n/kappa`、direction、RN/RM、`p/q`、delay 和 reflection phase，再查看 receiver complex field。不得进入 PE 或 Monte Carlo，直到 Bellhop-only covariance 通过。
 
 需要特别区分：internal adapter 使用参数曲线的连续几何曲率；native C-ATI 的有限采样实现使用 Bellhop 自身的 `Dss` 离散。有限 `N` 下不应要求两者 bitwise 相同，而应检验它们对同一连续曲线的收敛。若未来需要严格的“同一离散 ATI frame”审计，应作为单独 diagnostic mode，不应重新把通用 internal wall 绑定到 `z(r)`。
@@ -133,20 +185,23 @@ native backward-range Cartesian influence 仍有约 `-0.2606` 至 `-0.286 dB` �
 - sidecar 当前仍按明确的采样参数顺序输入；允许 range 折返，但不允许退化零长度 segment。
 - 未验证 layered SSP、3D、动态海面、多次粗糙面反射、跨 seam 的 arrivals/eigenrays 或大规模随机统计。
 - `InfluenceGeoHatCart` 核心公式没有修改；native backward-range absolute amplitude 仍是 diagnostic limitation。
-- fixed-realization PM、PE rough-wall cross-validation 和 Monte Carlo 均未完成。
+- fixed-realization PM internal-wall density convergence 和 fixed-PM local
+  native↔internal Reflect2D covariance 已通过；完整 receiver-field equivalence、
+  PE rough-wall cross-validation 和 Monte Carlo 仍未完成。
 
 这些限制不会否定已完成的参数化几何和 vertical-tangent 结论，但会阻塞将当前结果直接外推为完整 PM/PE 粗糙面模型。
 
 ## 7. 归档说明
 
-本次收尾将以下阶段性材料移入 `cash/bellhop_internal_wall_superseded_20260902/`，不再作为 active context：
+本次收尾已将以下阶段性材料移入 `cash/bellhop_internal_wall_superseded_20260902/`，不再作为 active context：
 
-- 九份被本报告取代的 feasibility/POC/audit/PM/redesign/geometry-fix 阶段报告；
+- 九份被本报告取代的 feasibility/POC/audit/PM/redesign/geometry-fix 阶段报告，以及本轮 fixed-realization/local-covariance 阶段报告；
 - 已完成使命的 curved-wall beam/frame logging 入口、runner 和源码 overlay；
-- 物理比较关系无效的 strict-90-degree PM validator、native PM runner 和旧 profile generator。
+- 物理比较关系无效的 strict-90-degree PM validator、native PM runner 和旧 profile generator；
+- 已完成使命的 fixed-realization convergence validator、local covariance validator 及其一次性 runner。
 
 归档不删除其历史内容；current 数值证据仍保留在 `results/validation/`。flat、tilted、sinusoidal、vertical-tangent、SHD selector 以及通用 parametric-wall build/runner 均保留为有效回归或下一阶段基础。
 
 ## 8. 最终判断
 
-**PASS_WITH_LIMITS**：当前 validation-only curved internal wall 已真正按参数曲线处理，`dr/ds=0` 回归和 flat/tilted/sinusoidal 回归通过；原生 `Reflect2D`、原生 beam-state 更新和未修改的 `InfluenceGeoHatCart` 保持在链路中。下一步可以开展“同一 fixed-band-limited PM realization + 有限角度全系统旋转”的 Bellhop-only POC，但尚不能进入 PE rough-wall 对比或宣称 PM validation 完成。
+**PASS_WITH_LIMITS**：当前 validation-only curved internal wall 已真正按参数曲线处理，`dr/ds=0` 回归、flat/tilted/sinusoidal 回归、同一 fixed-band-limited PM realization 的 density 收敛以及 `phi=89/89.5` 度的 local native↔internal Reflect2D covariance 均通过；原生 `Reflect2D`、原生 beam-state 更新和未修改的 `InfluenceGeoHatCart` 保持在链路中。下一步才是独立的 PE rough-surface ↔ Bellhop rotated-rough 对照；完整 receiver-field 等价和 Monte Carlo 尚未完成。

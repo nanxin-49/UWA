@@ -94,8 +94,9 @@ this is a visualization/filtering result rather than a new PE validation.
   `reports/bellhop_internal_wall_implementation_report.md`; superseded stage
   reports and obsolete one-off runners have been moved to the recoverable
   repository-root `cash/` quarantine and are not active project context.
-- Current status is **PASS_WITH_LIMITS**. Flat, tilted, smooth sinusoidal and a
-  circular vertical-tangent wall pass. Curved overlays use ordered
+- Current status is **PASS_WITH_LIMITS**. Flat, tilted, smooth sinusoidal, a
+  circular vertical-tangent wall, the fixed-realization PM density audit and
+  the finite-angle fixed-PM local Reflect2D covariance audit pass. Curved overlays use ordered
   non-coincident parametric segments, normalized hit tangents, reconstructed
   TOP normals and signed turning-angle/arclength curvature. They no longer use
   internal-wall `dz/dr`, `Dss`, `Delta z/Delta r`, `1/Delta r`, strict range
@@ -112,12 +113,57 @@ this is a visualization/filtering result rather than a new PE validation.
 - The former `2.095 rad` discrepancy was a wrong SHD receiver-column pairing,
   not a reflection/frame defect. Native backward-range Cartesian amplitude
   remains a `-0.2606` to `-0.286 dB` diagnostic and is not fitted.
+- The fixed PM audit uses seed `260001`, `U=6 m/s`, span `160 m`, master `4097`
+  and density `513/1025/2049/4097`, all sampled from one realization. Preflight
+  has `min |u·n|=0.8022`, `lambda max|kappa|=0.01672`, and no rejected segments;
+  hit/tangent/normal/curvature/reflected-direction/RN/path/phase errors decrease
+  through `N=2049`, with 2001/2001 rays successful at every density. Details:
+  `cash/bellhop_internal_wall_superseded_20260902/reports/bellhop_internal_pm_fixed_realization_convergence_report.md`.
 - The old strict-90-degree native ATI versus rotated-returned PM comparison is
   not the same physical problem and is retired. The next allowed stage is a
-  Bellhop-only finite-angle POC using one fixed, band-limited PM realization,
-  full-system 89-degree rotation first, and density cases interpolated from the
-  same high-resolution profile. No redesigned PM run, PE rough-wall comparison
-  or Monte Carlo has yet been completed.
+  PE rough-wall cross-validation using this same fixed, band-limited realization
+  and the accepted 89/89.5-degree rigid transforms. Complete receiver-field
+  equivalence and Monte Carlo remain unstarted.
+- The completed Bellhop-only local reflection covariance validator and its
+  fixed-realization convergence validator are archived under
+  `cash/bellhop_internal_wall_superseded_20260902/scripts/validation/`.
+  Their paired-ray evidence remains under
+  `results/validation/bellhop_pm_local_reflection_covariance/` and writes
+  the merged authoritative summary in
+  `reports/bellhop_internal_wall_implementation_report.md`. Its hard gates stop
+  at the native ATI/internal-wall intersection and native `Reflect2D`出口;
+  receiver coherent pressure is diagnostic-only. The full stage reports are
+  retained in `cash/bellhop_internal_wall_superseded_20260902/reports/`.
+
+### PE rough-PM ↔ Bellhop rough-PM comparison design（2026-09-02）
+
+- The current design authority is
+  `reports/pe_bellhop_pm_comparison_design_audit_report.md`; status is
+  **FEASIBLE_WITH_MINOR_PREPARATION**. This design supersedes the earlier
+  suggestion that the PE comparison itself should use 89/89.5 degrees.
+  Those angles remain Bellhop-only covariance/continuity diagnostics; the
+  nominal PE comparison should use the now-validated exact-90-degree
+  parametric internal wall.
+- The first controlled surface is the existing seed-260001, U=6 m/s,
+  160 m, band-limited 1-D PM realization. PE uses
+  `eta_PE(x,y)=eta_1D(x)` and Bellhop uses the same coefficients/profile;
+  neither side may regenerate, recenter, renormalize or separately smooth it.
+- Because the production PE is a two-transverse-dimensional Gaussian field
+  while Bellhop is 2-D, the primary dimensional bridge must be a
+  validation-only one-transverse-dimensional PE/AS result or equivalent
+  `k_y=0` projection. The production y-invariant-surface/on-axis PE result is
+  a secondary dimensionality sensitivity, not an exact line-source match.
+- The primary metric is reflected-only
+  `G=H_ref_rough/H_ref_flat`; compare `G_PE/G_BH`. Absolute reflected pressure,
+  total channel, individual ray/arrival matching and native backward-range
+  amplitude remain diagnostic. The first run is one frequency (4 kHz), one
+  on-axis receiver and a flat/rough pair using the strict 192.1875 m
+  no-sponge PE baseline; 6/8 kHz and ensembles come only after interpretation.
+- Three minor preparations remain: a same-dimension PE validation reference,
+  a canonical Fourier-profile mapper with support/seam metadata, and a shared
+  flat/rough reflected-ratio extractor including flat/source and constant-
+  height sign audits. No PE/Bellhop core physics change is authorized by the
+  design review.
 
 ### Active core
 

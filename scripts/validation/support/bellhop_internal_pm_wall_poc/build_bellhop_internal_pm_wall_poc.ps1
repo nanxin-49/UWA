@@ -100,7 +100,7 @@ if (-not (Test-Path -LiteralPath $builtExe -PathType Leaf)) {
 Copy-Item -LiteralPath $builtExe -Destination $validationExe -Force
 
 $manifest = [ordered]@{
-    purpose = 'Bellhop 2020 validation-only fixed-seed PM internal wall POC'
+    purpose = 'Bellhop 2020 validation-only fixed-PM internal wall and local covariance overlay'
     official_toolbox_root = $officialRoot
     official_bellhop_sha256 = (Get-FileHash -Algorithm SHA256 (Join-Path $officialRoot 'Bellhop\bellhop.f90')).Hash
     official_step_sha256 = (Get-FileHash -Algorithm SHA256 (Join-Path $officialRoot 'Bellhop\Step.f90')).Hash

@@ -28,7 +28,7 @@ fprintf(fid,'%.17g\n%.17g\n%d\n%d\n',cfg.wall_r0_m,cfg.mapped_receiver_range_m, 
 fprintf(fid,'%.17g %.17g\n',[cfg.wall_profile_r_m(:) cfg.wall_profile_z_m(:)].');
 clear cleanup
 
-extensions={'.arr','.shd','.ray','.prt','.iwdiag'};
+extensions={'.arr','.shd','.ray','.prt','.iwdiag','.covdiag'};
 for ii=1:numel(extensions)
     target=[cfg.case_root extensions{ii}];
     if exist(target,'file')==2, delete(target); end
@@ -50,7 +50,8 @@ names={'alpha_deg','hit_r','hit_z','wall_residual','wall_t_r','wall_t_z','wall_n
     'specular_error','rotation_error','phase_in','phase_ref','phase_delta','amp_in','amp_ref','amp_delta', ...
     'p1_in','p2_in','p1_ref','p2_ref','p_ref_error','q1_in','q2_in','q1_ref','q2_ref', ...
     'q_ref_error','p_rot_error','q_rot_error','tau_wall_real','tau_wall_imag', ...
-    'tau_receiver_real','tau_receiver_imag','min_post_dr','n_post','kappa'};
+    'tau_receiver_real','tau_receiver_imag','min_post_dr','n_post','kappa', ...
+    'wall_seg','wall_lambda','wall_tg','wall_th','wall_rm','wall_rn'};
 if size(diag_matrix,2)~=numel(names)
     error('Expected %d internal PM-wall diagnostic columns, found %d.',numel(names),size(diag_matrix,2));
 end
