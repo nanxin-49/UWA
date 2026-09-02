@@ -12,12 +12,13 @@ The validation executable reads an `.iwpm` sidecar containing `R0`, mapped
 receiver range, the fixed profile seed, and the sampled `(range, depth)` wall
 profile. The profile samples are generated once in MATLAB and the same points
 are written to the rotated internal wall and the native C-ATI case. The
-overlay adds two constant-depth extension points to match Bellhop's infinite
-boundary extension.
+internal wall uses only the finite sampled support; it does not add ATI-style
+constant-depth/infinite-range endpoint extensions.
 
-At an accepted wall segment, tangent, outward TOP normal, and signed curvature
-are computed with the same node averaging and `Dss` override as
-`ComputeBdryTangentNormal`. The physical reflection calls native 2-D
+At an accepted wall segment, the unit tangent is obtained from the ordered
+parametric polyline, the outward TOP normal is reconstructed from that tangent,
+and signed geometric curvature is computed from wrapped tangent turning over
+local arc length. The physical reflection calls native 2-D
 `Reflect2D` once with pressure-release conditions. It then applies the already
 validated proper pi rotation and passes only the transformed, monotonically
 increasing branch to the unchanged Cartesian geometric-hat influence routine.

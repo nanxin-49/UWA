@@ -11,12 +11,13 @@ separate executable. It never replaces the official Bellhop executable.
 The validation executable reads a `.iw3` sidecar containing `R0`, amplitude
 `A`, signed wavenumber `K`, mapped receiver range, and the sampled `(range,
 depth)` profile. The profile samples are the same points written to the native
-C-ATI `.ati` file; the overlay adds two constant-depth extension points to
-match Bellhop's infinite boundary extension.
+C-ATI `.ati` file. The internal wall uses only the finite sampled support; it
+does not add ATI-style constant-depth/infinite-range endpoint extensions.
 
-At an accepted wall segment, tangent, outward TOP normal, and signed curvature
-are computed with the same node averaging and `Dss` override as
-`ComputeBdryTangentNormal`. The physical reflection calls native 2-D
+At an accepted wall segment, the unit tangent is obtained from the ordered
+parametric polyline, the outward TOP normal is reconstructed from that tangent,
+and signed geometric curvature is computed from wrapped tangent turning over
+local arc length. The physical reflection calls native 2-D
 `Reflect2D` once with pressure-release conditions. It then applies the already
 validated proper pi rotation and passes only the transformed, monotonically
 increasing branch to the unchanged Cartesian geometric-hat influence routine.

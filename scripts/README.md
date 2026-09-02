@@ -211,90 +211,42 @@ The atlas distinguishes physical boundary models from computational acceleration
   `results/validation/pe_bellhop_unfolded_flat_gaussian/` and the report is
   `reports/pe_bellhop_unfolded_flat_gaussian_report.md`.
 
-### Bellhop 2020 internal flat-wall POC
+### Bellhop 2020 parametric internal-wall validation
 
-- `validation/validate_bellhop_internal_flat_wall_poc.m` compares a
-  validation-only Bellhop 2020 internal wall at `r=100 m` against the official
-  unfolded free-field pressure at 103 m. It runs a 3-by-3 ray-step/beam-count
-  convergence matrix and audits the native reflection and post-reflection
-  coordinate state.
-- `validation/support/bellhop_internal_flat_wall_poc/` contains the two-source
-  overlay and isolated Windows build script. The official Bellhop 2020 source
-  and executable are copied/read only and are never replaced.
-- `validation/support/run_bellhop_internal_flat_wall_poc_vertical.m` writes the
-  required `.iw2` sidecar, runs the isolated binary, and reads its `.shd` and
-  per-ray `.iwdiag` diagnostics. The existing `.sbp` writer and
-  `InfluenceGeoHatCart` implementation are unchanged.
-- Outputs are under `results/validation/bellhop_internal_flat_wall_poc/`; the
-  acceptance report is `reports/bellhop_internal_flat_wall_poc_report.md`.
-
-### Bellhop 2020 internal tilted-wall POC
-
-- `validation/validate_bellhop_internal_tilted_wall_poc.m` extends the isolated
-  flat-wall overlay to the fixed straight line `r=100+0.005*z` (m). It uses
-  analytic line intersection in both `ReduceStep2D` reductions, the native
-  TOP `Reflect2D`, and the same proper pi rotation before the unchanged
-  `InfluenceGeoHatCart` call.
-- `validation/support/bellhop_internal_tilted_wall_poc/` contains the separate
-  Bellhop 2020 source overlay and build script; the native ATI comparison
-  helper is `validation/support/run_bellhop_native_tilted_wall_vertical.m`.
-- The 3-by-3 step/beam scan and native-vs-rotated diagnostics are stored under
-  `results/validation/bellhop_internal_tilted_wall_poc/`; the report is
-  `reports/bellhop_internal_tilted_wall_poc_report.md`. This stage does not
-  implement sinusoidal or PM walls.
-
-### Bellhop 2020 internal sinusoidal-wall POC
-
-- `validation/validate_bellhop_internal_sinusoidal_wall_poc.m` exercises a
-  sampled smooth wall `r=100-A*sin(K*z)` in a validation-only Bellhop 2020
-  overlay. The same profile samples feed native C-ATI and the internal wall;
-  analytic segment crossing is included in both `ReduceStep2D` calls, and the
-  accepted hit calls the native TOP `Reflect2D` with Bellhop's sampled tangent,
-  normal, and C-ATI `Dss` curvature.
-- The reflected branch is rotated by the validated proper pi transform about
-  `(100,0)` before the unchanged `InfluenceGeoHatCart` call. No PE, scattering
-  phase screen, p/q reset, or formal `bellhop.exe` modification is involved.
-- The small amplitude/step/beam/profile-density scan is stored under
-  `results/validation/bellhop_internal_sinusoidal_wall_poc/`; the report is
-  `reports/bellhop_internal_sinusoidal_wall_poc_report.md`. The follow-up
-  beam/frame audit in `reports/bellhop_curved_wall_beam_frame_audit_report.md`
-  shows that the earlier `2.095 rad` observation was a rotated SHD
-  receiver-column indexing artifact; correctly paired reflected-field phase
-  differs by only `1.02e-5 rad`. No PM random wall is implemented here.
-
-### Bellhop 2020 fixed-seed 1-D PM internal-wall validation
-
-- `validation/validate_bellhop_internal_pm_wall.m` generates one deterministic
-  1-D Pierson--Moskowitz Fourier realization per profile density and writes the
-  same samples to native C-ATI and to the validation-only rotated wall. It
-  scans a small profile/step/beam matrix at 4 kHz and records wall geometry,
-  signed C-ATI curvature, native `Reflect2D` p/q state, phase, delay and
-  post-rotation range monotonicity.
-- `validation/support/sample_fixed_pm_profile_vertical.m` is the sole seeded
-  profile generator; it performs no per-case smoothing, normalization or
-  scattering calculation. The isolated overlay is under
-  `validation/support/bellhop_internal_pm_wall_poc/`, and its `.iwpm` sidecar
-  contains the shared `(r,z)` samples and seed.
-- Outputs belong under `results/validation/bellhop_internal_pm_wall_poc/`; the
-  report is `reports/bellhop_internal_pm_wall_validation_report.md`. The stage
-  remains Bellhop-only and does not modify PE, `Reflect2D`,
-  `InfluenceGeoHatCart`, or the official executable. Native backward-range
-  amplitude is diagnostic only; geometry, phase, delay and beam-state checks
-  are the hard gates.
-
-### Bellhop curved-wall beam/frame covariance audit
-
-- `validation/validate_bellhop_curved_wall_beam_frame_audit.m` runs the
-  Bellhop 2020 validation overlay with reflection, proper-rotation and
-  `InfluenceGeoHatCart` contribution logging. It compares a native C-ATI
-  sinusoid with the rotated internal-wall case and writes the compact frame
-  and beam-fan tables under
-  `results/validation/bellhop_curved_wall_beam_frame_audit/`.
+- The authoritative implementation and status report is
+  `../reports/bellhop_internal_wall_implementation_report.md`. It consolidates
+  the feasibility, flat, tilted, sinusoidal, beam/frame, old PM, redesign and
+  parameterization-fix stages. Superseded reports and obsolete one-off scripts
+  are in the recoverable root `cash/` quarantine, not active project context.
+- `validation/validate_bellhop_internal_flat_wall_poc.m`,
+  `validation/validate_bellhop_internal_tilted_wall_poc.m`, and
+  `validation/validate_bellhop_internal_sinusoidal_wall_poc.m` are the retained
+  flat/straight/curved regression entrypoints. Their isolated source overlays
+  and runners remain under `validation/support/`.
+- Curved overlays use ordered noncoincident parametric segments, a normalized
+  hit tangent, a TOP normal reconstructed from that tangent, signed
+  turning-angle/arclength curvature, and finite profile support. Internal-wall
+  geometry does not use `dz/dr`, `Dss`, `Delta z/Delta r`, `1/Delta r`, range
+  monotonicity or ATI-style infinite endpoint extension.
+- `validation/validate_bellhop_internal_vertical_tangent_poc.m` is the focused
+  circular-wall regression at exact `dr/ds=0` and non-grazing `u dot n=1`. It
+  scans 65/129/257 samples and checks intersection, orthonormal frame, signed
+  curvature, `RN`, p/q, one pressure-release phase jump, finite values and
+  positive transformed range.
+- `validation/support/run_bellhop_internal_pm_wall_poc_vertical.m` and
+  `validation/support/bellhop_internal_pm_wall_poc/` are retained as the
+  generic parametric-wall runner/build used by the vertical-tangent test and a
+  future finite-angle PM POC. The invalid strict-90-degree PM comparator and
+  its old profile generator are not retained as active entrypoints.
 - `validation/validate_bellhop_shd_receiver_range_pairing_vertical.m` is the
   permanent receiver-column regression. It requires exact 103 m rotated and
   97 m native matches, verifies that native total/direct use the same column,
-  and uses the 102 m rotated column as a negative control that must retain the
-  former approximately `-2.095 rad` phase error.
+  and keeps the 102 m rotated column as a negative control for the former
+  approximately `-2.095 rad` indexing error.
+- Current status is **PASS_WITH_LIMITS**: flat, tilted, sinusoidal and vertical
+  tangent pass; the redesigned fixed-band-limited, finite-angle PM validation
+  has not yet run. No PE comparison or Monte Carlo is authorized by this
+  status.
 
 ### Reflection-free four-level audit
 

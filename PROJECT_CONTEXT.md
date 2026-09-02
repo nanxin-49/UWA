@@ -88,81 +88,36 @@ this is a visualization/filtering result rather than a new PE validation.
   change does not alter PE marching, the Gaussian source, communication code,
   validation thresholds, or previously generated outputs.
 
-### Bellhop 2020 internal flat-wall POC（2026-08-31）
+### Bellhop 2020 parametric internal-wall validation（2026-09-02）
 
-- `validate_bellhop_internal_flat_wall_poc` implements only the approved flat
-  `r=100 m` validation stage in an isolated Bellhop 2020 binary. `Step2D` limits
-  the accepted step at the actual wall crossing, the existing internal 2D
-  `Reflect2D` performs a single vacuum/TOP reflection, and the reflected branch
-  is then rotated by pi about `(100,0)` and packed before the unchanged
-  `InfluenceGeoHatCart` call.
-- The 4 kHz matrix used steps `0.2/0.1/0.05 m` and `2001/5001/10001` beams. All
-  nine cases reproduced `H_wall=-P_BH(103 m)` exactly at stored SHD precision;
-  maximum wall residual was `3.5385e-12 m`, maximum travel-time error was
-  `9.7145e-16 s`, and reflection/rotation `p/q` errors were zero.
-- This result approves proceeding to a separate tilted-straight-wall
-  validation. It does not validate curved/rough walls, PM surfaces, layered
-  SSP, 3D, multiple reflections, or PE. The official 2020 executable is
-  unchanged; the isolated binary and evidence are under
-  `results/validation/bellhop_internal_flat_wall_poc/`.
-
-### Bellhop 2020 internal tilted-wall POC（2026-08-31）
-
-- `validate_bellhop_internal_tilted_wall_poc` adds only the fixed line
-  `r=100+0.005*z` to a new validation-only Bellhop 2020 binary. The analytic
-  `F=r-R0-a*z` crossing is included in both `ReduceStep2D` calls; the wall
-  frame is `t=(a,1)/sqrt(1+a^2)`, `n=(1,-a)/sqrt(1+a^2)`, `kappa=0`, and
-  physical reflection calls the unchanged native `Reflect2D` with TOP/vacuum
-  semantics. The reflected node is then rotated by pi about `(100,0)` and
-  only that monotone branch reaches `InfluenceGeoHatCart`.
-- The 4 kHz 3-by-3 scan gives machine-precision wall residual, tangent/normal
-  and specular-direction errors, one pi phase jump, unchanged `Amp` and `p/q`,
-  and positive transformed range increments. The equivalent native ATI case
-  agrees in reflection angle, point and delay; its backward-range Cartesian
-  amplitude has a repeatable ~0.286 dB offset while phase agrees within
-  0.003 rad, so amplitude is recorded as a Bellhop range-chart limitation,
-  not corrected or fitted.
-- This is a straight-wall geometry/state validation only. It does not modify
-  PE, communication code, `InfluenceGeoHatCart`, the official executable, or
-  implement sinusoidal/PM walls, layered SSP, 3D, or multiple reflections.
-
-### Bellhop 2020 internal sinusoidal-wall POC（2026-08-31）
-
-- `validate_bellhop_internal_sinusoidal_wall_poc` adds a validation-only smooth
-  sampled wall `r=100-A*sin(K*z)` to a Bellhop 2020 overlay. Native C-ATI and
-  internal geometry use the same profile samples, node-frame interpolation,
-  and Bellhop `Dss` curvature path; wall crossings are reduced in both
-  `ReduceStep2D` calls and the accepted hit invokes the unchanged native TOP
-  `Reflect2D`.
-- For `A=0.25/0.5 m`, signed `K=-0.01 1/m`, profile counts `41/81/161`,
-  steps `0.2/0.1/0.05 m`, and `2001/5001` beams, wall residuals, local
-  tangent/normal, specular direction, pressure-release phase, Amp, p/q
-  curvature kick, travel time, and proper-rotation monotonicity are stable.
-- The follow-up beam/frame covariance audit
-  (`reports/bellhop_curved_wall_beam_frame_audit_report.md`) supersedes the
-  earlier phase conclusion: the apparent `2.095 rad` offset came from reading
-  the rotated 102 m SHD column instead of the explicit 103 m target column.
-  With native total-minus-direct pairing, reflected-field phase agrees to
-  `1.02e-5 rad`; the stable `-0.2606 dB` amplitude offset is the known
-  backward-range `ScalePressure` diagnostic. No p/q or phase correction was
-  introduced, and PM random-wall work remains a separate future validation.
-
-### Bellhop 2020 fixed-seed 1-D PM internal-wall validation（2026-09-01）
-
-- `validate_bellhop_internal_pm_wall` and its isolated Bellhop 2020 overlay
-  generate one seeded 1-D PM Fourier realization and write the same samples to
-  native C-ATI and rotated `.iwpm` cases. The overlay keeps native
-  `Reflect2D`, `Dss`, pressure-release phase, p/q state, and proper pi rotation;
-  PE and communication code are untouched.
-- The binary builds and internal-wall smoke runs complete with exact
-  intersection, one phase jump, preserved q/p under rotation, and positive
-  transformed range. The requested native-ATI `z=eta(r)` versus rotated
-  backward-range return branch is not a convergent equivalent chart for the
-  frozen zero-clearance receiver pairing; unfiltered PM samples additionally
-  produce grazing-sensitive `Dss`/`RN` kicks as profile density changes.
-- Therefore the PM stage is recorded as **NOT_FEASIBLE for the requested
-  native↔rotated hard comparison** and is stopped before any PE rough-wall
-  cross-validation. See `reports/bellhop_internal_pm_wall_validation_report.md`.
+- The authoritative implementation and validation status is consolidated in
+  `reports/bellhop_internal_wall_implementation_report.md`; superseded stage
+  reports and obsolete one-off runners have been moved to the recoverable
+  repository-root `cash/` quarantine and are not active project context.
+- Current status is **PASS_WITH_LIMITS**. Flat, tilted, smooth sinusoidal and a
+  circular vertical-tangent wall pass. Curved overlays use ordered
+  non-coincident parametric segments, normalized hit tangents, reconstructed
+  TOP normals and signed turning-angle/arclength curvature. They no longer use
+  internal-wall `dz/dr`, `Dss`, `Delta z/Delta r`, `1/Delta r`, strict range
+  monotonicity or ATI-style infinite endpoint extension.
+- The accepted hit calls unchanged native 2D `Reflect2D` once. Native RN/RM,
+  p/q, vacuum phase, Amp and tau are retained; the reflected branch then uses
+  the proper half-turn `r'=2R0-r, z'=-z` only as a storage-chart map before the
+  unchanged `InfluenceGeoHatCart`.
+- Flat reproduces `H_wall=-P_BH(103 m)` for the 3-by-3 step/beam scan. Tilted
+  geometry is machine-precision. The sinusoidal 36-case scan has maximum phase
+  difference `6.71e-5 rad` after explicit SHD receiver pairing. A radius-100 m
+  circular wall remains finite and convergent at exact `dr/ds=0`, with
+  `u·n=1`, no NaN/Inf and signed curvature converging to `-0.01 1/m`.
+- The former `2.095 rad` discrepancy was a wrong SHD receiver-column pairing,
+  not a reflection/frame defect. Native backward-range Cartesian amplitude
+  remains a `-0.2606` to `-0.286 dB` diagnostic and is not fitted.
+- The old strict-90-degree native ATI versus rotated-returned PM comparison is
+  not the same physical problem and is retired. The next allowed stage is a
+  Bellhop-only finite-angle POC using one fixed, band-limited PM realization,
+  full-system 89-degree rotation first, and density cases interpolated from the
+  same high-resolution profile. No redesigned PM run, PE rough-wall comparison
+  or Monte Carlo has yet been completed.
 
 ### Active core
 

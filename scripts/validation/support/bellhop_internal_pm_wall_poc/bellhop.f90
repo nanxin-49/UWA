@@ -192,8 +192,8 @@ SUBROUTINE ReadInternalPMWall( FileRootIn )
        CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall POC requires mapped receiver range = 103 m' )
   IF ( ANY( IWallZProfile( 2:IWallNProfile ) <= IWallZProfile( 1:IWallNProfile-1 ) ) ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall profile depth samples must be strictly increasing' )
-  IF ( MINVAL( ABS( IWallRProfile( 2:IWallNProfile ) - IWallRProfile( 1:IWallNProfile-1 ) ) ) <= 1.0d-12 ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'PM-wall profile contains a zero-range segment' )
+  ! The internal wall is parameterized by the ordered profile samples; no
+  ! monotonic or nonzero-range condition is imposed on r.
   CALL ConfigureWallProfile( IWallRProfile, IWallZProfile, IWallNProfile )
 
   WRITE( PRTFile, * )

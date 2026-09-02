@@ -24,8 +24,6 @@
 !/scripts/validation/support/bellhop_internal_sinusoidal_wall_poc/*.ps1
 !/scripts/validation/support/bellhop_internal_pm_wall_poc/*.f90
 !/scripts/validation/support/bellhop_internal_pm_wall_poc/*.ps1
-!/scripts/validation/support/bellhop_curved_wall_beam_frame_audit/*.f90
-!/scripts/validation/support/bellhop_curved_wall_beam_frame_audit/*.ps1
 !/results/validation/bellhop_internal_flat_wall_poc/*.csv
 !/results/validation/bellhop_internal_flat_wall_poc/*.json
 !/results/validation/bellhop_internal_tilted_wall_poc/*.csv
@@ -36,3 +34,5 @@
 !/results/validation/bellhop_internal_pm_wall_poc/*.json
 !/results/validation/bellhop_curved_wall_beam_frame_audit/*.csv
 !/results/validation/bellhop_curved_wall_beam_frame_audit/*.json
+!/results/validation/bellhop_internal_vertical_tangent_poc/*.csv
+!/results/validation/bellhop_internal_vertical_tangent_poc/*.json

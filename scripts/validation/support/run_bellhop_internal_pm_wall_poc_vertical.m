@@ -12,8 +12,8 @@ if numel(cfg.wall_profile_r_m)~=numel(cfg.wall_profile_z_m) || numel(cfg.wall_pr
         any(~isfinite(cfg.wall_profile_r_m(:))) || any(~isfinite(cfg.wall_profile_z_m(:)))
     error('PM wall profile must contain at least three finite paired samples.');
 end
-if any(diff(cfg.wall_profile_z_m(:))<=0) || any(abs(diff(cfg.wall_profile_r_m(:)))<=1e-12)
-    error('PM wall profile depth must increase and range segments must be nonzero.');
+if any(diff(cfg.wall_profile_z_m(:))<=0)
+    error('PM wall profile parameter samples must increase.');
 end
 if exist(cfg.bellhop_exe,'file')~=2
     error('Bellhop PM internal-wall validation executable is missing: %s',cfg.bellhop_exe);

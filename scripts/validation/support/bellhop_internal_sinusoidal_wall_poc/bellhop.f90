@@ -193,8 +193,8 @@ SUBROUTINE ReadInternalSinusoidalWall( FileRootIn )
        CALL ERROUT( 'BELLHOP-IWALL', 'Sinusoidal-wall POC requires positive A and nonzero K' )
   IF ( ABS( IWallReceiverRange - 103.0d0 ) > 1.0d-12 ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'Sinusoidal-wall POC requires mapped receiver range = 103 m' )
-  IF ( ANY( IWallRProfile( 2:IWallNProfile ) <= IWallRProfile( 1:IWallNProfile-1 ) ) ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'Sinusoidal-wall profile range samples must be strictly increasing' )
+  ! Internal-wall samples are ordered by their explicit parameter (z in this
+  ! sinusoidal POC); range may increase, decrease, or have a zero increment.
   IF ( ANY( IWallZProfile( 2:IWallNProfile ) <= IWallZProfile( 1:IWallNProfile-1 ) ) ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'Sinusoidal-wall profile depth samples must be strictly increasing' )
   IF ( MAXVAL( ABS( IWallRProfile - ( IWallR0 - IWallAmplitude * SIN( IWallWavenumber * IWallZProfile ) ) ) ) > 1.0d-8 ) &

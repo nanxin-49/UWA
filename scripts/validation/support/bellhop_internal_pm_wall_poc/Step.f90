@@ -4,62 +4,57 @@ MODULE Step
   USE sspMod
   IMPLICIT NONE
 
-  ! Validation-only sampled internal PM wall. The profile points are ordered
-  ! exactly as Bellhop's ATI points (in increasing range); two constant-depth
-  ! extension points reproduce ReadATI/ComputeBdryTangentNormal's infinite
-  ! left/right extensions.
+  ! Validation-only sampled internal wall. The profile points are an ordered
+  ! parametric support; range need not be monotone. No ATI-style endpoint
+  ! extension is used for an internal wall.
   INTEGER :: WallNProfile = 0
-  REAL (KIND=8), ALLOCATABLE :: WallX( :, : ), WallSegT( :, : ), WallNodeT( :, : ), WallNodeN( :, : )
-  REAL (KIND=8), ALLOCATABLE :: WallSegLen( : ), WallDx( : ), WallSegKappa( : )
+  REAL (KIND=8), ALLOCATABLE :: WallX( :, : ), WallSegT( :, : ), WallNodeT( :, : )
+  REAL (KIND=8), ALLOCATABLE :: WallSegLen( : ), WallSegKappa( : )
 
 CONTAINS
 
   SUBROUTINE ConfigureWallProfile( R, Z, N )
     INTEGER, INTENT( IN ) :: N
     REAL (KIND=8), INTENT( IN ) :: R( N ), Z( N )
-    INTEGER :: i, nAll
+    INTEGER :: i, nSeg
+    REAL (KIND=8) :: nodeNorm, deltaPhi
     REAL (KIND=8), ALLOCATABLE :: phi( : )
 
     IF ( N < 3 ) STOP 'BELLHOP-IWALL: PM wall requires at least 3 profile points'
     WallNProfile = N
-    nAll = N + 2
-    IF ( ALLOCATED( WallX ) ) DEALLOCATE( WallX, WallSegT, WallNodeT, WallNodeN, WallSegLen, WallDx, WallSegKappa )
-    ALLOCATE( WallX( 2, nAll ), WallSegT( 2, nAll - 1 ), WallNodeT( 2, nAll ), WallNodeN( 2, nAll ), &
-              WallSegLen( nAll - 1 ), WallDx( nAll ), WallSegKappa( nAll - 1 ), phi( nAll ) )
+    nSeg = N - 1
+    IF ( ALLOCATED( WallX ) ) DEALLOCATE( WallX, WallSegT, WallNodeT, WallSegLen, WallSegKappa )
+    ALLOCATE( WallX( 2, N ), WallSegT( 2, nSeg ), WallNodeT( 2, N ), &
+              WallSegLen( nSeg ), WallSegKappa( nSeg ), phi( N ) )
 
-    WallX( :, 1 ) = [ -SQRT( HUGE( 1.0d0 ) ) / 1.0d5, Z( 1 ) ]
-    WallX( 1, 2 : N + 1 ) = R
-    WallX( 2, 2 : N + 1 ) = Z
-    WallX( :, nAll ) = [ SQRT( HUGE( 1.0d0 ) ) / 1.0d5, Z( N ) ]
+    WallX( 1, : ) = R
+    WallX( 2, : ) = Z
 
-    DO i = 1, nAll - 1
+    DO i = 1, nSeg
        WallSegT( :, i ) = WallX( :, i + 1 ) - WallX( :, i )
        WallSegLen( i ) = NORM2( WallSegT( :, i ) )
+       IF ( WallSegLen( i ) <= 1.0d-12 ) STOP 'BELLHOP-IWALL: coincident wall samples'
        WallSegT( :, i ) = WallSegT( :, i ) / WallSegLen( i )
-       WallDx( i ) = ( WallX( 2, i + 1 ) - WallX( 2, i ) ) / ( WallX( 1, i + 1 ) - WallX( 1, i ) )
     END DO
-    WallDx( nAll ) = 0.0d0
 
-    WallNodeT( :, 1 ) = [ 1.0d0, 0.0d0 ]
-    WallNodeT( :, nAll ) = [ 1.0d0, 0.0d0 ]
-    DO i = 2, nAll - 1
-       ! Literal averaging used by Bellhop's C ATI path.
+    WallNodeT( :, 1 ) = WallSegT( :, 1 )
+    WallNodeT( :, N ) = WallSegT( :, nSeg )
+    DO i = 2, N - 1
+       ! Average adjacent unit tangents, then restore a unit node frame.
        WallNodeT( :, i ) = 0.5d0 * ( WallSegT( :, i - 1 ) + WallSegT( :, i ) )
+       nodeNorm = NORM2( WallNodeT( :, i ) )
+       IF ( nodeNorm <= 1.0d-12 ) STOP 'BELLHOP-IWALL: degenerate wall node frame'
+       WallNodeT( :, i ) = WallNodeT( :, i ) / nodeNorm
     END DO
-    DO i = 1, nAll
-       ! Outward normal for a TOP boundary, copied from bdryMod.f90.
-       WallNodeN( 1, i ) = +WallNodeT( 2, i )
-       WallNodeN( 2, i ) = -WallNodeT( 1, i )
+    DO i = 1, N
        phi( i ) = ATAN2( WallNodeT( 2, i ), WallNodeT( 1, i ) )
     END DO
 
-    DO i = 1, nAll - 1
-       ! ComputeBdryTangentNormal's C-ATI curvature path, including its
-       ! Dss override. Keeping this expression identical is important for
-       ! a native-to-internal curvature audit.
-       WallSegKappa( i ) = ( phi( i + 1 ) - phi( i ) ) / WallSegLen( i )
-       WallSegKappa( i ) = ( WallDx( i + 1 ) - WallDx( i ) ) / &
-            ( WallX( 1, i + 1 ) - WallX( 1, i ) ) * WallSegT( 1, i ) ** 3
+    DO i = 1, nSeg
+       ! Signed geometric curvature from the ordered parametric polyline.
+       ! atan2(sin,cos) unwraps the turning angle without a +/-pi jump.
+       deltaPhi = ATAN2( SIN( phi( i + 1 ) - phi( i ) ), COS( phi( i + 1 ) - phi( i ) ) )
+       WallSegKappa( i ) = deltaPhi / WallSegLen( i )
     END DO
     DEALLOCATE( phi )
   END SUBROUTINE ConfigureWallProfile
@@ -79,7 +74,7 @@ CONTAINS
     residual = HUGE( residual )
     best = HUGE( best )
     IF ( WallNProfile <= 0 ) RETURN
-    DO i = 1, WallNProfile + 1
+    DO i = 1, WallNProfile - 1
        d = WallX( :, i + 1 ) - WallX( :, i )
        q = x - WallX( :, i )
        lam = DOT_PRODUCT( q, d ) / DOT_PRODUCT( d, d )
@@ -96,7 +91,10 @@ CONTAINS
        residual = ( ( x( 1 ) - WallX( 1, iSeg ) ) * ( WallX( 2, iSeg + 1 ) - WallX( 2, iSeg ) ) - &
                     ( x( 2 ) - WallX( 2, iSeg ) ) * ( WallX( 1, iSeg + 1 ) - WallX( 1, iSeg ) ) ) / WallSegLen( iSeg )
        tWall = ( 1.0d0 - lambda ) * WallNodeT( :, iSeg ) + lambda * WallNodeT( :, iSeg + 1 )
-       nWall = ( 1.0d0 - lambda ) * WallNodeN( :, iSeg ) + lambda * WallNodeN( :, iSeg + 1 )
+       IF ( NORM2( tWall ) <= 1.0d-12 ) STOP 'BELLHOP-IWALL: degenerate hit frame'
+       tWall = tWall / NORM2( tWall )
+       nWall( 1 ) = +tWall( 2 )
+       nWall( 2 ) = -tWall( 1 )
        kappa = WallSegKappa( iSeg )
     END IF
   END SUBROUTINE GetWallGeometry
@@ -110,7 +108,7 @@ CONTAINS
     hWall = HUGE( hWall )
     IF ( WallNProfile <= 0 ) RETURN
     tol = 1.0d-10
-    DO i = 1, WallNProfile + 1
+    DO i = 1, WallNProfile - 1
        d = WallX( :, i + 1 ) - WallX( :, i )
        q = WallX( :, i ) - x0
        den = u( 1 ) * d( 2 ) - u( 2 ) * d( 1 )

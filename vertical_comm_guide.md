@@ -88,48 +88,28 @@ H_f=H_{\mathrm{direct},f}+H_{\mathrm{reflect},f}.
 横向窗口。结果目录为
 `results/validation/pe_bellhop_unfolded_flat_gaussian/`。
 
-在此基础上，validation-only 的 Bellhop 2020 flat internal-wall POC 位于
-`scripts/validation/validate_bellhop_internal_flat_wall_poc.m`。它让射线在
-`r=100 m` 的真实交点调用原生 2D `Reflect2D`，随后绕 `(100,0)` 旋转 pi，
-并只把单调增加的 transformed post-wall branch 交给未修改的
-`InfluenceGeoHatCart`。4 kHz 的 `step=0.2/0.1/0.05 m`、
-`Nbeam=2001/5001/10001` 九项检查全部恢复
-`H_wall=-P_BH(103 m)`；本结论仅批准进入 tilted straight-wall 的独立验证，
-不能外推到曲面、PM 粗糙面、分层 SSP、3D 或多次反射。详见
-`reports/bellhop_internal_flat_wall_poc_report.md`。
+Bellhop 2020 validation-only internal-wall 的当前权威状态统一见
+`reports/bellhop_internal_wall_implementation_report.md`。实现链为：参数化墙
+`Gamma(s)=[r(s),z(s)]` 的有限段求交与 `ReduceStep2D` 截断，命中点单位切向、
+由切向构造的 TOP 法向、有符号转角/弧长曲率，原生 2D `Reflect2D` 一次，随后
+仅用 `r'=2R0-r, z'=-z` proper half-turn 重映射反射分支，最后进入未修改的
+`InfluenceGeoHatCart`。curved adapter 不再依赖 `dz/dr`、`Dss`、
+`Delta z/Delta r`、`1/Delta r`、range 单调性或 ATI 无限端点延拓。
 
-随后完成的 tilted straight-wall validation-only POC 使用
-`r=100+0.005*z`，在 `Step2D/ReduceStep2D` 中解析求交，采用
-`t=(a,1)/sqrt(1+a^2)`、`n=(1,-a)/sqrt(1+a^2)`、`kappa=0`，并直接复用
-Bellhop 2020 原生 `Reflect2D`。反射后的分支仍绕 `(100,0)` 做 proper pi
-rotation，再交给未修改的 `InfluenceGeoHatCart`。4 kHz 的 3×3
-step/beam 扫描显示几何、pressure-release 相位、Amp、p/q、travel time 和
-正 range 均通过；同一物理直线的 native ATI arrival 在反射点、方向和时延上
-一致。native 原坐标的 backward-range Cartesian 场保留约 0.286 dB 的稳定
-幅度偏移（phase 约 0.003 rad），没有人为校正。结果详见
-`reports/bellhop_internal_tilted_wall_poc_report.md`；本阶段尚未实现
-sinusoidal 或 PM 粗糙墙。
+flat、tilted、smooth sinusoidal 与半径 100 m 的 vertical-tangent circle 均已
+回归通过。flat 的 3×3 step/beam scan 恢复 `H_wall=-P_BH(103 m)`；sinusoidal
+正确配对 receiver column 后 phase difference 不超过 `6.71e-5 rad`；circle 在
+严格 `dr/ds=0`、非 grazing 的 `u·n=1` 下无 NaN/Inf，signed curvature 随
+65/129/257 samples 收敛到 `-0.01 1/m`。曾出现的约 `2.095 rad` 偏差是读取了
+错误 SHD range column，不是 reflection/frame 缺陷。native backward-range
+Cartesian amplitude 的 `-0.2606` 至 `-0.286 dB` 偏差仍只作 diagnostic，未拟合。
 
-随后进行的 smooth sinusoidal internal-wall validation-only POC 使用同一组
-采样点同时构造 native C-ATI 与内部墙 `r=100-A sin(Kz)`，在两次
-`ReduceStep2D` 中解析截断，并直接调用原生 `Reflect2D` 的局部 tangent、normal
-与 `Dss` 曲率路径。wall hit 后仍只做绕 `(100,0)` 的 proper pi rotation，再交给
-未修改的 `InfluenceGeoHatCart`。小振幅/长波长扫描中交点、局部几何、非零
-`kappa`、pressure-release pi 相位、Amp、p/q curvature kick、时延及正 range
-均稳定。后续 beam/frame covariance audit 发现此前约 `2.095 rad` 的读数是
-把 rotated SHD 的 102 m 首列误当成 103 m 目标列；按显式目标列并用 native
-total-minus-direct 配对后，反射场 phase 差约 `1.02e-5 rad`，剩余约
-`-0.2606 dB` 为 backward-range `ScalePressure` 诊断偏差。详见
-`reports/bellhop_curved_wall_beam_frame_audit_report.md`。本任务仍未实现
-PM 随机墙；PM 阶段的结果与限制见下文。
-
-固定 seed 的 1-D PM internal-wall validation-only overlay 随后已加入
-`scripts/validation/validate_bellhop_internal_pm_wall.m`。它只复用原生
-`Reflect2D`/`InfluenceGeoHatCart`，不修改 PE；standalone internal smoke
-通过，但 native `z=eta(r)` 与 rotated backward-range branch 无法构成
-收敛的等价返回路径，未滤波 PM polyline 的 `Dss`/grazing kick 也随采样密度
-敏感。该阶段按 `reports/bellhop_internal_pm_wall_validation_report.md`
-停止，未进入 PE rough-wall 交叉验证。
+旧 strict-90-degree PM native ATI 与 rotated returned branch 不是同一个物理
+问题，相关阶段入口已退役。下一步只能使用同一 fixed-seed、fixed-`Kmax`、
+band-limited high-resolution PM realization，并以全系统 89 度 proper rotation
+同时变换 Tx/Rx/source/profile；所有 density cases 从同一 `eta_ref` 插值得到。
+该 Bellhop-only finite-angle PM POC 尚未运行，因此当前状态为
+**PASS_WITH_LIMITS**，不得进入 PE rough-wall 对比或 Monte Carlo。
 
 2026-08-27 起，正常坐标粗糙海面 Bellhop 任务按用户要求重建为平均水深
 100 m、物理源离底 0 m、Rx 深度 3 m。海底测试模型暂定均匀流体半空间：
