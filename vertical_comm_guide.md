@@ -2,7 +2,7 @@
 
 本文件是当前实现的中文权威技术参考，说明物理约定、代码语义、公共字段、验证证据和已知限制。开发时间线保存在 `PROJECT_CONTEXT.md`，具体数值证据保存在 `reports/`；`docs/history/` 中的旧规格不是当前接口依据。
 
-状态日期：2026-08-20。
+状态日期：2026-09-03。
 
 ## 1. 坐标、时间与载波相位参考
 
@@ -117,20 +117,115 @@ coordinate-covariance：同一 seed-260001 master realization 在 `phi=89` 和
 `89.5` 度、`N=2049/4097`、三条精确配对 ray 上通过交点、frame、共同曲率
 参考、反射方向、RN/p/q、pressure-release phase 和 internal half-turn 检查。
 详见权威汇总 `reports/bellhop_internal_wall_implementation_report.md`（完整阶段报告已归档于 `cash/bellhop_internal_wall_superseded_20260902/reports/`）；硬门截止
-Reflect2D 出口，receiver coherent field 仍是 diagnostic-only。PE rough-wall
-对比和 Monte Carlo 尚未开始。
+Reflect2D 出口，receiver coherent field 仍是 diagnostic-only。随后完成了
+受控 PE rough-PM 对比链及两个低成本 Stage 3 ensemble smoke；结果与限制统一见
+`reports/pe_bellhop_pm_complete_execution_summary.md`。
 
-下一阶段的 PE rough-PM ↔ Bellhop rough-PM 方案已在
-`reports/pe_bellhop_pm_comparison_design_audit_report.md` 中冻结，结论为
-`FEASIBLE_WITH_MINOR_PREPARATION`。主工况采用 exact 90-degree internal wall，
-同一 seed-260001 band-limited profile 在 PE 中映射为
-`eta(x,y)=eta_1D(x)`，在 Bellhop 中由同一 Fourier coefficients 生成参数墙；
-不得分别随机、归一化或平滑。主比较量是 reflected-only
-`G=H_ref_rough/H_ref_flat`。由于生产 PE 是两横向维 Gaussian 场而 Bellhop 是
-二维线源模型，严格同维主参考应先使用 validation-only 一横向维 PE/AS 或
-等价 `k_y=0` 投影；生产 PE 的 y-invariant surface/on-axis 结果作为第二层
-dimensionality sensitivity。第一轮只做 4 kHz、单轴接收和 flat/rough pair，
-继续使用 `192.1875 m` no-sponge 数值基线；总信道、6/8 kHz 和随机集合均后置。
+PE rough-PM ↔ Bellhop rough-PM 方案曾在
+`reports/pe_bellhop_pm_comparison_design_audit_report.md` 中冻结，现已按
+Stage 0A--0E、Stage 1A--1C、Stage 2 和 Stage 3 执行完成。主比较量仍是
+reflected-only `G=H_ref_rough/H_ref_flat`；一横向维 PE bridge、生产二维
+dimensionality sensitivity、4/6/8 kHz 扩展以及 8-seed phase/amplitude
+ensemble 的状态和限制见 `reports/pe_bellhop_pm_complete_execution_summary.md`。
+
+Stage 0A canonical mapper 已完成并通过：
+`scripts/validation/validate_pe_bellhop_pm_canonical_mapper.m` 直接读取既有
+`fixed_pm_fourier_coefficients.csv`，以同一周期 Fourier series 为 PE 与 Bellhop
+采样；输出见 `results/validation/pe_bellhop_pm_canonical_mapper/`，报告见
+`reports/pe_bellhop_pm_canonical_mapper_report.md`。本阶段只冻结 profile provenance
+和 `Gamma_B(s)=[R0-eta(s),s]` 映射，不运行 propagation，也不能替代后续的一横向维
+PE bridge、flat/source、constant-height sign 和 numerical-budget audits。
+
+Stage 0B 一横向维 PE bridge 已通过：
+`scripts/validation/validate_pe_1d_validation_bridge.m` 用独立一维 split-step、
+一步 exact angular spectrum 和完整生产 PE 的 `k_y=0` 投影交叉核对 flat 与弱
+phase-screen case。最大复误差分别约为 `1.14e-12` 和 `9.48e-13`，flat
+pressure-release sign 误差约 `2.64e-13`；结果在
+`results/validation/pe_1d_validation_bridge/`，报告为
+`reports/pe_1d_validation_bridge_report.md`。这只证明同维 PE bridge，不证明
+PE--Bellhop 粗糙面场一致；Stage 0C 及后续阶段均已完成，详见完整汇总报告。
+
+Stage 0C flat source/normalization audit 已通过：
+`scripts/validation/validate_pe_bellhop_pm_stage0_flat_source.m` 使用现有 Gaussian
+`.sbp`、97/103 m 显式 SHD range selector、5001/10001 beams 和 0.05 m step，
+核对一横向维 PE 与 Bellhop 2020 internal-flat 的相对传播定义。轴上 Q 的 phase
+残差为 `5.15e-4 rad`，normalized offset magnitude residual 为 `5.97e-3`
+（direct）和 `5.55e-3`（reflected）；约 `0.261 dB` 的 backward-range amplitude
+偏移保留为 diagnostic，不做拟合或归一化。带 `.sbp` 的 SHD 深度记录读取也已按
+detected range record 做最小兼容修复。结果见
+`results/validation/pe_bellhop_pm_stage0_flat_source/` 和
+`reports/pe_bellhop_pm_stage0_flat_source_report.md`；Stage 0D 及后续阶段均已
+完成，详见完整汇总报告。
+
+Stage 0D 常量高度符号审计已通过：
+`scripts/validation/validate_pe_bellhop_pm_constant_height_sign.m` 使用
+`eta0=+0.05, 0, -0.05 m`，并将物理 image span 固定为 `L=103-2*eta0 m`。
+PE 的 `exp(+i2k eta0)` 相位误差低于 `2.0e-15 rad`，Bellhop 低于
+`2.56e-5 rad`，两者相对相位误差低于 `2.56e-5 rad`；路径时间误差为
+`4.16e-17 s`，压力释放相位仅施加一次。结果见
+`results/validation/pe_bellhop_pm_constant_height_sign/` 和
+`reports/pe_bellhop_pm_constant_height_sign_audit.md`。validation-only
+overlay 仅放宽了移墙输入范围检查，未改动 Reflect2D、p/q 或 influence。
+
+Stage 0E 数值误差预算已冻结并通过：
+`scripts/validation/validate_pe_bellhop_pm_numerical_budget.m` 对同一
+seed-260001 band-limited realization 做 PE 窗口/网格/步长及 Bellhop
+profile/beam/step 扫描；PE 与 Bellhop 扫描均落在 0.1 dB、0.02 rad 预算内，
+Bellhop 墙残差低于 `8e-15 m` 且 q-state residual 为零。结果见
+`reports/pe_bellhop_pm_numerical_error_budget.md`；已冻结的平面源基线仍保留
+0.30 dB backward-range influence diagnostic allowance。
+
+Stage 1A Tier-1 固定 PM 比较已完成，状态为 PASS_WITH_LIMITS：
+`scripts/validation/validate_pe_bellhop_pm_stage1_tier1.m` 的结构几何、
+压力释放相位和 Bellhop p/q 状态检查全部通过。PE Kirchhoff phase-screen 与
+Bellhop local-specular Gaussian-beam 的 reflected-only ratio 差异（0.3104 dB、
+−2.2482 rad）只作模型差异诊断，不作结构 gate。详情见
+`reports/pe_bellhop_pm_stage1_tier1_report.md`。
+
+Stage 1B/1C 已冻结。生产二维 PE 在 y 方向复制同一个固定 `eta(x)`，
+`ny=256/512` 的变化仅为 `4.36e-6 dB / 4.49e-6 rad`；相对一横向维桥接，
+dimensionality sensitivity 约 `−0.1589 dB / 0.01251 rad`（复误差 `0.02196`）。
+4 kHz fixed-PM 总结判定为 `PASS_WITH_MODEL_DISCREPANCY`：PE/Bellhop ratio
+差异为 `0.3104 dB`、`−2.2482 rad`，明显高于维度误差，归类为 Kirchhoff
+phase-screen 与 Bellhop local-specular 模型差异。详情见
+`reports/pe_bellhop_fixed_pm_4khz_comparison_report.md`；随后已完成 4/6/8 kHz
+频率扩展。
+
+Stage 2 频率扩展已通过，状态为 `PASS_WITH_MODEL_DISCREPANCY`：固定
+seed-260001 band-limited PM 在 4/6/8 kHz 分别运行一横向 PE 与 Bellhop
+internal-wall flat/rough 配对。三点均满足有限场、wall residual `7.14e-15 m`、
+零 grazing、压力释放 phase error `7.11e-15 rad`、q residual 与 p/q rotation
+误差为零；跨模型 TL 差异为 `0.3104/0.3083/0.3048 dB`。频率趋势只作
+模型 diagnostic，不由三点估计 group delay。Bellhop 使用预声明 ±15° sector
+和 5001 beams，以避开 validation overlay 的低振幅尾束终止，不涉及 source
+拟合。详情见 `reports/pe_bellhop_fixed_pm_frequency_extension_report.md`；随后已完成
+Stage 3A 配对多 realization smoke 与 Stage 3B 独立系数幅度 ensemble。
+
+Stage 3 已完成 8 个 paired fixed-band seed 的 4 kHz 统计 smoke，状态为
+`PASS_WITH_LIMITS`。每个 profile 保持 canonical PM 每模态谱幅度和 Kmax，
+只由确定性 seed 改变相位；Bellhop wall residual 均约 `7.1e-15 m`、零
+grazing、压力释放 phase 与 p/q state 检查全部通过。均值反射粗糙功率为 PE
+`1.0707`、Bellhop `0.9271`。这不是独立 PM 幅度抽样的最终 Monte Carlo，
+backward-range amplitude 仍只作 diagnostic；详情见
+`reports/pe_bellhop_pm_ensemble_comparison_report.md`。随后补充的 Stage 3B 使用
+同一 `Sk_m3` 频带独立抽样 Fourier 系数幅度，8 个 seed、统一 5001 beams 也通过
+全部结构检查；每个 rough case 均记录 5001/5001 wall hits。flat、canonical rough
+和其他缓存只在配置指纹、输入新旧关系及输出哈希满足对应校验时复用，避免旧
+1001-beam case 混入；结果见下方独立报告。
+
+完整阶段索引和冻结项汇总见
+`reports/pe_bellhop_pm_complete_execution_summary.md`。后续若进入正式粗糙面
+统计，仍需保持同一 profile provenance、`G=H_ref,rough/H_ref,flat` 主量和既定
+数值/维度护栏，不得用 source 或幅相 renormalization 消除 PE--Bellhop 模型差异。
+若需要独立 PM 幅度 ensemble，应运行 validation-only
+`validate_pe_bellhop_pm_amplitude_ensemble`；它固定同一 `Sk_m3` 频带，
+已完成 `seed=260001:260008`、5001-beam 的 reduced first ensemble，
+只改变确定性 Gaussian Fourier 系数抽样，不改变 PE/Bellhop 核心物理。
+当前 mean delta TL 为 `0.320686 dB`，circular mean phase difference 为
+`-0.689310 rad`；所有 case-fingerprint、uniform-numerics 和 reflection-success
+检查通过。
+其结果仍不是充分收敛的 ocean Monte Carlo，报告见
+`reports/pe_bellhop_pm_amplitude_ensemble_report.md`。
 
 2026-08-27 起，正常坐标粗糙海面 Bellhop 任务按用户要求重建为平均水深
 100 m、物理源离底 0 m、Rx 深度 3 m。海底测试模型暂定均匀流体半空间：

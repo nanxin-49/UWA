@@ -165,6 +165,207 @@ this is a visualization/filtering result rather than a new PE validation.
   height sign audits. No PE/Bellhop core physics change is authorized by the
   design review.
 
+### PE--Bellhop PM Stage 0A canonical mapper（2026-09-03）
+
+- Stage 0A is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_canonical_mapper.m`; its support
+  functions are `load_fixed_pm_profile_for_pe_bellhop_validation.m` and
+  `evaluate_fixed_pm_fourier_profile.m`.
+- The mapper reads the existing
+  `results/validation/bellhop_internal_pm_fixed_realization/fixed_pm_fourier_coefficients.csv`
+  directly. It evaluates the same periodic series and analytic first/second
+  derivatives for PE samples and Bellhop wall samples, with no new random
+  numbers, recentering, variance scaling, smoothing or tapering.
+- The canonical mapping is `eta_PE(x,y)=eta_1D(x)` and
+  `Gamma_B(s)=[R0-eta(s),s]` with `R0=100 m`. The master profile cross-check
+  errors are `8.38e-15 m` in height, `2.01e-15` in slope and `5.31e-16 1/m`
+  in the second derivative; the wall inverse-map error is `7.11e-15 m`.
+- The fixed profile statistics from the coefficient evaluator are RMS height
+  `0.18639076 m`, RMS/max slope `0.0539798/0.1166743`, RMS/max geometric
+  curvature `0.0209047/0.0445944 1/m`, and minimum radius `22.4243 m`.
+- Outputs are under `results/validation/pe_bellhop_pm_canonical_mapper/` and
+  the stage report is `reports/pe_bellhop_pm_canonical_mapper_report.md`.
+  This stage freezes input provenance only; it does not run PE or Bellhop
+  propagation and does not authorize skipping Stage 0B--0E.
+
+### PE--Bellhop PM Stage 0B one-transverse-dimensional bridge（2026-09-03）
+
+- Stage 0B is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_1d_validation_bridge.m`; the 1-D operator is
+  implemented in `scripts/validation/support/run_pe_1d_surface_reflection_validation.m`.
+- The bridge uses `xw=192.1875 m`, `nx=984`, `dx=0.1953125 m`,
+  `yw=50 m`, `ny=256`, sponge off, `f=4 kHz`, `c=1500 m/s`,
+  `z_tx=100 m`, `z_rx=3 m`, and `sigma=0.3 m`. It compares the independent
+  one-step exact 1-D angular spectrum with the 1-D split-step helper and with
+  the `k_y=0` projection of the unchanged production two-transverse PE.
+- Flat and a weak deterministic phase-screen case pass. Maximum 1-D versus
+  exact-AS complex error is `1.14e-12`; maximum production-PE `k_y=0` versus
+  scaled 1-D complex error is `9.48e-13`; flat pressure-release sign error is
+  `2.64e-13`. No Bellhop propagation or PE core changes were made.
+- Results are under `results/validation/pe_1d_validation_bridge/` and the
+  stage report is `reports/pe_1d_validation_bridge_report.md`. Stage 0C flat
+  source/normalization audit is the only next permitted stage.
+
+### PE--Bellhop PM Stage 0C flat source/normalization audit（2026-09-03）
+
+- Stage 0C is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_stage0_flat_source.m`; it uses
+  the existing Gaussian `.sbp` pattern and the unchanged 1-D PE bridge.
+- The audit uses the 97 m direct / 103 m image geometry, explicit SHD range
+  selectors, and Bellhop beam counts 5001/10001 at 0.05 m steps. Flat wall
+  intersection residual is `3.54e-12 m`, pressure-release phase error is
+  `7.11e-15 rad`, and both beam counts produce identical axis-Q values
+  (`0.2610 dB` diagnostic TL offset, `-5.15e-4 rad` phase).
+- Normalized offset *magnitude* residuals are `5.97e-3` (direct) and
+  `5.55e-3` (reflected). Complex offset profiles retain a documented
+  transverse phasor-orientation diagnostic (`1.71/1.81`), not a source fit or
+  calibration. The known `~0.26 dB` backward-range Cartesian influence offset
+  remains diagnostic only.
+- A minimal compatibility fix in
+  `scripts/validation/support/read_bellhop_shd_unfolded_vertical.m` locates
+  receiver depths relative to the detected range record, which is required
+  for `.sbp` SHD files. Results are in
+  `results/validation/pe_bellhop_pm_stage0_flat_source/` and the report is
+  `reports/pe_bellhop_pm_stage0_flat_source_report.md`. Stage 0D and all
+  subsequent planned stages are complete below.
+
+### PE--Bellhop PM Stage 0D constant-height sign audit（2026-09-03）
+
+- Stage 0D is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_constant_height_sign.m` and
+  tests `eta0=+0.05, 0, -0.05 m` at 4 kHz with the unchanged 1-D PE bridge,
+  Gaussian `.sbp`, and the independent internal-flat validation binary.
+- The image range is consistently `L=103-2*eta0 m`; PE predicts
+  `exp(+i 2 k eta0)`. PE phase errors are below `2.0e-15 rad` and Bellhop
+  phase errors are `2.56e-5 rad`; PE--Bellhop ratio phase differences stay
+  below `2.56e-5 rad`. Travel-time residuals are `4.16e-17 s`, pressure-
+  release phase is applied once, and flat curvature/rotation-state checks pass.
+- The validation overlay now accepts translated flat walls subject only to
+  positive wall/post-wall ranges; this is not an official Bellhop change.
+  Results are under `results/validation/pe_bellhop_pm_constant_height_sign/`
+  and the report is `reports/pe_bellhop_pm_constant_height_sign_audit.md`.
+  Stage 0E numerical-budget freeze is completed below.
+
+### PE--Bellhop PM Stage 0E numerical-budget freeze（2026-09-03）
+
+- Stage 0E is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_numerical_budget.m`.
+- One seed-260001 band-limited Fourier realization is reused across PE
+  window/grid/step and Bellhop profile/beam/step scans. PE stays within
+  0.1 dB / 0.02 rad and Bellhop stays within 0.1 dB / 0.02 rad, with zero
+  grazing hits, wall residual below `8e-15 m`, and zero q-state residual.
+  The p-state change is the native curvature kick, not an error.
+- The frozen flat/source allowance remains `0.30 dB` for the known
+  backward-range Cartesian influence offset. Results are in
+  `results/validation/pe_bellhop_pm_numerical_budget/`; report:
+  `reports/pe_bellhop_pm_numerical_error_budget.md`.
+
+### PE--Bellhop PM Stage 1A Tier-1（2026-09-03）
+
+- Stage 1A structural audit is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_stage1_tier1.m`. It uses the
+  fixed seed-260001 realization at 4 kHz and compares reflected-only
+  rough/flat ratios without fitting or renormalizing either model.
+- Bellhop geometry and native beam-state checks pass (`|u.n|` minimum
+  `0.8319`, wall residual `7.21e-15 m`, phase jump error `7.11e-15 rad`,
+  q residual and rotation-state errors zero). The PE/Bellhop ratio difference
+  (`0.3104 dB`, `-2.2482 rad`) is retained as a cross-model diagnostic, not a
+  structural acceptance gate. Results are in
+  `results/validation/pe_bellhop_pm_stage1_tier1/`; report:
+  `reports/pe_bellhop_pm_stage1_tier1_report.md`.
+
+### PE--Bellhop PM Stage 1B/1C（2026-09-03）
+
+- Stage 1B production dimensionality sensitivity is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_stage1_dimensionality.m`.
+  The same seed-260001 `eta(x)` is copied unchanged over y; `ny=256/512`
+  changes by only `4.36e-6 dB / 4.49e-6 rad`. Relative to the 1-transverse
+  bridge, the 2-transverse reflected rough/flat ratio differs by about
+  `-0.1589 dB / 0.01251 rad` (complex error `0.02196`).
+- Stage 1C freezes the interpretation as **PASS_WITH_MODEL_DISCREPANCY** via
+  `scripts/validation/validate_pe_bellhop_pm_stage1_interpretation.m` and
+  `reports/pe_bellhop_fixed_pm_4khz_comparison_report.md`. The cross-model
+  Tier-1 difference is `0.3104 dB`, `-2.2482 rad`, complex error `1.8366`,
+  substantially larger than the dimensionality sensitivity. Stage 2 frequency
+  extension is therefore permitted; no model fitting or core-physics change is
+  implied.
+
+### PE--Bellhop PM Stage 2 frequency extension（2026-09-03）
+
+- Stage 2 is **PASS_WITH_MODEL_DISCREPANCY** via
+  `scripts/validation/validate_pe_bellhop_pm_frequency_extension.m`.
+  The fixed seed-260001 realization is evaluated at 4/6/8 kHz with PE
+  flat/rough and Bellhop flat/internal-PM rough pairs. Each point is finite
+  and geometrically valid: wall residual `7.14e-15 m`, zero grazing fraction,
+  pressure-release phase error `7.11e-15 rad`, q residual and p/q rotation
+  errors zero.
+- Cross-model diagnostics are `(0.3104, 0.3083, 0.3048) dB` TL and
+  `(-2.2482, 2.9109, 1.7868) rad` phase at 4/6/8 kHz; no three-point group
+  delay is inferred. The sweep uses the unchanged Gaussian source formula and
+  a predeclared Bellhop ±15° sector with the accepted 5001-beam setting; the
+  sector avoids low-amplitude tail termination in the validation overlay and
+  is not a source fit. Results are under
+  `results/validation/pe_bellhop_pm_frequency_extension/`; report:
+  `reports/pe_bellhop_fixed_pm_frequency_extension_report.md`.
+
+### PE--Bellhop PM Stage 3 paired ensemble（2026-09-03）
+
+- Stage 3 is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_ensemble.m` with seeds
+  `260001:260008` at 4 kHz. Seed 260001 reuses the canonical realization;
+  the other paired profiles preserve the canonical per-mode spectral
+  amplitudes and use deterministic seed phases, with no Hs renormalization,
+  recentering, smoothing, tapering, or bandwidth change.
+- All eight Bellhop cases pass finite-field, geometry, positive-range,
+  pressure-release phase and p/q-state checks. Wall residuals are
+  `7.11--7.16e-15 m`, grazing fraction is zero, and the reported mean
+  reflected roughness powers are PE `1.0707` and Bellhop `0.9271`.
+- This is a paired fixed-band phase-ensemble statistical smoke, not an
+  independently sampled PM amplitude ensemble. The native backward-range
+  Cartesian amplitude limitation remains diagnostic. Results are under
+  `results/validation/pe_bellhop_pm_ensemble/`; report:
+  `reports/pe_bellhop_pm_ensemble_comparison_report.md`.
+
+### PE--Bellhop PM Stage 3B coefficient-amplitude ensemble（2026-09-03）
+
+- Stage 3B is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_amplitude_ensemble.m`, using
+  seeds `260001:260008`, 4 kHz, and a uniform 5001 Bellhop beams for a reduced
+  first independent ensemble.
+- Seed 260001 is copied byte-for-byte from the canonical coefficient file;
+  the other seeds draw independent zero-mean Gaussian cosine/sine
+  coefficients with variance `S(k)*Delta-k` from the same `Sk_m3` band. No
+  Hs renormalization, recentering, smoothing, tapering, or bandwidth change
+  is applied. All finite-field, geometry, pressure-release phase, beam-state,
+  positive-range, request-fingerprint, output-hash, uniform-numerics and
+  reflection-success checks pass; every rough case records 5001/5001 wall hits.
+- The flat and canonical rough Stage-2 artifacts are reused only after exact
+  embedded-configuration matching and input-age checks. Other cached cases
+  require a matching full request fingerprint and verified `.shd`/`.iwdiag`
+  SHA-256 hashes. A second identical run recovered the seven non-canonical
+  cases only as `cache_verified`, with no 1001/5001-beam mixing. The current
+  mean model delta TL is `0.320686 dB`, and the circular mean phase difference
+  is `-0.689310 rad`.
+- The amplitude-ensemble report is
+  `reports/pe_bellhop_pm_amplitude_ensemble_report.md`; machine-readable
+  results are under `results/validation/pe_bellhop_pm_amplitude_ensemble/`.
+  This is a first reduced statistical result, not a converged ocean Monte
+  Carlo or an ensemble worst-delay claim.
+
+The complete executable PE--Bellhop PM comparison chain is indexed by
+`reports/pe_bellhop_pm_complete_execution_summary.md`. Stages 0A--0E,
+1A--1C, 2, 3A and 3B were run independently with the frozen seed-260001
+band-limited realization and no PE/Bellhop core-physics or communication
+changes. The current rough-wall cross-model result is therefore a controlled
+model-discrepancy finding with the Stage-3 fixed-band ensemble limitation,
+not a claim of final independent PM Monte Carlo convergence.
+
+Stage 3B 的 validation-only entrypoint
+`scripts/validation/validate_pe_bellhop_pm_amplitude_ensemble.m` 已完成
+`260001:260008` 的 reduced first ensemble；它使用 canonical `Sk_m3` band
+独立抽样 Gaussian cosine/sine coefficient amplitudes，并与 Stage-3A
+phase-only smoke 分开保存。结果仍需按 reduced ensemble 限制解读。
+
 ### Active core
 
 - Public channel: root `vertical_channel_model.m` compatibility wrapper ->

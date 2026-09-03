@@ -171,10 +171,8 @@ SUBROUTINE ReadInternalFlatWall( FileRootIn )
   IF ( IOS /= 0 ) CALL ERROUT( 'BELLHOP-IWALL', 'Cannot read mapped receiver range from .iw2' )
   CLOSE( IWallFile )
 
-  IF ( ABS( IWallRange - 100.0d0 ) > 1.0d-12 ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'Flat-wall POC requires r_wall = 100 m' )
-  IF ( ABS( IWallReceiverRange - 103.0d0 ) > 1.0d-12 ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'Flat-wall POC requires mapped receiver range = 103 m' )
+  IF ( IWallRange <= 0.0d0 .OR. IWallReceiverRange <= IWallRange ) &
+       CALL ERROUT( 'BELLHOP-IWALL', 'Flat-wall POC requires positive post-wall range' )
 
   WRITE( PRTFile, * )
   WRITE( PRTFile, * ) 'Validation-only internal flat wall enabled'
@@ -206,9 +204,9 @@ SUBROUTINE BellhopCore
        CALL ERROUT( 'BELLHOP-IWALL', 'POC requires coherent TL with Cartesian geometric-hat beams' )
   IF ( Pos%NSz /= 1 .OR. ABS( Pos%Sz( 1 ) ) > 1.0d-12 ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'POC requires one source at transverse depth zero' )
-  IF ( .NOT. ANY( ABS( Pos%Rr( 1 : Pos%NRr ) - IWallReceiverRange ) <= 1.0d-10 ) .OR. &
+  IF ( .NOT. ANY( ABS( Pos%Rr( 1 : Pos%NRr ) - IWallReceiverRange ) <= 1.0d-4 ) .OR. &
        MINVAL( Pos%Rr( 1 : Pos%NRr ) ) <= IWallRange ) &
-       CALL ERROUT( 'BELLHOP-IWALL', 'POC requires post-wall receiver ranges including 103 m' )
+       CALL ERROUT( 'BELLHOP-IWALL', 'POC requires post-wall receiver range at mapped value' )
   IF ( SSP%Type /= 'C' .OR. MAXVAL( ABS( REAL( SSP%c( 1 : SSP%NPts ) ) - 1500.0d0 ) ) > 1.0d-10 .OR. &
        MAXVAL( ABS( AIMAG( SSP%c( 1 : SSP%NPts ) ) ) ) > 1.0d-12 ) &
        CALL ERROUT( 'BELLHOP-IWALL', 'POC requires uniform lossless c = 1500 m/s' )

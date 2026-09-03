@@ -12,8 +12,12 @@ executable.
 
 The validation executable requires a two-line `.iw2` sidecar:
 
-1. flat wall range in metres (must be `100`);
-2. mapped receiver range in metres (must be `103`).
+1. flat wall range in metres;
+2. mapped post-wall receiver range in metres, strictly greater than the wall.
+
+The historical flat regression uses `100` and `103` m.  The same
+validation-only binary also accepts translated flat walls for the Stage 0D
+constant-height sign audit; no official Bellhop executable is modified.
 
 It is deliberately limited to a uniform, lossless 1500 m/s environment, one
 source at transverse depth zero, coherent TL, one receiver range at 103 m, and

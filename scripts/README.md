@@ -243,8 +243,9 @@ The atlas distinguishes physical boundary models from computational acceleration
   `results/validation/bellhop_internal_pm_fixed_realization/`.
 - The invalid strict-90-degree PM comparator and its old profile generator are
   archived. The fixed-PM result and the finite-angle native-ATI/local-wall
-  covariance audit are both Bellhop-only PASS results; PE comparison and Monte
-  Carlo remain out of scope.
+  covariance audit are Bellhop-only PASS results; the controlled PE comparison
+  and reduced ensemble smoke are complete, while large-scale Monte Carlo remains
+  out of scope.
 - The completed Bellhop-only fixed-realization local covariance audit is archived at
   `../cash/bellhop_internal_wall_superseded_20260902/scripts/validation/validate_bellhop_pm_local_reflection_covariance.m`;
   its one-off runner is archived at
@@ -261,17 +262,104 @@ The atlas distinguishes physical boundary models from computational acceleration
   97 m native matches, verifies that native total/direct use the same column,
   and keeps the 102 m rotated column as a negative control for the former
   approximately `-2.095 rad` indexing error.
-- Current status is **PASS_WITH_LIMITS**: flat, tilted, sinusoidal, vertical
-  tangent, fixed-realization PM density convergence, and the finite-angle local
-  native↔internal Reflect2D covariance audit pass. Complete receiver-field
-  equivalence, PE comparison and Monte Carlo remain out of scope.
-- The next PE rough-PM comparison is design-only at this point. Its frozen
-  scope and comparability matrix are in
-  `../reports/pe_bellhop_pm_comparison_design_audit_report.md`: exact 90-degree
-  internal wall, one shared seed-260001 profile, reflected-only rough/flat
-  ratio, 4 kHz first, and a validation-only one-transverse-dimensional PE or
-  `k_y=0` bridge before using the production on-axis 3-D field as a secondary
-  sensitivity. No runnable PM cross-comparison entrypoint has been added yet.
+- Current Bellhop internal-wall status is **PASS_WITH_LIMITS**: flat, tilted,
+  sinusoidal, vertical tangent, fixed-realization PM density convergence, and
+  the finite-angle local native↔internal Reflect2D covariance audit pass.
+  Complete receiver-field equivalence and large-scale Monte Carlo remain out of
+  scope; the controlled PE rough-PM comparison is indexed below.
+- The PE rough-PM comparison execution chain is implemented as independent
+  Stage 0A--0E, Stage 1A--1C, Stage 2 and Stage 3 validation entrypoints. The
+  original scope and comparability matrix remain in
+  `../reports/pe_bellhop_pm_comparison_design_audit_report.md`; the complete
+  executable index and result interpretation are in
+  `../reports/pe_bellhop_pm_complete_execution_summary.md`.
+- Stage 0A canonical profile provenance is now implemented by
+  `validation/validate_pe_bellhop_pm_canonical_mapper.m` with support helpers
+  under `validation/support/`. It is a mapper-only audit (no PE/Bellhop run),
+  uses the existing seed-260001 Fourier coefficients, and writes its report to
+  `../reports/pe_bellhop_pm_canonical_mapper_report.md` and results to
+  `results/validation/pe_bellhop_pm_canonical_mapper/`. Stage 0B and all
+  subsequent planned stages are complete; see the complete execution summary.
+- Stage 0B one-transverse-dimensional PE bridge is implemented by
+  `validation/validate_pe_1d_validation_bridge.m` and
+  `validation/support/run_pe_1d_surface_reflection_validation.m`. It passes
+  independent 1-D exact-AS and production-PE `k_y=0` checks for flat and weak
+  phase-screen cases. Results are under
+  `results/validation/pe_1d_validation_bridge/`; report:
+  `../reports/pe_1d_validation_bridge_report.md`. Stage 0C and all subsequent
+  planned stages are complete; see the complete execution summary.
+- Stage 0C flat source/normalization audit is implemented by
+  `validation/validate_pe_bellhop_pm_stage0_flat_source.m`. It compares the
+  unchanged 1-D PE bridge with the existing Bellhop 2020 Gaussian `.sbp`
+  internal-flat case using explicit 97/103 m SHD selectors and 5001/10001
+  beams. It passes normalized offset-magnitude and axis-Q checks; the known
+  ~0.26 dB backward-range influence offset remains diagnostic. Results are in
+  `results/validation/pe_bellhop_pm_stage0_flat_source/`; report:
+  `../reports/pe_bellhop_pm_stage0_flat_source_report.md`. Stage 0D and all
+  subsequent planned stages are complete; see the complete execution summary.
+- Stage 0D constant-height sign audit is implemented by
+  `validation/validate_pe_bellhop_pm_constant_height_sign.m`. It checks
+  `eta0=+0.05, 0, -0.05 m` with image span `L=103-2*eta0`, and passes PE,
+  Bellhop and cross-model phase-sign, path-time, pressure-release and rotation
+  checks. Results are under
+  `results/validation/pe_bellhop_pm_constant_height_sign/`; report:
+  `../reports/pe_bellhop_pm_constant_height_sign_audit.md`. Stage 0E and all
+  subsequent planned stages are complete; see the complete execution summary.
+- Stage 0E numerical-budget freeze is implemented by
+  `validation/validate_pe_bellhop_pm_numerical_budget.m`. It reuses one
+  seed-260001 band-limited realization across PE window/grid/step and Bellhop
+  profile/beam/step scans; all frozen numerical gates pass. Results are under
+  `results/validation/pe_bellhop_pm_numerical_budget/`; report:
+  `../reports/pe_bellhop_pm_numerical_error_budget.md`.
+- Stage 1A Tier-1 fixed-PM reflected-only ratio audit is implemented by
+  `validation/validate_pe_bellhop_pm_stage1_tier1.m`. Bellhop structural
+  geometry/phase/beam-state checks pass; the PE/Bellhop ratio difference is
+  diagnostic, so the status is PASS_WITH_LIMITS. Results are under
+  `results/validation/pe_bellhop_pm_stage1_tier1/`; report:
+  `../reports/pe_bellhop_pm_stage1_tier1_report.md`.
+- Stage 1B production PE dimensionality sensitivity is implemented by
+  `validation/validate_pe_bellhop_pm_stage1_dimensionality.m`; it copies the
+  same fixed eta(x) across y and compares ny=256/512 against the 1T bridge.
+  Results are under `results/validation/pe_bellhop_pm_stage1_dimensionality/`;
+  report: `../reports/pe_bellhop_pm_stage1_dimensionality_report.md`.
+- Stage 1C interpretation/freeze is implemented by
+  `validation/validate_pe_bellhop_pm_stage1_interpretation.m` and classifies
+  the 4 kHz result as PASS_WITH_MODEL_DISCREPANCY. The cross-model residual is
+  reported separately from the smaller dimensionality sensitivity. Results are
+  under `results/validation/pe_bellhop_pm_stage1_interpretation/`; report:
+  `../reports/pe_bellhop_fixed_pm_4khz_comparison_report.md`.
+- Stage 2 fixed-PM frequency extension is implemented by
+  `validation/validate_pe_bellhop_pm_frequency_extension.m`. It runs the
+  same realization at 4/6/8 kHz with PE flat/rough and Bellhop flat/internal-
+  wall rough pairs; numerical geometry/phase/state checks pass and residuals
+  remain model diagnostics. Results are under
+  `results/validation/pe_bellhop_pm_frequency_extension/`; report:
+  `../reports/pe_bellhop_fixed_pm_frequency_extension_report.md`.
+- Stage 3 paired fixed-band PM ensemble smoke is implemented by
+  `validation/validate_pe_bellhop_pm_ensemble.m` with seeds 260001:260008.
+  It preserves the canonical per-mode spectral amplitudes and records paired
+  PE/Bellhop TL, phase, power and native wall diagnostics, including
+  machine-readable percentile summaries. Results are under
+  `results/validation/pe_bellhop_pm_ensemble/`; report:
+  `../reports/pe_bellhop_pm_ensemble_comparison_report.md`. The status is
+  PASS_WITH_LIMITS because this is a phase-ensemble smoke, not an independent
+  PM amplitude Monte Carlo.
+- Stage 3B independent PM coefficient-amplitude ensemble is exposed by
+  `validation/validate_pe_bellhop_pm_amplitude_ensemble.m`. It reuses the
+  same fixed spectral-density band and canonical seed anchor, then draws
+  zero-mean Gaussian cosine/sine coefficients with variance `S(k)*Delta-k`
+  for the remaining paired seeds. The reduced 8-seed run uses 5001 beams for
+  the flat baseline and every rough case, requires 5001/5001 wall hits, and
+  passes all structural checks. Stage-2 reuse requires an exact embedded
+  configuration match plus current artifacts; other cache reuse requires a
+  full request fingerprint and verified `.shd`/`.iwdiag` output hashes. Its
+  minimum accepted seed count is eight. Results belong under
+  `results/validation/pe_bellhop_pm_amplitude_ensemble/` and its report is
+  `../reports/pe_bellhop_pm_amplitude_ensemble_report.md`.
+
+The complete stage index, frozen parameters, cross-model interpretation and
+remaining statistical limitation are summarized in
+`../reports/pe_bellhop_pm_complete_execution_summary.md`.
 
 ### Reflection-free four-level audit
 

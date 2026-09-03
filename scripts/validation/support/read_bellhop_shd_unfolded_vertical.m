@@ -15,8 +15,14 @@ fseek(fid,3*rb,'bof'); theta_deg=fread(fid,n_theta,'float32');
 fseek(fid,4*rb,'bof'); source_x_m=fread(fid,n_sx,'float32');
 fseek(fid,5*rb,'bof'); source_y_m=fread(fid,n_sy,'float32');
 fseek(fid,6*rb,'bof'); source_depth_m=fread(fid,n_sd,'float32');
-fseek(fid,7*rb,'bof'); receiver_depth_m=fread(fid,n_rd,'float32');
-range_record=local_find_range_record(fid,rb,n_rr); fseek(fid,range_record*rb,'bof'); receiver_range_m=fread(fid,n_rr,'float32');
+% With a source beam pattern Bellhop 2020 inserts one auxiliary record
+% before the rectilinear coordinates.  Locate the range record first, then
+% read the receiver-depth record immediately preceding it.  This preserves
+% the standard no-pattern layout (range record 8, depth record 7) and the
+% shifted .sbp layout (range record 9, depth record 8).
+range_record=local_find_range_record(fid,rb,n_rr);
+fseek(fid,(range_record-1)*rb,'bof'); receiver_depth_m=fread(fid,n_rd,'float32');
+fseek(fid,range_record*rb,'bof'); receiver_range_m=fread(fid,n_rr,'float32');
 pressure=complex(zeros(n_rd,n_rr));
 for dd=1:n_rd
     fseek(fid,(range_record+dd)*rb,'bof'); raw=fread(fid,2*n_rr,'float32');
