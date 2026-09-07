@@ -528,3 +528,22 @@ electronics, SSA, kstat, modulation, and BER. Outputs are under
 `results/validation/li2009_explicit_surface/`; interpretation and unresolved
 transverse-grid sensitivity are documented in
 `reports/li2009_explicit_surface_validation_report.md`.
+
+## PE--Bellhop PM model-discrepancy statistical study
+
+The Stage-4 fixed-PM study is split into an execution entry and a read-only
+postprocessor:
+
+- `validation/validate_pe_bellhop_pm_model_discrepancy_statistics.m` runs the
+  frozen Stage-3B 4 kHz seed ensemble and conditionally extends it when the
+  prescribed 24->32 gates fail.
+- `validation/postprocess_pe_bellhop_pm_model_discrepancy_statistics.py`
+  performs no PE or Bellhop calls; it consumes completed per-seed metric CSVs
+  and regenerates the M=50 tables, bootstrap intervals, correlations, outlier
+  audit, figures, and flat-array `result.mat` after the user stopped the long
+  extension at seed 260050.
+
+The authoritative report is
+`reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`.  Current state
+is `PRELIMINARY_MODEL_DISCREPANCY`: numerical/applicability guards pass, while
+the 24->32 bootstrap half-width gate is narrowly above its engineering limit.

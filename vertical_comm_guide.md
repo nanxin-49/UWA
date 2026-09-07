@@ -384,3 +384,19 @@ LFM 是获得 `H(f)` 后的无噪声线性探针：频域输入乘以信道频�
 - 条件统计生成器：验证通过后的大规模通信抽样。
 
 研究级严格窗口当前优先采用 direct `160 m/no-sponge`、完整反射 `192.1875 m/no-sponge`；若使用公共 50 m/default sponge，必须明确它是兼容默认而非近期窗口收敛验证的推荐配置。
+
+## PE--Bellhop PM 模型差异统计（Stage 4）
+
+Stage 4 只在固定 4 kHz、冻结数值设置下，对 Stage 3B 的独立 Gaussian
+系数振幅 realization 做 PE--Bellhop 统计，不改变任一侧的核心传播或
+接收公式。当前保留 50 个完整 seed（`260001:260050`），报告为
+`reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`，逐 seed 与
+bootstrap/相关性表位于
+`results/validation/pe_bellhop_pm_model_discrepancy_statistics/`。
+
+M=50 的平均 `delta TL=-0.00748 dB`、圆均值相位差 `-0.37534 rad`；所有
+几何、非 grazing、beam-state、正 range、PE seam/edge 防护均通过。24→32
+的均值/功率/相位工程门通过，但 bootstrap 均值 delta-TL 半宽为
+`0.25835 dB`，略超 `0.25 dB`，故状态仍记为
+`PRELIMINARY_MODEL_DISCREPANCY`。该结果用于判断模型差异的稳定性，不用于
+校准或强行消除 native backward-range 幅度偏差。

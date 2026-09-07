@@ -3772,3 +3772,26 @@ assigns that residual to the Bellhop/source-mapping or 2-D/3-D representation
 side rather than the PE marching operator. The overview supersedes the old
 2026-07 “complete” report only as a status summary; historical files and raw
 results remain unchanged.
+
+## 2026-09-03 PE--Bellhop PM model-discrepancy statistical study (M=50)
+
+The fixed-4 kHz Stage-4 PM ensemble used the frozen Stage-3B independent
+Gaussian coefficient-amplitude chain.  The user stopped the conditional
+extension after 50 complete seeds (`260001:260050`); no PE or Bellhop core
+physics, source normalization, receiver selector, or influence formula was
+changed.  The active report is
+`reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`; seed-level
+tables and figures are under
+`results/validation/pe_bellhop_pm_model_discrepancy_statistics/`.
+
+At M=50 the mean delta TL is `-0.00748 dB` (sample standard deviation
+`0.96223 dB`) and the circular mean phase difference is `-0.37534 rad`.
+The 24-to-32 engineering gates pass for mean delta-TL, PE/Bellhop power
+change, and circular phase change; the bootstrap mean-delta-TL half-width is
+`0.25835 dB`, just above the prescribed `0.25 dB` gate.  Classification is
+therefore `PRELIMINARY_MODEL_DISCREPANCY`, not statistical establishment.
+All 50 rows pass finite-value, shared-profile, beam-hit, non-grazing,
+wall-residual, pressure-release phase, beam-state, positive-range, and PE
+edge/seam guards.  Native backward-range amplitude remains diagnostic only,
+and the dimensionality sensitivity (`-0.15886 dB`, `+0.01251 rad`) is
+reported separately rather than subtracted.

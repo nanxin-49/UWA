@@ -11,6 +11,7 @@
 # Keep MATLAB source and Markdown documentation.
 !*.m
 !*.md
+!scripts/validation/postprocess_pe_bellhop_pm_model_discrepancy_statistics.py
 
 # Retired local artifacts: override ALL allow-rules above, including .m/.md.
 /cash/
