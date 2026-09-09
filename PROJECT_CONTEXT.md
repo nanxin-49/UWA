@@ -135,6 +135,25 @@ this is a visualization/filtering result rather than a new PE validation.
   receiver coherent pressure is diagnostic-only. The full stage reports are
   retained in `cash/bellhop_internal_wall_superseded_20260902/reports/`.
 
+### Bellhop internal-wall visualization archive（2026-09-09）
+
+- The internal-wall visualization-only scripts and generated products used in
+  the tilted/sinusoidal ray figures and dense two-dimensional TL figure have
+  been moved to the recoverable archive
+  `cash/bellhop_internal_wall_visualization_archive_20260909/`.
+- The archive includes the reflection-overlay renderer, visual-enhancement
+  renderer, sparse TL diagnostic, dense TL-grid runner/renderer, the related
+  visualization validation entrypoint, and their validation/visualization
+  sidecars, fields, PNGs, CSVs and manifests. The exact moved-path list is in
+  `reports/bellhop_internal_wall_visualization_archive_manifest.md`.
+- This is an artifact-organization change only. It does not modify Bellhop
+  internal-wall geometry, native `Reflect2D`, `InfluenceGeoHatCart`, PE,
+  communication code, validation binaries, or the PASS_WITH_LIMITS numerical
+  conclusions in `reports/bellhop_internal_wall_implementation_report.md`.
+  The archived visual products are historical/reproducibility artifacts and
+  are not active entrypoints or current validation inputs. Normal searches must
+  exclude `cash/`.
+
 ### PE rough-PM ↔ Bellhop rough-PM comparison design（2026-09-02）
 
 - The current design authority is
@@ -273,6 +292,43 @@ this is a visualization/filtering result rather than a new PE validation.
   structural acceptance gate. Results are in
   `results/validation/pe_bellhop_pm_stage1_tier1/`; report:
   `reports/pe_bellhop_pm_stage1_tier1_report.md`.
+
+### Bellhop R/X source-geometry audit（2026-09-09）
+
+- A validation-only single-variable audit now explicitly selects Bellhop
+  `RunType(4)=R` (point source) or `X` (line source), leaving the Gaussian
+  `.sbp`, geometry, step, receiver positions, Reflect2D, p/q and
+  InfluenceGeoHatCart unchanged. Flat internal-wall regression remains exact.
+- For the weak sinusoidal native-ATI/internal-wall comparison at 10001 beams,
+  `R` gives `-0.260650 dB`, matching the range-normalization prediction
+  `10 log10(97/103)=-0.260655 dB`; `X` reduces the discrepancy to
+  `4.24e-6 dB / -3.92e-8 rad`. The 5001-beam sinusoidal result has a common
+  `3.156 dB` discretization change for both R and X and is not treated as the
+  converged endpoint.
+- The conditional 4 kHz seed-260001 X-source Tier-1 rerun passes all Bellhop
+  structural checks. Its PE--Bellhop delta is `0.310371 dB / -2.248201 rad`,
+  versus the prior R result `0.310434 dB / -2.248201 rad`. Thus future
+  dimensionally matched 1-transverse PE Tier-1 comparisons should use X, but
+  the existing reflection-model discrepancy conclusion is unchanged. Report:
+  `reports/bellhop_source_geometry_rx_audit_report.md`; results:
+  `results/validation/bellhop_source_geometry_rx_audit/`.
+- The active PE--Bellhop comparison entrypoints now request line-source X:
+  the incident-plane validator, fixed-PM Tier-1, frequency extension, ensemble
+  engine and Stage-4 statistical driver. Ensemble case roots and request
+  fingerprints include the source geometry, so historical R caches cannot be
+  silently reused as X.
+- The incident-plane comparison was rerun after integration with the original
+  Gaussian `.sbp`, grids, step, receivers and 5001/10001 beams. All 13 gates
+  pass. PE--Bellhop TL P95 over M95 improved from the archived R value
+  `0.15794309 dB` to `0.0019036364 dB`; normalized L2 over M99 is
+  `0.0061048459`, and the 5001--10001 beam L2 is `5.2520e-6`. The historical
+  point-source global constant is not applied to X; the comparison remains
+  axis-normalized and uses no fitted amplitude.
+- Existing Stage-2/3/4 numerical reports retain their pre-migration R-source
+  provenance and were not relabeled. A future rerun will generate new X-tagged
+  cases. Integration report:
+  `reports/pe_bellhop_line_source_integration_report.md`; archive manifest:
+  `reports/pe_bellhop_source_geometry_integration_archive_manifest.md`.
 
 ### PE--Bellhop PM Stage 1B/1C（2026-09-03）
 

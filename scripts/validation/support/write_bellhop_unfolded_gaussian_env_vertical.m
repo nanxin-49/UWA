@@ -20,6 +20,11 @@ if isempty(run_type), run_type='C'; end
 if ~ismember(run_type(1),['C','A','R','I'])
     error('run_type must start with C, A, R, or I.');
 end
+source_geometry='R';
+if isfield(cfg,'source_geometry'), source_geometry=upper(char(cfg.source_geometry)); end
+if ~isscalar(source_geometry) || ~ismember(source_geometry,['R','X'])
+    error('source_geometry must be R (point) or X (line).');
+end
 if numel(cfg.source_pattern_angles_deg)~=numel(cfg.source_pattern_level_db) || ...
         any(~isfinite(cfg.source_pattern_angles_deg(:))) || any(~isfinite(cfg.source_pattern_level_db(:)))
     error('The .sbp angle and level vectors must be finite and have equal length.');
@@ -51,7 +56,8 @@ fprintf(fid,'%.12g ',cfg.receiver_depths_m); fprintf(fid,'/\n');
 fprintf(fid,'%d\n',numel(cfg.receiver_ranges_m));
 fprintf(fid,'%.12g ',cfg.receiver_ranges_m/1000); fprintf(fid,'/\n');
 % Bellhop reads a source beam pattern when the third RunType character is *.
-fprintf(fid,'''%s *''\n%d\n%.12g %.12g /\n',run_type(1), ...
+% Character four explicitly selects point (R) or line (X) source geometry.
+fprintf(fid,'''%s *%s''\n%d\n%.12g %.12g /\n',run_type(1),source_geometry, ...
     cfg.beam_count,cfg.angle_limits_deg);
 rbox_km=max(cfg.receiver_ranges_m)*1.05/1000;
 fprintf(fid,'%.12g %.12g %.12g\n',cfg.step_m,d+1,rbox_km);

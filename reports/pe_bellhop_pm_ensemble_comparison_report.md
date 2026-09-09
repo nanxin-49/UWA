@@ -2,6 +2,10 @@
 
 状态：**PASS_WITH_LIMITS**
 
+> Provenance notice (2026-09-09): these eight numerical cases retain the
+> historical Bellhop point-source `R` convention. The active ensemble engine
+> now uses line-source `X` and includes source geometry in its cache fingerprint.
+
 固定 4 kHz、uniform c=1500 m/s、W=192.1875 m、nx=984、step=0.05 m、Bellhop 5001 beams、sector ±15°。Seed 260001 is the canonical fixed realization; the remaining paired profiles preserve the canonical per-mode spectral amplitudes and assign deterministic random phases. No Hs renormalization, recentering, smoothing, tapering, bandwidth change, source fit, or core-physics modification is applied.
 
 Canonical coefficient source: `E:\MISC\CARPE3D_matlab\Explain\results\validation\bellhop_internal_pm_fixed_realization\fixed_pm_fourier_coefficients.csv`; SHA-256: `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67`; requested Kmax `0.5 rad/m`, realized Kmax `0.471238898038 rad/m`.

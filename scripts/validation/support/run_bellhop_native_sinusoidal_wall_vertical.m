@@ -20,6 +20,11 @@ env_file=[cfg.case_root '.env']; ati_file=[cfg.case_root '.ati'];
 bty_file=[cfg.case_root '.bty']; sbp_file=[cfg.case_root '.sbp'];
 run_type=upper(char(cfg.run_type));
 if ~ismember(run_type(1),['C','A']), error('Native comparison supports C or A runs.'); end
+source_geometry='R';
+if isfield(cfg,'source_geometry'), source_geometry=upper(char(cfg.source_geometry)); end
+if ~isscalar(source_geometry) || ~ismember(source_geometry,['R','X'])
+    error('source_geometry must be R (point) or X (line).');
+end
 
 fid=fopen(sbp_file,'w'); if fid<0, error('Cannot create %s.',sbp_file); end
 cleanup=onCleanup(@()fclose(fid));
@@ -52,8 +57,8 @@ fprintf(fid,'%d\n',numel(cfg.receiver_depths_m));
 fprintf(fid,'%.17g ',cfg.receiver_depths_m); fprintf(fid,'/\n');
 fprintf(fid,'%d\n',numel(cfg.receiver_ranges_m));
 fprintf(fid,'%.17g ',cfg.receiver_ranges_m/1000); fprintf(fid,'/\n');
-fprintf(fid,'''%s *''\n%d\n%.17g %.17g /\n%.17g %.17g %.17g\n', ...
-    run_type(1),cfg.beam_count,cfg.angle_limits_deg,cfg.step_m,d+1, ...
+fprintf(fid,'''%s *%s''\n%d\n%.17g %.17g /\n%.17g %.17g %.17g\n', ...
+    run_type(1),source_geometry,cfg.beam_count,cfg.angle_limits_deg,cfg.step_m,d+1, ...
     max(cfg.receiver_ranges_m)*1.05/1000);
 clear cleanup
 

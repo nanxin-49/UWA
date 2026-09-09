@@ -2,6 +2,10 @@
 
 状态：**PASS_WITH_LIMITS**
 
+> Provenance notice (2026-09-09): this report is the historical point-source
+> `R` run. The active Tier-1 code now defaults to line-source `X`; its executed
+> seed-260001 result is documented in `bellhop_source_geometry_rx_audit_report.md`.
+
 固定条件：4 kHz、uniform c=1500 m/s、z_tx=100 m、z_rx=3 m、sigma=0.3 m、xw=192.1875 m、nx=984、step=0.05 m、seed=260001、profile N=4097、beam=10001。PE 使用 Kirchhoff phase screen，Bellhop 使用 native Reflect2D local-specular internal wall；只比较 reflected-only rough/flat ratios。
 
 ## Primary metrics

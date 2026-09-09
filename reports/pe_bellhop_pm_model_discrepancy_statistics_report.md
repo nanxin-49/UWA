@@ -2,6 +2,11 @@
 
 状态：**PRELIMINARY_MODEL_DISCREPANCY**
 
+> Provenance notice (2026-09-09): these M=50 numerical values were generated
+> with the historical Bellhop point-source `R` convention. The active driver
+> now requests line-source `X` and rejects R caches through its source-aware
+> fingerprint, but this 50-seed study was not rerun or relabeled.
+
 本报告基于固定 4 kHz、Stage 3B independent Gaussian coefficient-amplitude ensemble。用户要求在第 50 个完整 seed 后停止，因此最终样本为 **M=50**（260001--260050）；未运行或生成 260051 及以后样本。未修改 PE/Bellhop 核心物理。Bootstrap repetitions=2000, seed=42032。
 
 ## Running-prefix convergence

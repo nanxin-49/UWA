@@ -182,6 +182,27 @@ Bellhop local-specular Gaussian-beam 的 reflected-only ratio 差异（0.3104 dB
 −2.2482 rad）只作模型差异诊断，不作结构 gate。详情见
 `reports/pe_bellhop_pm_stage1_tier1_report.md`。
 
+后续 Bellhop source-geometry 单变量审计明确区分了 point-source `R` 与
+line-source `X`。在不改变 `.sbp`、几何、step、beams、receiver、Reflect2D、p/q
+或 influence 公式的条件下，10001-beam 弱正弦墙 native/internal 对比从
+`R` 的 `-0.260650 dB` 降至 `X` 的 `4.24e-6 dB`；前者与
+`10 log10(97/103)=-0.260655 dB` 一致。5001-beam 正弦场有两种 source 共有的
+`3.156 dB` 未收敛离散变化，不能作为端点。对 4 kHz、seed=260001 唯一一次
+X-source Tier-1 重跑后，跨模型差仅从 `0.310434 dB / -2.248201 rad` 变为
+`0.310371 dB / -2.248201 rad`，因此一横向维 PE 的正式 Bellhop comparator 应用
+`X`，但 Kirchhoff phase-screen 与 local-specular Reflect2D 的模型差异结论不变。
+详见 `reports/bellhop_source_geometry_rx_audit_report.md`。
+
+当前 PE--Bellhop validation 主链已把 line-source `X` 写入 incident、Tier-1、
+frequency-extension、ensemble 和 Stage-4 入口，并把 source geometry 纳入 ensemble
+case fingerprint，旧 `R` cache 不能冒充 `X`。在相同 4 kHz incident-plane 配置下
+重跑后，PE--Bellhop 的 M95 幅度 P95 从旧 R 的 `0.15794309 dB` 降至
+`0.0019036364 dB`，13/13 gates 全部通过；M99 phase RMS 仍为
+`0.00610483 rad`，PE--AS L2 仍约 `3.73e-13`。X 不使用旧 point-source 全局常数，
+且整个比较仍按轴上归一化，不包含经验拟合。既有 Stage-2/3/4 报告保留其 R-source
+历史 provenance；只有将来显式重跑后才会生成 X-tagged 统计结果。整合与归档见
+`reports/pe_bellhop_line_source_integration_report.md`。
+
 Stage 1B/1C 已冻结。生产二维 PE 在 y 方向复制同一个固定 `eta(x)`，
 `ny=256/512` 的变化仅为 `4.36e-6 dB / 4.49e-6 rad`；相对一横向维桥接，
 dimensionality sensitivity 约 `−0.1589 dB / 0.01251 rad`（复误差 `0.02196`）。

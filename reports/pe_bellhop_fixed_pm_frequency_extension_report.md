@@ -2,6 +2,10 @@
 
 状态：**PASS_WITH_MODEL_DISCREPANCY**
 
+> Provenance notice (2026-09-09): these 4/6/8 kHz values retain the historical
+> Bellhop point-source `R` convention. The active frequency-extension code now
+> uses line-source `X` and source-tagged case roots; this report was not rerun.
+
 固定 seed=260001、U=6 m/s、span=160 m、master N=4097、realized Kmax=0.471238898 rad/m；uniform c=1500 m/s、z_tx=100 m、z_rx=3 m、sigma=0.3 m、W=192.1875 m、nx=984、step=0.05 m、beam=5001、Bellhop sector=[-15,15] deg。PE 与 Bellhop 核心均未修改。
 
 ## Frequency results

@@ -3,8 +3,7 @@
 ## Scope
 This repository is a MATLAB vertical underwater acoustic channel and MPSK communication project.
 Work from code first. Do not assume external documents are authoritative unless explicitly requested.
-
-The long-term project context is a seabed-to-near-surface vertical underwater acoustic communication channel. The model uses PE/WAPE-style propagation to obtain channel frequency responses and communication metrics.
+See `PROJECT_CONTEXT.md` for project background and current status.
 
 ## Retired Local Artifacts: cash/
 - The repository-root `cash/` directory is a recoverable quarantine for obsolete or superseded experiments, data, figures and reports. The name is deliberately `cash`, not `cache`.
@@ -60,7 +59,10 @@ The long-term project context is a seabed-to-near-surface vertical underwater ac
 - Do not create logs, generated MAT/CSV/media files, downloaded references, or ad hoc notes at the repository root. Use the appropriate `results/<category>/<case>/`, `reports/`, or temporary location.
 - When adding a new entrypoint, reusable module, report family, or result category, update the relevant navigation document (`README.md`, `src/README.md`, or `scripts/README.md`) so future work can discover its location and invocation.
 
-## MATLAB Style
+## Development Standards
+
+### MATLAB style
+- Use MATLAB for programming tasks unless the user explicitly requests another language or an existing project integration requires a different language or tool.
 - Keep functions deterministic for the same input parameters and RNG seeds.
 - Preserve current naming style: `paramsV` for user input, `cfg` for validated runtime config, `output/results/meta` for structured outputs.
 - Prefer explicit struct fields over positional arguments for new physics options.
@@ -68,6 +70,14 @@ The long-term project context is a seabed-to-near-surface vertical underwater ac
 - Use clear suffixes when helpful: `_xy` for transverse spatial fields and `_k` for transverse wavenumber-domain fields.
 - Do not silently change units. Depth is meters, frequency is Hz, sound speed is m/s, z is positive downward.
 - Avoid introducing new toolbox dependencies beyond standard MATLAB unless explicitly approved.
+
+### Development workflow
+- Prefer small, reviewable changes.
+- For new physics, first add disabled-by-default configuration and regression checks.
+- Then add the minimal model.
+- Then add advanced models only after the disabled/default path is confirmed unchanged.
+- After each stage, summarize changed files, changed interfaces, validation results, and documentation updates.
+- Before closing the task, verify that any required updates to `PROJECT_CONTEXT.md`, `vertical_comm_guide.md`, README files, and validation reports have been made.
 
 ## Coordinate Convention
 - Sea surface is `z=0`.
@@ -129,14 +139,6 @@ Do not rename exported fields in `output` or `results` without updating all entr
 - If a task only changes generated outputs or runs an existing script without changing project behavior, documentation may be left unchanged, but the final response should say why no documentation update was needed.
 - Do not claim a new physical model when the code only rewrites an existing model in an equivalent mathematical form.
 - Do not claim fast statistical channel generation unless the code actually estimates or uses statistical parameters such as means, variances, covariances, distributions, or a stochastic generator.
-
-## Development Workflow
-- Prefer small, reviewable changes.
-- For new physics, first add disabled-by-default configuration and regression checks.
-- Then add the minimal model.
-- Then add advanced models only after the disabled/default path is confirmed unchanged.
-- After each stage, summarize changed files, changed interfaces, validation results, and documentation updates.
-- Before closing the task, verify that any required updates to `PROJECT_CONTEXT.md`, `vertical_comm_guide.md`, README files, and validation reports have been made.
 
 ## Do Not Do
 - Do not rewrite the whole project unless explicitly asked.

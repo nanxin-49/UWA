@@ -111,7 +111,69 @@ z' = -z
 
 曾报告的约 `-2.095 rad` native/rotated phase offset 不是 reflection-frame covariance 错误，而是把 rotated SHD 的 `102 m` 首列误当成 `103 m` 目标 receiver。固定显式 receiver-range selector，并对 native total/direct 使用同一列后，反射场 phase difference 约为 `1.02e-5 rad`。`Reflect2D` 出口的 `RN/RM/p/q/frame` 与 proper rotation 保存的 beam state 没有发现需修正之处。
 
-native backward-range Cartesian influence 仍有约 `-0.2606` 至 `-0.286 dB` 的稳定幅度差。它保持为 point-source/range-chart diagnostic，不作拟合、renormalization 或 hard gate。
+后续 `R`/`X` 单变量审计已定位其中稳定的 `-0.26065 dB` 主项：Bellhop point-source
+`R` 在 native `97 m` 与 rotated-wall `103 m` 接收 chart 间引入的 range normalization
+正好预测 `10 log10(97/103)=-0.2606549 dB`。在 10001 beams 下改用 line-source `X`
+后，同一正弦墙偏差降至 `4.24e-6 dB / -3.92e-8 rad`，且未修改 reflection/frame
+物理。5001-beam 正弦场仍有两种源类型共有的约 `3.16 dB` 离散未收敛，因此该档仅作
+diagnostic。详见 `reports/bellhop_source_geometry_rx_audit_report.md`。
+
+### 4.4 tilted / sinusoidal 反射过程可视化
+
+本节所述的可视化脚本、sidecar、图件和密集 TL 网格结果已完成归档，统一位于
+`cash/bellhop_internal_wall_visualization_archive_20260909/`；本节保留的是
+方法和历史结果说明，不再表示这些入口位于 active `scripts/` 或
+`results/` 路径。归档清单见
+`reports/bellhop_internal_wall_visualization_archive_manifest.md`。
+
+已有 tilted 与 sinusoidal `.iwdiag`、`.iw3` 和 convergence CSV 现可通过
+`scripts/reporting/generate_bellhop_internal_wall_reflection_visuals.py` 做只读后处理。
+图件把“真实 wall hit 后的原生物理反射”与“proper pi rotation 后隔离的正-range
+计算分支”既提供审计用分栏，也提供同一面板内的完整路径叠加；同时给出单位比例的局部 `t/n` frame、非零 curvature 对
+`p` 的 kick 以及已有 step/profile-density diagnostics。该入口不运行 Bellhop/PE，
+也不改变本报告任何验收结论。图件和使用说明见
+`reports/bellhop_internal_wall_reflection_visualization_report.md`，输出位于
+`results/visualization/bellhop_internal_wall_reflection/`。
+
+增强显示案例的只读后处理入口为
+`scripts/reporting/generate_bellhop_internal_wall_visual_enhancement.py`。它读取
+`results/validation/bellhop_internal_wall_visual_enhancement/` 中已完成的
+tilted `a=0.05` 与 sinusoidal `A=2 m, K=0.04 1/m, N=161` 的 `.iwdiag`/`.iw3`，
+输出等数据比例的端到端分支图和 `Delta-r`--`z` 几何图至
+`results/visualization/bellhop_internal_wall_visual_enhancement/`。增强案例的
+summary hard checks 为 **PASS**；sinusoidal 的非零曲率 `|kappa|_max =
+2.84018e-3 1/m` 和 `|p_reflect kick|_max = 0.626241` 仅用于展示/扩展诊断，
+不改变本报告原有回归结论，也不替代弱案例。当前显示后处理另外输出独立的
+`01_tilted_wall_end_to_end.png` 与 `02_sinusoidal_wall_end_to_end.png`（主图加
+多 ray wall-neighborhood zoom），保留 `01_visual_enhancement_end_to_end.png`
+作为兼容合图，并在 `ray_direction_audit.csv` 中对所有 plotted fan/target ray
+检查 `norm(rot+ref)`、端点 displacement-direction residual 和
+native/rotated segment length preservation；两 case 均为 **PASS**。在此基础上，
+`03_tilted_wall_physical_reconstruction.png` 与
+`04_sinusoidal_wall_physical_reconstruction.png` 将每条 mapped forward branch
+按同一 proper 半转的逆变换 `T^{-1}(r',z')=(2R_0-r',-z')` 重建回物理坐标，
+并与 `Reflect2D` 出口的原始 backward branch 在同一 `(r,z)` 图中逐 ray 叠加。
+`inverse_rotation_ray_audit.csv` 对选定的 16 条 ray 检查方向、hit/endpoint
+残差和路径长度保持；全部记录为 **PASS**（inverse-mapped hit/endpoint
+residual 与长度 mismatch 均为 `0`；既有方向审计的最大 endpoint residual
+为 `1.84e-12 m`）。计算坐标中的正-range 分支不再绘制为物理重建图中的
+第三个子图，避免把坐标映射误画成物理传播段；其数据仍保留在 sidecar 并用于
+审计。完整解释与数值摘要见
+`reports/bellhop_internal_wall_visual_enhancement_experiment_report.md`。
+其中物理放大图采用与参考审计图一致的显示轴重排：水平轴为 `z`、垂直轴为
+Bellhop range `r`；这只是局部图的显示约定，不改变主图的物理 `(r,z)` 坐标或
+任何 ray 数据。
+
+新增的二维 TL 后处理由
+`scripts/validation/run_bellhop_internal_wall_tl_grid.py` 和
+`scripts/reporting/generate_bellhop_internal_wall_tl_2d.py` 完成。前者仅将
+已通过的 tilted/sinusoidal internal-wall binary 接收网格加密为
+`603` 个 mapped range、`321` 个 transverse depth，后者按
+`r=2R_0-r'`、`z=-z'` 将 SHD 复声场映射回物理坐标并绘制
+`TL=-20log10|p|` 背景。结果见
+`results/visualization/bellhop_internal_wall_visual_enhancement/06_internal_wall_tl_2d.png`；
+该图显示的是 branch-isolated post-wall coherent reflected field，不代表
+direct-plus-reflected 总场，也不改变原有 internal-wall 物理实现。
 
 ## 5. PM 阶段的当前状态
 

@@ -1,11 +1,11 @@
 # PE--Bellhop PM 粗糙海面对比：完整执行汇总
 
-更新日期：2026-09-03
+更新日期：2026-09-09
 范围：固定 band-limited 1-D PM realization、1-transverse PE bridge、生产二维 PE sensitivity、Bellhop validation-only internal wall；不包含 PE/Bellhop 核心物理重写、通信链、Monte Carlo 大规模统计或 PE 与 Bellhop 的幅相拟合。
 
 ## 总结结论
 
-阶段 0A--0E、Stage 1A--1C、Stage 2 和 Stage 3 均已按顺序独立运行并生成报告。当前结论为：
+阶段 0A--0E、Stage 1A--1C、Stage 2、Stage 3 和 Stage 4 均已按顺序独立运行并生成报告。当前结论为：
 
 > **PE propagation 与 Bellhop internal-wall 的数值/几何链分别通过；在同一固定 PM 频带 realization 和已量化的维度差异下，PE Kirchhoff phase-screen 与 Bellhop local-specular Reflect2D 的 reflected-only 差异稳定存在，应归类为 reflection-model discrepancy，而不是数值失败。**
 
@@ -15,13 +15,34 @@ phase-ensemble seed 的统计 smoke。随后补充的 Stage 3B 使用同一 PM
 抽样，8 个 seed 也通过了全部结构检查；Stage 3B 仍是低成本 first ensemble，
 不是最终收敛的 ocean Monte Carlo。
 
+Stage 4 在相同冻结链上完成了 50 个 fixed-4 kHz seed 的模型差异统计；
+24→32 的均值/功率/圆相位门通过，但 bootstrap 均值 delta-TL 半宽为
+`0.25835 dB`，略高于预设 `0.25 dB`，因此状态为
+**PRELIMINARY_MODEL_DISCREPANCY**。该阶段由用户在 seed 260050 后停止，
+不包含 260051 及以后样本。
+
+2026-09-09 的 source-geometry 审计又隔离了 Bellhop `R`/`X` 定义：10001-beam
+弱正弦墙 native/internal 的 `-0.26065 dB` 偏差来自 point-source `R` 的
+97/103 m range normalization，line-source `X` 将其降至 `4.24e-6 dB`。但仅重跑的
+4 kHz seed-260001 X-source Tier-1 仍为 `0.310371 dB / -2.248201 rad`，与原 R
+结果 `0.310434 dB / -2.248201 rad` 几乎相同；因此 source artifact 已被定位，
+reflection-model discrepancy 结论不变。详见
+`reports/bellhop_source_geometry_rx_audit_report.md`。
+
+同日已把 `X` 正式写入 active incident/Tier-1/frequency/ensemble/Stage-4
+entrypoints，并把 source geometry 纳入 ensemble cache fingerprint。按原 4 kHz
+incident-plane 配置重跑后，幅度 P95 从 pre-X 的 `0.15794309 dB` 降至
+`0.0019036364 dB`，全部 13 个 gate 通过。既有 Stage-2/3/4 数值报告仍保留
+pre-migration R provenance，没有重写或假标为 X；未来重跑会使用独立 X-tagged
+case。详见 `reports/pe_bellhop_line_source_integration_report.md`。
+
 ## 冻结输入与不变项
 
 | 项目 | 值 |
 |---|---|
 | medium | uniform `c=1500 m/s` |
 | geometry | `z_tx=100 m`, `z_rx=3 m`, direct/image `97/103 m` |
-| source | Gaussian `sigma=0.3 m`, existing `.sbp` mapping |
+| source | Gaussian `sigma=0.3 m`, existing `.sbp`; active comparator uses Bellhop line-source `X` (existing Stage-2/3/4 reports retain historical `R` provenance) |
 | PM realization | seed `260001`, `U=6 m/s`, span `160 m`, master `N=4097` |
 | PM spectrum | requested `Kmax=0.5 rad/m`, realized `0.471238898 rad/m` |
 | canonical coefficients SHA-256 | `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67` |
@@ -47,6 +68,7 @@ phase-ensemble seed 的统计 smoke。随后补充的 Stage 3B 使用同一 PM
 | 2 frequency extension | **PASS_WITH_MODEL_DISCREPANCY** | 4/6/8 kHz delta TL `0.3104/0.3083/0.3048 dB`；均有限、零 grazing；不由三点估计 group delay |
 | 3A paired phase ensemble | **PASS_WITH_LIMITS** | seeds `260001:260008`；mean delta TL `0.6195 dB`，circular phase `-0.5496 rad`；几何/phase/pq/tau checks 全通过 |
 | 3B coefficient-amplitude ensemble | **PASS_WITH_LIMITS** | seeds `260001:260008`、统一 5001 beams；mean delta TL `0.3207 dB`，circular phase `-0.6893 rad`；5001/5001 wall hits，几何/phase/pq/tau checks 全通过 |
+| 4 model-discrepancy statistics | **PRELIMINARY_MODEL_DISCREPANCY** | seeds `260001:260050`；mean delta TL `-0.00748 dB`，circular phase `-0.37534 rad`；全部数值/几何护栏通过，bootstrap 半宽 `0.25835 dB` |
 
 Stage 2 的权威 Bellhop case roots 使用 `f4000k_B5001_*`、`f6000k_B5001_*` 和
 `f8000k_B5001_*`。早期未采用预声明 ±15° sector 的不完整试跑目录只保留作
@@ -100,6 +122,8 @@ inputs to the active chain.
 - `scripts/validation/validate_pe_bellhop_pm_frequency_extension.m`
 - `scripts/validation/validate_pe_bellhop_pm_ensemble.m`
 - `scripts/validation/validate_pe_bellhop_pm_amplitude_ensemble.m`
+- `scripts/validation/validate_pe_bellhop_pm_model_discrepancy_statistics.m`
+- `scripts/validation/postprocess_pe_bellhop_pm_model_discrepancy_statistics.py`（只读后处理，不调用 PE/Bellhop）
 
 ### Reports
 
@@ -114,10 +138,11 @@ inputs to the active chain.
 - `reports/pe_bellhop_fixed_pm_frequency_extension_report.md`
 - `reports/pe_bellhop_pm_ensemble_comparison_report.md`
 - `reports/pe_bellhop_pm_amplitude_ensemble_report.md`
+- `reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`
 
 ### Results
 
-All generated artifacts are under `results/validation/` in the matching stage directories. The Stage 3 machine-readable outputs are `ensemble_seed_summary.csv`, `ensemble_statistics.csv`, `ensemble_percentiles.csv`, `ensemble_checks.csv`, and `ensemble_comparison.mat` (the Stage 3B copies are under `pe_bellhop_pm_amplitude_ensemble/`).
+All generated artifacts are under `results/validation/` in the matching stage directories. Stage 3 machine-readable outputs are `ensemble_seed_summary.csv`, `ensemble_statistics.csv`, `ensemble_percentiles.csv`, `ensemble_checks.csv`, and `ensemble_comparison.mat`; Stage 4 outputs additionally include `per_seed_results.csv`, `convergence_by_sample_count.csv`, `bootstrap_confidence_intervals.csv`, `discrepancy_correlations.csv`, `outlier_audit.csv`, `roughness_bins.csv`, and `result.mat` under `pe_bellhop_pm_model_discrepancy_statistics/`.
 
 ## 下一步
 

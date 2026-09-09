@@ -218,11 +218,75 @@ The atlas distinguishes physical boundary models from computational acceleration
   the feasibility, flat, tilted, sinusoidal, beam/frame, old PM, redesign and
   parameterization-fix stages. Superseded reports and obsolete one-off scripts
   are in the recoverable root `cash/` quarantine, not active project context.
+- The internal-wall visualization scripts and generated figures/fields described
+  in the next bullets are now archived under
+  `../cash/bellhop_internal_wall_visualization_archive_20260909/`; they are
+  retained for reproducibility only and are not active entrypoints.
 - `validation/validate_bellhop_internal_flat_wall_poc.m`,
   `validation/validate_bellhop_internal_tilted_wall_poc.m`, and
   `validation/validate_bellhop_internal_sinusoidal_wall_poc.m` are the retained
   flat/straight/curved regression entrypoints. Their isolated source overlays
   and runners remain under `validation/support/`.
+- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_reflection_visuals.py` is a
+  read-only postprocessor for the accepted tilted/sinusoidal `.iwdiag`, `.iw3`,
+  and convergence CSV artifacts. It does not launch Bellhop or PE; it renders
+  the physical reflection and the isolated proper-rotation chart in separate
+  panels under `results/visualization/bellhop_internal_wall_reflection/`.
+  The primary `04_internal_wall_end_to_end_overlay.png` overlays the incident
+  segment, dashed native backward branch, and solid proper-rotated receiver
+  branch in one chart for each wall case.
+  Interpretation is documented in
+  `../reports/bellhop_internal_wall_reflection_visualization_report.md`.
+- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_visual_enhancement.py` is the
+  read-only postprocessor for the stronger display-only case in
+  `results/validation/bellhop_internal_wall_visual_enhancement/`:
+  tilted `a=0.05` and sinusoidal `A=2 m, K=0.04 1/m, N=161`, both at
+  `step=0.05 m` and `5001` beams. It consumes the stored `.iwdiag`/`.iw3`
+  sidecars, writes independent `01_tilted_wall_end_to_end.png` and
+  `02_sinusoidal_wall_end_to_end.png` figures (each with complete context and
+  a multi-ray wall-neighborhood zoom), the compatibility two-panel overlay,
+  the `Delta-r` versus `z` geometry plot, and `ray_direction_audit.csv` to
+  `results/visualization/bellhop_internal_wall_visual_enhancement/`, and
+  never launches Bellhop or MATLAB. The audit checks `norm(rot+ref)`, plotted
+  displacement-direction residuals, and equal native/rotated branch lengths
+  for every selected fan/target ray. The experiment is display-only and does
+  not replace the weak-wall regression or its conclusion; interpretation,
+  audit status, and hard-check status are recorded in
+  `../reports/bellhop_internal_wall_visual_enhancement_experiment_report.md`.
+  The same postprocessor also writes
+  `03_tilted_wall_physical_reconstruction.png`,
+  `04_sinusoidal_wall_physical_reconstruction.png`,
+  `inverse_rotation_ray_audit.csv`, and
+  `inverse_rotation_visualization_manifest.csv`. These products inverse-map
+  each stored mapped forward branch with
+  `T^-1(r',z')=(2R0-r',-z')` and overlay it on the original physical
+  `Reflect2D` backward branch. The mapped forward branch is not drawn as a
+  third subplot in these physical reconstruction figures. The physical
+  wall-neighborhood panels
+  re-order the display axes to `(z,r)` (horizontal `z`, vertical range `r`)
+  to match the compact audit view; this is explicitly annotated and screen
+  slopes are not angle measurements.
+- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_tl_diagnostic.py` is a read-only
+  postprocessor for the same stored `.iwdiag` and validation MAT data. It
+  writes `05_tl_diagnostic.png`, `tl_diagnostic.csv`, and
+  `tl_visualization_manifest.csv`. The upper panels show receiver-relative
+  TL after mapping `r'=2R0-r`; the lower panels show relative reflected-beam
+  level and the pressure-release reflection amplitude jump. Absolute TL and
+  native/rotated amplitude remain diagnostic only. A zero stored native
+  sinusoidal pressure is reported as unavailable rather than converted to a
+  spurious TL value.
+- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/validation/run_bellhop_internal_wall_tl_grid.py` reruns only the accepted
+  validation-only internal-wall binaries with a dense coherent receiver grid
+  (`603` mapped ranges from `100.05--130 m`, `321` depths from `-32--32 m`,
+  5001 beams, `step=0.05 m`). It reuses the existing `.sbp` and wall profile
+  inputs and writes compressed fields under
+  `results/validation/bellhop_internal_wall_tl_grid/`; it does not change any
+  Bellhop source or the established wall implementation.
+- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_tl_2d.py` reads those dense SHD
+  fields and writes `06_internal_wall_tl_2d.png` plus a grid summary. It
+  applies `r=2R0-r'`, `z=-z'` before plotting, so the main product is a
+  physical `(r,z)` coherent reflected TL background rather than a sparse
+  receiver diagnostic.
 - Curved overlays use ordered noncoincident parametric segments, a normalized
   hit tangent, a TOP normal reconstructed from that tangent, signed
   turning-angle/arclength curvature, and finite profile support. Internal-wall
@@ -297,6 +361,16 @@ The atlas distinguishes physical boundary models from computational acceleration
   `results/validation/pe_bellhop_pm_stage0_flat_source/`; report:
   `../reports/pe_bellhop_pm_stage0_flat_source_report.md`. Stage 0D and all
   subsequent planned stages are complete; see the complete execution summary.
+- The pre-reflection incident-plane audit is implemented by
+  `validation/validate_pe_bellhop_incident_field_vertical.m`. It compares the
+  complete 1-transverse-dimensional PE incident field at 100 m with Bellhop
+  2020 coherent `C *X` line-source output on the same transverse grid, using
+  the saved spatial-phase sign and no surface/wall reflection. The default
+  4 kHz run checks 5001/10001 beams and a half-dx receiver diagnostic. After
+  the X integration all 13 gates pass; PE--Bellhop TL P95 over M95 is
+  `0.0019036 dB`, versus `0.157943 dB` in the archived pre-X run. Outputs are
+  under `results/validation/pe_bellhop_incident_field/` and the report is
+  `../reports/pe_bellhop_incident_field_comparison_report.md`.
 - Stage 0D constant-height sign audit is implemented by
   `validation/validate_pe_bellhop_pm_constant_height_sign.m`. It checks
   `eta0=+0.05, 0, -0.05 m` with image span `L=103-2*eta0`, and passes PE,
@@ -313,10 +387,25 @@ The atlas distinguishes physical boundary models from computational acceleration
   `../reports/pe_bellhop_pm_numerical_error_budget.md`.
 - Stage 1A Tier-1 fixed-PM reflected-only ratio audit is implemented by
   `validation/validate_pe_bellhop_pm_stage1_tier1.m`. Bellhop structural
-  geometry/phase/beam-state checks pass; the PE/Bellhop ratio difference is
-  diagnostic, so the status is PASS_WITH_LIMITS. Results are under
+  geometry/phase/beam-state checks pass. The active code now defaults to
+  source geometry X and uses X-specific case roots; the historical report
+  remains pre-migration provenance, while the executed X result is recorded
+  in the source-geometry audit. The PE/Bellhop ratio difference is diagnostic.
+  Results are under
   `results/validation/pe_bellhop_pm_stage1_tier1/`; report:
   `../reports/pe_bellhop_pm_stage1_tier1_report.md`.
+- The point-source `R` versus line-source `X` covariance audit is implemented
+  by `validation/validate_bellhop_source_geometry_rx_audit.m`. It changes only
+  Bellhop `RunType(4)`, checks flat and weak-sinusoidal walls at 5001/10001
+  beams, and conditionally runs only the 4 kHz seed-260001 Tier-1 case. At
+  10001 beams, `X` removes the native-97 m/internal-103 m `-0.26065 dB`
+  range-normalization artifact, while the Tier-1 PE--Bellhop delta remains
+  `0.31037 dB / -2.24820 rad`. Results are under
+  `results/validation/bellhop_source_geometry_rx_audit/`; report:
+  `../reports/bellhop_source_geometry_rx_audit_report.md`.
+- Integration and archive details are recorded in
+  `../reports/pe_bellhop_line_source_integration_report.md` and
+  `../reports/pe_bellhop_source_geometry_integration_archive_manifest.md`.
 - Stage 1B production PE dimensionality sensitivity is implemented by
   `validation/validate_pe_bellhop_pm_stage1_dimensionality.m`; it copies the
   same fixed eta(x) across y and compares ny=256/512 against the 1T bridge.
