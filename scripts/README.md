@@ -222,6 +222,19 @@ The atlas distinguishes physical boundary models from computational acceleration
   in the next bullets are now archived under
   `../cash/bellhop_internal_wall_visualization_archive_20260909/`; they are
   retained for reproducibility only and are not active entrypoints.
+- `reporting/generate_bellhop_internal_wall_visuals_vertical.m` is the active
+  read-only renderer for the two requested products. It consumes the stored
+  dense tilted (`r=100+0.05z`) and sinusoidal (`r=100-2sin(0.04z)`) internal-
+  wall fields, draws eight incident/native-backward/inverse-mapped rays with
+  arrows plus reordered-axis wall zooms, and writes dense 2-D coherent
+  reflected-only TL backgrounds after `T^{-1}(r',z')=(200-r',-z')`. The SHD
+  input contains only the transformed post-wall branch, not a total
+  direct-plus-reflected field. It also renders a separate dense
+  incident-only TL field from the official matched-halfspace `C*X` run.
+  Outputs are under
+  `results/visualization/bellhop_internal_wall_visuals/`; the dense source
+  fields and their validation cases are under
+  `results/validation/bellhop_internal_wall_visuals/`.
 - `validation/validate_bellhop_internal_flat_wall_poc.m`,
   `validation/validate_bellhop_internal_tilted_wall_poc.m`, and
   `validation/validate_bellhop_internal_sinusoidal_wall_poc.m` are the retained

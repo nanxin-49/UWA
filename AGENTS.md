@@ -71,6 +71,21 @@ See `PROJECT_CONTEXT.md` for project background and current status.
 - Do not silently change units. Depth is meters, frequency is Hz, sound speed is m/s, z is positive downward.
 - Avoid introducing new toolbox dependencies beyond standard MATLAB unless explicitly approved.
 
+### MATLAB execution
+- Use the MATLAB MCP server as the default interface for executing, checking, and testing MATLAB code in this repository.
+- Use the existing shared MATLAB session through MATLAB MCP.
+- Do not launch MATLAB through PowerShell, CMD, `matlab.exe`, or `matlab.exe -batch` unless the user explicitly requests it.
+- Prefer the MATLAB MCP tools for their intended purposes, including `evaluate_matlab_code`, `run_matlab_file`, `run_matlab_test_file`, and `check_matlab_code`.
+- The normal project working directory is `E:\MISC\CARPE3D_matlab\Explain`. Do not rely on the current working directory for production code; project entrypoints must still follow the path-handling rules below.
+- When necessary, verify the connected MATLAB version and working directory before running a validation or workflow.
+- If the MATLAB MCP existing session is unavailable, report the condition instead of silently falling back to launching MATLAB through PowerShell or another shell.
+- PowerShell may still be used for repository management, Git, file inspection, and other non-MATLAB shell tasks.
+- Do not use PowerShell to launch MATLAB as a fallback without explicit user approval.
+
+### Development workflow
+- Prefer small, reviewable changes.
+...
+
 ### Development workflow
 - Prefer small, reviewable changes.
 - For new physics, first add disabled-by-default configuration and regression checks.
