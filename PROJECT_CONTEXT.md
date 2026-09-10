@@ -3851,3 +3851,21 @@ wall-residual, pressure-release phase, beam-state, positive-range, and PE
 edge/seam guards.  Native backward-range amplitude remains diagnostic only,
 and the dimensionality sensitivity (`-0.15886 dB`, `+0.01251 rad`) is
 reported separately rather than subtracted.
+
+## 2026-09-10 Controlled PE--Bellhop Goal: Stage 0/1 status
+
+The authoritative sequential driver is
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`, governed by
+`reports/pe_bellhop_controlled_comparison_GOAL.md`.  P0 and Stage 0 passed,
+including PE--AS closure, flat parametric internal-wall closure, receiver
+mapping, phase/tau/positive-range guards, and 5001/10001-beam checks.
+
+Stage 1 weak-sinusoid runs at `A=0.01`, `0.005`, and `0.0025 m` all passed
+profile/geometry/finite guards but did not return to the Stage-0 numerical
+floor: model M99 L2 was `0.47247`, `0.23875`, and `0.11969`, respectively;
+phase RMS was `0.47920`, `0.23960`, and `0.11980 rad`.  The controlled
+comparison is therefore blocked by model comparability at the current weak
+limit, not by PE marching, Bellhop geometry, or solver convergence.  Stage
+2--7 remain locked and the conditional Helmholtz/BEM feasibility branch is
+the next permitted step.  Per the latest user execution override, future
+Bellhop runs use 10,001 beams only; no 20,001-beam endpoint is to be started.

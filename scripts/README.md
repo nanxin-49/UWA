@@ -662,5 +662,10 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   selection, the rebuilt validation-only internal-wall binaries, and the
   existing 1-transverse PE helper. It does not modify PE, Bellhop core,
   `Reflect2D`, or `InfluenceGeoHatCart`.
+- P0 and Stage 0 are PASS. Stage 1 weak-sinusoid tests at `A=0.01`, `0.005`,
+  and `0.0025 m` remain below the prescribed PE--Bellhop floor gates, so
+  Stage 2--7 are locked and the conditional Helmholtz/BEM branch is next.
+  Future runs are limited to 10,001 beams by explicit user override; see
+  `reports/pe_bellhop_controlled_comparison_stage1_status.md`.
 - Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL.md` and
   `reports/pe_bellhop_controlled_comparison_goal_audit.md`.

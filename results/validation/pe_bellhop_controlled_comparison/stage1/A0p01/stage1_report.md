@@ -2,18 +2,18 @@
 
 状态：**FAIL**
 
-- A=0.0025 m, K=0.1 rad/m; source `X`, run `C`.
+- A=0.01 m, K=0.1 rad/m; source `X`, run `C`.
 - Floors: F_E=0.0058993922, F_phi=0.0058992479, F_TL=0.00079785258; thresholds T_E=0.010899392, T_phi=0.010899248, T_TL=0.010797853.
 
 | comparison | L2(M99) | phase RMS | TL RMS (dB) | rho |
 |---|---:|---:|---:|---:|
-| profile | 3.0923133e-07 | 2.5941921e-07 | 1.4618467e-06 | 1 |
-| beam | 0 | 0 | 0 | 1 |
-| model | 0.11969441 | 0.11980048 | 0.0011424793 | 0.99478804 |
+| profile | 1.2024712e-06 | 1.0348829e-06 | 5.3182868e-06 | 1 |
+| beam | 1.543684e-06 | 1.5104209e-06 | 2.7691186e-06 | 1 |
+| model | 0.47247164 | 0.47919524 | 0.0045698832 | 0.91922588 |
 
 ## Geometry
 
-- wall residual max: 7.105e-15 m; phase jump error max: 7.105e-15 rad; min post dr: 0.0433074 m; center tau error: 4.677e-15 s.
+- wall residual max: 7.102e-15 m; phase jump error max: 7.105e-15 rad; min post dr: 0.0433257 m; center tau error: 4.677e-15 s.
 
 ## Checks
 

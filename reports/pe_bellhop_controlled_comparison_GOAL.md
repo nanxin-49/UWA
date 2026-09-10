@@ -7,6 +7,13 @@
 `reports/pe_bellhop_controlled_comparison_goal_audit.md`，再严格按本文件顺序
 推进。禁止子 Agent、禁止并行启动多个 Stage、禁止为缩小差异修改核心物理。
 
+### 执行覆盖（2026-09-10）
+
+用户明确要求后续 Bellhop 运行限制为 **10,001 beams**。因此本 Goal 中原先的
+`10001 -> 20001` Stage-1 收敛端点由当前执行策略覆盖为单一 `10001` beams；
+不得再启动 20,001-beam case。此前已经完成的 20,001-beam 结果只保留为历史
+诊断，不作为后续硬门控依据。
+
 ## 1. 最终目标
 
 在统一 line source、物理 receiver、surface profile、reflected-field 定义和
