@@ -649,3 +649,18 @@ The authoritative report is
 `reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`.  Current state
 is `PRELIMINARY_MODEL_DISCREPANCY`: numerical/applicability guards pass, while
 the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
+
+## Controlled PE--Bellhop rough-surface Goal workflow
+
+- `validation/validate_pe_bellhop_controlled_comparison.m` is the sequential,
+  validation-only driver for the frozen controlled-comparison Goal. Run
+  `validate_pe_bellhop_controlled_comparison('p0')`, then `'stage0'`; later
+  stages remain locked until the preceding stage passes. Stage 0 writes the
+  authoritative flat closure under
+  `results/validation/pe_bellhop_controlled_comparison/stage0/`.
+- The workflow uses source `X`, coherent `C`, explicit receiver-range
+  selection, the rebuilt validation-only internal-wall binaries, and the
+  existing 1-transverse PE helper. It does not modify PE, Bellhop core,
+  `Reflect2D`, or `InfluenceGeoHatCart`.
+- Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL.md` and
+  `reports/pe_bellhop_controlled_comparison_goal_audit.md`.
