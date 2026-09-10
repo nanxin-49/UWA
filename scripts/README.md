@@ -662,10 +662,28 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   selection, the rebuilt validation-only internal-wall binaries, and the
   existing 1-transverse PE helper. It does not modify PE, Bellhop core,
   `Reflect2D`, or `InfluenceGeoHatCart`.
-- P0 and Stage 0 are PASS. Stage 1 weak-sinusoid tests at `A=0.01`, `0.005`,
-  and `0.0025 m` remain below the prescribed PE--Bellhop floor gates, so
-  Stage 2--7 are locked and the conditional Helmholtz/BEM branch is next.
+- P0 and Stage 0 are PASS. The original raw Stage 1 weak-sinusoid results at
+  `A=0.01`, `0.005`, and `0.0025 m` remain permanently retained as FAIL
+  diagnostics. The convention-fixed regression is PASS, and the read-only
+  Stage 1Y theoretical closure is
+  `CONVENTION_THEORETICALLY_CLOSED`; Stage 2 is now unlocked but has not been
+  executed.
   Future runs are limited to 10,001 beams by explicit user override; see
   `reports/pe_bellhop_controlled_comparison_stage1_status.md`.
-- Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL.md` and
+- Stage 1X is implemented by
+  `validation/validate_pe_bellhop_controlled_comparison_stage1x.m`; it reads
+  completed `A=0.01,0.005,0.0025` MAT files only and writes diagnostics under
+  `results/validation/pe_bellhop_controlled_comparison/stage1x/`.
+- The Stage 1X convention-only regression uses the explicit comparison field
+  `G_BH_comparison=conj(G_BH)` and writes isolated outputs under
+  `results/validation/pe_bellhop_controlled_comparison/stage1_convention_fixed/`;
+  the original raw Stage-1 results remain unchanged.
+- Stage 1Y report:
+  `reports/pe_bellhop_controlled_comparison_stage1y_theoretical_convention_closure.md`.
+  It closes the PE/Bellhop time-harmonic, coherent influence, SHD reader, and
+  constant-height analytic sign convention without new solver calls or any
+  per-case fitting. The fixed comparison definition is `B_abs=conj(B_raw)` and
+  `G_BH_comparison=conj(G_BH_abs)=G_BH_raw`.
+- Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`,
+  `reports/pe_bellhop_controlled_comparison_GOAL.md`, and
   `reports/pe_bellhop_controlled_comparison_goal_audit.md`.

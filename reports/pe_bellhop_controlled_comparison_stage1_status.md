@@ -2,7 +2,7 @@
 
 日期：2026-09-10  
 权威执行入口：`scripts/validation/validate_pe_bellhop_controlled_comparison.m`  
-权威 Goal：`reports/pe_bellhop_controlled_comparison_GOAL.md`
+权威 Goal：`reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`
 
 ## 已执行配置
 
@@ -30,10 +30,12 @@ Stage-0 floor 给出的弱限值为 `T_E=0.0108994`、`T_phi=0.0108992 rad`、
 
 ## 决策
 
-按唯一权威 Goal：Stage 2--7 锁定，停止 height/slope/PM 扩展，转入
-conditional Helmholtz/BEM feasibility branch。A=0.01 与 A=0.005 的历史
-20,001-beam endpoint 结果保留为诊断；A=0.0025 遵循最新约束仅使用 10,001
-beams，不能宣称原始 10,001→20,001 收敛门已重新执行。
+按修订版 Goal：Stage 2--7 仍锁定，先执行只读 Stage 1X
+phase/convention audit，再决定是否允许后续 Helmholtz/BEM branch。Stage 1X
+报告为 `reports/pe_bellhop_controlled_comparison_stage1x_phase_convention_audit.md`；
+其固定共轭诊断闭合三组 A，但不自动改写 Stage 1 的原始 PASS/FAIL。
+A=0.01 与 A=0.005 的历史 20,001-beam endpoint 结果保留为诊断；A=0.0025
+遵循最新约束仅使用 10,001 beams。
 
 详细逐 case 文件：
 
@@ -43,3 +45,51 @@ beams，不能宣称原始 10,001→20,001 收敛门已重新执行。
 
 本轮未修改 PE、Bellhop 核心、`Reflect2D`、`InfluenceGeoHatCart`、SHD
 selector 或通信代码。
+
+## Convention-only 回归（Stage 1X 后）
+
+按修订 Goal 对 Stage 1X 的处理，主驱动只在比较层增加
+`G_BH_comparison=conj(G_BH)`；Bellhop/PE 原始场和旧结果均保留不变。
+Stage 0 已重新执行并继续 PASS。A=0.01 的 10,001-beam 主程序回归 PASS；
+A=0.005 与 A=0.0025 使用已保存的同一 raw solver MAT 做 comparison-only
+重建，未重新启动 Bellhop，且各自的单项 checks 重新计算后均 PASS。
+
+| A (m) | corrected E_G | corrected phase RMS (rad) | corrected TL RMS (dB) | rho | 状态 |
+|---:|---:|---:|---:|---:|:---|
+| 0.0100 | 0.00409346 | 0.00405930 | 0.00456998 | 0.99999242 | PASS |
+| 0.0050 | 0.00204123 | 0.00202407 | 0.00228491 | 0.99999810 | PASS |
+| 0.0025 | 0.00101951 | 0.00101096 | 0.00114248 | 0.99999952 | PASS |
+
+fixed 输出位于
+`results/validation/pe_bellhop_controlled_comparison/stage1_convention_fixed/`；
+原始 Stage 1 FAIL 结果位于 `stage1/`，作为 superseded-by-convention-fix
+诊断保留。由于后两组是 comparison-only 重建，本节不宣称新增 Bellhop
+solver 收敛证据；Stage 2--7 仍需按修订 Goal 另行解锁。
+
+## Stage 1Y theoretical convention closure
+
+Stage 1Y 已完成，且没有重新运行 PE/Bellhop。报告
+`reports/pe_bellhop_controlled_comparison_stage1y_theoretical_convention_closure.md`
+从 PE helper、Bellhop 2020 `influence.f90`/`ReflectMod.f90`、SHD reader、X
+source normalization 以及既有 free-field 和 constant-height 数据独立闭合了
+复数传播约定。正式比较层固定为：
+
+```text
+B_abs = conj(B_raw)
+G_BH_comparison = conj(G_BH_abs) = G_BH_raw
+```
+
+这不是按误差择优，也不是幅相校正；PE screen、Bellhop `Reflect2D`、
+`InfluenceGeoHatCart`、SHD selector 和通信代码均未修改。`eta=+0.05,0,-0.05 m`
+的既有 constant-height audit 给出 Bellhop ratio phase residual 约
+`2.56e-5 rad`，与理论 `exp(+i*2*k*eta)` 符号一致；incident PE--AS L2 为
+`3.73e-13`，Bellhop--AS 10001-beam L2 为 `6.11e-3`，均为既有结果。
+
+最终状态：
+
+```text
+Stage 1 raw comparison             = FAIL (永久保留)
+Stage 1 convention-fixed regression= PASS
+Stage 1Y                           = CONVENTION_THEORETICALLY_CLOSED
+Stage 2                           = UNLOCKED, not executed in this turn
+```

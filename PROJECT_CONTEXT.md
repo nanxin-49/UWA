@@ -3856,7 +3856,7 @@ reported separately rather than subtracted.
 
 The authoritative sequential driver is
 `scripts/validation/validate_pe_bellhop_controlled_comparison.m`, governed by
-`reports/pe_bellhop_controlled_comparison_GOAL.md`.  P0 and Stage 0 passed,
+`reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`.  P0 and Stage 0 passed,
 including PE--AS closure, flat parametric internal-wall closure, receiver
 mapping, phase/tau/positive-range guards, and 5001/10001-beam checks.
 
@@ -3865,7 +3865,40 @@ profile/geometry/finite guards but did not return to the Stage-0 numerical
 floor: model M99 L2 was `0.47247`, `0.23875`, and `0.11969`, respectively;
 phase RMS was `0.47920`, `0.23960`, and `0.11980 rad`.  The controlled
 comparison is therefore blocked by model comparability at the current weak
-limit, not by PE marching, Bellhop geometry, or solver convergence.  Stage
-2--7 remain locked and the conditional Helmholtz/BEM feasibility branch is
-the next permitted step.  Per the latest user execution override, future
+limit, not by PE marching, Bellhop geometry, or solver convergence.  The
+read-only Stage 1X audit
+`reports/pe_bellhop_controlled_comparison_stage1x_phase_convention_audit.md`
+identifies a fixed PE conjugation convention that closes all three amplitudes
+(the mirror-conjugate is degenerate for the centered/even profile).  This does
+not rewrite the original Stage-1 PASS/FAIL: Stage 2--7 remain locked pending a
+narrow convention-only rerun.  Per the latest user execution override, future
 Bellhop runs use 10,001 beams only; no 20,001-beam endpoint is to be started.
+
+The convention-only regression is recorded under
+`results/validation/pe_bellhop_controlled_comparison/stage1_convention_fixed/`.
+It uses `G_BH_comparison=conj(G_BH)` only in the rough/flat comparison layer:
+Stage 0 was rerun and passed, A=0.01 was rerun through the main driver, and the
+A=0.005/A=0.0025 outputs are comparison-only reconstructions from preserved raw
+solver MAT files.  The original Stage-1 FAIL data remain under `stage1/`;
+Stage 2--7 are not automatically unlocked.
+
+## 2026-09-10 Controlled PE--Bellhop Goal: Stage 1Y convention closure
+
+Stage 1Y is complete and is documented in
+`reports/pe_bellhop_controlled_comparison_stage1y_theoretical_convention_closure.md`.
+Without new PE/Bellhop runs, the source audit independently closes the PE
+`exp(-i*omega*t)`/`exp(+i*(kz-k0)L)` convention, Bellhop 2020 coherent
+`exp(-i*(omega*tau-phase))` influence convention, the direct real/imag SHD
+reader, the real X-source normalization, and the single vacuum `+pi` phase in
+`Reflect2D`. Existing free-field and non-sinusoidal constant-height audits
+support the analytic prediction; no per-case conjugation, fitting, or core
+physics change is used.
+
+The permanently frozen comparison fields are
+`B_abs=conj(B_raw)` and `G_BH_comparison=conj(G_BH_abs)=G_BH_raw`. The original
+raw Stage-1 FAIL outputs remain unchanged, while the convention-fixed
+regression remains PASS. Stage 1Y is
+`CONVENTION_THEORETICALLY_CLOSED`, so Stage 2 is unlocked by the Goal gate;
+Stage 2 has not been run in this update. The remaining Bellhop--AS/flat
+residual (~`0.006` normalized complex L2) is retained as a finite
+source/beam mapping floor, not treated as a convention blocker.

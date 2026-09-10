@@ -72,6 +72,7 @@ cfg = struct( ...
     'stage0_halfdx_l2_limit', 0.005, 'fail_on_check', true, ...
     'stage1_amplitude_m', 0.01, 'stage1_wavenumber_radpm', 0.10, ...
     'stage1_beam_counts', [10001 10001], 'stage1_profile_counts', [2049 4097], ...
+    'stage1_output_subdir', 'stage1_convention_fixed', ...
     'canonical_coeff_source', fullfile('E:', filesep, 'MISC', 'CARPE3D_matlab', ...
         'Explain', 'results', 'validation', 'bellhop_internal_pm_fixed_realization', ...
         'fixed_pm_fourier_coefficients.csv'), ...
@@ -267,7 +268,7 @@ try
         bh_hi.field=local_stage0_convert(bh_hi.pressure_raw,cfg.phase_sign);
     end
 catch ME
-    out_dir=fullfile(cfg.output_dir,'stage1'); if ~exist(out_dir,'dir'),mkdir(out_dir);end
+    out_dir=fullfile(cfg.output_dir,cfg.stage1_output_subdir); if ~exist(out_dir,'dir'),mkdir(out_dir);end
     validation=struct('schema_version','1.0.0','stage','stage1_weak_sinusoid', ...
         'config',cfg,'A_m',A,'K_radpm',K,'passed',false,'blocked',true, ...
         'blocked_reason',ME.message,'error_identifier',ME.identifier, ...
@@ -282,7 +283,13 @@ Gpe(valid_ratio)=pe.reflected_field(valid_ratio)./flat_pe(valid_ratio);
 Gbh(valid_ratio)=bh_hi.field(valid_ratio)./flat_bh(valid_ratio);
 profile=local_stage1_ratio_metrics(GbhN{1},GbhN{2},fp);
 beam=local_stage1_ratio_metrics(GbhN{2},Gbh,fp);
-model=local_stage1_ratio_metrics(Gpe,Gbh,fp);
+% Stage 1X provenance audit identified a fixed Bellhop ratio conjugation:
+% the solver field convention remains unchanged, while the rough/flat
+% comparison uses G_BH_cmp = conj(G_BH).  Keep the unmodified metric as a
+% diagnostic and never feed this transform into PE/Bellhop physics.
+Gbh_cmp=conj(Gbh);
+model_raw=local_stage1_ratio_metrics(Gpe,Gbh,fp);
+model=local_stage1_ratio_metrics(Gpe,Gbh_cmp,fp);
 geom=local_stage1_geometry(bh_hi,cfg);
 floorE=max([s0.metrics.flat_internal.l2_m99,s0.metrics.chain_internal_free.l2_m99,s0.metrics.beam_convergence.l2_m99,s0.receiver_sampling.metrics.l2_m99]);
 floorPhi=max([s0.metrics.flat_internal.phase_rms_m99,s0.metrics.beam_convergence.phase_rms_m99,s0.receiver_sampling.metrics.phase_rms_m99]);
@@ -296,12 +303,15 @@ checks=struct('profile_l2',profile.l2_m99<=cfg.stage0_beam_l2_limit,'profile_pha
 checks.all=all(structfun(@(v)logical(v),checks));
 validation=struct('schema_version','1.0.0','stage','stage1_weak_sinusoid','config',cfg,'A_m',A,'K_radpm',K, ...
  'pe',pe,'flat_pe',flat_pe,'flat_bellhop',flat_bh,'bellhop_profile_cases',{bhN}, ...
- 'bellhop_high',bh_hi,'G_PE',Gpe,'G_BH',Gbh,'metrics',struct('profile',profile,'beam',beam,'model',model), ...
+ 'bellhop_high',bh_hi,'G_PE',Gpe,'G_BH',Gbh,'G_BH_comparison',Gbh_cmp, ...
+ 'comparison_convention','G_BH_comparison = conj(G_BH); fixed by Stage 1X provenance audit', ...
+ 'metrics',struct('profile',profile,'beam',beam,'model_raw',model_raw,'model',model), ...
  'geometry',geom,'floor',struct('F_E',floorE,'F_phi',floorPhi,'F_TL',floorTL,'T_E',T_E,'T_phi',T_phi,'T_TL',T_TL), ...
  'checks',checks,'passed',checks.all);
-out_dir=fullfile(cfg.output_dir,'stage1'); if ~exist(out_dir,'dir'),mkdir(out_dir);end
+out_dir=fullfile(cfg.output_dir,cfg.stage1_output_subdir); if ~exist(out_dir,'dir'),mkdir(out_dir);end
 mat_file=fullfile(out_dir,'stage1_validation.mat'); save(mat_file,'validation','-v7');
 report_file=fullfile(out_dir,'stage1_report.md'); local_stage1_write_report(report_file,validation);
+local_stage1_append_convention_report(report_file,validation);
 validation.files=struct('mat',mat_file,'report',report_file); result=validation;
 if cfg.fail_on_check && ~result.passed, error('Stage 1 failed; see %s.',report_file); end
 end
@@ -337,6 +347,17 @@ end
 
 function local_stage1_write_report(path,v)
 fid=fopen(path,'w','n','UTF-8');if fid<0,error('Cannot write %s.',path);end;cl=onCleanup(@()fclose(fid));fprintf(fid,'# Stage 1 weak sinusoid\n\n状态：**%s**\n\n',ternary(v.passed,'PASS','FAIL'));fprintf(fid,'- A=%.9g m, K=%.9g rad/m; source `%s`, run `%s`.\n',v.A_m,v.K_radpm,v.config.source_geometry,v.config.run_type);fprintf(fid,'- Floors: F_E=%.8g, F_phi=%.8g, F_TL=%.8g; thresholds T_E=%.8g, T_phi=%.8g, T_TL=%.8g.\n\n',v.floor.F_E,v.floor.F_phi,v.floor.F_TL,v.floor.T_E,v.floor.T_phi,v.floor.T_TL);fprintf(fid,'| comparison | L2(M99) | phase RMS | TL RMS (dB) | rho |\n|---|---:|---:|---:|---:|\n');for n={'profile','beam','model'},m=v.metrics.(n{1});fprintf(fid,'| %s | %.8g | %.8g | %.8g | %.8g |\n',n{1},m.l2_m99,m.phase_rms_m99,m.tl_rms_m99,m.rho_shape);end;fprintf(fid,'\n## Geometry\n\n- wall residual max: %.4g m; phase jump error max: %.4g rad; min post dr: %.6g m; center tau error: %.4g s.\n\n',v.geometry.wall_residual_max_m,v.geometry.phase_jump_error_max_rad,v.geometry.min_post_dr_m,v.geometry.center_tau_error_s);fprintf(fid,'## Checks\n\n');n=fieldnames(v.checks);for ii=1:numel(n),fprintf(fid,'- %s: %s\n',n{ii},ternary(v.checks.(n{ii}),'PASS','FAIL'));end;fprintf(fid,'\nStage 2 remains locked unless this weak-limit result passes.\n');
+end
+
+function local_stage1_append_convention_report(path,v)
+fid=fopen(path,'a','n','UTF-8');if fid<0,error('Cannot append %s.',path);end;cl=onCleanup(@()fclose(fid));
+if isfield(v,'comparison_convention')
+    fprintf(fid,'\n## Comparison convention\n\n- %s\n',v.comparison_convention);
+    if isfield(v.metrics,'model_raw')
+        m=v.metrics.model_raw;
+        fprintf(fid,'- Raw diagnostic: E_G=%.8g; phase RMS=%.8g rad; TL RMS=%.8g dB; rho=%.8g.\n',m.l2_m99,m.phase_rms_m99,m.tl_rms_m99,m.rho_shape);
+    end
+end
 end
 
 function local_stage1_blocked_report(path,v)
