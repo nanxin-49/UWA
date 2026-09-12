@@ -226,80 +226,27 @@ The atlas distinguishes physical boundary models from computational acceleration
   read-only renderer for the two requested products. It consumes the stored
   dense tilted (`r=100+0.05z`) and sinusoidal (`r=100-2sin(0.04z)`) internal-
   wall fields, draws eight incident/native-backward/inverse-mapped rays with
-  arrows plus reordered-axis wall zooms, and writes dense 2-D coherent
+  arrows plus equal-aspect reordered-axis wall zooms with explicit wall normals, and writes dense 2-D coherent
   reflected-only TL backgrounds after `T^{-1}(r',z')=(200-r',-z')`. The SHD
   input contains only the transformed post-wall branch, not a total
   direct-plus-reflected field. It also renders a separate dense
   incident-only TL field from the official matched-halfspace `C*X` run.
   Outputs are under
   `results/visualization/bellhop_internal_wall_visuals/`; the dense source
-  fields and their validation cases are under
-  `results/validation/bellhop_internal_wall_visuals/`.
+  field retained for regeneration is under
+  `results/validation/bellhop_internal_wall_visuals/`; raw case sidecars and
+  duplicate dense inputs are archived under
+  `../cash/bellhop_internal_wall_visualization_archive_20260910/`.
 - `validation/validate_bellhop_internal_flat_wall_poc.m`,
   `validation/validate_bellhop_internal_tilted_wall_poc.m`, and
   `validation/validate_bellhop_internal_sinusoidal_wall_poc.m` are the retained
   flat/straight/curved regression entrypoints. Their isolated source overlays
   and runners remain under `validation/support/`.
-- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_reflection_visuals.py` is a
-  read-only postprocessor for the accepted tilted/sinusoidal `.iwdiag`, `.iw3`,
-  and convergence CSV artifacts. It does not launch Bellhop or PE; it renders
-  the physical reflection and the isolated proper-rotation chart in separate
-  panels under `results/visualization/bellhop_internal_wall_reflection/`.
-  The primary `04_internal_wall_end_to_end_overlay.png` overlays the incident
-  segment, dashed native backward branch, and solid proper-rotated receiver
-  branch in one chart for each wall case.
-  Interpretation is documented in
-  `../reports/bellhop_internal_wall_reflection_visualization_report.md`.
-- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_visual_enhancement.py` is the
-  read-only postprocessor for the stronger display-only case in
-  `results/validation/bellhop_internal_wall_visual_enhancement/`:
-  tilted `a=0.05` and sinusoidal `A=2 m, K=0.04 1/m, N=161`, both at
-  `step=0.05 m` and `5001` beams. It consumes the stored `.iwdiag`/`.iw3`
-  sidecars, writes independent `01_tilted_wall_end_to_end.png` and
-  `02_sinusoidal_wall_end_to_end.png` figures (each with complete context and
-  a multi-ray wall-neighborhood zoom), the compatibility two-panel overlay,
-  the `Delta-r` versus `z` geometry plot, and `ray_direction_audit.csv` to
-  `results/visualization/bellhop_internal_wall_visual_enhancement/`, and
-  never launches Bellhop or MATLAB. The audit checks `norm(rot+ref)`, plotted
-  displacement-direction residuals, and equal native/rotated branch lengths
-  for every selected fan/target ray. The experiment is display-only and does
-  not replace the weak-wall regression or its conclusion; interpretation,
-  audit status, and hard-check status are recorded in
-  `../reports/bellhop_internal_wall_visual_enhancement_experiment_report.md`.
-  The same postprocessor also writes
-  `03_tilted_wall_physical_reconstruction.png`,
-  `04_sinusoidal_wall_physical_reconstruction.png`,
-  `inverse_rotation_ray_audit.csv`, and
-  `inverse_rotation_visualization_manifest.csv`. These products inverse-map
-  each stored mapped forward branch with
-  `T^-1(r',z')=(2R0-r',-z')` and overlay it on the original physical
-  `Reflect2D` backward branch. The mapped forward branch is not drawn as a
-  third subplot in these physical reconstruction figures. The physical
-  wall-neighborhood panels
-  re-order the display axes to `(z,r)` (horizontal `z`, vertical range `r`)
-  to match the compact audit view; this is explicitly annotated and screen
-  slopes are not angle measurements.
-- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_tl_diagnostic.py` is a read-only
-  postprocessor for the same stored `.iwdiag` and validation MAT data. It
-  writes `05_tl_diagnostic.png`, `tl_diagnostic.csv`, and
-  `tl_visualization_manifest.csv`. The upper panels show receiver-relative
-  TL after mapping `r'=2R0-r`; the lower panels show relative reflected-beam
-  level and the pressure-release reflection amplitude jump. Absolute TL and
-  native/rotated amplitude remain diagnostic only. A zero stored native
-  sinusoidal pressure is reported as unavailable rather than converted to a
-  spurious TL value.
-- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/validation/run_bellhop_internal_wall_tl_grid.py` reruns only the accepted
-  validation-only internal-wall binaries with a dense coherent receiver grid
-  (`603` mapped ranges from `100.05--130 m`, `321` depths from `-32--32 m`,
-  5001 beams, `step=0.05 m`). It reuses the existing `.sbp` and wall profile
-  inputs and writes compressed fields under
-  `results/validation/bellhop_internal_wall_tl_grid/`; it does not change any
-  Bellhop source or the established wall implementation.
-- `../cash/bellhop_internal_wall_visualization_archive_20260909/scripts/reporting/generate_bellhop_internal_wall_tl_2d.py` reads those dense SHD
-  fields and writes `06_internal_wall_tl_2d.png` plus a grid summary. It
-  applies `r=2R0-r'`, `z=-z'` before plotting, so the main product is a
-  physical `(r,z)` coherent reflected TL background rather than a sparse
-  receiver diagnostic.
+- Historical reflection/enhancement/TL renderers and their superseded figures
+  are retained only in the recoverable archives listed by
+  `../reports/bellhop_internal_wall_visualization_archive_manifest.md`; do not
+  use them as active entrypoints. The consolidated report and the active
+  renderer above define the current visualization products.
 - Curved overlays use ordered noncoincident parametric segments, a normalized
   hit tangent, a TOP normal reconstructed from that tangent, signed
   turning-angle/arclength curvature, and finite profile support. Internal-wall
@@ -310,6 +257,16 @@ The atlas distinguishes physical boundary models from computational acceleration
   scans 65/129/257 samples and checks intersection, orthonormal frame, signed
   curvature, `RN`, p/q, one pressure-release phase jump, finite values and
   positive transformed range.
+- `validation/validate_bellhop_internal_large_sinusoidal_wall_visual_case.m`
+  runs the corresponding full `[-30,30] deg` Bellhop-only fan after a
+  5001-ray analytic geometry preflight. The finite wall support is
+  `z=[-75,75]` m, while the wall-neighborhood plot remains `z=[-30,30]` m.
+  Numerical outputs are under
+  `results/validation/bellhop_internal_wall_two_period_full_fan/`; the three
+  authoritative visualization PNGs are written to
+  `results/visualization/bellhop_internal_wall_visuals/`. The TL axes include
+  the complete sampled wall support, leaving regions outside the SHD grid as
+  background rather than extrapolating pressure.
 - `validation/support/run_bellhop_internal_pm_wall_poc_vertical.m` and
   `validation/support/bellhop_internal_pm_wall_poc/` are retained as the
   generic parametric-wall runner/build. The fixed-realization convergence

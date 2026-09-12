@@ -28,3 +28,18 @@ The authoritative Bellhop implementation and numerical validation conclusions
 remain in `reports/bellhop_internal_wall_implementation_report.md`. This
 manifest intentionally does not duplicate archived files or enumerate their
 contents.
+
+## 2026-09-10 close-out
+
+The current visualization consolidation keeps only the three final products under
+`results/visualization/bellhop_internal_wall_visuals/`:
+
+- `internal_wall_ray_trajectories.png`
+- `internal_wall_incident_tl_2d.png`
+- `internal_wall_tl_2d.png`
+
+The active renderer and the dense input `dense_wall_fields.mat` remain outside the
+archive. Superseded visualization reports, duplicate dense MAT files, and raw case
+sidecars were moved to `cash/bellhop_internal_wall_visualization_archive_20260910/`.
+The consolidated authoritative report is
+`reports/bellhop_internal_wall_visualization_report.md`.
