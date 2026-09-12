@@ -3899,6 +3899,44 @@ The permanently frozen comparison fields are
 raw Stage-1 FAIL outputs remain unchanged, while the convention-fixed
 regression remains PASS. Stage 1Y is
 `CONVENTION_THEORETICALLY_CLOSED`, so Stage 2 is unlocked by the Goal gate;
-Stage 2 has not been run in this update. The remaining Bellhop--AS/flat
+Stage 2 was subsequently completed and is summarized in the Stage-2 status
+entry below. The remaining Bellhop--AS/flat
 residual (~`0.006` normalized complex L2) is retained as a finite
 source/beam mapping floor, not treated as a convention blocker.
+
+## 2026-09-11 Controlled PE--Bellhop Goal: Stage 2 execution status
+
+Stage 2 height-sweep orchestration is present in
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`. It fixes
+`K=0.10 rad/m`, X/C source settings, `N=4097`, and the user-mandated 10,001
+beams, and supports case-granular resume without rerunning completed cases.
+The prescribed A=`0.01/0.02/0.05/0.10/0.20 m` cases are complete; A=0.01
+reused the convention-fixed result and the other four points ran one Bellhop
+case each. All solver/mapping/finite guards pass. Metrics rise with height:
+`E_G`=`0.004093/0.008234/0.021036/0.044179/0.100485` and phase RMS
+`0.004059/0.008166/0.020869/0.043877/0.100142 rad` in that A order.
+The authoritative report is
+`reports/pe_bellhop_controlled_comparison_stage2_height_sweep_report.md`:
+Stage 2 is `PASS`. Its summary was later augmented with the Goal-required
+`rho_raw`, maximum slope, and maximum/RMS curvature columns without rerunning
+the solvers.
+
+## 2026-09-12 Controlled PE--Bellhop Goal: Stage 3 execution status
+
+Stage 3 is implemented as the `stage3` branch of
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`. The frozen
+manifest selects `A=0.02 m`, the largest Stage-2 point satisfying every Region-I
+gate, and scans `K=0.10/0.20/0.35/0.47 rad/m` at X/C, `N=4097`, and 10,001
+beams. All four solver/mapping/geometry/finite guards pass. The classifications
+are `I/II/II/II`; corresponding `E_G` values are
+`0.008234/0.008369/0.014140/0.022816`, and phase RMS values are
+`0.008166/0.007579/0.009428/0.012906 rad`. The largest sampled curvature is
+`0.004418 1/m`; Bellhop hit-curvature, native `Reflect2D` state, wall residual,
+and positive transformed range remain finite and consistent. The authoritative
+report is
+`reports/pe_bellhop_controlled_comparison_stage3_slope_curvature_report.md`.
+Stage 4 subsequently completed as a read-only validity-map aggregation with
+zero solver calls. At `K=0.10 rad/m`, the sampled Region-I to non-I transition
+is bracketed by `A=(0.02,0.05] m`; at `A=0.02 m`, it is bracketed by
+`K=(0.10,0.20] rad/m`. These are not interpolated or extrapolated boundaries.
+See `reports/pe_bellhop_controlled_comparison_stage4_validity_map_report.md`.

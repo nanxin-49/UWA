@@ -2,9 +2,9 @@ function result = validate_pe_bellhop_controlled_comparison(stage, overrides)
 %VALIDATE_PE_BELLHOP_CONTROLLED_COMPARISON
 % Sequential, validation-only driver for the frozen PE--Bellhop Goal.
 %
-% P0 is intentionally the only stage implemented in this preparation turn:
-% it verifies provenance and creates a source-aware manifest without calling
-% PE or Bellhop. Later stages must be unlocked explicitly after P0 passes.
+% P0 and Stages 0--4 are validation-only entry points. Stage 2 is unlocked
+% only by the preserved Stage-1 PASS and Stage-1Y theoretical convention
+% closure; Stage 3 is unlocked only by a completed Stage-2 height sweep.
 
 if nargin < 1 || isempty(stage), stage = 'p0'; end
 if nargin < 2 || isempty(overrides), overrides = struct(); end
@@ -29,8 +29,14 @@ switch lower(char(stage))
         result = local_stage0(cfg, root);
     case 'stage1'
         result = local_stage1(cfg, root);
+    case 'stage2'
+        result = local_stage2(cfg, root);
+    case 'stage3'
+        result = local_stage3(cfg, root);
+    case 'stage4'
+        result = local_stage4(cfg, root);
     otherwise
-        error('Stage %s is not unlocked. Complete P0 first.', char(stage));
+        error('Stage %s is not unlocked or implemented.', char(stage));
 end
 end
 
@@ -73,6 +79,13 @@ cfg = struct( ...
     'stage1_amplitude_m', 0.01, 'stage1_wavenumber_radpm', 0.10, ...
     'stage1_beam_counts', [10001 10001], 'stage1_profile_counts', [2049 4097], ...
     'stage1_output_subdir', 'stage1_convention_fixed', ...
+    'stage2_amplitudes_m', [0.01 0.02 0.05 0.10 0.20], ...
+    'stage2_wavenumber_radpm', 0.10, ...
+    'stage2_output_subdir', 'stage2_height_sweep', ...
+    'stage3_wavenumbers_radpm', [0.10 0.20 0.35 0.47], ...
+    'stage3_run_wavenumbers_radpm', [], ...
+    'stage3_output_subdir', 'stage3_slope_curvature_sweep', ...
+    'stage4_output_subdir', 'stage4_validity_map', ...
     'canonical_coeff_source', fullfile('E:', filesep, 'MISC', 'CARPE3D_matlab', ...
         'Explain', 'results', 'validation', 'bellhop_internal_pm_fixed_realization', ...
         'fixed_pm_fourier_coefficients.csv'), ...
@@ -321,10 +334,626 @@ function run=local_stage1_internal(cfg,x,beams,tag,A,K,N)
 s=linspace(cfg.wall_support_m(1),cfg.wall_support_m(2),N).'; r=cfg.wall_r0_m-A*cos(K*s);
 c=local_stage0_env_cfg(cfg,cfg.parametric_validation_exe,beams,zsort,tag);
 c.wall_r0_m=cfg.wall_r0_m; c.wall_seed=cfg.wall_seed; c.wall_profile_r_m=r; c.wall_profile_z_m=s;
+if isfield(cfg,'reuse_existing'), c.reuse_existing=cfg.reuse_existing; end
 raw=run_bellhop_internal_pm_wall_poc_vertical(c); run=raw; run.pressure_raw=zeros(1,numel(x));
 for ii=1:numel(x),run.pressure_raw(ii)=select_bellhop_shd_pressure_at_range_vertical(raw.data,cfg.mapped_receiver_range_m,zsort(ii),cfg.receiver_tolerance_m);end
 run.pressure_raw=run.pressure_raw(invord); run.requested_receiver_depth_m=(-x(:)).';
 run.receiver_coordinate_error_m=max(abs(double(raw.data.receiver_depth_m(:))-zsort(:)))*ones(1,numel(x)); run.profile_A_m=A;run.profile_K_radpm=K;run.profile_N=N;
+end
+
+function result = local_stage2(cfg, root)
+% Stage 2: fixed-K height sweep.  Stage 1Y has fixed the comparison
+% convention, so this stage may vary only the sinusoid height.  Each new
+% case is independent and uses the frozen 10,001-beam endpoint.
+stage1_file = fullfile(cfg.output_dir, cfg.stage1_output_subdir, ...
+    'stage1_validation.mat');
+if exist(stage1_file, 'file') ~= 2
+    error('Stage 1 convention-fixed result is required before Stage 2.');
+end
+tmp = load(stage1_file, 'validation'); s1 = tmp.validation;
+if ~isfield(s1, 'passed') || ~s1.passed
+    error('Stage 1 convention-fixed regression did not pass; Stage 2 remains locked.');
+end
+stage0_file = fullfile(cfg.output_dir, 'stage0', 'stage0_validation.mat');
+if exist(stage0_file, 'file') ~= 2
+    error('Stage 0 result is required for the frozen receiver footprint.');
+end
+tmp0 = load(stage0_file, 'validation'); s0 = tmp0.validation;
+if ~isfield(s0, 'passed') || ~s0.passed
+    error('Stage 0 did not pass; Stage 2 remains locked.');
+end
+
+Avals = double(cfg.stage2_amplitudes_m(:).');
+K = double(cfg.stage2_wavenumber_radpm);
+if isempty(Avals) || any(~isfinite(Avals)) || any(Avals <= 0) || ...
+        ~isfinite(K) || K <= 0
+    error('Stage 2 requires positive finite amplitudes and wavenumber.');
+end
+if any(diff(Avals) < 0)
+    error('Stage 2 amplitudes must be supplied in nondecreasing order.');
+end
+
+out_dir = fullfile(cfg.output_dir, cfg.stage2_output_subdir);
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+x = s0.x_m; fp = s0.footprint;
+cases = cell(1, numel(Avals));
+for ii = 1:numel(Avals)
+    A = Avals(ii);
+    case_dir = fullfile(out_dir, local_stage2_tag(A, K, cfg.wall_profile_count));
+    case_file = fullfile(case_dir, 'stage2_case.mat');
+    if exist(case_file, 'file') == 2
+        cached = load(case_file, 'case_validation');
+        if isfield(cached, 'case_validation') && ...
+                abs(cached.case_validation.A_m - A) <= 10 * eps(max(1, abs(A))) && ...
+                abs(cached.case_validation.K_radpm - K) <= 10 * eps(max(1, abs(K)))
+            % Resume is case-granular: completed cases are never rerun.
+            cc = cached.case_validation;
+            cc.metrics = local_stage1_ratio_metrics(cc.G_PE, cc.G_BH_comparison, fp);
+            cc.surface = local_sinusoid_surface_stats(A, K, cfg.wall_support_m, ...
+                cfg.wall_profile_count);
+            cc.checks.metrics_finite = local_metrics_finite(cc.metrics);
+            cc.checks.all = all(structfun(@(v) logical(v), cc.checks));
+            cases{ii} = cc;
+            case_validation = cc; %#ok<NASGU>
+            save(case_file, 'case_validation', '-v7');
+            local_stage2_case_report(fullfile(case_dir, 'stage2_case_report.md'), cc);
+            continue
+        end
+    end
+    reuse = abs(A - s1.A_m) <= 10 * eps(max(1, abs(A)));
+    if reuse && abs(K - s1.K_radpm) <= 10 * eps(max(1, abs(K)))
+        % Reuse the already executed, convention-fixed A=0.01 case.  No
+        % solver is called and the original Stage-1 MAT remains untouched.
+        Gpe = s1.G_PE;
+        Gbh_raw = s1.G_BH;
+        Gbh_cmp = s1.G_BH_comparison;
+        metrics = s1.metrics.model;
+        geom = s1.geometry;
+        source_tag = 'reused_stage1_convention_fixed';
+    else
+        pe_cfg = struct('frequency_hz', cfg.frequency_hz, 'c0_mps', cfg.c0_mps, ...
+            'xw_m', cfg.xw_m, 'nx', cfg.nx, 'z_tx_m', cfg.z_tx_m, ...
+            'z_rx_m', cfg.z_rx_m, 'sigma_src_m', cfg.sigma_src_m, ...
+            'surface_elevation_x_m', A * cos(K * x), ...
+            'surface_reflect_coeff', -1, 'step_m', cfg.pe_step_m, 'x_rx_m', 0);
+        pe = run_pe_1d_surface_reflection_validation(pe_cfg);
+        cfg_case = cfg;
+        cfg_case.reuse_existing = true;
+        bh = local_stage1_internal(cfg_case, x, cfg.stage1_beam_counts(2), ...
+            local_stage2_tag(A, K, cfg.wall_profile_count), A, K, cfg.wall_profile_count);
+        bh.field = local_stage0_convert(bh.pressure_raw, cfg.phase_sign);
+        Gpe = zeros(size(s1.flat_pe)); Gbh_raw = zeros(size(s1.flat_bellhop));
+        m = fp.m99.mask;
+        Gpe(m) = pe.reflected_field(m) ./ s1.flat_pe(m);
+        Gbh_raw(m) = bh.field(m) ./ s1.flat_bellhop(m);
+        Gbh_cmp = conj(Gbh_raw);
+        metrics = local_stage1_ratio_metrics(Gpe, Gbh_cmp, fp);
+        geom = local_stage1_geometry(bh, cfg);
+        source_tag = local_stage2_tag(A, K, cfg.wall_profile_count);
+    end
+    finite = all(isfinite([Gpe(:); Gbh_raw(:); Gbh_cmp(:)]));
+    metric_finite = local_metrics_finite(metrics);
+    checks = struct('geometry', logical(geom.all), 'finite', finite, ...
+        'metrics_finite', metric_finite);
+    checks.all = all(structfun(@(v) logical(v), checks));
+    cases{ii} = struct('A_m', A, 'K_radpm', K, 'two_k_A', ...
+        2 * (2*pi*cfg.frequency_hz/cfg.c0_mps) * A, ...
+        'source_tag', source_tag, 'G_PE', Gpe, 'G_BH_raw', Gbh_raw, ...
+        'G_BH_comparison', Gbh_cmp, 'metrics', metrics, ...
+        'geometry', geom, 'surface', local_sinusoid_surface_stats(A, K, ...
+        cfg.wall_support_m, cfg.wall_profile_count), 'checks', checks);
+    if ~exist(case_dir, 'dir'), mkdir(case_dir); end
+    case_validation = cases{ii}; %#ok<NASGU>
+    save(fullfile(case_dir, 'stage2_case.mat'), 'case_validation', '-v7');
+    local_stage2_case_report(fullfile(case_dir, 'stage2_case_report.md'), case_validation);
+end
+
+rows = repmat(struct('A_m',0,'K_radpm',0,'two_k_A',0,'E_G_M99',0, ...
+    'max_slope',0,'max_abs_curvature_per_m',0,'rms_curvature_per_m',0, ...
+    'phase_RMS_rad',0,'TL_RMS_dB',0,'phi0_rad',0,'rho_raw',0,'rho_shape',0, ...
+    'E_aligned',0,'wall_residual_m',0,'phase_jump_error_rad',0, ...
+    'p_rotation_error',0,'q_rotation_error',0,'min_post_dr_m',0, ...
+    'center_tau_error_s',0,'geometry_passed',false,'finite_passed',false), ...
+    1, numel(cases));
+for ii = 1:numel(cases)
+    cc = cases{ii}; mm = cc.metrics;
+    rows(ii) = struct('A_m',cc.A_m,'K_radpm',cc.K_radpm,'two_k_A',cc.two_k_A, ...
+        'max_slope',cc.surface.max_slope,'max_abs_curvature_per_m',cc.surface.max_abs_curvature_per_m, ...
+        'rms_curvature_per_m',cc.surface.rms_curvature_per_m, ...
+        'E_G_M99',mm.l2_m99,'phase_RMS_rad',mm.phase_rms_m99, ...
+        'TL_RMS_dB',mm.tl_rms_m99,'phi0_rad',mm.global_phase_rad, ...
+        'rho_raw',mm.rho_raw,'rho_shape',mm.rho_shape,'E_aligned',mm.aligned_l2_m99, ...
+        'wall_residual_m',cc.geometry.wall_residual_max_m, ...
+        'phase_jump_error_rad',cc.geometry.phase_jump_error_max_rad, ...
+        'p_rotation_error',cc.geometry.p_rotation_error_max, ...
+        'q_rotation_error',cc.geometry.q_rotation_error_max, ...
+        'min_post_dr_m',cc.geometry.min_post_dr_m, ...
+        'center_tau_error_s',cc.geometry.center_tau_error_s, ...
+        'geometry_passed',cc.checks.geometry,'finite_passed',cc.checks.finite);
+end
+case_table = struct2table(rows);
+checks = struct('stage1_gate', true, ...
+    'all_case_geometry', all(case_table.geometry_passed), ...
+    'all_case_finite', all(case_table.finite_passed), ...
+    'all_case_metrics_finite', all(cellfun(@(c) c.checks.metrics_finite, cases)));
+checks.all = all(structfun(@(v) logical(v), checks));
+validation = struct('schema_version','1.0.0','stage','stage2_height_sweep', ...
+    'config',cfg,'root',root,'K_radpm',K,'amplitudes_m',Avals, ...
+    'comparison_convention','G_BH_comparison = conj(G_BH_abs) = G_BH_raw', ...
+    'footprint',fp,'cases',{cases},'case_table',case_table, ...
+    'checks',checks,'passed',checks.all,'solver_calls_allowed',true);
+mat_file = fullfile(out_dir, 'stage2_validation.mat');
+csv_file = fullfile(out_dir, 'stage2_metrics.csv');
+report_file = fullfile(out_dir, 'stage2_report.md');
+save(mat_file, 'validation', '-v7'); writetable(case_table, csv_file);
+local_stage2_write_report(report_file, validation);
+validation.files = struct('mat',mat_file,'csv',csv_file,'report',report_file);
+result = validation;
+if cfg.fail_on_check && ~result.passed
+    error('Stage 2 failed geometry/finite checks; see %s.', report_file);
+end
+end
+
+function result = local_stage3(cfg, root)
+% Stage 3: fixed-height slope/curvature sweep. The height is frozen once
+% from the completed Stage-2 validity classification and cannot be changed
+% in response to the K-sweep results.
+stage2_file = fullfile(cfg.output_dir, cfg.stage2_output_subdir, ...
+    'stage2_validation.mat');
+if exist(stage2_file, 'file') ~= 2
+    error('Completed Stage 2 result is required before Stage 3.');
+end
+tmp = load(stage2_file, 'validation'); s2 = tmp.validation;
+if ~isfield(s2, 'passed') || ~s2.passed
+    error('Stage 2 did not pass its numerical/mapping guards; Stage 3 remains locked.');
+end
+stage1_file = fullfile(cfg.output_dir, cfg.stage1_output_subdir, ...
+    'stage1_validation.mat');
+tmp = load(stage1_file, 'validation'); s1 = tmp.validation;
+stage0_file = fullfile(cfg.output_dir, 'stage0', 'stage0_validation.mat');
+tmp = load(stage0_file, 'validation'); s0 = tmp.validation;
+
+[fixed_A, selection_reason, stage2_regions] = local_stage3_select_amplitude(s2, s1.floor);
+planned_K = double(cfg.stage3_wavenumbers_radpm(:).');
+run_K = double(cfg.stage3_run_wavenumbers_radpm(:).');
+if isempty(run_K), run_K = planned_K; end
+if isempty(planned_K) || any(~isfinite(planned_K)) || any(planned_K <= 0) || ...
+        any(diff(planned_K) <= 0)
+    error('Stage 3 planned wavenumbers must be positive, finite, and strictly increasing.');
+end
+for ii = 1:numel(run_K)
+    if ~any(abs(planned_K-run_K(ii)) <= 10*eps(max(1,abs(run_K(ii)))))
+        error('Stage 3 run wavenumber %.9g is not in the frozen planned sweep.', run_K(ii));
+    end
+end
+
+out_dir = fullfile(cfg.output_dir, cfg.stage3_output_subdir);
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+manifest_file = fullfile(out_dir, 'stage3_manifest.mat');
+manifest = struct('schema_version','1.0.0','stage','stage3_manifest', ...
+    'fixed_A_m',fixed_A,'selection_reason',selection_reason, ...
+    'planned_K_radpm',planned_K,'beam_count',10001, ...
+    'profile_count',cfg.wall_profile_count,'stage2_file',stage2_file, ...
+    'stage2_sha256',local_sha256_file(stage2_file),'stage2_regions',{stage2_regions}, ...
+    'comparison_convention','G_BH_comparison = conj(G_BH_abs) = G_BH_raw');
+if exist(manifest_file, 'file') == 2
+    old = load(manifest_file, 'manifest'); old = old.manifest;
+    if abs(old.fixed_A_m-fixed_A) > 10*eps(max(1,abs(fixed_A))) || ...
+            ~isequal(old.planned_K_radpm, planned_K)
+        error('Existing Stage-3 manifest conflicts with the current frozen selection.');
+    end
+    manifest = old;
+else
+    save(manifest_file, 'manifest', '-v7');
+    json_file = fullfile(out_dir, 'stage3_manifest.json');
+    fid = fopen(json_file, 'w', 'n', 'UTF-8');
+    if fid < 0, error('Cannot write %s.', json_file); end
+    cl = onCleanup(@() fclose(fid)); fwrite(fid, jsonencode(manifest), 'char'); clear cl
+end
+
+x = s0.x_m; fp = s0.footprint;
+for ii = 1:numel(run_K)
+    K = run_K(ii);
+    tag = local_stage3_tag(fixed_A, K, cfg.wall_profile_count);
+    case_dir = fullfile(out_dir, tag);
+    case_file = fullfile(case_dir, 'stage3_case.mat');
+    if exist(case_file, 'file') == 2
+        cached = load(case_file, 'case_validation'); cc = cached.case_validation;
+        if abs(cc.A_m-fixed_A) <= 10*eps(max(1,abs(fixed_A))) && ...
+                abs(cc.K_radpm-K) <= 10*eps(max(1,abs(K)))
+            cc.metrics = local_stage1_ratio_metrics(cc.G_PE, cc.G_BH_comparison, fp);
+            cc.surface = local_sinusoid_surface_stats(fixed_A, K, ...
+                cfg.wall_support_m, cfg.wall_profile_count);
+            cc.checks.metrics_finite = local_metrics_finite(cc.metrics);
+            cc.checks.all = all(structfun(@(v) logical(v), cc.checks));
+            case_validation = cc; %#ok<NASGU>
+            save(case_file, 'case_validation', '-v7');
+            local_stage3_case_report(fullfile(case_dir, 'stage3_case_report.md'), cc);
+            continue
+        end
+    end
+
+    stage2_case_file = fullfile(cfg.output_dir, cfg.stage2_output_subdir, ...
+        local_stage2_tag(fixed_A, K, cfg.wall_profile_count), 'stage2_case.mat');
+    if exist(stage2_case_file, 'file') == 2
+        old = load(stage2_case_file, 'case_validation'); old = old.case_validation;
+        Gpe = old.G_PE; Gbh_raw = old.G_BH_raw; Gbh_cmp = old.G_BH_comparison;
+        geom = old.geometry; source_tag = old.source_tag;
+        diag_file = fullfile(cfg.output_dir, 'bellhop', [source_tag '.iwdiag']);
+        diagnostics = local_internal_wall_diagnostics(diag_file);
+        reuse_note = 'reused matching Stage-2 case and raw Bellhop diagnostics';
+    else
+        pe_cfg = struct('frequency_hz',cfg.frequency_hz,'c0_mps',cfg.c0_mps, ...
+            'xw_m',cfg.xw_m,'nx',cfg.nx,'z_tx_m',cfg.z_tx_m, ...
+            'z_rx_m',cfg.z_rx_m,'sigma_src_m',cfg.sigma_src_m, ...
+            'surface_elevation_x_m',fixed_A*cos(K*x), ...
+            'surface_reflect_coeff',-1,'step_m',cfg.pe_step_m,'x_rx_m',0);
+        pe = run_pe_1d_surface_reflection_validation(pe_cfg);
+        cfg_case = cfg; cfg_case.reuse_existing = true;
+        source_tag = tag;
+        bh = local_stage1_internal(cfg_case, x, 10001, source_tag, ...
+            fixed_A, K, cfg.wall_profile_count);
+        bh.field = local_stage0_convert(bh.pressure_raw, cfg.phase_sign);
+        m99 = fp.m99.mask;
+        Gpe = zeros(size(s1.flat_pe)); Gbh_raw = zeros(size(s1.flat_bellhop));
+        Gpe(m99) = pe.reflected_field(m99)./s1.flat_pe(m99);
+        Gbh_raw(m99) = bh.field(m99)./s1.flat_bellhop(m99);
+        Gbh_cmp = conj(Gbh_raw);
+        geom = local_stage1_geometry(bh, cfg);
+        diagnostics = bh.diagnostics;
+        reuse_note = 'new Stage-3 PE and Bellhop case (raw Bellhop output is resumable)';
+    end
+    metrics = local_stage1_ratio_metrics(Gpe, Gbh_cmp, fp);
+    surface = local_sinusoid_surface_stats(fixed_A, K, cfg.wall_support_m, ...
+        cfg.wall_profile_count);
+    beam_diagnostics = local_stage3_select_diagnostics(diagnostics);
+    diagnostic_summary = local_stage3_diagnostic_summary(diagnostics, fixed_A, K);
+    checks = struct('geometry',logical(geom.all), ...
+        'field_finite',all(isfinite([Gpe(:);Gbh_raw(:);Gbh_cmp(:)])), ...
+        'diagnostics_finite',diagnostic_summary.finite, ...
+        'metrics_finite',local_metrics_finite(metrics));
+    checks.all = all(structfun(@(v) logical(v), checks));
+    case_validation = struct('schema_version','1.0.0','stage','stage3_case', ...
+        'A_m',fixed_A,'K_radpm',K,'source_tag',source_tag,'reuse_note',reuse_note, ...
+        'G_PE',Gpe,'G_BH_raw',Gbh_raw,'G_BH_comparison',Gbh_cmp, ...
+        'metrics',metrics,'surface',surface,'geometry',geom, ...
+        'diagnostic_summary',diagnostic_summary, ...
+        'beam_diagnostics',beam_diagnostics,'diagnostic_file',diag_file_if_needed(cfg,source_tag), ...
+        'checks',checks);
+    if ~exist(case_dir, 'dir'), mkdir(case_dir); end
+    save(case_file, 'case_validation', '-v7');
+    local_stage3_case_report(fullfile(case_dir, 'stage3_case_report.md'), case_validation);
+    if ~checks.all
+        error('Stage 3 numerical/mapping guard failed for K=%.9g.', K);
+    end
+end
+
+cases = cell(1,numel(planned_K)); complete = true(1,numel(planned_K));
+for ii = 1:numel(planned_K)
+    f = fullfile(out_dir, local_stage3_tag(fixed_A,planned_K(ii),cfg.wall_profile_count), ...
+        'stage3_case.mat');
+    if exist(f,'file')==2
+        q=load(f,'case_validation'); cases{ii}=q.case_validation;
+    else
+        complete(ii)=false;
+    end
+end
+done_cases = cases(complete);
+case_table = local_stage3_table(done_cases, s1.floor);
+checks = struct('stage2_gate',true,'all_cases_complete',all(complete), ...
+    'all_case_geometry',all(cellfun(@(c)c.checks.geometry,done_cases)), ...
+    'all_case_finite',all(cellfun(@(c)c.checks.field_finite && ...
+    c.checks.diagnostics_finite && c.checks.metrics_finite,done_cases)));
+checks.all = all(structfun(@(v)logical(v),checks));
+validation = struct('schema_version','1.0.0','stage','stage3_slope_curvature_sweep', ...
+    'config',cfg,'root',root,'manifest',manifest,'fixed_A_m',fixed_A, ...
+    'planned_K_radpm',planned_K,'completed_K_radpm',planned_K(complete), ...
+    'cases',{done_cases},'case_table',case_table,'checks',checks,'passed',checks.all);
+mat_file=fullfile(out_dir,'stage3_validation.mat'); csv_file=fullfile(out_dir,'stage3_metrics.csv');
+report_file=fullfile(out_dir,'stage3_report.md'); save(mat_file,'validation','-v7');
+writetable(case_table,csv_file); local_stage3_write_report(report_file,validation);
+validation.files=struct('manifest',manifest_file,'mat',mat_file,'csv',csv_file,'report',report_file);
+result=validation;
+if all(complete) && cfg.fail_on_check && ~result.passed
+    error('Stage 3 failed numerical/mapping guards; see %s.', report_file);
+end
+end
+
+function [A, reason, regions] = local_stage3_select_amplitude(s2, floor)
+t=s2.case_table; regions=strings(height(t),1); is_I=false(height(t),1);
+for ii=1:height(t)
+    is_I(ii)=t.E_G_M99(ii)<=floor.T_E && t.E_aligned(ii)<=floor.T_E && ...
+        t.TL_RMS_dB(ii)<=floor.T_TL && t.phase_RMS_rad(ii)<=floor.T_phi && ...
+        t.rho_shape(ii)>=0.9995 && t.geometry_passed(ii) && t.finite_passed(ii);
+    if is_I(ii)
+        regions(ii)="I";
+    elseif t.E_aligned(ii)<=0.10 && t.TL_RMS_dB(ii)<=0.5 && ...
+            t.phase_RMS_rad(ii)<=0.20 && t.rho_shape(ii)>=0.99
+        regions(ii)="II";
+    else
+        regions(ii)="III";
+    end
+end
+if any(is_I)
+    A=max(t.A_m(is_I));
+    reason='largest Stage-2 amplitude satisfying all frozen Region-I gates';
+elseif any(abs(t.A_m-0.05)<1e-12) && all(~is_I(t.A_m>=0.05))
+    A=0.05;
+    reason='Goal fallback: all sampled A >= 0.05 m are outside Region I';
+else
+    error('Stage-3 fixed-height selection rule is not resolvable from Stage 2.');
+end
+end
+
+function tag=local_stage3_tag(A,K,N)
+tag=strrep(sprintf('slope_A%.6g_K%.6g_N%d_B10001',A,K,N),'.','p');
+end
+
+function path=diag_file_if_needed(cfg,tag)
+path=fullfile(cfg.output_dir,'bellhop',[tag '.iwdiag']);
+end
+
+function d=local_internal_wall_diagnostics(path)
+if exist(path,'file')~=2, error('Missing internal-wall diagnostics: %s',path); end
+m=readmatrix(path,'FileType','text','CommentStyle','#'); m=m(~all(isnan(m),2),:);
+names={'alpha_deg','hit_r','hit_z','wall_residual','wall_t_r','wall_t_z','wall_n_r','wall_n_z', ...
+    'tangent_error','normal_error','inc_ur','inc_uz','ref_ur','ref_uz','rot_ur','rot_uz', ...
+    'specular_error','rotation_error','phase_in','phase_ref','phase_delta','amp_in','amp_ref','amp_delta', ...
+    'p1_in','p2_in','p1_ref','p2_ref','p_ref_error','q1_in','q2_in','q1_ref','q2_ref', ...
+    'q_ref_error','p_rot_error','q_rot_error','tau_wall_real','tau_wall_imag', ...
+    'tau_receiver_real','tau_receiver_imag','min_post_dr','n_post','kappa', ...
+    'wall_seg','wall_lambda','wall_tg','wall_th','wall_rm','wall_rn'};
+if size(m,2)~=numel(names), error('Unexpected diagnostic width in %s.',path); end
+d=array2table(m,'VariableNames',names);
+end
+
+function out=local_stage3_select_diagnostics(d)
+names={'alpha_deg','hit_r','hit_z','wall_residual','wall_t_r','wall_t_z', ...
+    'wall_n_r','wall_n_z','inc_ur','inc_uz','ref_ur','ref_uz','rot_ur','rot_uz', ...
+    'phase_delta','amp_delta','p1_in','p2_in','p1_ref','p2_ref','q1_in','q2_in', ...
+    'q1_ref','q2_ref','tau_wall_real','tau_receiver_real','min_post_dr','kappa', ...
+    'wall_tg','wall_th','wall_rm','wall_rn'};
+out=d(:,names);
+end
+
+function s=local_stage3_diagnostic_summary(d,A,K)
+analytic=-A*K^2*cos(K*d.hit_z)./(1+(A*K*sin(K*d.hit_z)).^2).^(3/2);
+e=d.kappa-analytic;
+s=struct('ray_count',height(d),'finite',all(isfinite(d{:,:}),'all'), ...
+    'hit_kappa_max_abs_per_m',max(abs(d.kappa)), ...
+    'hit_kappa_rms_per_m',sqrt(mean(d.kappa.^2)), ...
+    'kappa_error_max_abs_per_m',max(abs(e)), ...
+    'kappa_error_rms_per_m',sqrt(mean(e.^2)), ...
+    'min_abs_incidence_Th',min(abs(d.wall_th)), ...
+    'max_abs_RN',max(abs(d.wall_rn)),'max_abs_RM',max(abs(d.wall_rm)), ...
+    'wall_residual_max_m',max(abs(d.wall_residual)), ...
+    'phase_jump_error_max_rad',max(abs(d.phase_delta-pi)), ...
+    'p_ref_error_max',max(abs(d.p_ref_error)), ...
+    'q_ref_error_max',max(abs(d.q_ref_error)), ...
+    'p_rotation_error_max',max(abs(d.p_rot_error)), ...
+    'q_rotation_error_max',max(abs(d.q_rot_error)), ...
+    'min_post_dr_m',min(d.min_post_dr), ...
+    'tau_min_s',min(d.tau_receiver_real),'tau_max_s',max(d.tau_receiver_real));
+end
+
+function t=local_stage3_table(cases,floor)
+rows=repmat(struct('A_m',0,'K_radpm',0,'max_slope',0, ...
+    'max_abs_curvature_per_m',0,'rms_curvature_per_m',0,'minimum_radius_m',0, ...
+    'E_G_M99',0,'phase_RMS_rad',0,'TL_RMS_dB',0,'phi0_rad',0, ...
+    'rho_raw',0,'rho_shape',0,'E_aligned',0,'hit_kappa_max_abs_per_m',0, ...
+    'kappa_error_max_abs_per_m',0,'min_abs_incidence_Th',0,'max_abs_RN',0, ...
+    'max_abs_RM',0,'wall_residual_m',0,'min_post_dr_m',0,'region',"", ...
+    'geometry_passed',false,'finite_passed',false),1,numel(cases));
+for ii=1:numel(cases)
+    c=cases{ii};m=c.metrics;s=c.surface;d=c.diagnostic_summary;
+    region="III";
+    if m.l2_m99<=floor.T_E && m.aligned_l2_m99<=floor.T_E && ...
+            m.tl_rms_m99<=floor.T_TL && m.phase_rms_m99<=floor.T_phi && m.rho_shape>=.9995
+        region="I";
+    elseif m.aligned_l2_m99<=.10 && m.tl_rms_m99<=.5 && ...
+            m.phase_rms_m99<=.20 && m.rho_shape>=.99
+        region="II";
+    end
+    rows(ii)=struct('A_m',c.A_m,'K_radpm',c.K_radpm,'max_slope',s.max_slope, ...
+        'max_abs_curvature_per_m',s.max_abs_curvature_per_m, ...
+        'rms_curvature_per_m',s.rms_curvature_per_m,'minimum_radius_m',s.minimum_radius_m, ...
+        'E_G_M99',m.l2_m99,'phase_RMS_rad',m.phase_rms_m99,'TL_RMS_dB',m.tl_rms_m99, ...
+        'phi0_rad',m.global_phase_rad,'rho_raw',m.rho_raw,'rho_shape',m.rho_shape, ...
+        'E_aligned',m.aligned_l2_m99,'hit_kappa_max_abs_per_m',d.hit_kappa_max_abs_per_m, ...
+        'kappa_error_max_abs_per_m',d.kappa_error_max_abs_per_m, ...
+        'min_abs_incidence_Th',d.min_abs_incidence_Th,'max_abs_RN',d.max_abs_RN, ...
+        'max_abs_RM',d.max_abs_RM,'wall_residual_m',d.wall_residual_max_m, ...
+        'min_post_dr_m',d.min_post_dr_m,'region',region, ...
+        'geometry_passed',c.checks.geometry, ...
+        'finite_passed',c.checks.field_finite && c.checks.diagnostics_finite && c.checks.metrics_finite);
+end
+t=struct2table(rows);
+end
+
+function local_stage3_case_report(path,v)
+fid=fopen(path,'w','n','UTF-8');if fid<0,error('Cannot write %s.',path);end
+cl=onCleanup(@()fclose(fid));m=v.metrics;s=v.surface;d=v.diagnostic_summary;
+fprintf(fid,'# Stage 3 slope/curvature case\n\n- A=%.9g m; K=%.9g rad/m; max slope %.9g.\n',v.A_m,v.K_radpm,s.max_slope);
+fprintf(fid,'- max/RMS curvature: %.9g / %.9g 1/m; minimum radius %.9g m.\n',s.max_abs_curvature_per_m,s.rms_curvature_per_m,s.minimum_radius_m);
+fprintf(fid,'- %s.\n\n',v.reuse_note);
+fprintf(fid,'| E_G | phase RMS | TL RMS (dB) | phi0 | rho_raw | rho_shape | E_aligned |\n|---:|---:|---:|---:|---:|---:|---:|\n');
+fprintf(fid,'| %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g |\n\n',m.l2_m99,m.phase_rms_m99,m.tl_rms_m99,m.global_phase_rad,m.rho_raw,m.rho_shape,m.aligned_l2_m99);
+fprintf(fid,'Bellhop diagnostics: hit max |kappa| %.9g 1/m; max curvature error %.3g 1/m; min |Th| %.9g; max |RN/RM| %.9g / %.9g; wall residual %.3g m; min post dr %.9g m.\n', ...
+    d.hit_kappa_max_abs_per_m,d.kappa_error_max_abs_per_m,d.min_abs_incidence_Th,d.max_abs_RN,d.max_abs_RM,d.wall_residual_max_m,d.min_post_dr_m);
+end
+
+function local_stage3_write_report(path,v)
+fid=fopen(path,'w','n','UTF-8');if fid<0,error('Cannot write %s.',path);end
+cl=onCleanup(@()fclose(fid));
+fprintf(fid,'# Stage 3 fixed-height slope/curvature sweep\n\n');
+fprintf(fid,'状态：**%s**；fixed A=`%.9g m`。\n\n',ternary(v.passed,'PASS',ternary(v.checks.all_cases_complete,'FAIL','INCOMPLETE')),v.fixed_A_m);
+fprintf(fid,'选择依据：%s。Bellhop 固定 `X/C`, 10,001 beams, profile N=%d。\n\n',v.manifest.selection_reason,v.manifest.profile_count);
+fprintf(fid,'| K (rad/m) | max slope | max/RMS curvature (1/m) | min radius (m) | E_G | phase RMS | TL RMS (dB) | phi0 | rho_raw | rho_shape | E_aligned | hit max |kappa| | kappa max error | min |Th| | max |RN/RM| | wall residual | min post dr | region | guards |\n');
+fprintf(fid,'|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|:---:|\n');
+for ii=1:height(v.case_table)
+    r=v.case_table(ii,:);
+    fprintf(fid,'| %.9g | %.9g | %.9g/%.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.3g | %.9g | %.9g/%.9g | %.3g | %.9g | %s | %s |\n', ...
+        r.K_radpm,r.max_slope,r.max_abs_curvature_per_m,r.rms_curvature_per_m,r.minimum_radius_m, ...
+        r.E_G_M99,r.phase_RMS_rad,r.TL_RMS_dB,r.phi0_rad,r.rho_raw,r.rho_shape,r.E_aligned, ...
+        r.hit_kappa_max_abs_per_m,r.kappa_error_max_abs_per_m,r.min_abs_incidence_Th,r.max_abs_RN,r.max_abs_RM, ...
+        r.wall_residual_m,r.min_post_dr_m,char(r.region),ternary(r.geometry_passed&&r.finite_passed,'PASS','FAIL'));
+end
+fprintf(fid,'\nModel discrepancy and Region transition do not stop Stage 3. Only solver, mapping, geometry, or finite-state guards are hard gates. Stage 4 is not executed here.\n');
+end
+
+function result=local_stage4(cfg,root)
+% Stage 4: read-only sampled validity map. No solver call is permitted.
+s1f=fullfile(cfg.output_dir,cfg.stage1_output_subdir,'stage1_validation.mat');
+s2f=fullfile(cfg.output_dir,cfg.stage2_output_subdir,'stage2_validation.mat');
+s3f=fullfile(cfg.output_dir,cfg.stage3_output_subdir,'stage3_validation.mat');
+for f={s1f,s2f,s3f}
+    if exist(f{1},'file')~=2,error('Stage 4 requires %s.',f{1});end
+end
+q=load(s1f,'validation');s1=q.validation;q=load(s2f,'validation');s2=q.validation;
+q=load(s3f,'validation');s3=q.validation;
+if ~s1.passed || ~s2.passed || ~s3.passed
+    error('Stage 4 requires PASS results from Stages 1--3.');
+end
+
+cases=s2.cases;
+duplicate_error=NaN;
+for ii=1:numel(s3.cases)
+    c=s3.cases{ii};
+    duplicate=find(cellfun(@(v)abs(v.A_m-c.A_m)<1e-12 && abs(v.K_radpm-c.K_radpm)<1e-12,cases),1);
+    if isempty(duplicate)
+        cases{end+1}=c; %#ok<AGROW>
+    else
+        duplicate_error=max(abs(c.G_PE-cases{duplicate}.G_PE),[],'all');
+        duplicate_error=max(duplicate_error,max(abs(c.G_BH_comparison-cases{duplicate}.G_BH_comparison),[],'all'));
+    end
+end
+rows=repmat(struct('A_m',0,'K_radpm',0,'E_G_M99',0,'E_aligned',0, ...
+    'TL_RMS_dB',0,'phase_RMS_rad',0,'phi0_rad',0,'rho_raw',0,'rho_shape',0, ...
+    'region',"",'numerical_mapping_guards',false),1,numel(cases));
+for ii=1:numel(cases)
+    c=cases{ii};m=c.metrics;
+    region=local_stage4_region(m,s1.floor);
+    if isfield(c.checks,'field_finite')
+        guard=c.checks.geometry && c.checks.field_finite && ...
+            c.checks.diagnostics_finite && c.checks.metrics_finite;
+    else
+        guard=c.checks.geometry && c.checks.finite && c.checks.metrics_finite;
+    end
+    rows(ii)=struct('A_m',c.A_m,'K_radpm',c.K_radpm,'E_G_M99',m.l2_m99, ...
+        'E_aligned',m.aligned_l2_m99,'TL_RMS_dB',m.tl_rms_m99, ...
+        'phase_RMS_rad',m.phase_rms_m99,'phi0_rad',m.global_phase_rad, ...
+        'rho_raw',m.rho_raw,'rho_shape',m.rho_shape,'region',region, ...
+        'numerical_mapping_guards',guard);
+end
+t=struct2table(rows);t=sortrows(t,{'K_radpm','A_m'});
+height_slice=t(abs(t.K_radpm-cfg.stage2_wavenumber_radpm)<1e-12,:);
+slope_slice=t(abs(t.A_m-s3.fixed_A_m)<1e-12,:);
+intervals=struct( ...
+    'height_region_I_sampled_m',height_slice.A_m(height_slice.region=="I").', ...
+    'height_nonI_sampled_m',height_slice.A_m(height_slice.region~="I").', ...
+    'height_transition_bracket_m',[max(height_slice.A_m(height_slice.region=="I")), ...
+        min(height_slice.A_m(height_slice.region~="I"))], ...
+    'wavenumber_region_I_sampled_radpm',slope_slice.K_radpm(slope_slice.region=="I").', ...
+    'wavenumber_nonI_sampled_radpm',slope_slice.K_radpm(slope_slice.region~="I").', ...
+    'wavenumber_transition_bracket_radpm',[max(slope_slice.K_radpm(slope_slice.region=="I")), ...
+        min(slope_slice.K_radpm(slope_slice.region~="I"))]);
+checks=struct('stage1_pass',s1.passed,'stage2_pass',s2.passed,'stage3_pass',s3.passed, ...
+    'all_source_guards',all(t.numerical_mapping_guards), ...
+    'duplicate_consistent',isfinite(duplicate_error)&&duplicate_error<=1e-14, ...
+    'regions_assigned',all(ismember(t.region,["I","II","III"])));
+checks.all=all(structfun(@(v)logical(v),checks));
+out_dir=fullfile(cfg.output_dir,cfg.stage4_output_subdir);if ~exist(out_dir,'dir'),mkdir(out_dir);end
+validation=struct('schema_version','1.0.0','stage','stage4_validity_map', ...
+    'root',root,'config',cfg,'thresholds',s1.floor,'fixed_A_m',s3.fixed_A_m, ...
+    'case_table',t, ...
+    'sampled_intervals',intervals,'duplicate_case_error',duplicate_error, ...
+    'checks',checks,'passed',checks.all,'solver_calls',0, ...
+    'interpretation','sampled intervals only; no boundary interpolation or extrapolation');
+mat_file=fullfile(out_dir,'stage4_validation.mat');csv_file=fullfile(out_dir,'stage4_validity_map.csv');
+report_file=fullfile(out_dir,'stage4_report.md');save(mat_file,'validation','-v7');
+writetable(t,csv_file);local_stage4_write_report(report_file,validation);
+validation.files=struct('mat',mat_file,'csv',csv_file,'report',report_file);result=validation;
+if cfg.fail_on_check && ~result.passed,error('Stage 4 failed; see %s.',report_file);end
+end
+
+function region=local_stage4_region(m,floor)
+if m.l2_m99<=floor.T_E && m.aligned_l2_m99<=floor.T_E && ...
+        m.tl_rms_m99<=floor.T_TL && m.phase_rms_m99<=floor.T_phi && m.rho_shape>=.9995
+    region="I";
+elseif m.aligned_l2_m99<=.10 && m.tl_rms_m99<=.5 && ...
+        m.phase_rms_m99<=.20 && m.rho_shape>=.99
+    region="II";
+else
+    region="III";
+end
+end
+
+function local_stage4_write_report(path,v)
+fid=fopen(path,'w','n','UTF-8');if fid<0,error('Cannot write %s.',path);end
+cl=onCleanup(@()fclose(fid));
+fprintf(fid,'# Stage 4 sampled validity map\n\n状态：**%s**；solver calls: `0`。\n\n',ternary(v.passed,'PASS','FAIL'));
+fprintf(fid,'| A (m) | K (rad/m) | E_G | E_aligned | TL RMS (dB) | phase RMS (rad) | phi0 | rho_raw | rho_shape | region | guards |\n');
+fprintf(fid,'|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|:---:|\n');
+for ii=1:height(v.case_table)
+    r=v.case_table(ii,:);
+    fprintf(fid,'| %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %s | %s |\n', ...
+        r.A_m,r.K_radpm,r.E_G_M99,r.E_aligned,r.TL_RMS_dB,r.phase_RMS_rad, ...
+        r.phi0_rad,r.rho_raw,r.rho_shape,char(r.region),ternary(r.numerical_mapping_guards,'PASS','FAIL'));
+end
+h=v.sampled_intervals.height_transition_bracket_m;k=v.sampled_intervals.wavenumber_transition_bracket_radpm;
+fprintf(fid,'\n## Sampled intervals only\n\n');
+fprintf(fid,'- At K=0.10 rad/m, the sampled Region-I to non-I transition is bracketed by A=(%.9g, %.9g] m.\n',h(1),h(2));
+fprintf(fid,'- At A=%.9g m, the sampled Region-I to non-I transition is bracketed by K=(%.9g, %.9g] rad/m.\n',v.fixed_A_m,k(1),k(2));
+fprintf(fid,'- These are sampled brackets, not interpolated or extrapolated validity boundaries.\n');
+end
+
+function tag = local_stage2_tag(A, K, N)
+tag = strrep(sprintf('height_A%.6g_K%.6g_N%d_B10001', A, K, N), '.', 'p');
+end
+
+function local_stage2_case_report(path, v)
+fid = fopen(path, 'w', 'n', 'UTF-8'); if fid < 0, error('Cannot write %s.', path); end
+cl = onCleanup(@() fclose(fid)); m = v.metrics;
+fprintf(fid, '# Stage 2 height-sweep case\n\n');
+fprintf(fid, '- A=%.9g m, K=%.9g rad/m, `2kA=%.9g`.\n', v.A_m, v.K_radpm, v.two_k_A);
+fprintf(fid, '- source tag: `%s`\n\n', v.source_tag);
+fprintf(fid, '| max slope | max/RMS curvature (1/m) | E_G (M99) | phase RMS (rad) | TL RMS (dB) | phi0 (rad) | rho_raw | rho_shape | E_aligned | geometry | finite |\n');
+fprintf(fid, '|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|:---:|\n');
+fprintf(fid, '| %.9g | %.9g / %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %s | %s |\n\n', ...
+    v.surface.max_slope, v.surface.max_abs_curvature_per_m, v.surface.rms_curvature_per_m, ...
+    m.l2_m99, m.phase_rms_m99, m.tl_rms_m99, m.global_phase_rad, ...
+    m.rho_raw, m.rho_shape, m.aligned_l2_m99, ternary(v.checks.geometry,'PASS','FAIL'), ...
+    ternary(v.checks.finite,'PASS','FAIL'));
+fprintf(fid, 'Geometry guards: wall residual `%.3g m`; pressure-release phase-jump error `%.3g rad`; p/q rotation errors `%.3g/%.3g`; min post-wall dr `%.6g m`; center tau error `%.3g s`.\n\n', ...
+    v.geometry.wall_residual_max_m, v.geometry.phase_jump_error_max_rad, ...
+    v.geometry.p_rotation_error_max, v.geometry.q_rotation_error_max, ...
+    v.geometry.min_post_dr_m, v.geometry.center_tau_error_s);
+fprintf(fid, 'Comparison convention: `G_BH_comparison = conj(G_BH_abs) = G_BH_raw`.\n');
+end
+
+function local_stage2_write_report(path, v)
+fid = fopen(path, 'w', 'n', 'UTF-8'); if fid < 0, error('Cannot write %s.', path); end
+cl = onCleanup(@() fclose(fid));
+fprintf(fid, '# Stage 2 fixed-K height-phase sweep\n\n');
+fprintf(fid, '状态：**%s**\n\n', ternary(v.passed,'PASS','FAIL'));
+fprintf(fid, '本阶段在 Stage 1Y `CONVENTION_THEORETICALLY_CLOSED` 后执行，固定 `K=%.9g rad/m`、source `%s`、run `%s`、Bellhop beam count `%d`。A=%.9g m 复用已通过的 Stage-1 convention-fixed MAT；其余点各运行一次相同配置。\n\n', ...
+    v.K_radpm, v.config.source_geometry, v.config.run_type, v.config.stage1_beam_counts(2), v.amplitudes_m(1));
+fprintf(fid, '| A (m) | 2kA | max slope | max/RMS curvature (1/m) | E_G M99 | phase RMS (rad) | TL RMS (dB) | phi0 (rad) | rho_raw | rho_shape | E_aligned | wall residual (m) | phase jump error (rad) | p/q rotation error | min post dr (m) | tau error (s) | geometry | finite |\n');
+fprintf(fid, '|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|:---:|\n');
+for ii = 1:height(v.case_table)
+    r = v.case_table(ii,:);
+    fprintf(fid, '| %.9g | %.9g | %.9g | %.9g/%.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.9g | %.3g | %.3g | %.3g/%.3g | %.6g | %.3g | %s | %s |\n', ...
+        r.A_m, r.two_k_A, r.max_slope, r.max_abs_curvature_per_m, r.rms_curvature_per_m, ...
+        r.E_G_M99, r.phase_RMS_rad, r.TL_RMS_dB, r.phi0_rad, r.rho_raw, ...
+        r.rho_shape, r.E_aligned, r.wall_residual_m, ...
+        r.phase_jump_error_rad, r.p_rotation_error, r.q_rotation_error, ...
+        r.min_post_dr_m, r.center_tau_error_s, ...
+        ternary(r.geometry_passed,'PASS','FAIL'), ternary(r.finite_passed,'PASS','FAIL'));
+end
+fprintf(fid, '\n## Checks\n\n- Stage 1 gate: PASS\n- all case geometry: %s\n- all case finite: %s\n- all case metrics finite: %s\n\n', ...
+    ternary(v.checks.all_case_geometry,'PASS','FAIL'), ternary(v.checks.all_case_finite,'PASS','FAIL'), ...
+    ternary(v.checks.all_case_metrics_finite,'PASS','FAIL'));
+fprintf(fid, '模型差异不触发 Stage 2 停止；本阶段仅以 solver/mapping/finite guards 作为 hard gate。\n');
 end
 
 function tag=local_stage1_tag(A,K,N)
@@ -332,7 +961,26 @@ tag=strrep(sprintf('sinusoid_A%.6g_K%.6g_N%d',A,K,N),'.','p');
 end
 
 function m=local_stage1_ratio_metrics(a,b,fp)
-a=a(:).';b=b(:).';w=fp.energy_weights(:).';m99=fp.m99.mask;valid=fp.m95.mask & abs(a)>=10^(fp.phase_floor_db/20) & abs(b)>=10^(fp.phase_floor_db/20);ph=angle(a.*conj(b));tl=20*log10(max(abs(a),realmin)./max(abs(b),realmin));ww=w(m99);S=sum(ww.*a(m99).*conj(b(m99)));rho=abs(S)/sqrt(max(sum(ww.*abs(a(m99)).^2)*sum(ww.*abs(b(m99)).^2),realmin));g=angle(S);m=struct('l2_m99',sqrt(sum(ww.*abs(a(m99)-b(m99)).^2)/max(sum(ww.*abs(b(m99)).^2),realmin)),'phase_rms_m99',sqrt(sum(ww.*ph(m99).^2)/max(sum(ww),realmin)),'tl_rms_m99',sqrt(sum(ww.*tl(m99).^2)/max(sum(ww),realmin)),'phase_p95_m95',local_stage0_percentile(abs(ph(valid)),.95),'tl_p95_m95',local_stage0_percentile(abs(tl(valid)),.95),'rho_shape',rho,'global_phase_rad',g,'aligned_l2_m99',sqrt(sum(ww.*abs(a(m99)-exp(1i*g)*b(m99)).^2)/max(sum(ww.*abs(a(m99)).^2),realmin)),'phase_difference',ph,'tl_difference_db',tl);
+a=a(:).';b=b(:).';w=fp.energy_weights(:).';m99=fp.m99.mask;valid=fp.m95.mask & abs(a)>=10^(fp.phase_floor_db/20) & abs(b)>=10^(fp.phase_floor_db/20);ph=angle(a.*conj(b));tl=20*log10(max(abs(a),realmin)./max(abs(b),realmin));ww=w(m99);S=sum(ww.*a(m99).*conj(b(m99)));den=sqrt(max(sum(ww.*abs(a(m99)).^2)*sum(ww.*abs(b(m99)).^2),realmin));c=S/den;rho=abs(c);g=angle(S);m=struct('l2_m99',sqrt(sum(ww.*abs(a(m99)-b(m99)).^2)/max(sum(ww.*abs(b(m99)).^2),realmin)),'phase_rms_m99',sqrt(sum(ww.*ph(m99).^2)/max(sum(ww),realmin)),'tl_rms_m99',sqrt(sum(ww.*tl(m99).^2)/max(sum(ww),realmin)),'phase_p95_m95',local_stage0_percentile(abs(ph(valid)),.95),'tl_p95_m95',local_stage0_percentile(abs(tl(valid)),.95),'rho_raw',real(c),'rho_shape',rho,'global_phase_rad',g,'aligned_l2_m99',sqrt(sum(ww.*abs(a(m99)-exp(1i*g)*b(m99)).^2)/max(sum(ww.*abs(a(m99)).^2),realmin)),'phase_difference',ph,'tl_difference_db',tl);
+end
+
+function tf = local_metrics_finite(m)
+tf = all(isfinite([m.l2_m99, m.phase_rms_m99, m.tl_rms_m99, ...
+    m.global_phase_rad, m.rho_raw, m.rho_shape, m.aligned_l2_m99]));
+end
+
+function stats = local_sinusoid_surface_stats(A, K, support_m, count)
+s = linspace(support_m(1), support_m(2), count);
+eta_prime = -A * K * sin(K * s);
+eta_second = -A * K^2 * cos(K * s);
+kappa = eta_second ./ (1 + eta_prime.^2).^(3/2);
+stats = struct('sample_count',count,'support_m',support_m, ...
+    'max_slope',max(abs(eta_prime)), ...
+    'max_abs_curvature_per_m',max(abs(kappa)), ...
+    'rms_curvature_per_m',sqrt(trapz(s, kappa.^2) / (s(end)-s(1))), ...
+    'minimum_radius_m',1/max(abs(kappa)), ...
+    'analytic_max_abs_curvature_per_m',A*K^2, ...
+    'sample_s_m',s,'sample_kappa_per_m',kappa);
 end
 
 function g=local_stage1_geometry(run,cfg)

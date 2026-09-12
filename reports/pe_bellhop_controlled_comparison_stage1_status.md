@@ -91,5 +91,34 @@ G_BH_comparison = conj(G_BH_abs) = G_BH_raw
 Stage 1 raw comparison             = FAIL (永久保留)
 Stage 1 convention-fixed regression= PASS
 Stage 1Y                           = CONVENTION_THEORETICALLY_CLOSED
-Stage 2                           = UNLOCKED, not executed in this turn
+Stage 2                           = UNLOCKED at Stage1Y completion (see follow-up below)
 ```
+
+## Stage 2 follow-up (2026-09-11)
+
+Stage 2 fixed-`K` height sweep has since completed with X/C, `N=4097`, and the
+user-mandated 10,001 beams. The authoritative report is
+`reports/pe_bellhop_controlled_comparison_stage2_height_sweep_report.md`;
+all geometry/finite/metric guards PASS and Stage 3 is unlocked. The measured
+M99 `E_G` values for `A=[0.01,0.02,0.05,0.10,0.20] m` are
+`[0.004093,0.008234,0.021036,0.044179,0.100485]`; corresponding phase RMS
+values are `[0.004059,0.008166,0.020869,0.043877,0.100142] rad`.
+Model discrepancy increases with height, but this is not a Stage-2 solver or
+mapping failure under the Goal rules. Stage 3 has not been executed.
+
+## Stage 3 follow-up (2026-09-12)
+
+Stage 3 subsequently froze `A=0.02 m` as the largest Stage-2 Region-I height
+and completed `K=[0.10,0.20,0.35,0.47] rad/m` at 10,001 beams. All hard
+solver/mapping/geometry/finite guards pass; the sampled classifications are
+`I/II/II/II`. See
+`reports/pe_bellhop_controlled_comparison_stage3_slope_curvature_report.md`.
+Stage 4 has not been executed.
+
+## Stage 4 follow-up (2026-09-12)
+
+The read-only Stage-4 validity map subsequently completed with zero solver
+calls. It reports sampled Region-I transition brackets `A=(0.02,0.05] m` at
+`K=0.10 rad/m` and `K=(0.10,0.20] rad/m` at `A=0.02 m`; no boundary is
+interpolated or extrapolated. See
+`reports/pe_bellhop_controlled_comparison_stage4_validity_map_report.md`.

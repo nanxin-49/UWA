@@ -666,8 +666,10 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   `A=0.01`, `0.005`, and `0.0025 m` remain permanently retained as FAIL
   diagnostics. The convention-fixed regression is PASS, and the read-only
   Stage 1Y theoretical closure is
-  `CONVENTION_THEORETICALLY_CLOSED`; Stage 2 is now unlocked but has not been
-  executed.
+  `CONVENTION_THEORETICALLY_CLOSED`; Stages 2 and 3 have now PASSed their
+  solver/mapping/finite guards for all prescribed height and wavenumber points;
+  see `reports/pe_bellhop_controlled_comparison_stage2_height_sweep_report.md`
+  and `reports/pe_bellhop_controlled_comparison_stage3_slope_curvature_report.md`.
   Future runs are limited to 10,001 beams by explicit user override; see
   `reports/pe_bellhop_controlled_comparison_stage1_status.md`.
 - Stage 1X is implemented by
@@ -684,6 +686,23 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   constant-height analytic sign convention without new solver calls or any
   per-case fitting. The fixed comparison definition is `B_abs=conj(B_raw)` and
   `G_BH_comparison=conj(G_BH_abs)=G_BH_raw`.
+- Stage 2 height sweep is implemented as the `stage2` branch of
+  `validation/validate_pe_bellhop_controlled_comparison.m`, with resumable
+  case files under
+  `results/validation/pe_bellhop_controlled_comparison/stage2_height_sweep/`.
+  A=0.01 is reused from the convention-fixed result and A=0.02/0.05/0.10/0.20
+  are completed at 10,001 beams.
+- Stage 3 slope/curvature sweep is the `stage3` branch of the same driver. Its
+  manifest freezes `A=0.02 m` as the largest Stage-2 Region-I height, then runs
+  `K=[0.10,0.20,0.35,0.47] rad/m` with 10,001 beams. Per-case diagnostics and
+  resumable results are under
+  `results/validation/pe_bellhop_controlled_comparison/stage3_slope_curvature_sweep/`.
+  Stage 3 is PASS.
+- Stage 4 is the read-only `stage4` branch. It makes no PE/Bellhop solver call,
+  deduplicates the shared `(A,K)=(0.02,0.10)` case, applies the frozen Region
+  rules, and writes the sampled validity map under
+  `results/validation/pe_bellhop_controlled_comparison/stage4_validity_map/`.
+  Stage 4 is PASS; the reported transitions are sampled brackets only.
 - Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`,
   `reports/pe_bellhop_controlled_comparison_GOAL.md`, and
   `reports/pe_bellhop_controlled_comparison_goal_audit.md`.
