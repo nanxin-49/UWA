@@ -703,6 +703,27 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   rules, and writes the sampled validity map under
   `results/validation/pe_bellhop_controlled_comparison/stage4_validity_map/`.
   Stage 4 is PASS; the reported transitions are sampled brackets only.
+- Stage 5 is the read-only `stage5` branch. It selects the first non-I height,
+  maximum sampled height, and maximum sampled curvature cases, then applies the
+  frozen `rho_shape` and `E_aligned/E_G` attribution rule. It also records
+  analytic stationary/specular geometry, phase gradients, `2k eta`, and the
+  angle-aware phase diagnostic under
+  `results/validation/pe_bellhop_controlled_comparison/stage5_phase_attribution/`.
+  Stage 5 is PASS with all representatives classified as spatial distortion;
+  it makes zero solver calls and does not change the production PE screen.
+- Stage 6 is the `stage6` branch. It byte-copies and verifies the canonical
+  seed-260001 Fourier coefficients, runs only the frozen 4 kHz X/C,
+  10,001-beam fixed-PM case, reuses the Stage-0 flat denominator and masks, and
+  writes `results/validation/pe_bellhop_controlled_comparison/stage6_fixed_pm/`.
+  Stage 6 passes every numerical/geometry guard and is Region III; its
+  historical axis values are sanity checks only.
+- Stage 7 is the zero-solver `stage7` branch. It reads the authoritative M=50
+  CSV/MAT without rerunning seeds, preserves its historical point-source R
+  provenance, applies no R-to-X correction, and writes the interpretation to
+  `results/validation/pe_bellhop_controlled_comparison/stage7_historical_m50_interpretation/`.
+- The completed workflow is summarized in
+  `reports/pe_bellhop_controlled_comparison_final_report.md`; final status is
+  `PHASE_MECHANISM_IDENTIFIED`. The conditional BIE/BEM branch was not triggered.
 - Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`,
   `reports/pe_bellhop_controlled_comparison_GOAL.md`, and
   `reports/pe_bellhop_controlled_comparison_goal_audit.md`.

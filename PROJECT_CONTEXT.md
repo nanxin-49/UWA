@@ -3940,3 +3940,46 @@ zero solver calls. At `K=0.10 rad/m`, the sampled Region-I to non-I transition
 is bracketed by `A=(0.02,0.05] m`; at `A=0.02 m`, it is bracketed by
 `K=(0.10,0.20] rad/m`. These are not interpolated or extrapolated boundaries.
 See `reports/pe_bellhop_controlled_comparison_stage4_validity_map_report.md`.
+
+## 2026-09-12 Controlled PE--Bellhop Goal: Stage 5 attribution
+
+Stage 5 completed as a zero-solver-call diagnostic on three Region-II
+representatives: `(A,K)=(0.05,0.10)`, `(0.20,0.10)`, and `(0.02,0.47)` in
+meter/rad-per-meter units. Global phase alignment reduces `E_G` by only
+`7.85%/20.24%/7.94%`, so every case is classified as `spatial distortion`
+under the frozen Goal rule rather than global/coherent-phase dominated.
+Bellhop differs from the analytic stationary-path phase by only
+`1.7e-6/6.2e-6/1.3e-5 rad` RMS, whereas the corresponding PE residual is
+`0.02087/0.10014/0.01290 rad`. These quantities are validation diagnostics;
+the production PE phase screen and Bellhop physics remain unchanged. See
+`reports/pe_bellhop_controlled_comparison_stage5_phase_attribution_report.md`.
+
+## 2026-09-13 Controlled PE--Bellhop Goal: Stages 6--7
+
+Stage 6 copied and verified the canonical seed-260001 coefficients with
+SHA-256 `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67`,
+then ran the sole allowed 4 kHz X/C, 10,001-beam fixed-PM case. All Bellhop
+geometry, incidence, reflection-phase, beam-state, positive-range and finite
+guards pass. The axis sanity result is `0.310370739 dB / -2.24820073 rad`,
+matching the historical X audit, while the complete M99 line has
+`E_G=0.958269`, phase RMS `1.107714 rad`, TL RMS `1.273990 dB`,
+`rho_shape=0.771213`, and is Region III. See
+`reports/pe_bellhop_controlled_comparison_stage6_fixed_pm_report.md`.
+
+Stage 7 made zero solver calls and reproduced the existing M=50 published
+statistics directly from the authoritative CSV: mean delta TL `-0.00747858 dB`,
+PE/BH mean powers `1.004510/1.007007`, and circular mean phase
+`-0.375345 rad`. It explicitly retains historical point-source R provenance;
+the data are neither relabeled X nor empirically corrected. Together with
+Stages 4--6, near-equal ensemble power is compatible with realization-level
+spatial reflection-model discrepancy, and the nonzero circular phase is not a
+remaining convention error. See
+`reports/pe_bellhop_controlled_comparison_stage7_historical_m50_interpretation_report.md`.
+
+The controlled Goal is now complete. Its final report is
+`reports/pe_bellhop_controlled_comparison_final_report.md`, with status
+`PHASE_MECHANISM_IDENTIFIED`. All requirements for `COMMON_LIMIT_CONFIRMED` are
+also met, but the more informative final label is used because Stage 5 locates
+the residual as spatial reflection-model distortion. The conditional BIE/BEM
+branch was not triggered for convention adjudication; it remains necessary only
+for a future absolute-accuracy claim in the Region-III PM regime.
