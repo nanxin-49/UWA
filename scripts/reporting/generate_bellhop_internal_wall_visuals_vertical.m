@@ -113,12 +113,12 @@ function local_plot_rays(cases,rays,cfg,file)
 visible='off'; if cfg.show_figures, visible='on'; end
 fig=figure('Visible',visible,'Color','w','Position',[40 40 1500 980]);
 cleanup=onCleanup(@()close(fig)); tl=tiledlayout(fig,2,2,'TileSpacing','compact','Padding','compact');
-    for cc=1:2
-        colors=lines(numel(rays{cc}));
-        target_idx=[];
-        if cc==2 && isfinite(cfg.target_eigenray_angle_deg)
-            [~,target_idx]=min(abs([rays{cc}.alpha_deg]-cfg.target_eigenray_angle_deg));
-        end
+for cc=1:2
+    colors=lines(numel(rays{cc}));
+    target_idx=[];
+    if cc==2 && isfinite(cfg.target_eigenray_angle_deg)
+        [~,target_idx]=min(abs([rays{cc}.alpha_deg]-cfg.target_eigenray_angle_deg));
+    end
     wall_kind=cases{cc,2}; ax=nexttile(tl); hold(ax,'on');
     z=linspace(cfg.z_plot_m(1),cfg.z_plot_m(2),401); rw=local_wall(wall_kind,z,cfg);
     plot(ax,rw,z,'k-','LineWidth',2.0,'DisplayName','internal wall');
@@ -306,7 +306,11 @@ file=cfg.report_file; fid=fopen(file,'w','n','UTF-8');
 if fid<0, error('Cannot write %s.',file); end; cleanup=onCleanup(@()fclose(fid));
 fprintf(fid,'# Bellhop internal-wall visualization\n\n');
 fprintf(fid,'本报告由已保存的 Bellhop validation-only SHD/diagnostic 数据生成；入射场 SHD 来自官方 matched-halfspace coherent run，绘图脚本本身不重新运行 PE 或 Bellhop。\n\n');
-fprintf(fid,'- walls: `%s`, `%s`; sampled wall support: [%.0f, %.0f] m; plotted z window: [%.0f, %.0f] m; physical Rx: `(%.0f,0)` m.\n', ...
+fprintf(fid,'## 权威状态\n\n');
+fprintf(fid,['本文件是当前唯一权威的 internal-wall 可视化报告，整合并取代早期小振幅墙、独立大振幅墙面预览以及 two-period full-fan 阶段报告。' ...
+    '当前图件统一采用 `A=%.6g m`、`K=%.6g 1/m`、完整 `[-30,30] deg` 发射扇区和已标出的 Rx eigenray；旧报告与重复图件仅保存在可恢复归档中。\n\n'], ...
+    cfg.sinusoidal_amplitude_m,cfg.sinusoidal_wavenumber_per_m);
+fprintf(fid,'- walls: `%s`, `%s`; sampled wall support: [%.0f, %.0f] m; trajectory z window: [%.0f, %.0f] m; physical Rx: `(%.0f,0)` m.\n', ...
     cases{1,3},cases{2,3},cfg.wall_support_z_m(1),cfg.wall_support_z_m(2), ...
     cfg.z_plot_m(1),cfg.z_plot_m(2),cfg.physical_rx_range_m);
 fprintf(fid,'- inverse map: `r=200-r''`, `z=-z''`; dense SHD contains only the post-wall reflected branch. Both TL maps use the same axial source reference `p_ref=|p_inc(r=%.6g m,z=0)|=%.9g` and are plotted as `TL=-20 log10(abs(p)/p_ref)`.\n',cfg.reference_range_m,cfg.reference_amp);

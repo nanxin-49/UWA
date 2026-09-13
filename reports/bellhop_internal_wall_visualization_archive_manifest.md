@@ -43,3 +43,31 @@ archive. Superseded visualization reports, duplicate dense MAT files, and raw ca
 sidecars were moved to `cash/bellhop_internal_wall_visualization_archive_20260910/`.
 The consolidated authoritative report is
 `reports/bellhop_internal_wall_visualization_report.md`.
+
+## 2026-09-13 full-fan consolidation
+
+The active visualization was rebaselined to the accepted two-period full-fan
+case `r=100-2.4 sin((2pi/30)z)`, with 5001 beams over `[-30,30] deg` and the
+receiver eigenray explicitly highlighted. Both TL figures now display the
+complete sampled wall support `z=[-75,75] m`; areas outside the computed SHD
+receiver grid remain background/NaN and are not extrapolated.
+
+The following superseded or intermediate material was moved to the recoverable
+archive `cash/bellhop_internal_wall_visualization_consolidation_20260912/`:
+
+- the previous consolidated, standalone-large-sinusoid and staged full-fan
+  visualization reports;
+- the solver-free standalone wall-profile plotting entrypoint;
+- duplicate visualization trees for the old baseline, standalone wall preview
+  and staged full-fan output;
+- regenerable Bellhop case sidecars from the full-fan validation.
+
+The active retained products are:
+
+- `reports/bellhop_internal_wall_visualization_report.md`;
+- `scripts/reporting/generate_bellhop_internal_wall_visuals_vertical.m`;
+- `scripts/validation/validate_bellhop_internal_large_sinusoidal_wall_visual_case.m`;
+- the three PNGs and selected-ray CSV under
+  `results/visualization/bellhop_internal_wall_visuals/`;
+- the parsed full-fan MAT files and geometry/profile CSV files under
+  `results/validation/bellhop_internal_wall_two_period_full_fan/`.
