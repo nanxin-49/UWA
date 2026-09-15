@@ -763,3 +763,21 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   `reports/pe_bellhop_helmholtz_bie_final_report.md`. Optional R6 and fixed PM
   were not run because they are unnecessary for the completed first-round
   adjudication.
+
+## PE rough-surface operator improvement workflow
+
+- `validation/validate_pe_bellhop_helmholtz_bie_reference.m` also accepts
+  `'g0'` after the authoritative R5 gate. It runs the frozen
+  `A=0.02 m, K=0.47 rad/m`, 10,001-beam three-way diagnostic.
+- `validation/validate_pe_surface_normal_approximation_audit.m` is the G1
+  read-only angular-spectrum mechanism audit.
+- `validation/validate_pe_surface_kz_aware_operator.m` runs G2 with the
+  validation-only `model1_kz_aware` switch.
+- `validation/validate_pe_surface_angle_slope_operator.m` runs G3 with the
+  validation-only `model2_angle_slope` switch.
+- These switches live only in
+  `validation/support/run_pe_1d_surface_reflection_validation.m`; its omitted
+  or `model0_normal` setting exactly preserves the previous behavior.
+- G0--G2 pass. G3 fails the high-K improvement gate, so fixed PM is locked.
+  See `reports/pe_surface_operator_improvement_final_report.md`; the final
+  conclusion is `NONLOCAL_EFFECT_REQUIRED`.

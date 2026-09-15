@@ -4019,3 +4019,26 @@ boundary residual has an explicit `1.1e-8`--`2.9e-8` plateau, while an
 independent higher-order receiver field agrees within `3.291e-8`, below its
 declared `U_BIE=6.179e-8`. Optional R6 and fixed PM are not needed for this
 adjudication and were not run.
+
+## 2026-09-15 PE rough-surface reflection-operator improvement Goal
+
+The BIE workflow was extended with the frozen high-K G0 case
+`A=0.02 m, K=0.47 rad/m`. All numerical and Bellhop geometry gates pass;
+Model-0 PE/BIE `E_G=0.0229061`, while Bellhop/BIE `E_G=1.36812e-4`.
+
+G1 measures the actual sigma=0.3 m Gaussian angular spectrum:
+`kx_rms=2.35702 rad/m`, `theta_rms=8.14401 deg`, and
+`<kz>/k=0.9899505`. G2 adds a validation-only `model1_kz_aware` branch to the
+1T helper. It uses componentwise `exp(+i*2*kz*eta)`, changes the flat field by
+only `1.83e-13`, reproduces legacy Model-0 exactly when selected, and reduces
+controlled-case phase RMS by factors `25.0/5.11/1.61/1.22` in
+weak/Region-II/strong-height/high-K order. This establishes
+`NORMAL_APPROXIMATION_CONFIRMED`.
+
+G3 adds analytic local-normal specular `kzr` and `(kzi+kzr)*eta` phase without
+fitted coefficients. It produces only `0.01%--1.5%` further improvement and
+fails the high-K gate, despite positive reflected `kz`, zero non-returning
+components, and finite fields. The Goal therefore stops before fixed PM with
+`NONLOCAL_EFFECT_REQUIRED`. Production PE, PE marching, the production surface
+model, Bellhop, and the BIE solver are unchanged. See
+`reports/pe_surface_operator_improvement_final_report.md`.

@@ -1,7 +1,8 @@
 function result = validate_pe_bellhop_helmholtz_bie_reference(stage, overrides)
 %VALIDATE_PE_BELLHOP_HELMHOLTZ_BIE_REFERENCE Independent Helmholtz BIE Goal.
-%   Implements the gated R1--R5 independent-reference workflow. Each stage
-%   requires the preceding authoritative MAT artifact to have passed.
+%   Implements the gated R1--R5 independent-reference workflow and the
+%   follow-on G0 high-K diagnostic. Each stage requires its authoritative
+%   prerequisite MAT artifact to have passed.
 
 if nargin < 1 || isempty(stage), stage = 'r1'; end
 if nargin < 2 || isempty(overrides), overrides = struct(); end
@@ -31,8 +32,12 @@ switch lower(char(stage))
         cfg = local_r5_config(root,overrides);
         local_require_r4_pass(root);
         result = local_r4(cfg,root);
+    case 'g0'
+        cfg = local_g0_config(root,overrides);
+        local_require_r5_pass(root);
+        result = local_r4(cfg,root);
     otherwise
-        error('Stage %s is not implemented in the R1--R5 workflow.',char(stage));
+        error('Stage %s is not implemented in the R1--R5/G0 workflow.',char(stage));
 end
 end
 
@@ -206,12 +211,47 @@ for ii=1:numel(names)
     if ~isfield(cfg,names{ii}),error('Unknown R5 override %s.',names{ii});end
     cfg.(names{ii})=overrides.(names{ii});
 end
+
 if cfg.frequency_hz~=4000 || cfg.c0_mps~=1500 || cfg.amplitude_m~=0.20 || ...
         cfg.wavenumber_radpm~=0.10 || cfg.beam_count~=10001
     error('R5 physics and 10,001-beam policy are frozen by the Goal.');
 end
 if numel(cfg.spatial_levels_ppw)<3 || numel(cfg.window_levels_m)<3
     error('R5 requires three spatial and three window levels.');
+end
+end
+
+function cfg = local_g0_config(root,overrides)
+cfg = struct( ...
+    'stage_id','G0_high_K','artifact_stem','G0_high_K', ...
+    'frequency_hz',4000,'c0_mps',1500,'z_tx_m',100,'z_rx_m',3, ...
+    'sigma_src_m',0.3,'xw_m',192.1875,'nx',984, ...
+    'amplitude_m',0.02,'wavenumber_radpm',0.47, ...
+    'surface_taper_inner_m',42,'surface_support_m',50, ...
+    'halfplane_h_m',-2.0,'window_plateau_ratio',0.85, ...
+    'spatial_levels_ppw',[8 10 12],'spatial_half_width_m',60, ...
+    'window_levels_m',[60 70 80],'window_sweep_ppw',10, ...
+    'panel_order',8,'self_quadrature_order',96, ...
+    'phase_floor_db',-40,'wall_profile_support_m',[-80 80], ...
+    'wall_profile_count',4097,'beam_count',10001,'bellhop_step_m',0.05, ...
+    'receiver_tolerance_m',1e-6,'reuse_existing',true, ...
+    'output_dir',fullfile(root,'results','validation', ...
+        'pe_surface_operator_bie_reference','G0_high_K'), ...
+    'report_file',fullfile(root,'reports', ...
+        'pe_surface_operator_bie_G0_high_K_diagnostic.md'));
+names=fieldnames(overrides);
+for ii=1:numel(names)
+    if ~isfield(cfg,names{ii}),error('Unknown G0 override %s.',names{ii});end
+    cfg.(names{ii})=overrides.(names{ii});
+end
+if cfg.frequency_hz~=4000 || cfg.c0_mps~=1500 || cfg.z_tx_m~=100 || ...
+        cfg.z_rx_m~=3 || cfg.sigma_src_m~=0.3 || ...
+        cfg.amplitude_m~=0.02 || cfg.wavenumber_radpm~=0.47 || ...
+        cfg.beam_count~=10001
+    error('G0 physics and 10,001-beam policy are frozen by the Goal.');
+end
+if numel(cfg.spatial_levels_ppw)<3 || numel(cfg.window_levels_m)<3
+    error('G0 requires three spatial and three window levels.');
 end
 end
 
@@ -229,6 +269,14 @@ path=fullfile(root,'results','validation','pe_bellhop_helmholtz_bie_reference', 
 if ~exist(path,'file'),error('R5 locked: authoritative R4 artifact is missing.');end
 s=load(path,'validation');
 if ~s.validation.passed,error('R5 locked: R4 did not pass.');end
+end
+
+function local_require_r5_pass(root)
+path=fullfile(root,'results','validation','pe_bellhop_helmholtz_bie_reference', ...
+    'R5_stronger_height','R5_stronger_height_validation.mat');
+if ~exist(path,'file'),error('G0 locked: authoritative R5 artifact is missing.');end
+s=load(path,'validation');
+if ~s.validation.passed,error('G0 locked: R5 did not pass.');end
 end
 
 function result = local_r1(cfg,root)
