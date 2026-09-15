@@ -3983,3 +3983,39 @@ also met, but the more informative final label is used because Stage 5 locates
 the residual as spatial reflection-model distortion. The conditional BIE/BEM
 branch was not triggered for convention adjudication; it remains necessary only
 for a future absolute-accuracy claim in the Region-III PM regime.
+
+## 2026-09-14 Helmholtz BIE third-reference Goal: R0--R2
+
+The R0 formulation audit is complete and frozen in
+`reports/pe_bellhop_helmholtz_bie_R0_formulation_audit.md`. The selected
+validation-only reference is the two-dimensional sound-soft rough-surface
+combined-layer equation built with a Dirichlet half-plane Green function,
+`exp(-i*omega*t)`, an inward-to-water normal, and a slow-rise smooth finite
+section. The outgoing combined layer is `D_h-i*k*S_h`; an initial R1 smoke
+run exposed that the provisional plus sign was refinement-dependent and nearly
+singular, so the sign was corrected from the frozen time/radiation/normal
+conventions before accepting any result. It is specifically limited to the localized Gaussian angular-spectrum
+incidence and graph surfaces required by this Goal. Closed-obstacle BEM,
+quasi-periodic/Bloch formulations, and abrupt free-space truncation were
+rejected for R1--R5. R1 flat self-validation passes: the accepted 12-ppw
+result has boundary residual `9.276e-10`, image-field complex L2 `1.236e-7`,
+and phase RMS `9.268e-8 rad`. R2 also passes for the fixed C2-tapered
+`A=0.01 m`, `K=0.10 rad/m` benchmark. Its receiver-line BIE uncertainty is
+`6.002e-8` complex L2, `4.220e-8 rad` phase RMS, and `3.596e-7 dB` TL RMS.
+The physical surface support remains fixed while spatial, close-panel
+quadrature, and BIE-window convergence are varied independently. R3 weak
+PE--Bellhop--BIE closure also passes on that exact benchmark: PE--BIE has
+`E_G=0.003158` and phase RMS `0.003118 rad`, Bellhop--BIE has
+`E_G=8.092e-6` and phase RMS `5.886e-6 rad`, and PE--Bellhop has
+`E_G=0.003159`. Both native Helmholtz ratios (Bellhop and BIE) are mapped by
+the same fixed conjugation into the PE comparison convention; no scalar is
+fitted. Bellhop geometry and receiver guards pass. R4 (`A=0.05 m`) gives
+PE--BIE/Bellhop--BIE complex errors `0.016090/3.890e-5`; R5 (`A=0.20 m`)
+gives `0.080908/9.976e-5`. The ranking is unchanged at every spatial/window
+level and both separations exceed `5 U_BIE` by many orders of magnitude.
+The final first-round status is `BELLHOP_CLOSER_TO_HELMHOLTZ_REFERENCE`; see
+`reports/pe_bellhop_helmholtz_bie_final_report.md`. The R5 strong-height
+boundary residual has an explicit `1.1e-8`--`2.9e-8` plateau, while an
+independent higher-order receiver field agrees within `3.291e-8`, below its
+declared `U_BIE=6.179e-8`. Optional R6 and fixed PM are not needed for this
+adjudication and were not run.

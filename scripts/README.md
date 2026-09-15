@@ -724,6 +724,42 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
 - The completed workflow is summarized in
   `reports/pe_bellhop_controlled_comparison_final_report.md`; final status is
   `PHASE_MECHANISM_IDENTIFIED`. The conditional BIE/BEM branch was not triggered.
-- Goal and audit: `reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`,
-  `reports/pe_bellhop_controlled_comparison_GOAL.md`, and
-  `reports/pe_bellhop_controlled_comparison_goal_audit.md`.
+
+## Independent Helmholtz BIE third-reference workflow
+
+- `validation/validate_pe_bellhop_helmholtz_bie_reference.m` is the new
+  validation-only entrypoint for the independent 2-D pressure-release
+  Helmholtz reference. `R1` flat self-validation and `R2` weak-rough BIE
+  convergence and `R3` weak three-way closure are complete and pass.
+- Run from any MATLAB working directory after project setup with
+  `validate_pe_bellhop_helmholtz_bie_reference('r1')`, then `'r2'`, `'r3'`,
+  `'r4'`, and `'r5'`. Each stage reads and enforces the preceding
+  authoritative gate.
+- `validation/support/solve_helmholtz_bie_halfplane_vertical.m` implements the
+  R0-frozen Dirichlet-half-plane-Green combined-layer equation, slow-rise
+  finite section, panel Nyström quadrature, independent boundary residual,
+  and receiver evaluation. It does not call PE or Bellhop physics code.
+- R0 theory, signs, normal orientation, restrictions, and stop conditions are
+  frozen in `reports/pe_bellhop_helmholtz_bie_R0_formulation_audit.md`.
+- R1 writes validation artifacts under
+  `results/validation/pe_bellhop_helmholtz_bie_reference/R1_flat/` and the
+  authoritative summary to
+  `reports/pe_bellhop_helmholtz_bie_R1_flat_validation_report.md`.
+- R2 uses one fixed `A=0.01 m`, `K=0.10 rad/m` C2-tapered benchmark surface;
+  it keeps the physical support fixed while separately refining space,
+  close-panel quadrature, and the BIE window. Artifacts are under
+  `results/validation/pe_bellhop_helmholtz_bie_reference/R2_weak_rough/` and
+  the report is
+  `reports/pe_bellhop_helmholtz_bie_R2_weak_rough_convergence_report.md`.
+- R3 constructs that exact same continuous tapered surface for the existing
+  1-transverse PE helper, the 10,001-beam validation-only internal-wall
+  Bellhop runner, and BIE. It applies only the previously frozen Bellhop
+  rough/flat ratio conjugation for both native Helmholtz results and performs
+  no scalar fitting. Its report is
+  `reports/pe_bellhop_helmholtz_bie_R3_weak_three_way_closure_report.md`.
+- R4 (`A=0.05 m`) and R5 (`A=0.20 m`) repeat BIE spatial/window refinement
+  and compare the same tapered surface in PE, Bellhop, and BIE. Both are
+  complete and select `BELLHOP_CLOSER_TO_HELMHOLTZ_REFERENCE`; see
+  `reports/pe_bellhop_helmholtz_bie_final_report.md`. Optional R6 and fixed PM
+  were not run because they are unnecessary for the completed first-round
+  adjudication.
