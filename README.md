@@ -7,7 +7,7 @@
 在 MATLAB 中先初始化一次路径：
 
 ```matlab
-cd('E:/MISC/CARPE3D_matlab/Explain')
+cd('<repository-root>')
 setup_vertical_project;
 ```
 

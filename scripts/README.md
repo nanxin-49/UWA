@@ -587,7 +587,7 @@ is changed by these validators.
 - Formal mode requires `BELLHOP_EXE` even if another Bellhop is on the MATLAB
   or system path. Temporary paths and binary-hash changes are rejected.
 - The current local baseline is OALIB `2020_11_4` at
-  `E:/MISC/BELLHOP/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe`.
+  `<external>/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe`.
   The retained 2017 directory is historical and must be selected explicitly
   only when reproducing a run whose metadata records that binary.
 - The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
@@ -598,7 +598,7 @@ This stage deliberately excludes rough-surface scattering, bottom bounces, stoch
 Historical formal command (archived; not runnable from the active tree):
 
 ```matlab
-setenv('BELLHOP_EXE','E:/MISC/BELLHOP/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe')
+setenv('BELLHOP_EXE','<external>/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe')
 addpath('scripts/validation')
 % validate_pe_bellhop_flat_surface_current_vertical is archived.
 ```

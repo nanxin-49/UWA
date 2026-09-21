@@ -16,9 +16,9 @@ reports/pe_bellhop_controlled_comparison_goal_audit.md
 历史执行原则：
 
 - 不并行启动多个 Stage；
-- 为缩小 PE/Bellhop 差异修改核心物理；
-- 根据结果临时调整 comparison convention；
-- 通过 amplitude/phase fitting 人为闭合结果。
+- 不得为缩小 PE/Bellhop 差异修改核心物理；
+- 不得根据结果临时调整 comparison convention；
+- 不得通过 amplitude/phase fitting 人为闭合结果。
 
 ---
 
