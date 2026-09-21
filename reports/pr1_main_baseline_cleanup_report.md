@@ -30,13 +30,31 @@
   结果 CSV 中仍可能有运行时 provenance 路径，它们不被运行时读取，未改动其
   验证结论。
 - `build_manifest.json` JSON 结构：已检查；路径字段已改为可移植占位符/相对路径，哈希和验证身份字段保留。
-- MATLAB `setup_vertical_project`、静态检查、`main_vertical`/demo、PE/PM、通信 smoke：未执行成功。共享 MATLAB MCP 会话两次均返回 `failed to attach to MATLAB session`；按仓库规则未通过 PowerShell 启动 MATLAB 作为替代。
-- Bellhop：未伪造运行成功；仅完成配置解析/依赖入口审查。当前环境未要求运行外部 Bellhop。
+- MATLAB shared session：通过，版本为 MATLAB R2025b Update 6；仓库根目录为
+  `E:\MISC\CARPE3D_matlab\Explain`。`setup_vertical_project` 成功且未改变当前目录；
+  `scripts/`、`examples/`、`scripts/validation/` 及各 `src` 模块路径可解析。
+- MATLAB Code Analyzer：本次涉及的正式入口、核心 `src` 文件和 PE validation
+  入口均无 error；`examples/comm_main_vertical_psk_demo.m` 仅有一个既有的
+  unreachable-statement warning，未发现 syntax、undefined local function、路径解析
+  或 function/file name mismatch blocker。
+- 主入口 smoke：`main_vertical` 成功调用 `examples/main_vertical_demo.m`；默认
+  4 kHz uniform、1024x1024 demo 在临时目录完成，无仓库生成物。
+- PE smoke：128x128、4 kHz、uniform、`save_mode=rx_only`、无海面反射的轻量 case
+  通过，`pass_1_over_R=true`、`Nf=1`；同一轻量参数启用 PM 海面后通过，输出
+  `surface_elevation`/`h_reflect` 有限且有效（最大海面幅度约 0.44528 m）。
+- Communication smoke：兼容入口在 `COMM_NX=256`、`COMM_NY=256`、`Nf=8`、
+  `n_sym=32`、`EbN0=10 dB` 的轻量配置下完成 `direct_only` 与
+  `direct_plus_reflect` 两个场景；两者 BER/SER 均为 0，入口逻辑完成。demo 内部
+  的 `clear` 会清除外层临时变量，但不影响入口执行结果。
+- Validation isolation：production/demo 与正式入口扫描未发现对
+  `scripts/validation`、Helmholtz BIE、Model-1 kz-aware 或 Model-2 angle+slope
+  的隐式调用。
+- Bellhop：`BELLHOP_EXE`/`BELLHOP_TOOLBOX_ROOT` 未配置；解析结果为空，轻量缺失
+  依赖 guard 清晰返回 `Set overrides.bellhop_exe or BELLHOP_EXE.`，未启动外部
+  Bellhop，也未伪造运行成功。
 
 ## 结论
 
-由于 MATLAB 共享会话不可用，当前不能声明 `MAIN_BASELINE_READY`。除该外部验证环境阻塞外，未发现需要扩大范围或改变既有验证结论的问题。
+MAIN_BASELINE_READY
 
-阻塞项：
-
-1. MATLAB MCP 共享会话不可 attach，因此无法完成本次要求的 MATLAB 静态检查和基础 smoke。
+本次 MATLAB baseline regression 未发现阻塞 PR #1 合入 `main` 的问题；未修改物理模型、验证算法或仓库结构。
