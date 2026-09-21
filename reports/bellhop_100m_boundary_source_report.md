@@ -96,4 +96,4 @@ direct_surface=直达+一次海面；bottom_only=所有含底类别；all_arriva
 
 ## 产物
 
-结果目录：`E:/MISC/CARPE3D_matlab/Explain/results/validation/bellhop_100m_rough_surface/boundary_source/explicit_bty`。source_position_audit.csv、source_metadata.csv、epsilon_path_classes.csv、epsilon_convergence.csv、aggregate_responses.csv、all_arrivals.csv、boundary_source_validation.mat 以及 6 个 case 的 ENV/ATI/BTY/ARR/PRT/运行日志。
+结果目录：`results/validation/bellhop_100m_rough_surface/boundary_source/explicit_bty`。source_position_audit.csv、source_metadata.csv、epsilon_path_classes.csv、epsilon_convergence.csv、aggregate_responses.csv、all_arrivals.csv、boundary_source_validation.mat 以及 6 个 case 的 ENV/ATI/BTY/ARR/PRT/运行日志。

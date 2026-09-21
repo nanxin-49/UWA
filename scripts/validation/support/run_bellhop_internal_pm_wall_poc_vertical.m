@@ -18,27 +18,42 @@ end
 if exist(cfg.bellhop_exe,'file')~=2
     error('Bellhop PM internal-wall validation executable is missing: %s',cfg.bellhop_exe);
 end
-[env_file,sbp_file]=write_bellhop_unfolded_gaussian_env_vertical(cfg.case_root,cfg);
+reuse_existing = isfield(cfg,'reuse_existing') && logical(cfg.reuse_existing);
+if reuse_existing && exist([cfg.case_root '.shd'],'file')==2 && ...
+        exist([cfg.case_root '.iwdiag'],'file')==2 && ...
+        dir([cfg.case_root '.shd']).bytes>0 && dir([cfg.case_root '.iwdiag']).bytes>0
+    env_file=[cfg.case_root '.env']; sbp_file=[cfg.case_root '.sbp'];
+else
+    [env_file,sbp_file]=write_bellhop_unfolded_gaussian_env_vertical(cfg.case_root,cfg);
+    reuse_existing = false;
+end
 iwpm_file=[cfg.case_root '.iwpm'];
-fid=fopen(iwpm_file,'w');
-if fid<0, error('Cannot create %s.',iwpm_file); end
-cleanup=onCleanup(@()fclose(fid));
-fprintf(fid,'%.17g\n%.17g\n%d\n%d\n',cfg.wall_r0_m,cfg.mapped_receiver_range_m, ...
-    cfg.wall_seed,numel(cfg.wall_profile_r_m));
-fprintf(fid,'%.17g %.17g\n',[cfg.wall_profile_r_m(:) cfg.wall_profile_z_m(:)].');
-clear cleanup
+if ~reuse_existing
+    fid=fopen(iwpm_file,'w');
+    if fid<0, error('Cannot create %s.',iwpm_file); end
+    cleanup=onCleanup(@()fclose(fid));
+    fprintf(fid,'%.17g\n%.17g\n%d\n%d\n',cfg.wall_r0_m,cfg.mapped_receiver_range_m, ...
+        cfg.wall_seed,numel(cfg.wall_profile_r_m));
+    fprintf(fid,'%.17g %.17g\n',[cfg.wall_profile_r_m(:) cfg.wall_profile_z_m(:)].');
+    clear cleanup
+end
 
 extensions={'.arr','.shd','.ray','.prt','.iwdiag','.covdiag'};
-for ii=1:numel(extensions)
-    target=[cfg.case_root extensions{ii}];
-    if exist(target,'file')==2, delete(target); end
+if ~reuse_existing
+    for ii=1:numel(extensions)
+        target=[cfg.case_root extensions{ii}];
+        if exist(target,'file')==2, delete(target); end
+    end
 end
 out_dir=fileparts(cfg.case_root); old=pwd; cleanup=onCleanup(@()cd(old)); cd(out_dir);
 [~,name]=fileparts(cfg.case_root);
 data_file=[cfg.case_root '.shd']; diag_file=[cfg.case_root '.iwdiag']; prt_file=[cfg.case_root '.prt'];
-[status,command_output]=system(sprintf('"%s" "%s"',cfg.bellhop_exe,name));
-clear cleanup
-if status~=0, error('Internal PM-wall Bellhop failed for %s: %s',name,command_output); end
+[status,command_output]=deal(0,'reused existing raw Bellhop outputs');
+if ~reuse_existing
+    [status,command_output]=system(sprintf('"%s" "%s"',cfg.bellhop_exe,name));
+    clear cleanup
+    if status~=0, error('Internal PM-wall Bellhop failed for %s: %s',name,command_output); end
+end
 for path={data_file,diag_file,prt_file}
     if exist(path{1},'file')~=2, error('Bellhop did not create %s.',path{1}); end
 end

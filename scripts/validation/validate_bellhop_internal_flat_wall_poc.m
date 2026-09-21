@@ -3,7 +3,7 @@ function validation = validate_bellhop_internal_flat_wall_poc(options)
 arguments
     options.output_dir (1,:) char = ''
     options.validation_exe (1,:) char = ''
-    options.official_exe (1,:) char = 'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe'
+    options.official_exe (1,:) char = ''
     options.frequency_hz (1,1) double {mustBePositive} = 4000
     options.beam_counts (1,:) double {mustBeInteger,mustBePositive} = [2001 5001 10001]
     options.step_values_m (1,:) double {mustBePositive} = [0.2 0.1 0.05]
@@ -11,6 +11,10 @@ arguments
 end
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 setup_vertical_project;
+if isempty(options.official_exe), options.official_exe=getenv('BELLHOP_EXE'); end
+if isempty(options.official_exe)
+    error('Set options.official_exe or BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.');
+end
 if isempty(options.output_dir)
     options.output_dir=fullfile(root,'results','validation','bellhop_internal_flat_wall_poc');
 end

@@ -19,16 +19,22 @@ fprintf(fid,'%.17g\n%.17g\n',cfg.wall_range_m,cfg.mapped_receiver_range_m);
 clear cleanup
 
 extensions={'.arr','.shd','.ray','.prt','.iwdiag'};
-for ii=1:numel(extensions)
-    target=[cfg.case_root extensions{ii}];
-    if exist(target,'file')==2, delete(target); end
-end
-out_dir=fileparts(cfg.case_root); old=pwd; cleanup=onCleanup(@()cd(old)); cd(out_dir);
-[~,name]=fileparts(cfg.case_root);
 data_file=[cfg.case_root '.shd']; diag_file=[cfg.case_root '.iwdiag']; prt_file=[cfg.case_root '.prt'];
-[status,command_output]=system(sprintf('"%s" "%s"',cfg.bellhop_exe,name));
-clear cleanup
-if status~=0, error('Internal-wall Bellhop failed for %s: %s',name,command_output); end
+reuse=isfield(cfg,'reuse_existing')&&cfg.reuse_existing&& ...
+    local_nonempty(data_file,100)&&local_nonempty(diag_file,100)&&local_nonempty(prt_file,0);
+if reuse
+    command_output='Reused existing flat-wall Bellhop artifacts.';
+else
+    for ii=1:numel(extensions)
+        target=[cfg.case_root extensions{ii}];
+        if exist(target,'file')==2, delete(target); end
+    end
+    out_dir=fileparts(cfg.case_root); old=pwd; cleanup=onCleanup(@()cd(old)); cd(out_dir);
+    [~,name]=fileparts(cfg.case_root);
+    [status,command_output]=system(sprintf('"%s" "%s"',cfg.bellhop_exe,name));
+    clear cleanup
+    if status~=0, error('Internal-wall Bellhop failed for %s: %s',name,command_output); end
+end
 for path={data_file,diag_file,prt_file}
     if exist(path{1},'file')~=2, error('Bellhop did not create %s.',path{1}); end
 end
@@ -47,4 +53,9 @@ diagnostics=array2table(diag_matrix,'VariableNames',names);
 result=struct('config',cfg,'data',data,'diagnostics',diagnostics,'command_output',command_output, ...
     'files',struct('env',env_file,'sbp',sbp_file,'iw2',iw2_file,'data',data_file, ...
     'diagnostics',diag_file,'prt',prt_file));
+end
+
+function tf=local_nonempty(path,min_bytes)
+info=dir(path);
+tf=~isempty(info)&&info(1).bytes>min_bytes;
 end

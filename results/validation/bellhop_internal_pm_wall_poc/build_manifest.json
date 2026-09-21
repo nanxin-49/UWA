@@ -1,12 +1,12 @@
 {
   "purpose": "Bellhop 2020 validation-only fixed-PM internal wall and local covariance overlay",
-  "official_toolbox_root": "E:\\MISC\\BELLHOP\\AcousticsToolbox_2020",
+  "official_toolbox_root": "external dependency: AcousticsToolbox 2020 (windows-bin-20201102)",
   "official_bellhop_sha256": "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
   "official_step_sha256": "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
-  "overlay_bellhop_sha256": "D9191A9C13C23083D70A2A864255C394AC1994CE0161FC204F10D521C16C301C",
-  "overlay_step_sha256": "A89D6FA73A4AE2BBFA5FCE782BD784A5ADC7432E9C8B8180D31D8E5B0A216B0D",
-  "validation_executable": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_pm_wall_poc\\bin\\bellhop_iwall_pm_2020.exe",
-  "validation_executable_sha256": "F9FDB6166B7E0106098DA62417044B42636494B77391FDEE0C581566B6D92853",
-  "compiler_root": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_sinusoidal_wall_poc\\toolchain_tmp\\mingw64",
+  "overlay_bellhop_sha256": "986010216F03D1EF2156730F076FCEC27AD8A39CC1A5EB44096726EE33E0E251",
+  "overlay_step_sha256": "1F54C01F35AC9682C80D374ABC7CFC83EC9EBF72BD4928FEDED5E19323C757DE",
+  "validation_executable": "results/validation/bellhop_internal_pm_wall_poc/bin/bellhop_iwall_pm_2020.exe",
+  "validation_executable_sha256": "81DE6A512037D63F06EDE0537D5A591FDE5E41B4AB9A95FF57F53F66917A5360",
+  "compiler_root": "external build toolchain: MinGW-w64 (validation-only; local root intentionally not recorded)",
   "compiler_version": "GNU Fortran (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r2) 15.1.0"
 }

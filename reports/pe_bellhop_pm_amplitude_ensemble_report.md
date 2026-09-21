@@ -8,7 +8,7 @@
 
 固定 4 kHz、uniform c=1500 m/s、W=192.1875 m、nx=984、step=0.05 m、Bellhop 5001 beams、sector ±15°。The canonical PM spectral-density column is fixed and each non-reference seed independently draws Gaussian cosine/sine coefficients with variance S(k)*Delta-k. No Hs renormalization, recentering, smoothing, tapering, bandwidth change, source fit, or core-physics modification is applied.
 
-Canonical coefficient source: `E:\MISC\CARPE3D_matlab\Explain\results\validation\bellhop_internal_pm_fixed_realization\fixed_pm_fourier_coefficients.csv`; SHA-256: `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67`; requested Kmax `0.5 rad/m`, realized Kmax `0.471238898038 rad/m`.
+Canonical coefficient source: `results\validation\bellhop_internal_pm_fixed_realization\fixed_pm_fourier_coefficients.csv`; SHA-256: `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67`; requested Kmax `0.5 rad/m`, realized Kmax `0.471238898038 rad/m`.
 
 Flat Bellhop baseline: source `stage2_verified`, beams `5001`, fingerprint `7e2112a91a8ccbdf4c98cfefde1b93d24976a13bfd7f79d655e311acb5cf2e74`. Every rough case must match this beam count; cached outputs are accepted only when their request fingerprint and output hashes match.
 

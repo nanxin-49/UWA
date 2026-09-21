@@ -68,10 +68,7 @@ end
 
 function cfg=local_config(root,o)
 exe=getenv('BELLHOP_EXE');
-if isempty(exe)
-    candidates={'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe'};
-    for ii=1:numel(candidates), if exist(candidates{ii},'file')==2, exe=candidates{ii}; break; end, end
-end
+if isempty(exe), error('Set BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.'); end
 cfg=struct('output_dir',fullfile(root,'results','validation','pe_bellhop_unfolded_flat_gaussian'), ...
     'report_path',fullfile(root,'reports','pe_bellhop_unfolded_flat_gaussian_report.md'), ...
     'bellhop_exe',exe,'c0_mps',1500,'z_tx_m',100,'z_rx_m',3,'sigma_src_m',0.3, ...

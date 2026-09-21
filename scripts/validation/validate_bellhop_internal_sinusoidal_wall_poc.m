@@ -5,7 +5,7 @@ function validation = validate_bellhop_internal_sinusoidal_wall_poc(options)
 arguments
     options.output_dir (1,:) char = ''
     options.validation_exe (1,:) char = ''
-    options.official_exe (1,:) char = 'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe'
+    options.official_exe (1,:) char = ''
     options.frequency_hz (1,1) double {mustBePositive} = 4000
     options.wall_wavenumber_per_m (1,1) double = -0.01
     options.wall_amplitudes_m (1,:) double {mustBePositive} = [0.25 0.5]
@@ -16,6 +16,10 @@ arguments
 end
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 setup_vertical_project;
+if isempty(options.official_exe), options.official_exe=getenv('BELLHOP_EXE'); end
+if isempty(options.official_exe)
+    error('Set options.official_exe or BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.');
+end
 if isempty(options.output_dir)
     options.output_dir=fullfile(root,'results','validation','bellhop_internal_sinusoidal_wall_poc');
 end
