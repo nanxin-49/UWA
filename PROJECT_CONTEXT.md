@@ -4062,3 +4062,11 @@ theta95 around `9.5 deg` is supported for the phase criterion, not as a
 universal total-field bound. Optional sigma `4 m` is excluded because fixed
 Bellhop receiver influence yields sparse `0/0` ratios. Production PE remains
 unchanged. See `reports/pe_strict_normal_sigma_sweep_report.md`.
+
+The same audit now includes a strong-height discriminator
+`A=0.20 m, K=0.10 rad/m` at sigma `0.3/2 m`. Its Model-0/Model-1 gap falls
+from `0.06227` to `0.000924` as theta95 narrows from `15.97` to `2.35 deg`,
+while PE--BIE remains `0.08091/0.08708` and phase RMS remains about
+`0.075 rad`. Thus the finite-angle normal approximation is removed by a narrow
+source, but strong-height phase-screen/nonlocal error remains. This result is
+part of the same `STRICT_NORMAL_APPROXIMATION_PARTIAL` report.
