@@ -28,4 +28,4 @@ Status: **NORMAL_APPROXIMATION_CONFIRMED**; high-K limited: **1**.
 
 If high-K remains limited while G2 passes, the Goal proceeds to G3 local-slope coupling without fitting Model-1.
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G2_kz_aware\G2_kz_aware_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G2_kz_aware\G2_kz_aware_cases.csv`.
+Artifacts: `results\validation\pe_surface_operator_bie_reference\G2_kz_aware\G2_kz_aware_validation.mat`, `results\validation\pe_surface_operator_bie_reference\G2_kz_aware\G2_kz_aware_cases.csv`.

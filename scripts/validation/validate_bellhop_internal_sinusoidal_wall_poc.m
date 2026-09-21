@@ -5,7 +5,7 @@ function validation = validate_bellhop_internal_sinusoidal_wall_poc(options)
 arguments
     options.output_dir (1,:) char = ''
     options.validation_exe (1,:) char = ''
-    options.official_exe (1,:) char = 'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe'
+    options.official_exe (1,:) char = 'AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe'
     options.frequency_hz (1,1) double {mustBePositive} = 4000
     options.wall_wavenumber_per_m (1,1) double = -0.01
     options.wall_amplitudes_m (1,:) double {mustBePositive} = [0.25 0.5]

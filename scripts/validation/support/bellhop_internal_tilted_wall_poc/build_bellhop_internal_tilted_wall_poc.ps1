@@ -1,5 +1,5 @@
 param(
-    [string]$OfficialToolboxRoot = 'E:\MISC\BELLHOP\AcousticsToolbox_2020',
+    [string]$OfficialToolboxRoot = 'AcousticsToolbox_2020',
     [string]$CompilerRoot = '',
     [string]$OutputDir = ''
 )

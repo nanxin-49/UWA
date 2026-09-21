@@ -32,6 +32,6 @@
 - `finite`: PASS
 - `all`: PASS
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R1_flat\R1_flat_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R1_flat\R1_flat_convergence.csv`.
+Artifacts: `results\validation\pe_bellhop_helmholtz_bie_reference\R1_flat\R1_flat_validation.mat`, `results\validation\pe_bellhop_helmholtz_bie_reference\R1_flat\R1_flat_convergence.csv`.
 
 Rough stages remain locked unless every R1 hard gate passes.

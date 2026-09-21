@@ -6,7 +6,7 @@
 
 ## 输入与映射
 
-- coefficients：E:\MISC\CARPE3D_matlab\Explain\results\validation\bellhop_internal_pm_fixed_realization\fixed_pm_fourier_coefficients.csv
+- coefficients：results\validation\bellhop_internal_pm_fixed_realization\fixed_pm_fourier_coefficients.csv
 - coefficients SHA-256：1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67
 - seed/U/span：260001 / 6 m/s / 160 m
 - coefficient count / requested Kmax / realized Kmax：12 / 0.5 / 0.471238898038 rad/m

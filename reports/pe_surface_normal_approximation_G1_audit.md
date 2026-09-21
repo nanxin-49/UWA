@@ -33,4 +33,4 @@ The frozen mechanism gate requires median low-K error-vector correlation >=0.9, 
 
 Interpretation: G1 tests whether the omitted finite-angle phase has the correct scale and error-vector direction across frozen cases. High-K residual after this diagnostic is evidence for a separate slope-coupling test, not permission to fit a coefficient.
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G1_normal_approximation\G1_normal_approximation_audit.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G1_normal_approximation\G1_normal_approximation_cases.csv`.
+Artifacts: `results\validation\pe_surface_operator_bie_reference\G1_normal_approximation\G1_normal_approximation_audit.mat`, `results\validation\pe_surface_operator_bie_reference\G1_normal_approximation\G1_normal_approximation_cases.csv`.

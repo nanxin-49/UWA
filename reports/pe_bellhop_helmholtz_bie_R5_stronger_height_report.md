@@ -40,4 +40,4 @@
 - `finite`: PASS
 - `all`: PASS
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R5_stronger_height\R5_stronger_height_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R5_stronger_height\R5_stronger_height_refinement_stability.csv`.
+Artifacts: `results\validation\pe_bellhop_helmholtz_bie_reference\R5_stronger_height\R5_stronger_height_validation.mat`, `results\validation\pe_bellhop_helmholtz_bie_reference\R5_stronger_height\R5_stronger_height_refinement_stability.csv`.

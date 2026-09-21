@@ -6,7 +6,7 @@ function validation = validate_bellhop_internal_tilted_wall_poc(options)
 arguments
     options.output_dir (1,:) char = ''
     options.validation_exe (1,:) char = ''
-    options.official_exe (1,:) char = 'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe'
+    options.official_exe (1,:) char = 'AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe'
     options.frequency_hz (1,1) double {mustBePositive} = 4000
     options.wall_slope (1,1) double = 0.005
     options.beam_counts (1,:) double {mustBeInteger,mustBePositive} = [2001 5001 10001]

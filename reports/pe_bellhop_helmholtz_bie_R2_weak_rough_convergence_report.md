@@ -38,6 +38,6 @@
 - `finite`: PASS
 - `all`: PASS
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R2_weak_rough\R2_weak_rough_convergence.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R2_weak_rough\R2_weak_rough_convergence.csv`.
+Artifacts: `results\validation\pe_bellhop_helmholtz_bie_reference\R2_weak_rough\R2_weak_rough_convergence.mat`, `results\validation\pe_bellhop_helmholtz_bie_reference\R2_weak_rough\R2_weak_rough_convergence.csv`.
 
 R3 remains locked unless every R2 gate passes.

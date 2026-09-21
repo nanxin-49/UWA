@@ -23,4 +23,4 @@ Status: **NONLOCAL_EFFECT_REQUIRED**.
 - `finite`: true
 - `all`: false
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G3_angle_slope\G3_angle_slope_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G3_angle_slope\G3_angle_slope_cases.csv`.
+Artifacts: `results\validation\pe_surface_operator_bie_reference\G3_angle_slope\G3_angle_slope_validation.mat`, `results\validation\pe_surface_operator_bie_reference\G3_angle_slope\G3_angle_slope_cases.csv`.

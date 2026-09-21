@@ -36,4 +36,4 @@
 - `finite`: PASS
 - `all`: PASS
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R4_region_II\R4_region_II_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_bellhop_helmholtz_bie_reference\R4_region_II\R4_refinement_stability.csv`.
+Artifacts: `results\validation\pe_bellhop_helmholtz_bie_reference\R4_region_II\R4_region_II_validation.mat`, `results\validation\pe_bellhop_helmholtz_bie_reference\R4_region_II\R4_refinement_stability.csv`.

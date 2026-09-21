@@ -1,11 +1,11 @@
-# PE--Bellhop controlled rough-surface comparison — authoritative GOAL
+# PE--Bellhop controlled rough-surface comparison — authoritative execution record
 
-状态：**FROZEN / READY FOR SEQUENTIAL EXECUTION**  
+状态：**COMPLETED / AUTHORITATIVE EXECUTION RECORD**
 冻结日期：2026-09-10  
 修订说明：已纳入 Stage 1X phase-convention attribution、Stage 1 convention-only regression、Stage 1Y theoretical convention closure，并统一 10,001-beam 执行覆盖。  
-执行要求：**Sol 审核，Luna xhigh 顺序执行；禁止任何子 Agent。**
+执行记录：按 Stage 顺序、单一验证会话和固定比较约定完成；禁止并行运行和结果拟合。
 
-本文件是后续执行的唯一 authoritative Goal。执行者必须先读：
+本文件是当前权威执行记录；Stage 0--7 已全部完成。历史执行前置说明如下：
 
 ```text
 reports/pe_bellhop_controlled_comparison_goal_audit.md
@@ -13,10 +13,9 @@ reports/pe_bellhop_controlled_comparison_goal_audit.md
 
 再按本文件顺序推进。
 
-禁止：
+历史执行原则：
 
-- 使用子 Agent；
-- 并行启动多个 Stage；
+- 不并行启动多个 Stage；
 - 为缩小 PE/Bellhop 差异修改核心物理；
 - 根据结果临时调整 comparison convention；
 - 通过 amplitude/phase fitting 人为闭合结果。
@@ -149,40 +148,13 @@ BIE/BEM reference adjudication。
 
 ---
 
-## 2. 模型与执行角色
+## 2. 历史执行原则
 
-### Sol
+历史执行采用单一验证会话，按已解锁 Stage 顺序推进，并优先复用
+authoritative outputs。不得并行启动多个 Stage，不得通过临时的模型角色、
+代理分工、结果拟合或重设比较约定来改变实验结论。
 
-Sol 仅负责：
-
-- 审核计划；
-- 核对 current authoritative code/reports；
-- 冻结 Goal；
-- 判断是否存在逻辑冲突。
-
-不负责执行完整实验。
-
-### Luna xhigh
-
-Goal 冻结后由 **Luna xhigh** 顺序执行：
-
-- 一次只推进一个已解锁 Stage；
-- 根据上一阶段结果决定下一步；
-- 优先复用 authoritative outputs；
-- 不重新设计另一套路线。
-
-### 禁止子 Agent
-
-整个任务禁止：
-
-- research agent；
-- coding agent；
-- review agent；
-- parallel worker；
-- agent delegation；
-- agent swarm。
-
-允许普通工具、MATLAB、Python、shell、Bellhop executable、文件搜索。
+允许使用普通工具、MATLAB、Python、shell、Bellhop executable 和文件搜索。
 
 ---
 

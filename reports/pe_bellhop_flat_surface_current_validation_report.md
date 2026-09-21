@@ -32,7 +32,7 @@ Scale spread 1.65401 dB; reflection RMS 1.62948 dB; max 2.0751 dB. Source-aware 
 
 Physical PE fields are obtained through the public phase-reference layer; no validator adds a second carrier. The 4 kHz Bellhop arrivals are extended across 3--5 kHz only for delay/PDP diagnostics, not as a multifrequency Bellhop amplitude model.
 
-The public PE core and default `kirchhoff_spatial` surface remain unchanged. See the same-run ten-figure atlas under `E:\MISC\CARPE3D_matlab\Explain\results\visualization\pe_bellhop_flat_surface_current\bellhop_current_20260723_rc5`.
+The public PE core and default `kirchhoff_spatial` surface remain unchanged. See the same-run ten-figure atlas under `results\visualization\pe_bellhop_flat_surface_current\bellhop_current_20260723_rc5`.
 
 ## Fixed conclusions
 

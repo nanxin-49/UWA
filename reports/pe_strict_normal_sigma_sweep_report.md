@@ -94,4 +94,4 @@ The sampled angle is an engineering bound for this 4 kHz Gaussian/source/surface
 
 PE/BIE remained finite (`theta95=1.22986 deg`, Model-0/Model-1 gap `4.90776e-05`), but Bellhop rough/flat contained `933` NaNs, so this point is excluded from hard gates and trend fits. No Bellhop parameter was tuned.
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_strict_normal_sigma_sweep\strict_normal_sigma_sweep_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_strict_normal_sigma_sweep\strict_normal_lowK.csv`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_strict_normal_sigma_sweep\strict_normal_highK.csv`.
+Artifacts: `results\validation\pe_strict_normal_sigma_sweep\strict_normal_sigma_sweep_validation.mat`, `results\validation\pe_strict_normal_sigma_sweep\strict_normal_lowK.csv`, `results\validation\pe_strict_normal_sigma_sweep\strict_normal_highK.csv`.

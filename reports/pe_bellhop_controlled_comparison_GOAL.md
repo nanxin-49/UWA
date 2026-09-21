@@ -1,11 +1,12 @@
-# PE--Bellhop controlled rough-surface comparison — authoritative GOAL
+# PE--Bellhop controlled rough-surface comparison — historical GOAL
 
-状态：**FROZEN / READY FOR SEQUENTIAL EXECUTION**  
+状态：**SUPERSEDED / HISTORICAL FROZEN PLAN**
 冻结日期：2026-09-10
 
-本文件是后续执行的唯一 authoritative Goal。执行者必须先读
-`reports/pe_bellhop_controlled_comparison_goal_audit.md`，再严格按本文件顺序
-推进。禁止子 Agent、禁止并行启动多个 Stage、禁止为缩小差异修改核心物理。
+本文件保留原冻结计划、阈值和历史数值，仅用于追溯，已不再作为当前执行入口。
+当前权威版本为
+`reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`。
+其中的执行顺序和角色约束属于历史计划，不覆盖当前已完成记录。
 
 ### 执行覆盖（2026-09-10）
 

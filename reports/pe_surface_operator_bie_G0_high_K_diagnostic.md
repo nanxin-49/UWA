@@ -36,4 +36,4 @@
 - `finite`: PASS
 - `all`: PASS
 
-Artifacts: `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G0_high_K\G0_high_K_validation.mat`, `C:\Users\ASUS\.codex\worktrees\baf5\Explain\results\validation\pe_surface_operator_bie_reference\G0_high_K\G0_high_K_refinement_stability.csv`.
+Artifacts: `results\validation\pe_surface_operator_bie_reference\G0_high_K\G0_high_K_validation.mat`, `results\validation\pe_surface_operator_bie_reference\G0_high_K\G0_high_K_refinement_stability.csv`.
