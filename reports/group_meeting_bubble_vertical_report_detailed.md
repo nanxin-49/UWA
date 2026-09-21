@@ -145,7 +145,7 @@ output/channel struct
 如果在 Windows PowerShell 中从外部调用 MATLAB，可使用以下形式：
 
 ```powershell
-& 'D:\Matlab2025b\bin\matlab.exe' -batch "cd('E:/MISC/CARPE3D_matlab/Explain'); comm_compare_bubble_models_vertical;"
+& 'D:\Matlab2025b\bin\matlab.exe' -batch "cd('.'); comm_compare_bubble_models_vertical;"
 ```
 
 当前不同运行入口的定位如下：

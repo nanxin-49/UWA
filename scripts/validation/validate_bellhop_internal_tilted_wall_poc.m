@@ -15,7 +15,10 @@ arguments
 end
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 setup_vertical_project;
-if isempty(options.official_exe), options.official_exe=resolve_bellhop_exe_vertical(); end
+if isempty(options.official_exe), options.official_exe=getenv('BELLHOP_EXE'); end
+if isempty(options.official_exe)
+    error('Set options.official_exe or BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.');
+end
 if isempty(options.output_dir)
     options.output_dir=fullfile(root,'results','validation','bellhop_internal_tilted_wall_poc');
 end

@@ -19,6 +19,9 @@ for ii=1:numel(names)
 end
 assert(cfg.water_depth_m==100 && cfg.source_clearance_m==1, ...
     'This entry fixes the newly approved physical installation.');
+if isempty(cfg.bellhop_exe)
+    error('Set BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.');
+end
 cfg.tx_depth_m=cfg.water_depth_m-cfg.source_clearance_m;
 cfg.rx_range_m=(cfg.tx_depth_m-cfg.rx_depth_m)/tand(cfg.geometry_angle_deg);
 assert(isfile(cfg.bellhop_exe),'Bellhop is missing.');

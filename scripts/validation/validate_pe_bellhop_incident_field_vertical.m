@@ -80,9 +80,7 @@ end
 
 function cfg = local_config(root,overrides)
 exe = getenv('BELLHOP_EXE');
-if isempty(exe)
-    exe = resolve_bellhop_exe_vertical();
-end
+if isempty(exe), error('Set BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.'); end
 cfg = struct( ...
     'output_dir',fullfile(root,'results','validation','pe_bellhop_incident_field'), ...
     'report_path',fullfile(root,'reports','pe_bellhop_incident_field_comparison_report.md'), ...

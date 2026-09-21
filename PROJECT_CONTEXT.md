@@ -1,4 +1,4 @@
-﻿# PROJECT_CONTEXT.md
+# PROJECT_CONTEXT.md
 
 ## Purpose
 This file is the append-only project log and long-term model memory for the
@@ -76,11 +76,11 @@ this is a visualization/filtering result rather than a new PE validation.
 ### Bellhop executable baseline / Bellhop 执行版本（2026-08-31）
 
 - New Bellhop runs use the official OALIB Windows package `2020_11_4`,
-  selected through `BELLHOP_EXE` or `BELLHOP_TOOLBOX_ROOT`. The executable is
+  installed at `AcousticsToolbox_2020/`. The executable is
   `windows-bin-20201102/bellhop.exe` (1,273,704 bytes, SHA-256
   `7E7809A64C3BF734AFF6D28D0D4D52B1B4BD203D81676E3241FFD3189941B505`).
-- The current Windows user `BELLHOP_EXE` and all active script fallbacks that
-  previously named `AcousticsToolbox_2017` now select this 2020 executable.
+- Active validation scripts read the configured `BELLHOP_EXE`; no machine-local
+  executable fallback is embedded in the repository.
 - The 2017 installation remains in place for reproducibility. Historical
   reports and saved run metadata keep their recorded 2017 path and hashes;
   do not reinterpret those artifacts as 2020 reruns.
@@ -3379,8 +3379,8 @@ marching, default surface model, communication entry, or carrier formula was
 changed.
 
 Formal mode requires a stable absolute non-Temp `BELLHOP_EXE`. The accepted
-historical external executable was the 2017 Bellhop binary recorded by the
-run metadata, size 683637 bytes,
+external executable was
+the historical AcousticsToolbox 2017 Bellhop executable (external dependency), size 683637 bytes,
 SHA-256
 `e6f9c1bcfd2b0945bfb59607909af589fa7b3f823df8bd5121425736eaebd796`.
 The wrapper writes standard uniform/flat pressure-release `.env` cases,
@@ -3851,3 +3851,222 @@ wall-residual, pressure-release phase, beam-state, positive-range, and PE
 edge/seam guards.  Native backward-range amplitude remains diagnostic only,
 and the dimensionality sensitivity (`-0.15886 dB`, `+0.01251 rad`) is
 reported separately rather than subtracted.
+
+## 2026-09-10 Controlled PE--Bellhop Goal: Stage 0/1 status
+
+The authoritative sequential driver is
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`, governed by
+`reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`.  P0 and Stage 0 passed,
+including PE--AS closure, flat parametric internal-wall closure, receiver
+mapping, phase/tau/positive-range guards, and 5001/10001-beam checks.
+
+Stage 1 weak-sinusoid runs at `A=0.01`, `0.005`, and `0.0025 m` all passed
+profile/geometry/finite guards but did not return to the Stage-0 numerical
+floor: model M99 L2 was `0.47247`, `0.23875`, and `0.11969`, respectively;
+phase RMS was `0.47920`, `0.23960`, and `0.11980 rad`.  The controlled
+comparison is therefore blocked by model comparability at the current weak
+limit, not by PE marching, Bellhop geometry, or solver convergence.  The
+read-only Stage 1X audit
+`reports/pe_bellhop_controlled_comparison_stage1x_phase_convention_audit.md`
+identifies a fixed PE conjugation convention that closes all three amplitudes
+(the mirror-conjugate is degenerate for the centered/even profile).  This does
+not rewrite the original Stage-1 PASS/FAIL: Stage 2--7 remain locked pending a
+narrow convention-only rerun.  Per the latest user execution override, future
+Bellhop runs use 10,001 beams only; no 20,001-beam endpoint is to be started.
+
+The convention-only regression is recorded under
+`results/validation/pe_bellhop_controlled_comparison/stage1_convention_fixed/`.
+It uses `G_BH_comparison=conj(G_BH)` only in the rough/flat comparison layer:
+Stage 0 was rerun and passed, A=0.01 was rerun through the main driver, and the
+A=0.005/A=0.0025 outputs are comparison-only reconstructions from preserved raw
+solver MAT files.  The original Stage-1 FAIL data remain under `stage1/`;
+Stage 2--7 are not automatically unlocked.
+
+## 2026-09-10 Controlled PE--Bellhop Goal: Stage 1Y convention closure
+
+Stage 1Y is complete and is documented in
+`reports/pe_bellhop_controlled_comparison_stage1y_theoretical_convention_closure.md`.
+Without new PE/Bellhop runs, the source audit independently closes the PE
+`exp(-i*omega*t)`/`exp(+i*(kz-k0)L)` convention, Bellhop 2020 coherent
+`exp(-i*(omega*tau-phase))` influence convention, the direct real/imag SHD
+reader, the real X-source normalization, and the single vacuum `+pi` phase in
+`Reflect2D`. Existing free-field and non-sinusoidal constant-height audits
+support the analytic prediction; no per-case conjugation, fitting, or core
+physics change is used.
+
+The permanently frozen comparison fields are
+`B_abs=conj(B_raw)` and `G_BH_comparison=conj(G_BH_abs)=G_BH_raw`. The original
+raw Stage-1 FAIL outputs remain unchanged, while the convention-fixed
+regression remains PASS. Stage 1Y is
+`CONVENTION_THEORETICALLY_CLOSED`, so Stage 2 is unlocked by the Goal gate;
+Stage 2 was subsequently completed and is summarized in the Stage-2 status
+entry below. The remaining Bellhop--AS/flat
+residual (~`0.006` normalized complex L2) is retained as a finite
+source/beam mapping floor, not treated as a convention blocker.
+
+## 2026-09-11 Controlled PE--Bellhop Goal: Stage 2 execution status
+
+Stage 2 height-sweep orchestration is present in
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`. It fixes
+`K=0.10 rad/m`, X/C source settings, `N=4097`, and the user-mandated 10,001
+beams, and supports case-granular resume without rerunning completed cases.
+The prescribed A=`0.01/0.02/0.05/0.10/0.20 m` cases are complete; A=0.01
+reused the convention-fixed result and the other four points ran one Bellhop
+case each. All solver/mapping/finite guards pass. Metrics rise with height:
+`E_G`=`0.004093/0.008234/0.021036/0.044179/0.100485` and phase RMS
+`0.004059/0.008166/0.020869/0.043877/0.100142 rad` in that A order.
+The authoritative report is
+`reports/pe_bellhop_controlled_comparison_stage2_height_sweep_report.md`:
+Stage 2 is `PASS`. Its summary was later augmented with the Goal-required
+`rho_raw`, maximum slope, and maximum/RMS curvature columns without rerunning
+the solvers.
+
+## 2026-09-12 Controlled PE--Bellhop Goal: Stage 3 execution status
+
+Stage 3 is implemented as the `stage3` branch of
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`. The frozen
+manifest selects `A=0.02 m`, the largest Stage-2 point satisfying every Region-I
+gate, and scans `K=0.10/0.20/0.35/0.47 rad/m` at X/C, `N=4097`, and 10,001
+beams. All four solver/mapping/geometry/finite guards pass. The classifications
+are `I/II/II/II`; corresponding `E_G` values are
+`0.008234/0.008369/0.014140/0.022816`, and phase RMS values are
+`0.008166/0.007579/0.009428/0.012906 rad`. The largest sampled curvature is
+`0.004418 1/m`; Bellhop hit-curvature, native `Reflect2D` state, wall residual,
+and positive transformed range remain finite and consistent. The authoritative
+report is
+`reports/pe_bellhop_controlled_comparison_stage3_slope_curvature_report.md`.
+Stage 4 subsequently completed as a read-only validity-map aggregation with
+zero solver calls. At `K=0.10 rad/m`, the sampled Region-I to non-I transition
+is bracketed by `A=(0.02,0.05] m`; at `A=0.02 m`, it is bracketed by
+`K=(0.10,0.20] rad/m`. These are not interpolated or extrapolated boundaries.
+See `reports/pe_bellhop_controlled_comparison_stage4_validity_map_report.md`.
+
+## 2026-09-12 Controlled PE--Bellhop Goal: Stage 5 attribution
+
+Stage 5 completed as a zero-solver-call diagnostic on three Region-II
+representatives: `(A,K)=(0.05,0.10)`, `(0.20,0.10)`, and `(0.02,0.47)` in
+meter/rad-per-meter units. Global phase alignment reduces `E_G` by only
+`7.85%/20.24%/7.94%`, so every case is classified as `spatial distortion`
+under the frozen Goal rule rather than global/coherent-phase dominated.
+Bellhop differs from the analytic stationary-path phase by only
+`1.7e-6/6.2e-6/1.3e-5 rad` RMS, whereas the corresponding PE residual is
+`0.02087/0.10014/0.01290 rad`. These quantities are validation diagnostics;
+the production PE phase screen and Bellhop physics remain unchanged. See
+`reports/pe_bellhop_controlled_comparison_stage5_phase_attribution_report.md`.
+
+## 2026-09-13 Controlled PE--Bellhop Goal: Stages 6--7
+
+Stage 6 copied and verified the canonical seed-260001 coefficients with
+SHA-256 `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67`,
+then ran the sole allowed 4 kHz X/C, 10,001-beam fixed-PM case. All Bellhop
+geometry, incidence, reflection-phase, beam-state, positive-range and finite
+guards pass. The axis sanity result is `0.310370739 dB / -2.24820073 rad`,
+matching the historical X audit, while the complete M99 line has
+`E_G=0.958269`, phase RMS `1.107714 rad`, TL RMS `1.273990 dB`,
+`rho_shape=0.771213`, and is Region III. See
+`reports/pe_bellhop_controlled_comparison_stage6_fixed_pm_report.md`.
+
+Stage 7 made zero solver calls and reproduced the existing M=50 published
+statistics directly from the authoritative CSV: mean delta TL `-0.00747858 dB`,
+PE/BH mean powers `1.004510/1.007007`, and circular mean phase
+`-0.375345 rad`. It explicitly retains historical point-source R provenance;
+the data are neither relabeled X nor empirically corrected. Together with
+Stages 4--6, near-equal ensemble power is compatible with realization-level
+spatial reflection-model discrepancy, and the nonzero circular phase is not a
+remaining convention error. See
+`reports/pe_bellhop_controlled_comparison_stage7_historical_m50_interpretation_report.md`.
+
+The controlled Goal is now complete. Its final report is
+`reports/pe_bellhop_controlled_comparison_final_report.md`, with status
+`PHASE_MECHANISM_IDENTIFIED`. All requirements for `COMMON_LIMIT_CONFIRMED` are
+also met, but the more informative final label is used because Stage 5 locates
+the residual as spatial reflection-model distortion. The conditional BIE/BEM
+branch was not triggered for convention adjudication; it remains necessary only
+for a future absolute-accuracy claim in the Region-III PM regime.
+
+## 2026-09-14 Helmholtz BIE third-reference Goal: R0--R2
+
+The R0 formulation audit is complete and frozen in
+`reports/pe_bellhop_helmholtz_bie_R0_formulation_audit.md`. The selected
+validation-only reference is the two-dimensional sound-soft rough-surface
+combined-layer equation built with a Dirichlet half-plane Green function,
+`exp(-i*omega*t)`, an inward-to-water normal, and a slow-rise smooth finite
+section. The outgoing combined layer is `D_h-i*k*S_h`; an initial R1 smoke
+run exposed that the provisional plus sign was refinement-dependent and nearly
+singular, so the sign was corrected from the frozen time/radiation/normal
+conventions before accepting any result. It is specifically limited to the localized Gaussian angular-spectrum
+incidence and graph surfaces required by this Goal. Closed-obstacle BEM,
+quasi-periodic/Bloch formulations, and abrupt free-space truncation were
+rejected for R1--R5. R1 flat self-validation passes: the accepted 12-ppw
+result has boundary residual `9.276e-10`, image-field complex L2 `1.236e-7`,
+and phase RMS `9.268e-8 rad`. R2 also passes for the fixed C2-tapered
+`A=0.01 m`, `K=0.10 rad/m` benchmark. Its receiver-line BIE uncertainty is
+`6.002e-8` complex L2, `4.220e-8 rad` phase RMS, and `3.596e-7 dB` TL RMS.
+The physical surface support remains fixed while spatial, close-panel
+quadrature, and BIE-window convergence are varied independently. R3 weak
+PE--Bellhop--BIE closure also passes on that exact benchmark: PE--BIE has
+`E_G=0.003158` and phase RMS `0.003118 rad`, Bellhop--BIE has
+`E_G=8.092e-6` and phase RMS `5.886e-6 rad`, and PE--Bellhop has
+`E_G=0.003159`. Both native Helmholtz ratios (Bellhop and BIE) are mapped by
+the same fixed conjugation into the PE comparison convention; no scalar is
+fitted. Bellhop geometry and receiver guards pass. R4 (`A=0.05 m`) gives
+PE--BIE/Bellhop--BIE complex errors `0.016090/3.890e-5`; R5 (`A=0.20 m`)
+gives `0.080908/9.976e-5`. The ranking is unchanged at every spatial/window
+level and both separations exceed `5 U_BIE` by many orders of magnitude.
+The final first-round status is `BELLHOP_CLOSER_TO_HELMHOLTZ_REFERENCE`; see
+`reports/pe_bellhop_helmholtz_bie_final_report.md`. The R5 strong-height
+boundary residual has an explicit `1.1e-8`--`2.9e-8` plateau, while an
+independent higher-order receiver field agrees within `3.291e-8`, below its
+declared `U_BIE=6.179e-8`. Optional R6 and fixed PM are not needed for this
+adjudication and were not run.
+
+## 2026-09-15 PE rough-surface reflection-operator improvement Goal
+
+The BIE workflow was extended with the frozen high-K G0 case
+`A=0.02 m, K=0.47 rad/m`. All numerical and Bellhop geometry gates pass;
+Model-0 PE/BIE `E_G=0.0229061`, while Bellhop/BIE `E_G=1.36812e-4`.
+
+G1 measures the actual sigma=0.3 m Gaussian angular spectrum:
+`kx_rms=2.35702 rad/m`, `theta_rms=8.14401 deg`, and
+`<kz>/k=0.9899505`. G2 adds a validation-only `model1_kz_aware` branch to the
+1T helper. It uses componentwise `exp(+i*2*kz*eta)`, changes the flat field by
+only `1.83e-13`, reproduces legacy Model-0 exactly when selected, and reduces
+controlled-case phase RMS by factors `25.0/5.11/1.61/1.22` in
+weak/Region-II/strong-height/high-K order. This establishes
+`NORMAL_APPROXIMATION_CONFIRMED`.
+
+G3 adds analytic local-normal specular `kzr` and `(kzi+kzr)*eta` phase without
+fitted coefficients. It produces only `0.01%--1.5%` further improvement and
+fails the high-K gate, despite positive reflected `kz`, zero non-returning
+components, and finite fields. The Goal therefore stops before fixed PM with
+`NONLOCAL_EFFECT_REQUIRED`. Production PE, PE marching, the production surface
+model, Bellhop, and the BIE solver are unchanged. See
+`reports/pe_surface_operator_improvement_final_report.md`.
+
+## 2026-09-20 Strict-normal Gaussian-width applicability audit
+
+The validation-only sigma sweep keeps the 4 kHz controlled benchmark, accepted
+Helmholtz BIE, X-source Bellhop convention, receiver map, and surface geometry
+fixed while changing only the analytic Gaussian width. For the low-slope
+`A=0.05 m, K=0.10 rad/m` family, sigma `0.3/0.5/1/2 m` corresponds to
+theta95 `15.97/9.55/4.70/2.35 deg`. Legacy Model-0 phase RMS contracts from
+`0.01589` to a `0.00460--0.00469 rad` floor, its theta-rms-squared fit has
+`R2=0.9881`, and the Model-0/Model-1 complex gap contracts from `0.01558` to
+`0.000231`. Total complex/TL error is not monotone and no point passes the
+complete all-metric Region-I gate. At high K (`A=0.02 m, K=0.47 rad/m`) and
+theta95 `2.35 deg`, both PE variants agree to `1.56e-4` but remain about
+`0.0256` from BIE with phase RMS `0.0110 rad`, confirming a separate
+nonlocal/spectral-coupling residual. The final status is
+`STRICT_NORMAL_APPROXIMATION_PARTIAL`; for this smooth low-K family,
+theta95 around `9.5 deg` is supported for the phase criterion, not as a
+universal total-field bound. Optional sigma `4 m` is excluded because fixed
+Bellhop receiver influence yields sparse `0/0` ratios. Production PE remains
+unchanged. See `reports/pe_strict_normal_sigma_sweep_report.md`.
+
+The same audit now includes a strong-height discriminator
+`A=0.20 m, K=0.10 rad/m` at sigma `0.3/2 m`. Its Model-0/Model-1 gap falls
+from `0.06227` to `0.000924` as theta95 narrows from `15.97` to `2.35 deg`,
+while PE--BIE remains `0.08091/0.08708` and phase RMS remains about
+`0.075 rad`. Thus the finite-angle normal approximation is removed by a narrow
+source, but strong-height phase-screen/nonlocal error remains. This result is
+part of the same `STRICT_NORMAL_APPROXIMATION_PARTIAL` report.

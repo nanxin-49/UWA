@@ -446,7 +446,7 @@ validation = validate_pe_bellhop_freefield_vertical();
 
 Bellhop is an external dependency and is never copied into `results/`. Set
 `BELLHOP_EXE` to the executable directly, or set `BELLHOP_TOOLBOX_ROOT` to
-the external Acoustics Toolbox root; the resolver then checks
+the external Acoustics Toolbox root; the shared resolver checks
 `windows-bin-20201102/bellhop.exe`. If neither variable resolves to a file,
 the validator must stop at its dependency check.
 
@@ -549,10 +549,10 @@ is changed by these validators.
 - `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/reporting/generate_bellhop_flat_surface_visuals_vertical.m` is the archived historical matrix plotting entry.
 - Formal mode requires `BELLHOP_EXE` even if another Bellhop is on the MATLAB
   or system path. Temporary paths and binary-hash changes are rejected.
-- The current baseline is OALIB `2020_11_4` under the externally configured
-  `BELLHOP_TOOLBOX_ROOT`. The retained 2017 installation is historical and
-  must be selected explicitly only when reproducing a run whose metadata
-  records that binary.
+- The current local baseline is OALIB `2020_11_4` at
+  `<external>/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe`.
+  The retained 2017 directory is historical and must be selected explicitly
+  only when reproducing a run whose metadata records that binary.
 - The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
 - Outputs are written to `results/validation/pe_bellhop_flat_surface/`; the Markdown report records exact parameters, formulas, thresholds, results, and limitations.
 
@@ -561,7 +561,7 @@ This stage deliberately excludes rough-surface scattering, bottom bounces, stoch
 Historical formal command (archived; not runnable from the active tree):
 
 ```matlab
-setenv('BELLHOP_EXE',fullfile('path','to','bellhop.exe'))
+setenv('BELLHOP_EXE','<external>/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe')
 addpath('scripts/validation')
 % validate_pe_bellhop_flat_surface_current_vertical is archived.
 ```
@@ -612,3 +612,146 @@ The authoritative report is
 `reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`.  Current state
 is `PRELIMINARY_MODEL_DISCREPANCY`: numerical/applicability guards pass, while
 the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
+
+## Controlled PE--Bellhop rough-surface Goal workflow
+
+- `validation/validate_pe_bellhop_controlled_comparison.m` is the sequential,
+  validation-only driver for the frozen controlled-comparison Goal. Run
+  `validate_pe_bellhop_controlled_comparison('p0')`, then `'stage0'`; later
+  stages remain locked until the preceding stage passes. Stage 0 writes the
+  authoritative flat closure under
+  `results/validation/pe_bellhop_controlled_comparison/stage0/`.
+- The workflow uses source `X`, coherent `C`, explicit receiver-range
+  selection, the rebuilt validation-only internal-wall binaries, and the
+  existing 1-transverse PE helper. It does not modify PE, Bellhop core,
+  `Reflect2D`, or `InfluenceGeoHatCart`.
+- P0 and Stage 0 are PASS. The original raw Stage 1 weak-sinusoid results at
+  `A=0.01`, `0.005`, and `0.0025 m` remain permanently retained as FAIL
+  diagnostics. The convention-fixed regression is PASS, and the read-only
+  Stage 1Y theoretical closure is
+  `CONVENTION_THEORETICALLY_CLOSED`; Stages 2 and 3 have now PASSed their
+  solver/mapping/finite guards for all prescribed height and wavenumber points;
+  see `reports/pe_bellhop_controlled_comparison_stage2_height_sweep_report.md`
+  and `reports/pe_bellhop_controlled_comparison_stage3_slope_curvature_report.md`.
+  Future runs are limited to 10,001 beams by explicit user override; see
+  `reports/pe_bellhop_controlled_comparison_stage1_status.md`.
+- Stage 1X is implemented by
+  `validation/validate_pe_bellhop_controlled_comparison_stage1x.m`; it reads
+  completed `A=0.01,0.005,0.0025` MAT files only and writes diagnostics under
+  `results/validation/pe_bellhop_controlled_comparison/stage1x/`.
+- The Stage 1X convention-only regression uses the explicit comparison field
+  `G_BH_comparison=conj(G_BH)` and writes isolated outputs under
+  `results/validation/pe_bellhop_controlled_comparison/stage1_convention_fixed/`;
+  the original raw Stage-1 results remain unchanged.
+- Stage 1Y report:
+  `reports/pe_bellhop_controlled_comparison_stage1y_theoretical_convention_closure.md`.
+  It closes the PE/Bellhop time-harmonic, coherent influence, SHD reader, and
+  constant-height analytic sign convention without new solver calls or any
+  per-case fitting. The fixed comparison definition is `B_abs=conj(B_raw)` and
+  `G_BH_comparison=conj(G_BH_abs)=G_BH_raw`.
+- Stage 2 height sweep is implemented as the `stage2` branch of
+  `validation/validate_pe_bellhop_controlled_comparison.m`, with resumable
+  case files under
+  `results/validation/pe_bellhop_controlled_comparison/stage2_height_sweep/`.
+  A=0.01 is reused from the convention-fixed result and A=0.02/0.05/0.10/0.20
+  are completed at 10,001 beams.
+- Stage 3 slope/curvature sweep is the `stage3` branch of the same driver. Its
+  manifest freezes `A=0.02 m` as the largest Stage-2 Region-I height, then runs
+  `K=[0.10,0.20,0.35,0.47] rad/m` with 10,001 beams. Per-case diagnostics and
+  resumable results are under
+  `results/validation/pe_bellhop_controlled_comparison/stage3_slope_curvature_sweep/`.
+  Stage 3 is PASS.
+- Stage 4 is the read-only `stage4` branch. It makes no PE/Bellhop solver call,
+  deduplicates the shared `(A,K)=(0.02,0.10)` case, applies the frozen Region
+  rules, and writes the sampled validity map under
+  `results/validation/pe_bellhop_controlled_comparison/stage4_validity_map/`.
+  Stage 4 is PASS; the reported transitions are sampled brackets only.
+- Stage 5 is the read-only `stage5` branch. It selects the first non-I height,
+  maximum sampled height, and maximum sampled curvature cases, then applies the
+  frozen `rho_shape` and `E_aligned/E_G` attribution rule. It also records
+  analytic stationary/specular geometry, phase gradients, `2k eta`, and the
+  angle-aware phase diagnostic under
+  `results/validation/pe_bellhop_controlled_comparison/stage5_phase_attribution/`.
+  Stage 5 is PASS with all representatives classified as spatial distortion;
+  it makes zero solver calls and does not change the production PE screen.
+- Stage 6 is the `stage6` branch. It byte-copies and verifies the canonical
+  seed-260001 Fourier coefficients, runs only the frozen 4 kHz X/C,
+  10,001-beam fixed-PM case, reuses the Stage-0 flat denominator and masks, and
+  writes `results/validation/pe_bellhop_controlled_comparison/stage6_fixed_pm/`.
+  Stage 6 passes every numerical/geometry guard and is Region III; its
+  historical axis values are sanity checks only.
+- Stage 7 is the zero-solver `stage7` branch. It reads the authoritative M=50
+  CSV/MAT without rerunning seeds, preserves its historical point-source R
+  provenance, applies no R-to-X correction, and writes the interpretation to
+  `results/validation/pe_bellhop_controlled_comparison/stage7_historical_m50_interpretation/`.
+- The completed workflow is summarized in
+  `reports/pe_bellhop_controlled_comparison_final_report.md`; final status is
+  `PHASE_MECHANISM_IDENTIFIED`. The conditional BIE/BEM branch was not triggered.
+
+## Independent Helmholtz BIE third-reference workflow
+
+- `validation/validate_pe_bellhop_helmholtz_bie_reference.m` is the new
+  validation-only entrypoint for the independent 2-D pressure-release
+  Helmholtz reference. `R1` flat self-validation and `R2` weak-rough BIE
+  convergence and `R3` weak three-way closure are complete and pass.
+- Run from any MATLAB working directory after project setup with
+  `validate_pe_bellhop_helmholtz_bie_reference('r1')`, then `'r2'`, `'r3'`,
+  `'r4'`, and `'r5'`. Each stage reads and enforces the preceding
+  authoritative gate.
+- `validation/support/solve_helmholtz_bie_halfplane_vertical.m` implements the
+  R0-frozen Dirichlet-half-plane-Green combined-layer equation, slow-rise
+  finite section, panel Nyström quadrature, independent boundary residual,
+  and receiver evaluation. It does not call PE or Bellhop physics code.
+- R0 theory, signs, normal orientation, restrictions, and stop conditions are
+  frozen in `reports/pe_bellhop_helmholtz_bie_R0_formulation_audit.md`.
+- R1 writes validation artifacts under
+  `results/validation/pe_bellhop_helmholtz_bie_reference/R1_flat/` and the
+  authoritative summary to
+  `reports/pe_bellhop_helmholtz_bie_R1_flat_validation_report.md`.
+- R2 uses one fixed `A=0.01 m`, `K=0.10 rad/m` C2-tapered benchmark surface;
+  it keeps the physical support fixed while separately refining space,
+  close-panel quadrature, and the BIE window. Artifacts are under
+  `results/validation/pe_bellhop_helmholtz_bie_reference/R2_weak_rough/` and
+  the report is
+  `reports/pe_bellhop_helmholtz_bie_R2_weak_rough_convergence_report.md`.
+- R3 constructs that exact same continuous tapered surface for the existing
+  1-transverse PE helper, the 10,001-beam validation-only internal-wall
+  Bellhop runner, and BIE. It applies only the previously frozen Bellhop
+  rough/flat ratio conjugation for both native Helmholtz results and performs
+  no scalar fitting. Its report is
+  `reports/pe_bellhop_helmholtz_bie_R3_weak_three_way_closure_report.md`.
+- R4 (`A=0.05 m`) and R5 (`A=0.20 m`) repeat BIE spatial/window refinement
+  and compare the same tapered surface in PE, Bellhop, and BIE. Both are
+  complete and select `BELLHOP_CLOSER_TO_HELMHOLTZ_REFERENCE`; see
+  `reports/pe_bellhop_helmholtz_bie_final_report.md`. Optional R6 and fixed PM
+  were not run because they are unnecessary for the completed first-round
+  adjudication.
+
+## PE rough-surface operator improvement workflow
+
+- `validation/validate_pe_bellhop_helmholtz_bie_reference.m` also accepts
+  `'g0'` after the authoritative R5 gate. It runs the frozen
+  `A=0.02 m, K=0.47 rad/m`, 10,001-beam three-way diagnostic.
+- `validation/validate_pe_surface_normal_approximation_audit.m` is the G1
+  read-only angular-spectrum mechanism audit.
+- `validation/validate_pe_surface_kz_aware_operator.m` runs G2 with the
+  validation-only `model1_kz_aware` switch.
+- `validation/validate_pe_surface_angle_slope_operator.m` runs G3 with the
+  validation-only `model2_angle_slope` switch.
+- These switches live only in
+  `validation/support/run_pe_1d_surface_reflection_validation.m`; its omitted
+  or `model0_normal` setting exactly preserves the previous behavior.
+- G0--G2 pass. G3 fails the high-K improvement gate, so fixed PM is locked.
+  See `reports/pe_surface_operator_improvement_final_report.md`; the final
+  conclusion is `NONLOCAL_EFFECT_REQUIRED`.
+- `validation/validate_pe_strict_normal_sigma_sweep.m` performs the subsequent
+  4 kHz Gaussian-width applicability audit without changing production PE.
+  Run the `lowk` cases at sigma `0.3/0.5/1/2 m`, the `highk` cases at
+  `0.3/2 m`, and the `strong` cases at `A=0.20 m, K=0.10 rad/m` with
+  sigma `0.3/2 m`, then `aggregate`. It compares legacy `2*k*eta`, validation-only
+  kz-aware PE, 10,001-beam X-source Bellhop, and the accepted Helmholtz BIE;
+  artifacts are under `results/validation/pe_strict_normal_sigma_sweep/` and
+  the report is `reports/pe_strict_normal_sigma_sweep_report.md`. The accepted
+  status is `STRICT_NORMAL_APPROXIMATION_PARTIAL`. Optional sigma `4 m` is a
+  diagnostic only because the fixed Bellhop receiver influence produces
+  sparse-support `0/0` ratios, so it is excluded from hard gates.

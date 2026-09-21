@@ -76,7 +76,7 @@ See `PROJECT_CONTEXT.md` for project background and current status.
 - Use the existing shared MATLAB session through MATLAB MCP.
 - Do not launch MATLAB through PowerShell, CMD, `matlab.exe`, or `matlab.exe -batch` unless the user explicitly requests it.
 - Prefer the MATLAB MCP tools for their intended purposes, including `evaluate_matlab_code`, `run_matlab_file`, `run_matlab_test_file`, and `check_matlab_code`.
-- The normal project working directory is the repository root. Do not rely on the current working directory for production code; project entrypoints must still follow the path-handling rules below.
+- The normal project working directory is the repository checkout. Do not rely on the current working directory for production code; project entrypoints must still follow the path-handling rules below.
 - When necessary, verify the connected MATLAB version and working directory before running a validation or workflow.
 - If the MATLAB MCP existing session is unavailable, report the condition instead of silently falling back to launching MATLAB through PowerShell or another shell.
 - PowerShell may still be used for repository management, Git, file inspection, and other non-MATLAB shell tasks.

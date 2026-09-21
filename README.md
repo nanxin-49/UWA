@@ -4,9 +4,10 @@
 
 ## 快速开始
 
-在 MATLAB 中从仓库根目录先初始化一次路径：
+在 MATLAB 中先初始化一次路径：
 
 ```matlab
+cd('<repository-root>')
 setup_vertical_project;
 ```
 
@@ -82,10 +83,10 @@ comm_main_vertical_psk     % MPSK 通信演示
 
 当前技术状态日期为 2026-08-20。目录迁移仅改变文件位置和初始化方式，没有改变 PE marching、相位公式、海面统计公式或公共默认配置。
 
-Bellhop 是外部验证依赖，不随仓库分发。需要运行 Bellhop 验证时设置
-`BELLHOP_EXE`；也可以设置 `BELLHOP_TOOLBOX_ROOT`，脚本会在其
-`windows-bin-20201102/bellhop.exe` 下查找官方可执行文件。没有这些配置时，
-Bellhop 验证应停在依赖检查，不得将缺少外部依赖报告为运行成功。
+Bellhop 是外部验证依赖，不随仓库分发。运行 Bellhop 验证时可设置
+`BELLHOP_EXE` 指向可执行文件，或设置 `BELLHOP_TOOLBOX_ROOT` 指向外部
+Acoustics Toolbox 根目录；脚本会检查其 `windows-bin-20201102/bellhop.exe`。
+缺少外部依赖时，验证入口应停在依赖检查，不得伪造运行成功。
 
 ## PE--Bellhop 展开坐标验证
 

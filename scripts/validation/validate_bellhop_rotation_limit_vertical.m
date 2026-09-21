@@ -45,7 +45,7 @@ end
 function cfg = local_config(root,o)
 exe = getenv('BELLHOP_EXE');
 if isempty(exe)
-    exe = resolve_bellhop_exe_vertical();
+    error('Set BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.');
 end
 cfg = struct('bellhop_exe',exe, ...
     'output_dir',fullfile(root,'results','validation','bellhop_rotation_limit'), ...

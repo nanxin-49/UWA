@@ -28,11 +28,11 @@ Generated: 2026-07-03 12:09:08
 
 ## Figures
 
-- `E:\MISC\CARPE3D_matlab\Explain\results\validation\kstat_kdomain_Rcoh_vs_Hs_f.png`
-- `E:\MISC\CARPE3D_matlab\Explain\results\validation\kstat_kdomain_incoh_energy_vs_Hs_f.png`
-- `E:\MISC\CARPE3D_matlab\Explain\results\validation\kstat_kdomain_convergence_vs_M.png`
-- `E:\MISC\CARPE3D_matlab\Explain\results\validation\kstat_kdomain_radial_spectrum_compare.png`
-- `E:\MISC\CARPE3D_matlab\Explain\results\validation\kstat_kdomain_2d_spectrum_typical.png`
+- `results\validation\kstat_kdomain_Rcoh_vs_Hs_f.png`
+- `results\validation\kstat_kdomain_incoh_energy_vs_Hs_f.png`
+- `results\validation\kstat_kdomain_convergence_vs_M.png`
+- `results\validation\kstat_kdomain_radial_spectrum_compare.png`
+- `results\validation\kstat_kdomain_2d_spectrum_typical.png`
 
 ## Summary Table Preview
 

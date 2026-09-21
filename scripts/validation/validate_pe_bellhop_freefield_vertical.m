@@ -131,9 +131,7 @@ end
 
 function cfg=local_defaults(root)
 exe=getenv('BELLHOP_EXE');
-if isempty(exe)
-    exe=resolve_bellhop_exe_vertical();
-end
+if isempty(exe), error('Set BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.'); end
 cfg=struct('bellhop_exe',exe,'output_dir',fullfile(root,'results','validation','pe_bellhop_freefield','formal'), ...
     'reuse_existing_subresults',false, ...
     'c0_mps',1500,'frequencies_hz',[3000 4000 5000],'L_values_m',[20 40 70 100], ...
@@ -147,6 +145,7 @@ cfg=struct('bellhop_exe',exe,'output_dir',fullfile(root,'results','validation','
     'delay_frequency_hz',4000,'delay_frequency_offsets_hz',[-1 0 1], ...
     'delay_L_m',70,'delay_s0_m',10,'delay_tolerance_s',5e-6, ...
     'tl_tolerance_db',0.5,'phase_tolerance_rad',0.1);
+if isempty(cfg.bellhop_exe), error('Set BELLHOP_EXE to the AcousticsToolbox 2020 bellhop.exe.'); end
 end
 
 function g=local_default_grid_cases()
