@@ -1,12 +1,12 @@
 ﻿{
     "purpose":  "Bellhop 2020 validation-only smooth sinusoidal internal wall POC",
-    "official_toolbox_root":  "E:\\MISC\\BELLHOP\\AcousticsToolbox_2020",
+    "official_toolbox_root":  "<BELLHOP_TOOLBOX_ROOT>",
     "official_bellhop_sha256":  "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
     "official_step_sha256":  "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
     "overlay_bellhop_sha256":  "2A8DF26F12CB1E303F18B73FECCE2F5A5B6F9F97EEF7CED9A0EC1852ACA95E34",
     "overlay_step_sha256":  "7F8CE205051F724AA4D98384B6B2EED559DCF11233C89E21469549BFFE9BA530",
-    "validation_executable":  "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_sinusoidal_wall_poc\\bin\\bellhop_iwall_sinusoidal_2020.exe",
+    "validation_executable":  "results/validation/bellhop_internal_sinusoidal_wall_poc/bin/bellhop_iwall_sinusoidal_2020.exe",
     "validation_executable_sha256":  "520A9F51FD4C795AFD9FDFA55CB621878F2A5D7AD0658C2DB0C0D6BCD35D13B1",
-    "compiler_root":  "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_sinusoidal_wall_poc\\toolchain_tmp\\mingw64",
+    "compiler_root":  "<temporary compiler root removed after validation>",
     "compiler_version":  "GNU Fortran (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r2) 15.1.0"
 }

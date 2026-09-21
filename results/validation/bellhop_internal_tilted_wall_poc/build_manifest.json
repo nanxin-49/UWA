@@ -1,12 +1,12 @@
 ﻿{
     "purpose":  "Bellhop 2020 validation-only tilted straight internal wall POC",
-    "official_toolbox_root":  "E:\\MISC\\BELLHOP\\AcousticsToolbox_2020",
+    "official_toolbox_root":  "<BELLHOP_TOOLBOX_ROOT>",
     "official_bellhop_sha256":  "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
     "official_step_sha256":  "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
     "overlay_bellhop_sha256":  "8A39A9C14B221DA0B17DB7E44945D9FE9DD13F888F7B3CB7299A39A1C3D93208",
     "overlay_step_sha256":  "B00CDC3CBB3CB8D5D9351EAFF1068DE7EF8E070DAD4944DDB87B18F00B426145",
-    "validation_executable":  "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_tilted_wall_poc\\bin\\bellhop_iwall_tilted_2020.exe",
+    "validation_executable":  "results/validation/bellhop_internal_tilted_wall_poc/bin/bellhop_iwall_tilted_2020.exe",
     "validation_executable_sha256":  "2F7D52B4A3218D366B2D4CA535C4CAE08C8EB07DF0AE1EDFFCD8D8B03B8C1716",
-    "compiler_root":  "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\bellhop_internal_sinusoidal_wall_poc\\toolchain_tmp\\mingw64",
+    "compiler_root":  "<temporary compiler root removed after validation>",
     "compiler_version":  "GNU Fortran (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r2) 15.1.0"
 }

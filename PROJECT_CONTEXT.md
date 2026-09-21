@@ -76,7 +76,7 @@ this is a visualization/filtering result rather than a new PE validation.
 ### Bellhop executable baseline / Bellhop 执行版本（2026-08-31）
 
 - New Bellhop runs use the official OALIB Windows package `2020_11_4`,
-  installed at `E:/MISC/BELLHOP/AcousticsToolbox_2020/`. The executable is
+  selected through `BELLHOP_EXE` or `BELLHOP_TOOLBOX_ROOT`. The executable is
   `windows-bin-20201102/bellhop.exe` (1,273,704 bytes, SHA-256
   `7E7809A64C3BF734AFF6D28D0D4D52B1B4BD203D81676E3241FFD3189941B505`).
 - The current Windows user `BELLHOP_EXE` and all active script fallbacks that
@@ -3379,8 +3379,8 @@ marching, default surface model, communication entry, or carrier formula was
 changed.
 
 Formal mode requires a stable absolute non-Temp `BELLHOP_EXE`. The accepted
-external executable was
-`E:/MISC/BELLHOP/AcousticsToolbox_2017/Bellhop/bellhop.exe`, size 683637 bytes,
+historical external executable was the 2017 Bellhop binary recorded by the
+run metadata, size 683637 bytes,
 SHA-256
 `e6f9c1bcfd2b0945bfb59607909af589fa7b3f823df8bd5121425736eaebd796`.
 The wrapper writes standard uniform/flat pressure-release `.env` cases,

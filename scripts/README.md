@@ -439,10 +439,16 @@ remaining statistical limitation are summarized in
   remain `source_mode='gaussian'`.
 
 ```matlab
-setenv('BELLHOP_EXE','E:/stable/path/to/bellhop.exe')
+setenv('BELLHOP_EXE',fullfile('path','to','bellhop.exe'))
 addpath('scripts/validation')
 validation = validate_pe_bellhop_freefield_vertical();
 ```
+
+Bellhop is an external dependency and is never copied into `results/`. Set
+`BELLHOP_EXE` to the executable directly, or set `BELLHOP_TOOLBOX_ROOT` to
+the external Acoustics Toolbox root; the resolver then checks
+`windows-bin-20201102/bellhop.exe`. If neither variable resolves to a file,
+the validator must stop at its dependency check.
 
 Artifacts are under `results/validation/pe_bellhop_freefield/formal/`; the
 summary is `reports/pe_bellhop_freefield_validation_report.md`.
@@ -543,10 +549,10 @@ is changed by these validators.
 - `../cash/pe_bellhop_validation_scripts_2026-09-01/scripts/reporting/generate_bellhop_flat_surface_visuals_vertical.m` is the archived historical matrix plotting entry.
 - Formal mode requires `BELLHOP_EXE` even if another Bellhop is on the MATLAB
   or system path. Temporary paths and binary-hash changes are rejected.
-- The current local baseline is OALIB `2020_11_4` at
-  `E:/MISC/BELLHOP/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe`.
-  The retained 2017 directory is historical and must be selected explicitly
-  only when reproducing a run whose metadata records that binary.
+- The current baseline is OALIB `2020_11_4` under the externally configured
+  `BELLHOP_TOOLBOX_ROOT`. The retained 2017 installation is historical and
+  must be selected explicitly only when reproducing a run whose metadata
+  records that binary.
 - The validator runs scalar direct-only/direct-plus-reflection regressions and a 65-frequency PE case, compares direct/single-surface arrival times and TL, reconstructs matched PDPs, and checks public PE invariants.
 - Outputs are written to `results/validation/pe_bellhop_flat_surface/`; the Markdown report records exact parameters, formulas, thresholds, results, and limitations.
 
@@ -555,7 +561,7 @@ This stage deliberately excludes rough-surface scattering, bottom bounces, stoch
 Historical formal command (archived; not runnable from the active tree):
 
 ```matlab
-setenv('BELLHOP_EXE','E:/MISC/BELLHOP/AcousticsToolbox_2020/windows-bin-20201102/bellhop.exe')
+setenv('BELLHOP_EXE',fullfile('path','to','bellhop.exe'))
 addpath('scripts/validation')
 % validate_pe_bellhop_flat_surface_current_vertical is archived.
 ```

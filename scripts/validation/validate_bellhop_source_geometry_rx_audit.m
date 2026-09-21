@@ -7,7 +7,7 @@ function audit = validate_bellhop_source_geometry_rx_audit(options)
 arguments
     options.output_dir (1,:) char = ''
     options.report_path (1,:) char = ''
-    options.official_exe (1,:) char = 'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe'
+    options.official_exe (1,:) char = ''
     options.flat_validation_exe (1,:) char = ''
     options.sinusoidal_validation_exe (1,:) char = ''
     options.pm_validation_exe (1,:) char = ''
@@ -16,6 +16,7 @@ arguments
 end
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 addpath(root); setup_vertical_project();
+if isempty(options.official_exe), options.official_exe=resolve_bellhop_exe_vertical(); end
 if isempty(options.output_dir)
     options.output_dir=fullfile(root,'results','validation','bellhop_source_geometry_rx_audit');
 end

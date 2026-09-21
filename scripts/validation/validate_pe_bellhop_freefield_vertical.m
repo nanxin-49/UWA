@@ -132,8 +132,7 @@ end
 function cfg=local_defaults(root)
 exe=getenv('BELLHOP_EXE');
 if isempty(exe)
-    candidate='E:\MISC\fxx\Bellhop相关\Bellhop例程包\atWin10_2020_11_4\atWin10_2020_11_4\windows-bin-20201102\bellhop.exe';
-    if exist(candidate,'file')==2, exe=candidate; end
+    exe=resolve_bellhop_exe_vertical();
 end
 cfg=struct('bellhop_exe',exe,'output_dir',fullfile(root,'results','validation','pe_bellhop_freefield','formal'), ...
     'reuse_existing_subresults',false, ...

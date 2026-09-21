@@ -13,6 +13,22 @@
 !*.md
 !scripts/validation/postprocess_pe_bellhop_pm_model_discrepancy_statistics.py
 
+# Re-generable build, compiler, toolchain, and Python cache content must stay
+# ignored even though the repository-wide source/documentation rules above
+# allow .m and .md files.
+**/build/
+**/build/**
+**/toolchain_tmp/
+**/toolchain_tmp/**
+**/bin/
+**/bin/**
+**/__pycache__/
+**/__pycache__/**
+**/.cache/
+**/.cache/**
+*.pyc
+*.pyo
+
 # Retired local artifacts: override ALL allow-rules above, including .m/.md.
 /cash/
 

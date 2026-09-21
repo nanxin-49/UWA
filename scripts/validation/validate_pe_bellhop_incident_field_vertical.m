@@ -81,8 +81,7 @@ end
 function cfg = local_config(root,overrides)
 exe = getenv('BELLHOP_EXE');
 if isempty(exe)
-    candidate = 'E:\MISC\BELLHOP\AcousticsToolbox_2020\windows-bin-20201102\bellhop.exe';
-    if exist(candidate,'file') == 2, exe = candidate; end
+    exe = resolve_bellhop_exe_vertical();
 end
 cfg = struct( ...
     'output_dir',fullfile(root,'results','validation','pe_bellhop_incident_field'), ...

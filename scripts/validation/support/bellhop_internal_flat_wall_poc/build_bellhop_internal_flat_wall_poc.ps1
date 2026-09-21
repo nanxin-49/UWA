@@ -1,10 +1,16 @@
 param(
-    [string]$OfficialToolboxRoot = 'E:\MISC\BELLHOP\AcousticsToolbox_2020',
+    [string]$OfficialToolboxRoot = '',
     [string]$CompilerRoot = '',
     [string]$OutputDir = ''
 )
 
 $ErrorActionPreference = 'Stop'
+if ([string]::IsNullOrWhiteSpace($OfficialToolboxRoot)) {
+    $OfficialToolboxRoot = $env:BELLHOP_TOOLBOX_ROOT
+}
+if ([string]::IsNullOrWhiteSpace($OfficialToolboxRoot)) {
+    throw 'Set BELLHOP_TOOLBOX_ROOT to the external Acoustics Toolbox root.'
+}
 $supportDir = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $supportDir '..\..\..\..'))
 if ([string]::IsNullOrWhiteSpace($OutputDir)) {
