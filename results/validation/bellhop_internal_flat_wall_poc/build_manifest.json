@@ -1,0 +1,12 @@
+{
+  "purpose": "Bellhop 2020 validation-only flat internal wall POC",
+  "official_toolbox_root": "external dependency: AcousticsToolbox 2020 (windows-bin-20201102)",
+  "official_bellhop_sha256": "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
+  "official_step_sha256": "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
+  "overlay_bellhop_sha256": "AD8CE36E5EB199264B96EB8E1E151CB299FDBA3A1C1AA9E2158A60DD86A613BC",
+  "overlay_step_sha256": "98A1A250B33C2E11309F61E920F3D335D9FADF152398C8847A909EC81F32D43D",
+  "validation_executable": "results/validation/bellhop_internal_flat_wall_poc/bin/bellhop_iwall_flat_2020.exe",
+  "validation_executable_sha256": "1CFABA7BA7BC19738EBFFA5361C2D2866CD1ABF05C1C3501DF6657FAD19D5341",
+  "compiler_root": "external build toolchain: MinGW-w64 (validation-only; local root intentionally not recorded)",
+  "compiler_version": "GNU Fortran (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r2) 15.1.0"
+}

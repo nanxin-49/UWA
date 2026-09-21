@@ -1,0 +1,13 @@
+﻿{
+    "purpose":  "Bellhop 2020 validation-only curved-wall beam/frame covariance audit",
+    "official_toolbox_root":  "external dependency: AcousticsToolbox 2020 (windows-bin-20201102)",
+    "official_bellhop_sha256":  "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
+    "official_step_sha256":  "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
+    "overlay_bellhop_sha256":  "F8359C23226BB813199C0C7301D02B59E334C9BE078AEDDAA1824C0DDF40FCFA",
+    "overlay_step_sha256":  "0CE795843CB278DE07AA32AFB099E86752611C50C3D13B07CA147E4F9CBE479B",
+    "overlay_influence_sha256":  "093B4F19D34B1C9561A96CFD0E45E154ECBF4176AFDE87D538306D60623047A7",
+    "validation_executable":  "results/validation/bellhop_curved_wall_beam_frame_audit/bin/bellhop_curved_wall_audit_2020.exe",
+    "validation_executable_sha256":  "93E599BBAF01A5BAB9CD27145606E5DD22F4C45E03D30886FC798FCD9C01FA78",
+    "compiler_root":  "external build toolchain: MinGW-w64 (validation-only; local root intentionally not recorded)",
+    "compiler_version":  "GNU Fortran (MinGW-W64 x86_64-msvcrt-posix-seh, built by Brecht Sanders, r2) 15.1.0"
+}

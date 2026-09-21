@@ -1,20 +1,606 @@
 # PROJECT_CONTEXT.md
 
 ## Purpose
-This file records the current code structure, execution paths, and data flow of the MATLAB vertical underwater acoustic channel and MPSK communication project.
-It is intended as a code-first reference for future maintenance and feature work.
+This file is the append-only project log and long-term model memory for the
+MATLAB vertical underwater acoustic channel and MPSK communication project.
+Future coding models should read the current-state index first, then consult
+the dated log for provenance. Historical entries are retained even when
+superseded; a newer explicitly marked entry is authoritative.
+
+## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
+
+### Bellhop task supersession / 当前任务补充（2026-08-27）
+
+**Latest user decision:** use a physical 1 m source clearance, i.e. water
+depth 100 m, Tx depth 99 m, Rx depth 3 m. Stop epsilon-limit investigation.
+`generate_bellhop_100m_source1m_visuals_vertical` is the isolated current entry
+for 4 kHz / 89.5-degree representative A/E/R figures. Receiver runs use a
+12 m range box; the illustrative 1001-ray fan uses 120 m to show returns.
+The old zero-clearance results below remain historical and do not certify
+or invalidate this changed physical installation. PE defaults are untouched.
+
+The representative run and both PNGs are complete: 193 A arrivals, 199 E
+contribution records (all retraced using 167 launch angles), and 1001 fan rays.
+All fan rays touch the sea surface; 961 touch the 100 m bottom. The fan has
+33 storage-limited trajectories; receiver A/E/R have no such warnings.
+E prefixes are not exact point-hit rays (maximum closest-prefix distance
+10.0569 m). See `reports/bellhop_100m_source1m_visuals_report.md`; these figures
+do not certify rough multipath convergence or equivalence to 90 degrees.
+
+On 2026-09-01 the user archived 12 historical PE–Bellhop validation/plotting
+scripts (including the dedicated `pe_bellhop_current_run_meta_vertical` helper)
+under the Git-ignored `cash/pe_bellhop_validation_scripts_2026-09-01/` directory.
+The exact list and reason are recorded in
+`reports/pe_bellhop_validation_archive_manifest_2026-09-01.md`. These files are
+not active entrypoints; the archive is not read during normal project searches.
+
+The PE-topology-only display is now provided by
+`generate_bellhop_pe_equivalent_ray_paths_vertical`. It selects the unique
+0-top/0-bottom and 1-top/0-bottom A arrivals, retraces their launch angles in
+R mode, and truncates each stored ray at its closest approach to Rx. At 4 kHz
+the delays are 64.0024394 ms and 67.9360554 ms; the closest-point residuals are
+approximately 5.61e-9 m and 6.25e-3 m. No bottom-reflected ray is plotted, and
+this is a visualization/filtering result rather than a new PE validation.
+
+- The previous zero-clearance normal-coordinate task required mean water depth
+  100 m, physical source clearance 0 m and receiver depth 3 m. The proposed
+  fluid bottom uses 1800 m/s, 2000 kg/m^3 and 0.5 dB/wavelength attenuation.
+- The user accepted water-side epsilon=[1e-3,1e-4,1e-5] m. Read
+  `reports/bellhop_100m_rough_surface_report.md` for the current status and
+  `reports/bellhop_100m_boundary_source_report.md` for the six 4 kHz trials.
+  Direct/one-surface classes passed all four final-pair checks; rough-surface
+  higher bottom-bounce classes failed. Angle/frequency expansion is paused,
+  not completed. The full channel is NOT approved by this check.
+- The installed input reader clamps near-bottom sources using the SSP limit.
+  Explicit flat BTY at physical 100 m plus a homogeneous SSP-only extension
+  of 0.1 m avoids that clamp without moving the actual bottom. All six source
+  preflights passed; requested 1e-5 m is recorded as approximately 8e-6 m.
+  The unclamped flat 1e-3 m ARR is byte-identical before/after this input change.
+- Final-pair rough total ARR-synthesized response changes by -0.0385556 dB TL
+  and +0.0103577 rad. Primary classes passing does not validate coherent totals:
+  the flat D+S sum near cancellation changes by +0.0132625 dB/-0.0106057 rad.
+  Results are Bellhop-only unit Cartesian line-source diagnostics, not a new
+  Gaussian PE comparison. No bottom-inclusive production recommendation yet.
+- A follow-up C-vs-ARR audit on rough 89.5 degrees at 4 kHz (epsilon 1e-4 versus
+  1e-5) found C and ARR complex-ratio changes within 0.000533 dB TL and
+  2.29e-5 rad. Epsilon sensitivity is therefore already present in Bellhop's
+  coherent field; ARR single-precision storage/merging is not its sole cause.
+  This remains a diagnostic, not full multipath acceptance or a PE comparison.
+- The historical 500 m rough-surface audit, full-ray plots and trial outputs
+  have been moved to `cash/`. Entries below describing them are historical,
+  not active result locations or evidence for the 100 m channel. Do not read
+  or auto-recover `cash/`; the external manifest is in the new plan.
+- Keep PE/AS, Gaussian-window and unfolded flat-surface evidence. No PE core,
+  source definition, communication code or production default was changed.
+
+### Bellhop executable baseline / Bellhop 执行版本（2026-08-31）
+
+- New Bellhop runs use the official OALIB Windows package `2020_11_4`,
+  installed at `AcousticsToolbox_2020/`. The executable is
+  `windows-bin-20201102/bellhop.exe` (1,273,704 bytes, SHA-256
+  `7E7809A64C3BF734AFF6D28D0D4D52B1B4BD203D81676E3241FFD3189941B505`).
+- Active validation scripts read the configured `BELLHOP_EXE`; no machine-local
+  executable fallback is embedded in the repository.
+- The 2017 installation remains in place for reproducibility. Historical
+  reports and saved run metadata keep their recorded 2017 path and hashes;
+  do not reinterpret those artifacts as 2020 reruns.
+- The bundled Munk ray case completed with exit code 0. This installation
+  change does not alter PE marching, the Gaussian source, communication code,
+  validation thresholds, or previously generated outputs.
+
+### Bellhop 2020 parametric internal-wall validation（2026-09-02）
+
+- The authoritative implementation and validation status is consolidated in
+  `reports/bellhop_internal_wall_implementation_report.md`; superseded stage
+  reports and obsolete one-off runners have been moved to the recoverable
+  repository-root `cash/` quarantine and are not active project context.
+- Current status is **PASS_WITH_LIMITS**. Flat, tilted, smooth sinusoidal, a
+  circular vertical-tangent wall, the fixed-realization PM density audit and
+  the finite-angle fixed-PM local Reflect2D covariance audit pass. Curved overlays use ordered
+  non-coincident parametric segments, normalized hit tangents, reconstructed
+  TOP normals and signed turning-angle/arclength curvature. They no longer use
+  internal-wall `dz/dr`, `Dss`, `Delta z/Delta r`, `1/Delta r`, strict range
+  monotonicity or ATI-style infinite endpoint extension.
+- The accepted hit calls unchanged native 2D `Reflect2D` once. Native RN/RM,
+  p/q, vacuum phase, Amp and tau are retained; the reflected branch then uses
+  the proper half-turn `r'=2R0-r, z'=-z` only as a storage-chart map before the
+  unchanged `InfluenceGeoHatCart`.
+- Flat reproduces `H_wall=-P_BH(103 m)` for the 3-by-3 step/beam scan. Tilted
+  geometry is machine-precision. The sinusoidal 36-case scan has maximum phase
+  difference `6.71e-5 rad` after explicit SHD receiver pairing. A radius-100 m
+  circular wall remains finite and convergent at exact `dr/ds=0`, with
+  `u·n=1`, no NaN/Inf and signed curvature converging to `-0.01 1/m`.
+- The former `2.095 rad` discrepancy was a wrong SHD receiver-column pairing,
+  not a reflection/frame defect. Native backward-range Cartesian amplitude
+  remains a `-0.2606` to `-0.286 dB` diagnostic and is not fitted.
+- The fixed PM audit uses seed `260001`, `U=6 m/s`, span `160 m`, master `4097`
+  and density `513/1025/2049/4097`, all sampled from one realization. Preflight
+  has `min |u·n|=0.8022`, `lambda max|kappa|=0.01672`, and no rejected segments;
+  hit/tangent/normal/curvature/reflected-direction/RN/path/phase errors decrease
+  through `N=2049`, with 2001/2001 rays successful at every density. Details:
+  `cash/bellhop_internal_wall_superseded_20260902/reports/bellhop_internal_pm_fixed_realization_convergence_report.md`.
+- The old strict-90-degree native ATI versus rotated-returned PM comparison is
+  not the same physical problem and is retired. The next allowed stage is a
+  PE rough-wall cross-validation using this same fixed, band-limited realization
+  and the accepted 89/89.5-degree rigid transforms. Complete receiver-field
+  equivalence and Monte Carlo remain unstarted.
+- The completed Bellhop-only local reflection covariance validator and its
+  fixed-realization convergence validator are archived under
+  `cash/bellhop_internal_wall_superseded_20260902/scripts/validation/`.
+  Their paired-ray evidence remains under
+  `results/validation/bellhop_pm_local_reflection_covariance/` and writes
+  the merged authoritative summary in
+  `reports/bellhop_internal_wall_implementation_report.md`. Its hard gates stop
+  at the native ATI/internal-wall intersection and native `Reflect2D`出口;
+  receiver coherent pressure is diagnostic-only. The full stage reports are
+  retained in `cash/bellhop_internal_wall_superseded_20260902/reports/`.
+
+### Bellhop internal-wall visualization archive（2026-09-09）
+
+- The internal-wall visualization-only scripts and generated products used in
+  the tilted/sinusoidal ray figures and dense two-dimensional TL figure have
+  been moved to the recoverable archive
+  `cash/bellhop_internal_wall_visualization_archive_20260909/`.
+- The archive includes the reflection-overlay renderer, visual-enhancement
+  renderer, sparse TL diagnostic, dense TL-grid runner/renderer, the related
+  visualization validation entrypoint, and their validation/visualization
+  sidecars, fields, PNGs, CSVs and manifests. The exact moved-path list is in
+  `reports/bellhop_internal_wall_visualization_archive_manifest.md`.
+- This is an artifact-organization change only. It does not modify Bellhop
+  internal-wall geometry, native `Reflect2D`, `InfluenceGeoHatCart`, PE,
+  communication code, validation binaries, or the PASS_WITH_LIMITS numerical
+  conclusions in `reports/bellhop_internal_wall_implementation_report.md`.
+  The archived visual products are historical/reproducibility artifacts and
+  are not active entrypoints or current validation inputs. Normal searches must
+  exclude `cash/`.
+
+### PE rough-PM ↔ Bellhop rough-PM comparison design（2026-09-02）
+
+- The current design authority is
+  `reports/pe_bellhop_pm_comparison_design_audit_report.md`; status is
+  **FEASIBLE_WITH_MINOR_PREPARATION**. This design supersedes the earlier
+  suggestion that the PE comparison itself should use 89/89.5 degrees.
+  Those angles remain Bellhop-only covariance/continuity diagnostics; the
+  nominal PE comparison should use the now-validated exact-90-degree
+  parametric internal wall.
+- The first controlled surface is the existing seed-260001, U=6 m/s,
+  160 m, band-limited 1-D PM realization. PE uses
+  `eta_PE(x,y)=eta_1D(x)` and Bellhop uses the same coefficients/profile;
+  neither side may regenerate, recenter, renormalize or separately smooth it.
+- Because the production PE is a two-transverse-dimensional Gaussian field
+  while Bellhop is 2-D, the primary dimensional bridge must be a
+  validation-only one-transverse-dimensional PE/AS result or equivalent
+  `k_y=0` projection. The production y-invariant-surface/on-axis PE result is
+  a secondary dimensionality sensitivity, not an exact line-source match.
+- The primary metric is reflected-only
+  `G=H_ref_rough/H_ref_flat`; compare `G_PE/G_BH`. Absolute reflected pressure,
+  total channel, individual ray/arrival matching and native backward-range
+  amplitude remain diagnostic. The first run is one frequency (4 kHz), one
+  on-axis receiver and a flat/rough pair using the strict 192.1875 m
+  no-sponge PE baseline; 6/8 kHz and ensembles come only after interpretation.
+- Three minor preparations remain: a same-dimension PE validation reference,
+  a canonical Fourier-profile mapper with support/seam metadata, and a shared
+  flat/rough reflected-ratio extractor including flat/source and constant-
+  height sign audits. No PE/Bellhop core physics change is authorized by the
+  design review.
+
+### PE--Bellhop PM Stage 0A canonical mapper（2026-09-03）
+
+- Stage 0A is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_canonical_mapper.m`; its support
+  functions are `load_fixed_pm_profile_for_pe_bellhop_validation.m` and
+  `evaluate_fixed_pm_fourier_profile.m`.
+- The mapper reads the existing
+  `results/validation/bellhop_internal_pm_fixed_realization/fixed_pm_fourier_coefficients.csv`
+  directly. It evaluates the same periodic series and analytic first/second
+  derivatives for PE samples and Bellhop wall samples, with no new random
+  numbers, recentering, variance scaling, smoothing or tapering.
+- The canonical mapping is `eta_PE(x,y)=eta_1D(x)` and
+  `Gamma_B(s)=[R0-eta(s),s]` with `R0=100 m`. The master profile cross-check
+  errors are `8.38e-15 m` in height, `2.01e-15` in slope and `5.31e-16 1/m`
+  in the second derivative; the wall inverse-map error is `7.11e-15 m`.
+- The fixed profile statistics from the coefficient evaluator are RMS height
+  `0.18639076 m`, RMS/max slope `0.0539798/0.1166743`, RMS/max geometric
+  curvature `0.0209047/0.0445944 1/m`, and minimum radius `22.4243 m`.
+- Outputs are under `results/validation/pe_bellhop_pm_canonical_mapper/` and
+  the stage report is `reports/pe_bellhop_pm_canonical_mapper_report.md`.
+  This stage freezes input provenance only; it does not run PE or Bellhop
+  propagation and does not authorize skipping Stage 0B--0E.
+
+### PE--Bellhop PM Stage 0B one-transverse-dimensional bridge（2026-09-03）
+
+- Stage 0B is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_1d_validation_bridge.m`; the 1-D operator is
+  implemented in `scripts/validation/support/run_pe_1d_surface_reflection_validation.m`.
+- The bridge uses `xw=192.1875 m`, `nx=984`, `dx=0.1953125 m`,
+  `yw=50 m`, `ny=256`, sponge off, `f=4 kHz`, `c=1500 m/s`,
+  `z_tx=100 m`, `z_rx=3 m`, and `sigma=0.3 m`. It compares the independent
+  one-step exact 1-D angular spectrum with the 1-D split-step helper and with
+  the `k_y=0` projection of the unchanged production two-transverse PE.
+- Flat and a weak deterministic phase-screen case pass. Maximum 1-D versus
+  exact-AS complex error is `1.14e-12`; maximum production-PE `k_y=0` versus
+  scaled 1-D complex error is `9.48e-13`; flat pressure-release sign error is
+  `2.64e-13`. No Bellhop propagation or PE core changes were made.
+- Results are under `results/validation/pe_1d_validation_bridge/` and the
+  stage report is `reports/pe_1d_validation_bridge_report.md`. Stage 0C flat
+  source/normalization audit is the only next permitted stage.
+
+### PE--Bellhop PM Stage 0C flat source/normalization audit（2026-09-03）
+
+- Stage 0C is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_stage0_flat_source.m`; it uses
+  the existing Gaussian `.sbp` pattern and the unchanged 1-D PE bridge.
+- The audit uses the 97 m direct / 103 m image geometry, explicit SHD range
+  selectors, and Bellhop beam counts 5001/10001 at 0.05 m steps. Flat wall
+  intersection residual is `3.54e-12 m`, pressure-release phase error is
+  `7.11e-15 rad`, and both beam counts produce identical axis-Q values
+  (`0.2610 dB` diagnostic TL offset, `-5.15e-4 rad` phase).
+- Normalized offset *magnitude* residuals are `5.97e-3` (direct) and
+  `5.55e-3` (reflected). Complex offset profiles retain a documented
+  transverse phasor-orientation diagnostic (`1.71/1.81`), not a source fit or
+  calibration. The known `~0.26 dB` backward-range Cartesian influence offset
+  remains diagnostic only.
+- A minimal compatibility fix in
+  `scripts/validation/support/read_bellhop_shd_unfolded_vertical.m` locates
+  receiver depths relative to the detected range record, which is required
+  for `.sbp` SHD files. Results are in
+  `results/validation/pe_bellhop_pm_stage0_flat_source/` and the report is
+  `reports/pe_bellhop_pm_stage0_flat_source_report.md`. Stage 0D and all
+  subsequent planned stages are complete below.
+
+### PE--Bellhop PM Stage 0D constant-height sign audit（2026-09-03）
+
+- Stage 0D is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_constant_height_sign.m` and
+  tests `eta0=+0.05, 0, -0.05 m` at 4 kHz with the unchanged 1-D PE bridge,
+  Gaussian `.sbp`, and the independent internal-flat validation binary.
+- The image range is consistently `L=103-2*eta0 m`; PE predicts
+  `exp(+i 2 k eta0)`. PE phase errors are below `2.0e-15 rad` and Bellhop
+  phase errors are `2.56e-5 rad`; PE--Bellhop ratio phase differences stay
+  below `2.56e-5 rad`. Travel-time residuals are `4.16e-17 s`, pressure-
+  release phase is applied once, and flat curvature/rotation-state checks pass.
+- The validation overlay now accepts translated flat walls subject only to
+  positive wall/post-wall ranges; this is not an official Bellhop change.
+  Results are under `results/validation/pe_bellhop_pm_constant_height_sign/`
+  and the report is `reports/pe_bellhop_pm_constant_height_sign_audit.md`.
+  Stage 0E numerical-budget freeze is completed below.
+
+### PE--Bellhop PM Stage 0E numerical-budget freeze（2026-09-03）
+
+- Stage 0E is **PASS**. The validation-only entrypoint is
+  `scripts/validation/validate_pe_bellhop_pm_numerical_budget.m`.
+- One seed-260001 band-limited Fourier realization is reused across PE
+  window/grid/step and Bellhop profile/beam/step scans. PE stays within
+  0.1 dB / 0.02 rad and Bellhop stays within 0.1 dB / 0.02 rad, with zero
+  grazing hits, wall residual below `8e-15 m`, and zero q-state residual.
+  The p-state change is the native curvature kick, not an error.
+- The frozen flat/source allowance remains `0.30 dB` for the known
+  backward-range Cartesian influence offset. Results are in
+  `results/validation/pe_bellhop_pm_numerical_budget/`; report:
+  `reports/pe_bellhop_pm_numerical_error_budget.md`.
+
+### PE--Bellhop PM Stage 1A Tier-1（2026-09-03）
+
+- Stage 1A structural audit is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_stage1_tier1.m`. It uses the
+  fixed seed-260001 realization at 4 kHz and compares reflected-only
+  rough/flat ratios without fitting or renormalizing either model.
+- Bellhop geometry and native beam-state checks pass (`|u.n|` minimum
+  `0.8319`, wall residual `7.21e-15 m`, phase jump error `7.11e-15 rad`,
+  q residual and rotation-state errors zero). The PE/Bellhop ratio difference
+  (`0.3104 dB`, `-2.2482 rad`) is retained as a cross-model diagnostic, not a
+  structural acceptance gate. Results are in
+  `results/validation/pe_bellhop_pm_stage1_tier1/`; report:
+  `reports/pe_bellhop_pm_stage1_tier1_report.md`.
+
+### Bellhop R/X source-geometry audit（2026-09-09）
+
+- A validation-only single-variable audit now explicitly selects Bellhop
+  `RunType(4)=R` (point source) or `X` (line source), leaving the Gaussian
+  `.sbp`, geometry, step, receiver positions, Reflect2D, p/q and
+  InfluenceGeoHatCart unchanged. Flat internal-wall regression remains exact.
+- For the weak sinusoidal native-ATI/internal-wall comparison at 10001 beams,
+  `R` gives `-0.260650 dB`, matching the range-normalization prediction
+  `10 log10(97/103)=-0.260655 dB`; `X` reduces the discrepancy to
+  `4.24e-6 dB / -3.92e-8 rad`. The 5001-beam sinusoidal result has a common
+  `3.156 dB` discretization change for both R and X and is not treated as the
+  converged endpoint.
+- The conditional 4 kHz seed-260001 X-source Tier-1 rerun passes all Bellhop
+  structural checks. Its PE--Bellhop delta is `0.310371 dB / -2.248201 rad`,
+  versus the prior R result `0.310434 dB / -2.248201 rad`. Thus future
+  dimensionally matched 1-transverse PE Tier-1 comparisons should use X, but
+  the existing reflection-model discrepancy conclusion is unchanged. Report:
+  `reports/bellhop_source_geometry_rx_audit_report.md`; results:
+  `results/validation/bellhop_source_geometry_rx_audit/`.
+- The active PE--Bellhop comparison entrypoints now request line-source X:
+  the incident-plane validator, fixed-PM Tier-1, frequency extension, ensemble
+  engine and Stage-4 statistical driver. Ensemble case roots and request
+  fingerprints include the source geometry, so historical R caches cannot be
+  silently reused as X.
+- The incident-plane comparison was rerun after integration with the original
+  Gaussian `.sbp`, grids, step, receivers and 5001/10001 beams. All 13 gates
+  pass. PE--Bellhop TL P95 over M95 improved from the archived R value
+  `0.15794309 dB` to `0.0019036364 dB`; normalized L2 over M99 is
+  `0.0061048459`, and the 5001--10001 beam L2 is `5.2520e-6`. The historical
+  point-source global constant is not applied to X; the comparison remains
+  axis-normalized and uses no fitted amplitude.
+- Existing Stage-2/3/4 numerical reports retain their pre-migration R-source
+  provenance and were not relabeled. A future rerun will generate new X-tagged
+  cases. Integration report:
+  `reports/pe_bellhop_line_source_integration_report.md`; archive manifest:
+  `reports/pe_bellhop_source_geometry_integration_archive_manifest.md`.
+
+### PE--Bellhop PM Stage 1B/1C（2026-09-03）
+
+- Stage 1B production dimensionality sensitivity is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_stage1_dimensionality.m`.
+  The same seed-260001 `eta(x)` is copied unchanged over y; `ny=256/512`
+  changes by only `4.36e-6 dB / 4.49e-6 rad`. Relative to the 1-transverse
+  bridge, the 2-transverse reflected rough/flat ratio differs by about
+  `-0.1589 dB / 0.01251 rad` (complex error `0.02196`).
+- Stage 1C freezes the interpretation as **PASS_WITH_MODEL_DISCREPANCY** via
+  `scripts/validation/validate_pe_bellhop_pm_stage1_interpretation.m` and
+  `reports/pe_bellhop_fixed_pm_4khz_comparison_report.md`. The cross-model
+  Tier-1 difference is `0.3104 dB`, `-2.2482 rad`, complex error `1.8366`,
+  substantially larger than the dimensionality sensitivity. Stage 2 frequency
+  extension is therefore permitted; no model fitting or core-physics change is
+  implied.
+
+### PE--Bellhop PM Stage 2 frequency extension（2026-09-03）
+
+- Stage 2 is **PASS_WITH_MODEL_DISCREPANCY** via
+  `scripts/validation/validate_pe_bellhop_pm_frequency_extension.m`.
+  The fixed seed-260001 realization is evaluated at 4/6/8 kHz with PE
+  flat/rough and Bellhop flat/internal-PM rough pairs. Each point is finite
+  and geometrically valid: wall residual `7.14e-15 m`, zero grazing fraction,
+  pressure-release phase error `7.11e-15 rad`, q residual and p/q rotation
+  errors zero.
+- Cross-model diagnostics are `(0.3104, 0.3083, 0.3048) dB` TL and
+  `(-2.2482, 2.9109, 1.7868) rad` phase at 4/6/8 kHz; no three-point group
+  delay is inferred. The sweep uses the unchanged Gaussian source formula and
+  a predeclared Bellhop ±15° sector with the accepted 5001-beam setting; the
+  sector avoids low-amplitude tail termination in the validation overlay and
+  is not a source fit. Results are under
+  `results/validation/pe_bellhop_pm_frequency_extension/`; report:
+  `reports/pe_bellhop_fixed_pm_frequency_extension_report.md`.
+
+### PE--Bellhop PM Stage 3 paired ensemble（2026-09-03）
+
+- Stage 3 is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_ensemble.m` with seeds
+  `260001:260008` at 4 kHz. Seed 260001 reuses the canonical realization;
+  the other paired profiles preserve the canonical per-mode spectral
+  amplitudes and use deterministic seed phases, with no Hs renormalization,
+  recentering, smoothing, tapering, or bandwidth change.
+- All eight Bellhop cases pass finite-field, geometry, positive-range,
+  pressure-release phase and p/q-state checks. Wall residuals are
+  `7.11--7.16e-15 m`, grazing fraction is zero, and the reported mean
+  reflected roughness powers are PE `1.0707` and Bellhop `0.9271`.
+- This is a paired fixed-band phase-ensemble statistical smoke, not an
+  independently sampled PM amplitude ensemble. The native backward-range
+  Cartesian amplitude limitation remains diagnostic. Results are under
+  `results/validation/pe_bellhop_pm_ensemble/`; report:
+  `reports/pe_bellhop_pm_ensemble_comparison_report.md`.
+
+### PE--Bellhop PM Stage 3B coefficient-amplitude ensemble（2026-09-03）
+
+- Stage 3B is **PASS_WITH_LIMITS** via
+  `scripts/validation/validate_pe_bellhop_pm_amplitude_ensemble.m`, using
+  seeds `260001:260008`, 4 kHz, and a uniform 5001 Bellhop beams for a reduced
+  first independent ensemble.
+- Seed 260001 is copied byte-for-byte from the canonical coefficient file;
+  the other seeds draw independent zero-mean Gaussian cosine/sine
+  coefficients with variance `S(k)*Delta-k` from the same `Sk_m3` band. No
+  Hs renormalization, recentering, smoothing, tapering, or bandwidth change
+  is applied. All finite-field, geometry, pressure-release phase, beam-state,
+  positive-range, request-fingerprint, output-hash, uniform-numerics and
+  reflection-success checks pass; every rough case records 5001/5001 wall hits.
+- The flat and canonical rough Stage-2 artifacts are reused only after exact
+  embedded-configuration matching and input-age checks. Other cached cases
+  require a matching full request fingerprint and verified `.shd`/`.iwdiag`
+  SHA-256 hashes. A second identical run recovered the seven non-canonical
+  cases only as `cache_verified`, with no 1001/5001-beam mixing. The current
+  mean model delta TL is `0.320686 dB`, and the circular mean phase difference
+  is `-0.689310 rad`.
+- The amplitude-ensemble report is
+  `reports/pe_bellhop_pm_amplitude_ensemble_report.md`; machine-readable
+  results are under `results/validation/pe_bellhop_pm_amplitude_ensemble/`.
+  This is a first reduced statistical result, not a converged ocean Monte
+  Carlo or an ensemble worst-delay claim.
+
+The complete executable PE--Bellhop PM comparison chain is indexed by
+`reports/pe_bellhop_pm_complete_execution_summary.md`. Stages 0A--0E,
+1A--1C, 2, 3A and 3B were run independently with the frozen seed-260001
+band-limited realization and no PE/Bellhop core-physics or communication
+changes. The current rough-wall cross-model result is therefore a controlled
+model-discrepancy finding with the Stage-3 fixed-band ensemble limitation,
+not a claim of final independent PM Monte Carlo convergence.
+
+Stage 3B 的 validation-only entrypoint
+`scripts/validation/validate_pe_bellhop_pm_amplitude_ensemble.m` 已完成
+`260001:260008` 的 reduced first ensemble；它使用 canonical `Sk_m3` band
+独立抽样 Gaussian cosine/sine coefficient amplitudes，并与 Stage-3A
+phase-only smoke 分开保存。结果仍需按 reduced ensemble 限制解读。
+
+### Active core
+
+- Public channel: root `vertical_channel_model.m` compatibility wrapper ->
+  `src/channel/vertical_channel_model_impl.m` ->
+  `src/propagation/vertical_wape_propagator.m`.
+- Surface boundary: `src/surface/pm_surface_boundary_model.m`; public default remains
+  `kirchhoff_spatial`.
+- Receiver phase reference:
+  `src/channel/apply_pe_channel_phase_reference_vertical.m`.
+- Fixed-path research acceleration: cached joint-kstat PE, exact discrete
+  adjoint receiver projection, PM-grid FFT `C/P`, and conditional receiver
+  statistics.
+- Communication consumer: root `comm_main_vertical_psk.m` compatibility
+  wrapper, `examples/comm_main_vertical_psk_demo.m`, and
+  `src/communication/build_communication_taps_vertical.m`.
+- `setup_vertical_project.m` is the single idempotent path initializer. Core
+  reusable implementations are under `src/`; validation-only helpers are
+  under `scripts/validation/support/`.
+
+### Public receiver phase semantics
+
+- Default `paramsV.channel_phase_reference='direct_dsp'`.
+- `H_direct_f/H_reflect_f/H_f` now share the direct receiver reference and
+  are ready for the MATLAB-IFFT communication path.
+- `H_*_reduced_f` preserves the raw PE envelopes; `H_*_physical_f` restores
+  absolute longitudinal carriers under `exp(-i*omega*t)`.
+- For the standard 100 m Tx / 3 m Rx / 1500 m/s geometry, the nominal direct
+  and reflected spans are 97/103 m and the relative reference delay is 4 ms.
+  This is not a per-realization PDP peak alignment.
+- `legacy_reduced` is retained only for migration and regression.
+
+### Current validation status
+
+- Release candidate `phase_rc_20260722_174945` is **PASS**. The authoritative
+  decision and per-gate evidence are in
+  `reports/pe_phase_reference_release_candidate_report.md`.
+- The independent F=65 phase audit recovered the nominal 4 ms relative delay
+  within the delay grid, with operator error `2.2741e-13`, positive-carrier
+  phase RMS `3.1007e-11 rad`, and group-delay difference
+  `1.2768e-12 ms`.
+- The full adjoint suite passed: exact adjoint `7.7684e-15`, receiver
+  projection `5.0950e-15`, dense/FFT `C/P`
+  `5.7693e-16/1.0052e-15`; F=9 and F=64 analytic/sample ratios to their
+  split-sample floors were `0.593078` and `0.850502`.
+- U=5 and U=8 full conditional models, the exact-node library, and the
+  two-node full communication validation passed with schema 2.x,
+  `target_reference='direct_dsp'`, and zero common CIR shift.
+- The F=64 public/cached double consistency error was `9.88957e-16`.
+- The same-run propagation atlas contains 13 PNG files, one MP4, MAT,
+  manifest, and summary. MATLAB static parsing found no RC-source syntax
+  errors.
+- F=9 (`df=500 Hz`) aliases a 4 ms delay and is not a phase-delay acceptance
+  grid. The authoritative delay audit uses F=65 (`df=62.5 Hz`, 16 ms
+  unambiguous window).
+- Current flat/uniform PE--Bellhop run `bellhop_current_20260723_rc5` is
+  **FAIL_CORE / amplitude OPEN**. Phase conversion and component closure were
+  at `0` and `3.5762e-18`; PE--analytic/PE--Bellhop maximum delay residuals
+  were `0.027282/0.027281 ms`; Bellhop--analytic was
+  `3.9304e-06 ms`; coherent/incoherent 5001--10001 beam RMS differences were
+  `0.19041/0.10193 dB`. The only core failure was the no-sponge aperture
+  validity prerequisite: 32/64 m edge levels were `-1.087/-14.532 dB`, both
+  above the required `-40 dB`, and the 32--64 m phase/TL differences were
+  `3.526 rad/-3.896 dB`. The current report and ten-figure atlas supersede
+  the 2026-07-21 complete report for present-version conclusions.
+- Gaussian direct-field aperture study is **CONVERGED** at 160 m/no-sponge.
+  The complete reflected chain is strictly **CONVERGED** at actual
+  192.1875 m/no-sponge. The current public 50 m/default-sponge configuration
+  remains a compatibility default, not the validation recommendation.
+- The 4 kHz random-surface aperture set is **PASS** for 192.1875 m in 15/15
+  tested realizations. The paired 3--5 kHz random-surface qualification is
+  **INCOMPLETE**; no ensemble worst group-delay claim is authorized.
+- The 2k phase-coefficient and ocean-spectrum studies are **diagnostic only**.
+  They do not validate PE, KStat, realistic ocean scattering, or higher-order
+  SSA. Their scripts/results now live under `scripts/validation/` and
+  `results/validation/ssa_2k_phase/`.
+
+### Known limits and next checks
+
+- Exact-adjoint/cached v1 remains uniform, CPU double, fixed grid/frequency,
+  one nearest-grid receiver, and no bubble/Doppler path.
+- The formal adjoint configuration uses PE `128^2` / PM `256^2`; the accepted
+  U=8 conditional branch deliberately retains its separately audited
+  PE `128^2` / PM `384^2` aperture.
+- Bellhop absolute-amplitude source normalization remains open: one global
+  direct-path scale gave `1.654 dB` scale spread and reflected TL RMS/max
+  `1.629/2.075 dB`; Gaussian source-aware direct-only weighting reduced its
+  diagnostic RMS from `0.815` to `0.502 dB` but is not an acceptance path.
+- The current 32/64 m no-sponge fields do not meet the `-40 dB` edge-validity
+  prerequisite, so they cannot be used to claim PE aperture convergence.
+  Sampling/step and sponge location/strength checks themselves passed.
+- The atlas emitted one cosmetic MATLAB title-format warning for `\Delta`;
+  the saved fields, checks, and artifact counts are unaffected.
+- See `vertical_comm_guide.md` for current formulas,
+  `scripts/README.md` for commands, and
+  `reports/pe_phase_reference_release_candidate_report.md` for the release
+  decision. Older combined reduced-envelope phase conclusions are
+  **Superseded** by this release-candidate run.
+- Bellhop absolute amplitude, point-source infinite-aperture equivalence, and
+  source normalization remain **OPEN**. Li2009 remains a partial
+  reproduction without completed transverse-grid convergence.
+- Repository layout changed on 2026-08-20 without changing public call names,
+  formulas, defaults, or result schemas. Current code paths in this index and
+  the technical guide supersede root-level paths written in older log entries.
+
+## Detailed Snapshot and Historical Reference
+
+> Entries below this point predate or accompany later changes. When a phase
+> or output-semantic statement conflicts with the current-state index above,
+> the 2026-08-20 index and latest dated log entries are authoritative.
+
+## Current Snapshot / 当前状态摘要
+
+- Project role: vertical underwater acoustic random-channel generation and communication validation platform.
+- Propagation structure: the channel is decomposed into direct propagation, sea-surface reflection/scattering, and the total frequency response:
+  - `H_f = H_direct_f + H_reflect_f`
+  - `h_total = H_f(idx_f_ref)`
+- Current propagation engine: the project still uses the vertical WAPE/PE-style split-step propagation path for acoustic channel generation. Surface boundary models only replace the sea-surface reflection/scattering operator between the upward incident march and the downward reflected march.
+- Current external propagation cross-validation: `validate_pe_bellhop_flat_surface_vertical.m` runs a deterministic uniform-SSP, flat pressure-release surface case through the PE public API and the external Bellhop executable. Historical runs restored PE carriers only in the validator; since 2026-07-22 the public API exposes explicit reduced, direct-DSP, and absolute-physical fields, and validators consume those fields directly.
+- Bellhop rough-surface near-vertical limit audit (2026-08-26): `validate_bellhop_rough_surface_near_vertical_limit.m` is a validation-only Bellhop entrypoint. It fixes one deterministic three-cosine 1-D altimetry profile (`CVW *`/`.ati`), uses a Cartesian line source, and changes only the Tx--Rx horizontal offset for `85, 87, 88, 89, 89.5, 89.75, 89.875, 89.9375, 89.96875, 89.99` degrees at 4 kHz. Direct and one-top-bounce arrivals plus `.ray` reflection diagnostics are saved under `results/validation/bellhop_rough_surface_near_vertical/`. The selected primary comparison excludes bottom bounces; the unfiltered arrival files do contain bottom/multiple-bounce paths. The near-vertical coherent reflected response is not continuous under the configured `0.1 dB/0.02 rad/10 us` checks and the 89.99-degree case is not captured as a one-top-bounce arrival by the installed Bellhop build. Therefore no finite angle is currently approved as a strict 90-degree substitute for this rough profile; this result does not change PE marching or production defaults.
+- Complete Bellhop path display (2026-08-27): `plot_bellhop_rough_surface_full_paths.m` adds all receiver-contributing E records (including bottom/multiple bounces), independently retraced in R mode, and the entire 1001-ray emitted fan in a common 12 m / 500 m box. Historical launch limits are recovered from original `.prt` logs; A replay must reproduce original arrivals. E beams are not exact point-intersecting rays and may be merged in A output. New figures/CSV/MAT live in `bellhop_rough_surface_near_vertical/full_paths/`; original figures, PE code, defaults and validation status are preserved.
+- Current communication policy after the D2 update:
+  - receive-window mode defaults to `peak_sync`, which aligns the effective equalizer taps to the dominant baseband tap and then keeps the first `N` samples from a full convolution;
+  - Eb/N0 noise reference defaults to `rx_clean`, i.e. receiver-side clean waveform power.
+- `same_legacy` / `same` receive slicing is retained only as a historical or diagnostic mode. It is not the current default communication flow.
+- Current sea-surface model set:
+  - `kirchhoff_spatial`: realization-based Kirchhoff phase-screen path and default surface model;
+  - `kirchhoff_kdomain`: wavenumber-domain interface for the same explicit Kirchhoff phase-screen realization model;
+  - `kirchhoff_kstat`: Kirchhoff statistical phase-screen branch. It does not generate a concrete sea surface; it builds coherent reflection, incoherent scattering power, optional random reflected spectra, and energy diagnostics from the PM height spectrum;
+  - `ssa_stat_kernel` with `pm_convolution`: PM-spectrum engineering baseline statistical kernel;
+  - `ssa_stat_kernel` with `ssa1_geometry`: first-order pressure-release / Dirichlet geometry kernel.
+- Current Kirchhoff K-Stat status:
+  - implemented as an independent branch under `pm_surface_boundary_model.m`, selected by `surface_boundary_model='kirchhoff_kstat'`;
+  - uses near-vertical phase-screen factor `alpha=2*k0`, coherent reflection `R_coh=-exp(-2*k0^2*sigma_eta^2)`, and the incoherent phase-screen spectrum `S_deltaG` rather than the total phase-screen spectrum with the coherent delta peak included;
+  - metadata records `sigma_eta2_m2`, `G_mean`, `R_coh`, `S_deltaG`, `P_sca`, deterministic random seed fields, FFT normalization notes, full-K energy closure, and propagation/trusted-window energies;
+  - disabled/default paths keep compatibility and do not replace the existing default `kirchhoff_spatial` behavior.
+- Current roughness scaling policy:
+  - `surface_roughness_scale_mode='target_hs'` remains the default and scales the PM spectrum or explicit surface realization to `sea_hs_target`;
+  - `surface_roughness_scale_mode='raw_pm'` disables target-Hs scaling, so `sea_wind_speed` sets both PM spectral shape and integrated roughness strength;
+  - raw-PM comparisons use the project's discrete spectrum variance convention, `sigma_eta_raw^2=sum(Phi2D(:))*dkx*dky` and `Hs_raw=4*sigma_eta_raw`;
+  - in raw-PM mode, `kirchhoff_kstat` maps the project PM spectrum to its continuous correlation formula with `W_eta=Phi2D*(2*pi)^2`, while explicit `kirchhoff_kdomain` uses the current `sqrt(2)*real(ifft2(...))` realization convention.
+- Current SSA statistical kernel status:
+  - PM-spectrum-driven statistical scattering is connected to the existing reflected PE path and communication `H_f` consumer;
+  - `periodic` and `zero_padded` convolution paths are implemented for `pm_convolution` and `ssa1_geometry`;
+  - energy audit, compact metadata, Hs=0 degeneration, deterministic seeding, scale monotonicity, dense-vs-FFT periodic validation, and reduced-grid smoke tests have passed;
+  - optional frequency-correlated random scattering modes are available for wideband stochastic-channel diagnostics, while the default remains independent per-frequency scatter;
+  - reduced-grid scatter-scale calibration and compact applicability reporting scripts are available as engineering diagnostics;
+  - optional `ssa2_broschat_coherent` is implemented only as a coherent-reflection sensitivity diagnostic; second-order incoherent scattering is not implemented.
+- Current K-Stat / K-Domain validation status:
+  - `validate_kirchhoff_kstat_vertical.m` validates the standalone kstat branch for flat-surface degeneration, coherent formula, phase-screen energy closure, propagation-window diagnostics, deterministic seeds, explicit Kirchhoff mean comparison, and weak SSA1 coherent-reference consistency;
+  - `compare_kirchhoff_kdomain_kstat_wind_vertical.m` compares explicit and statistical Kirchhoff branches under raw-PM wind sweeps. With the discrete-variance alignment, the full reduced run reported maximum `Hs_raw_rel_error` about `0.0145`, maximum kstat energy-closure error about `2.22e-15`, and `H_f=H_direct_f+H_reflect_f` at about the `1e-17` level;
+  - `validate_kstat_vs_kdomain_phase_screen_vertical.m` is a surface-boundary-only plane-wave ensemble check. The latest full reduced run (`f=[4000 6000 8000] Hz`, `Hs=[0.05 0.1 0.2 0.5] m`, `M=[8 16 32 64]`, `128x128`) reported maximum kstat energy-closure error `4.663e-15`, maximum `sigma_eta` relative error `4.163e-16`, final-M mean radial-spectrum L2 error `0.0213`, and final-M mean radial-spectrum correlation `0.9997`;
+  - `validate_kstat_vs_kdomain_channel_stats_vertical.m` extends the comparison to the full `vertical_channel_model` PE/WAPE path and receiver-side statistics: `E[|h_ref|^2]`, peak-synced reflected/total PDP ensemble means, `|h_total|` distributions, direct-path consistency, and `H_f` invariants. The latest smoke run (`Hs=[0.1 0.2] m`, `seed_count=8`, `64x64`, `Nf=8`) passed hard checks with maximum `H_f` invariant error `7.76e-18`, maximum kstat energy error `9.99e-16`, maximum `E[|h_ref|^2]` relative error `0.0973`, reflected PDP correlations at least `0.979`, and `|h_total|` quantile NRMSE at most `0.193`; reflected PDP L2 exceeded the nominal statistical target at `0.313` for `Hs=0.2`, so larger ensembles are still needed for the full reduced conclusion;
+  - `validate_kstat_vs_kdomain_lfm_channel_vertical.m` is an independent channel-level LFM waveform validation script. It does not call `comm_main_vertical_psk.m` and does not use PSK, BER/SER, noise injection, or equalization. It generates an analytic baseband LFM test signal, interpolates `H_f` and `H_reflect_f` onto the LFM FFT grid, computes received total/reflected LFM waveforms and matched-filter outputs, and compares ensemble receiver statistics between `kirchhoff_kdomain` and `kirchhoff_kstat`. The latest reflected-focused run (`Hs=0.2 m`, `seed_count=32`, `64x64`, `Nf=32`, LFM `4-8 kHz`, `fs=24 kHz`, `T=20 ms`) passed hard checks with maximum `H_f` invariant error `1.39e-17`, maximum kstat energy error `1.11e-16`, and direct-path branch/seed delta `0`. However reflected-only agreement did not pass: `E[|h_ref|^2]` relative error was `0.580`, reflected LFM envelope correlation `0.0279`, reflected PDP correlation `0.276`, and reflected matched-filter peak relative error `0.743`. Total-channel metrics were much better (`rx_total_env_corr=0.982`, `pdp_total_corr=0.930`), so total LFM can mask reflected-path disagreement. `plot_lfm_tx_rx_comparison_vertical.m` reads the saved LFM result and generates normalized TX-vs-RX total/reflected waveform overlays for direct visual inspection;
+  - single-seed `kirchhoff_kdomain` fields are not expected to match `kirchhoff_kstat` pointwise. The intended comparison is ensemble coherent mean, incoherent power spectrum, radial spectral shape, energy closure, and receiver-side statistics after PE/WAPE if propagation is included.
+- Optional SSA component diagnostics can decompose the surface-reflected field into coherent specular and incoherent scatter components, march both components to the receiver, and report whether the scatter-only received contribution is negligible for the current settings. This path is disabled by default and does not alter `H_reflect_f`.
+- A surface-only plane-wave coherent-reflection diagnostic is available in `compare_plane_wave_surface_coherent_reflection_vertical.m`. It bypasses PE/WAPE and communication code, uses a vertical plane wave at the sea surface, and compares raw-PM SSA1 coherent reflection with Kirchhoff phase-screen ensemble coherent reflection under wind-speed sweeps.
+- Optional reference-frequency surface-wavefield diagnostics can record:
+  - the incident center slice from `z_tx` to the sea surface;
+  - the reflected center slice from the sea surface to `z_rx`;
+  - the incident and reflected complex fields on the sea-surface plane.
+  This path is disabled by default and does not change channel values.
+- Current physics boundary:
+  - this is not a complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering model;
+  - `kirchhoff_kstat` is a near-vertical Kirchhoff/Gaussian statistical phase-screen model, not a full rough-surface scattering theory and not a replacement for calibrated sea-surface scattering measurements;
+  - the wideband frequency correlation of statistical scattering realizations is still simplified and needs a physically or empirically calibrated model;
+  - under fixed `sea_hs_target` normalization, changing wind speed mainly changes PM spectral shape, not a monotonic sea-state intensity by itself;
+  - in the plane-wave raw-PM diagnostic, no `sea_hs_target` normalization is applied, so wind speed changes both the PM spectral shape and the integrated roughness variance.
 
 ## Repository Role of Each Main MATLAB File
 
-### `CARPE3D_vertical.m`
-- Public channel entrypoint: `output = CARPE3D_vertical(paramsV)`.
+### `vertical_channel_model.m`
+- Public channel entrypoint: `output = vertical_channel_model(paramsV)`.
 - Accepts user-facing configuration in `paramsV`.
 - Normalizes and validates parameters through `local_prepare_config`.
-- Calls `propWAPE_vertical(cfg)` to perform propagation.
+- Calls `vertical_wape_propagator(cfg)` to perform propagation.
 - Packages all outputs into a stable `output` struct.
 - Enforces 1/R validation in uniform-medium mode when `enforce_1_over_R=true`.
 
-### `propWAPE_vertical.m`
+### `vertical_wape_propagator.m`
 - Core upward-marching WAPE propagation engine.
 - Builds transverse grids, source field, spectral operators, and absorption profile.
 - Resolves receiver state, frequency axis, optional GPU path, and optional reflection path.
@@ -27,27 +613,29 @@ It is intended as a code-first reference for future maintenance and feature work
   - `h_reflect`
   - `h_total`
 
-### `pm_surface_kirchhoff_module.m`
-- Rough-surface reflection submodule.
-- Synthesizes a 2D Pierson-Moskowitz rough sea surface.
-- Applies Kirchhoff phase distortion to the incident surface field through a selectable boundary interface.
+### `pm_surface_boundary_model.m`
+- Rough-surface boundary and statistical scattering submodule.
+- Supports concrete Pierson-Moskowitz surface realizations for Kirchhoff-style spatial reflection.
+- Supports PM-spectrum statistical scattering through `ssa_stat_kernel`, including `pm_convolution`, `ssa1_geometry`, and small-grid `ssa1_debug_dense`.
+- Applies the selected surface boundary operator to the incident surface field.
 - Supports:
   - reflection coefficient control
   - normal-incidence phase mode
   - oblique phase mode using TX/RX geometry
   - spatial-domain and implicit wavenumber-domain Kirchhoff phase-screen boundary models
-- Returns reflected field and reflection metadata.
+  - SSA-like statistical scatter metadata and energy audit fields
+- Returns reflected field and reflection/scattering metadata.
 
 ### `explain_main_vertical.m`
 - Channel-only demonstration script.
 - Builds a scalar-frequency `paramsV`.
-- Calls `CARPE3D_vertical(paramsV)`.
+- Calls `vertical_channel_model(paramsV)`.
 - Saves the output struct and standard figures.
 
 ### `comm_main_vertical_psk.m`
 - End-to-end communication demonstration script.
 - Builds a wideband channel configuration.
-- Calls `CARPE3D_vertical(paramsV)` for each scenario.
+- Calls `vertical_channel_model(paramsV)` for each scenario.
 - Converts acoustic frequency response to a discrete baseband channel.
 - Runs MPSK modulation, channel convolution, noise injection, equalization, and BER/SER statistics.
 
@@ -66,10 +654,10 @@ It is intended as a code-first reference for future maintenance and feature work
 ## Main Execution Paths
 
 ### Path 1: Channel Demo
-`explain_main_vertical -> CARPE3D_vertical -> propWAPE_vertical -> output struct + saved figures`
+`explain_main_vertical -> vertical_channel_model -> vertical_wape_propagator -> output struct + saved figures`
 
 ### Path 2: Communication Demo
-`comm_main_vertical_psk -> CARPE3D_vertical -> propWAPE_vertical -> H_f/f_axis -> baseband channel -> MPSK link simulation`
+`comm_main_vertical_psk -> vertical_channel_model -> vertical_wape_propagator -> H_f/f_axis -> baseband channel -> MPSK link simulation`
 
 ## Channel Data Flow
 
@@ -78,7 +666,7 @@ It is intended as a code-first reference for future maintenance and feature work
 - `paramsV` may contain both core physics fields and future extension fields.
 
 ### Step 2: Runtime configuration
-- `CARPE3D_vertical` calls `local_prepare_config(paramsV)`.
+- `vertical_channel_model` calls `local_prepare_config(paramsV)`.
 - `local_prepare_config`:
   - merges defaults
   - copies user fields into `cfg`
@@ -94,7 +682,7 @@ It is intended as a code-first reference for future maintenance and feature work
     - `dz_step`
 
 ### Step 3: Receiver state resolution
-- `propWAPE_vertical` initializes `rx_state_used` from:
+- `vertical_wape_propagator` initializes `rx_state_used` from:
   - `x_rx`
   - `y_rx`
   - `z_rx`
@@ -120,7 +708,7 @@ It is intended as a code-first reference for future maintenance and feature work
 ### Step 6: Reflected-path propagation
 - If `enable_surface_reflection=true`, the code performs:
   1. `tx -> surface` propagation via `local_march_field`
-  2. rough-surface reflection via `pm_surface_kirchhoff_module`
+  2. rough-surface reflection via `pm_surface_boundary_model`
   3. `surface -> rx` propagation via `local_march_field`
 - The result is stored as `H_reflect_f(ifq)`.
 - The selected surface boundary model acts only in step 2; it does not change the two propagation segments.
@@ -134,7 +722,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - `h_total = H_f(idx_f_ref)`
 
 ### Step 8: Output packaging
-- `CARPE3D_vertical` returns a stable `output` struct containing:
+- `vertical_channel_model` returns a stable `output` struct containing:
   - field snapshots
   - centerline diagnostics
   - rough-surface products
@@ -156,7 +744,7 @@ It is intended as a code-first reference for future maintenance and feature work
 - `modem_psk('modulate', bits_tx, M)` maps them to unit-power M-PSK symbols.
 
 ### Step 3: Channel acquisition
-- Each scenario calls `channel = CARPE3D_vertical(paramsV)`.
+- Each scenario calls `channel = vertical_channel_model(paramsV)`.
 - The communication chain mainly consumes:
   - `channel.f_axis`
   - `channel.H_f`
@@ -175,14 +763,19 @@ It is intended as a code-first reference for future maintenance and feature work
   - truncates taps to a target cumulative energy ratio
 
 ### Step 5: Signal propagation at baseband
-- The transmitted symbol stream is convolved with `h_bb` using:
-  - `rx_clean = conv(tx_symbols, h_bb, 'same')`
+- The current default receive-window policy is `peak_sync`:
+  - find the dominant tap of `h_bb`;
+  - discard pre-peak taps for equalizer/channel application;
+  - compute a full convolution with the effective taps;
+  - keep the first `N` received samples as the symbol-aligned `rx_clean`.
+- `same_legacy` remains available only as a diagnostic/historical slicing mode.
 
 ### Step 6: Noise injection
 - `noise_inject_vertical` adds noise to `rx_clean`.
 - In the current demo:
   - model: `awgn`
   - control variable: `Eb/N0`
+  - default reference signal: `rx_clean`
   - SNR conversion uses `bits_per_symbol`
 
 ### Step 7: Equalization and decisions
@@ -245,8 +838,10 @@ It is intended as a code-first reference for future maintenance and feature work
   - `surface_boundary_redistribution_debug`
 
 ### Kirchhoff surface boundary interface
-- Default behavior is unchanged:
+- Default surface model remains Kirchhoff, but the rough-surface phase convention has been corrected:
   - `surface_boundary_model='kirchhoff_spatial'`
+  - `delta_phi = k0*(cos_i+cos_r)*eta`
+  - normal incidence gives `delta_phi=2*k0*eta`
   - `G_xy = surface_reflect_coeff * exp(1i*delta_phi)`
   - `psi_ref_xy = G_xy .* psi_inc_xy`
 - Optional k-domain interface:
@@ -275,7 +870,8 @@ It is intended as a code-first reference for future maintenance and feature work
 - Current limits:
   - This is not a T-matrix, SSA, or NLSSA rough-surface solver.
   - It is not a fast statistical channel generator.
-  - It keeps the PM sea synthesis, phase factor, reflection coefficient, and two-segment reflected path unchanged.
+  - It keeps the PM sea synthesis, reflection coefficient, and two-segment reflected path unchanged.
+  - The pre-fix `delta_phi=2*k0*(cos_i+cos_r)*eta` convention is retained only in standalone diagnostics as a legacy comparison.
 
 ### Boundary screen coupling diagnostics
 - `surface_boundary_coupling_diagnostics=false` by default. When enabled, the code only adds metadata and does not change the reflected field or channel outputs.
@@ -427,7 +1023,7 @@ It is intended as a code-first reference for future maintenance and feature work
   - fixed bit stream with `bits_seed=9000`.
   - varying AWGN seed: `noise_seed_base + condition_index*100000 + scenario_index*10000 + seed_index*100 + ebn0_index`.
 - Data flow:
-  - each run calls `CARPE3D_vertical(paramsV)`;
+  - each run calls `vertical_channel_model(paramsV)`;
   - builds baseband taps from `H_f` with the same `ifft(ifftshift(...))` logic as `comm_main_vertical_psk.m`;
   - applies the explicit receive-window policy used by `comm_main_vertical_psk.m`;
   - injects AWGN with `noise_inject_vertical`;
@@ -461,8 +1057,8 @@ It is intended as a code-first reference for future maintenance and feature work
   - `M=4`, `n_sym=2000`, `EbN0_dB_list=0:2:20`;
   - fixed `bits_seed=9000`;
   - deterministic AWGN seeds from `noise_seed_base=7000`.
-- It compares two receive slicing modes:
-  - `same`: current `conv(tx_symbols,h_bb,'same')` behavior used by the communication scripts.
+- It compares receive slicing modes:
+  - `same`: legacy `conv(tx_symbols,h_bb,'same')` diagnostic behavior retained for pre-D2 comparisons.
   - `causal_head`: diagnostic-only `conv(...,'full')` followed by the first `N` samples, appropriate for causal taps whose main energy starts at tap 1.
   - `peak_sync`: D2 policy that shifts the effective tap origin to the dominant tap before causal-head receive-window selection.
 - Outputs:
@@ -550,12 +1146,18 @@ It is intended as a code-first reference for future maintenance and feature work
   - `h_total`
 - Breaking these semantics will break the communication demo even if the channel demo still runs.
 
+## Chronological Project Log / 按时间追加的项目日志
+
+Historical entries are evidence of what was implemented or concluded at that
+time. They are not silently rewritten when later work changes the public
+semantics. Superseding entries explicitly identify the affected conclusion.
+
 ## 2026-06-10 Kirchhoff k-domain Boundary Validation
 
 Changed files for this interface:
-- `CARPE3D_vertical.m`: adds user-facing `paramsV` fields and validation.
-- `propWAPE_vertical.m`: forwards the surface boundary configuration and preserves disabled-path metadata.
-- `pm_surface_kirchhoff_module.m`: implements spatial and implicit k-domain boundary application paths.
+- `vertical_channel_model.m`: adds user-facing `paramsV` fields and validation.
+- `vertical_wape_propagator.m`: forwards the surface boundary configuration and preserves disabled-path metadata.
+- `pm_surface_boundary_model.m`: implements spatial and implicit k-domain boundary application paths.
 - `PROJECT_CONTEXT.md`: records formulas, interface, assumptions, limits, and validation.
 
 Reduced-grid validation settings:
@@ -590,9 +1192,9 @@ Remaining issues:
 ## 2026-06-10 Boundary Coupling Diagnostic Validation
 
 Changed files for this diagnostic:
-- `CARPE3D_vertical.m`: adds default-off diagnostic flags.
-- `propWAPE_vertical.m`: forwards diagnostic flags only for the reference-frequency reflection call and preserves disabled metadata.
-- `pm_surface_kirchhoff_module.m`: computes scalar coupling metrics from `G_xy` and optional compact debug summaries.
+- `vertical_channel_model.m`: adds default-off diagnostic flags.
+- `vertical_wape_propagator.m`: forwards diagnostic flags only for the reference-frequency reflection call and preserves disabled metadata.
+- `pm_surface_boundary_model.m`: computes scalar coupling metrics from `G_xy` and optional compact debug summaries.
 - `PROJECT_CONTEXT.md`: records formulas, interpretation, limits, and validation.
 
 Reduced-grid validation settings:
@@ -638,9 +1240,9 @@ Remaining issues:
 ## 2026-06-10 Incident-Weighted Redistribution Diagnostic Validation
 
 Changed files for this diagnostic:
-- `CARPE3D_vertical.m`: adds default-off redistribution diagnostic flags.
-- `propWAPE_vertical.m`: forwards redistribution flags only for the reference-frequency reflection call and preserves disabled metadata.
-- `pm_surface_kirchhoff_module.m`: compares `Psi_inc_k`, `Psi_ref_k`, and flat-reflected spectra without changing propagation results.
+- `vertical_channel_model.m`: adds default-off redistribution diagnostic flags.
+- `vertical_wape_propagator.m`: forwards redistribution flags only for the reference-frequency reflection call and preserves disabled metadata.
+- `pm_surface_boundary_model.m`: compares `Psi_inc_k`, `Psi_ref_k`, and flat-reflected spectra without changing propagation results.
 - `sweep_surface_boundary_redistribution_vertical.m`: reduced scalar trend sweep for `Hs`, wind speed, and frequency.
 - `PROJECT_CONTEXT.md`: records formulas, interpretation, limits, and validation.
 
@@ -830,7 +1432,7 @@ Changed files for this prototype:
 
 Purpose and scope:
 - C4 converts existing Monte Carlo summary rows into a lightweight empirical random generator for reference-frequency and low-dimensional channel summaries.
-- It does not modify `CARPE3D_vertical`, `propWAPE_vertical`, `pm_surface_kirchhoff_module`, or communication-chain public outputs.
+- It does not modify `vertical_channel_model`, `vertical_wape_propagator`, `pm_surface_boundary_model`, or communication-chain public outputs.
 - It does not run PE/WAPE and does not save full channel structs, spatial fields, or two-dimensional spectra.
 - It is an empirical resampler of previously computed C3/C3.5 results, not a new rough-surface scattering theory.
 
@@ -882,7 +1484,7 @@ Smoke validation settings:
   - `surface_empirical_channel_generator_validation_result.mat`
   - size `37379` bytes
 - Static check:
-  - C4 files do not call `CARPE3D_vertical`, `propWAPE_vertical`, or `pm_surface_kirchhoff_module`.
+  - C4 files do not call `vertical_channel_model`, `vertical_wape_propagator`, or `pm_surface_boundary_model`.
 
 Smoke validation results:
 - Condition 1, `Hs=0.05`, `wind=3`:
@@ -960,6 +1562,96 @@ Generated smoke artifacts:
 
 Remaining issue:
 - The full 192-propagation C3.5 run was not executed in this update; only the redirected smoke test was run. Existing `sweep_monte_carlo_surface_channel_vertical_result.mat` still reflects the previously saved `mc_count=4` run until the full script is rerun.
+
+## 2026-06-11 Realization-Based Platform and C4 Wideband Bootstrap Update
+
+Changed files for this update:
+- `plot_c35_core_heatmaps_vertical.m`: reads the C3.5 result file and regenerates the five core heatmaps.
+- `monte_carlo_comm_surface_psk_representative_vertical.m`: runs communication Monte Carlo on weak/mid/strong representative sea states while keeping the D2 link fixed.
+- `build_surface_empirical_channel_model_vertical.m`: detects stored wideband `H_f` Monte Carlo samples in C3/C3.5 result files.
+- `sample_surface_empirical_channel_vertical.m`: adds `sample_mode='wideband_hf'` and `sample_mode='tap_level'`.
+- `validate_surface_empirical_channel_generator_vertical.m`: validates summary, wideband, and tap-level C4 modes.
+- `reports/realization_to_empirical_channel_generator_report.md`: records the stage summary and main results.
+
+Fixed communication policy:
+- D2 is treated as fixed for this phase.
+- `receive_window_mode='peak_sync'`.
+- `ebn0_reference='rx_clean'`.
+- No changes were made to `comm_main_vertical_psk.m`.
+
+C3.5 full rerun:
+- `sea_hs_target=[0.05,0.5,1.0]`.
+- `sea_wind_speed=[3,5,8,12]`.
+- `mc_count=16`, `seed_list=12345:12360`.
+- Total propagation count: `12 x 16 = 192`.
+- `run_summary_table` rows: `192`.
+- `condition_summary_table` rows: `12`.
+- Maximum `H_f-(H_direct_f+H_reflect_f)` invariant error: `1.551583845779546e-17`.
+- Maximum direct-path drift: `1.390486644391991e-17`.
+- All 12 conditions contain stored wideband `H_f.samples` with `Nf=16`.
+
+C3.5 core heatmaps generated:
+- `c35_core_abs_H_ref_mean_heatmap.png`
+- `c35_core_abs_H_ref_std_heatmap.png`
+- `c35_core_reflect_rms_delta_k_mean_heatmap.png`
+- `c35_core_reflect_high_k_fraction_mean_heatmap.png`
+- `c35_core_tap_rms_delay_mean_heatmap.png`
+
+C3.5 selected condition results:
+- weak sea, `Hs=0.05`, `wind=5`:
+  - `abs_H_ref_mean=0.029723`
+  - `abs_H_ref_std=0.019989`
+  - `reflect_rms_delta_k_mean=2.6774`
+  - `reflect_high_k_fraction_mean=0.13695`
+  - `tap_rms_delay_symbols_mean=31.644`
+- mid representative sea, `Hs=0.5`, `wind=8`:
+  - `abs_H_ref_mean=0.045544`
+  - `abs_H_ref_std=0.018677`
+  - `reflect_rms_delta_k_mean=4.9028`
+  - `reflect_high_k_fraction_mean=0.56899`
+  - `tap_rms_delay_symbols_mean=97.101`
+- strong representative sea, `Hs=1.0`, `wind=12`:
+  - `abs_H_ref_mean=0.054750`
+  - `abs_H_ref_std=0.021414`
+  - `reflect_rms_delta_k_mean=6.0107`
+  - `reflect_high_k_fraction_mean=0.74638`
+  - `tap_rms_delay_symbols_mean=109.35`
+
+Representative communication Monte Carlo:
+- Sea states:
+  - weak: `Hs=0.05`, `wind=5`
+  - mid: `Hs=0.5`, `wind=8`
+  - strong: `Hs=1.0`, `wind=12`
+- Scenarios: `direct_only`, `direct_plus_reflect`.
+- `mc_count=16`.
+- Total channel runs: `3 x 2 x 16 = 96`.
+- Maximum channel invariant error: `1.387778780781446e-17`.
+- Maximum direct-only reflected response: `0`.
+- Selected BER results:
+  - weak direct-plus-reflect: `BER_mean` at `[0,10,20] dB = [0.11606, 3.125e-05, 0]`
+  - mid direct-plus-reflect: `BER_mean` at `[0,10,20] dB = [0.17438, 0.045906, 0.037469]`
+  - strong direct-plus-reflect: `BER_mean` at `[0,10,20] dB = [0.15978, 0.018125, 0.00875]`
+- Mid and strong reflected cases retain residual high-Eb/N0 BER for some seeds under the current reduced-grid channel and MMSE receiver.
+
+C4 upgraded generator:
+- `summary` mode retains low-dimensional bootstrap behavior.
+- `wideband_hf` mode bootstraps stored `H_f(f)` samples from the matched C3.5 condition.
+- `tap_level` mode derives baseband/tap samples from bootstrapped `H_f(f)` without rerunning PE/WAPE.
+- C4 validation using the new C3.5 source:
+  - comparison rows: `18`
+  - output file size: `219191` bytes
+  - `H_f_sample_size=[16 50]`
+  - `idx_f_ref=8`
+  - `tap_count_mean=501.92`
+  - `tap_rms_delay_mean=40.0435`
+  - `tap_peak_fraction_mean=0.9857`
+  - tap metrics finite: true
+  - no PE/WAPE propagation run: true
+
+Stage conclusion:
+- The current platform is a realization-based PE/WAPE simulation and empirical Monte Carlo analysis pipeline.
+- The next stage should focus on empirical statistics-based channel generation from the C3.5 sample ensemble.
+- C4 remains an empirical bootstrap generator. It is not a T-matrix, SSA/NLSSA, physical scattering cross-section model, or closed-form statistical channel model.
 
 ## 2026-06-10 Communication Monte Carlo PSK Validation
 
@@ -1043,7 +1735,7 @@ Validation results:
   - `BER(20 dB)=0`, `SER(20 dB)=0`
   - BER curve `[0.22275, 0.15075, 0.07425, 0.0365, 0.01, 0.002, 0, 0, 0, 0, 0]`
   - nonmonotonic counts: BER `0`, SER `0`
-- Known short multipath with current `conv(...,'same')` slicing:
+- Known short multipath with pre-D2 legacy `conv(...,'same')` slicing:
   - `tap_count=3`, `peak_index=1`, `peak_fraction=0.8733624454148472`
   - noiseless `BER=0.506`, `SER=0.758`
   - `BER(20 dB)=0.50575`, `SER(20 dB)=0.7575`
@@ -1053,15 +1745,15 @@ Validation results:
   - `BER(20 dB)=0`, `SER(20 dB)=0`
   - BER curve `[0.14575, 0.07975, 0.03475, 0.00675, 0.0005, 0, 0, 0, 0, 0, 0]`
   - nonmonotonic counts: BER `0`, SER `0`
-- PE direct-only current taps with current `conv(...,'same')` slicing:
+- PE direct-only taps with pre-D2 legacy `conv(...,'same')` slicing:
   - `H_f` invariant error `=0`
   - `max(abs(H_reflect_f))=0`
   - `peak_index_before_alignment=1`
   - `h_full` peak fraction `=0.9976004631466816`
-  - current retained `tap_count=1997`
+  - retained `tap_count=1997`
   - noiseless `BER=0.51775`, `SER=0.768`
   - `BER(20 dB)=0.49175`, `SER(20 dB)=0.739`
-- PE direct-only peak-aligned taps with current `conv(...,'same')` slicing:
+- PE direct-only peak-aligned taps with pre-D2 legacy `conv(...,'same')` slicing:
   - peak alignment does not change the result because the dominant tap was already at index 1.
   - noiseless `BER=0.51775`, `SER=0.768`
   - `BER(20 dB)=0.4925`, `SER(20 dB)=0.7415`
@@ -1070,13 +1762,13 @@ Validation results:
   - BER curve `[0.49725, 0.47675, 0.475, 0.4745, 0.47275, 0.4625, 0.45075, 0.431, 0.42525, 0.3695, 0.342]`
   - SER curve `[0.741, 0.7185, 0.7055, 0.704, 0.701, 0.677, 0.6655, 0.617, 0.6005, 0.5195, 0.479]`
   - nonmonotonic counts: BER `0`, SER `0`
-  - effective SNR at nominal `20 dB` Eb/N0 is still `-4.9334090404706892 dB`, because current AWGN injection references transmit-symbol power while the PE channel gain is much smaller.
+  - effective SNR at nominal `20 dB` Eb/N0 is still `-4.9334090404706892 dB`, because the pre-D2 AWGN reference used transmit-symbol power while the PE channel gain is much smaller.
 
 Diagnosis:
 - The PSK mapper/demapper, AWGN injection, and single-tap equalization are functional.
-- The current communication scripts fail for multi-tap channels mainly because `conv(tx_symbols,h_bb,'same')` center-crops a causal impulse response. For a long PE `h_bb`, this introduces a large symbol timing offset even when the dominant tap is already at index 1.
+- The pre-D2 communication slicing failed for multi-tap channels mainly because `conv(tx_symbols,h_bb,'same')` center-cropped a causal impulse response. For a long PE `h_bb`, this introduced a large symbol timing offset even when the dominant tap was already at index 1.
 - Main-peak alignment alone is not sufficient for PE taps; receive-window selection must also respect causal timing.
-- After causal receive-window selection, PE direct-only noiseless BER/SER becomes zero, but noisy BER remains high because the current Eb/N0 noise calibration is referenced to transmitted symbols rather than received/channel-output power.
+- After causal receive-window selection, PE direct-only noiseless BER/SER becomes zero, but noisy BER remains high under the pre-D2 transmit-symbol Eb/N0 reference.
 
 Generated result artifacts:
 - `validate_comm_link_minimal_vertical_result.mat`
@@ -1086,8 +1778,7 @@ Generated result artifacts:
 - `validate_comm_link_minimal_vertical_pe_h_bb_aligned_taps.png`
 
 Remaining issues:
-- D1 does not change production communication scripts.
-- A follow-up fix should replace or parameterize `conv(...,'same')` receive slicing for causal channel taps.
+- D1 did not change production communication scripts; the later D2 update changed the default receive policy to `peak_sync` and the default Eb/N0 reference to `rx_clean`.
 - A separate noise-calibration decision is needed: Eb/N0 can be referenced to transmit-symbol power, received clean-signal power, or post-equalizer noise enhancement, and these produce different BER interpretations.
 
 ## 2026-06-10 D2 Communication Receive Window and Eb/N0 Reference Update
@@ -1113,7 +1804,7 @@ D2 policy:
 - Compatibility:
   - `comm_main_vertical_psk.m` still saves the previous result fields and adds `receive_window_mode`, `receive_meta`, `ebn0_reference`, and `h_eq`.
   - `monte_carlo_comm_surface_psk_vertical.m` keeps the same result tables and sample arrays, and adds receive-window metadata in per-run summaries.
-  - `comm_main_vertical_psk.m` remains the reference single-run demo; no changes were made to `CARPE3D_vertical` or propagation outputs.
+  - `comm_main_vertical_psk.m` remains the reference single-run demo; no changes were made to `vertical_channel_model` or propagation outputs.
 
 Expected effect from D1 diagnosis:
 - Unit and single-tap channels should remain zero-error in noiseless mode and should show BER/SER reduction with Eb/N0.
@@ -1169,3 +1860,2213 @@ Remaining D2 issues:
 - `peak_sync` is a deterministic dominant-tap synchronization rule; it is not a timing recovery loop.
 - `rx_clean` Eb/N0 is a receiver-side performance convention. It is useful for comparing channel distortion at controlled received SNR, but it no longer includes absolute path-loss penalty in the noise power.
 - The strong reflected channel can still have residual ISI/noise enhancement, so BER may remain nonzero at 20 dB for small `n_sym`/`mc_count` smoke tests.
+
+## 2026-06-15 SSA-Like Statistical Surface Kernel
+
+Changed files for this update:
+- `vertical_channel_model.m`: adds validated `paramsV.surface_ssa_random_scatter`, `paramsV.surface_ssa_scatter_scale`, `paramsV.surface_ssa_seed_offset`, `paramsV.surface_ssa_kernel_mode`, `paramsV.surface_ssa_geometry_source_id`, `paramsV.surface_ssa_kz_branch`, `paramsV.surface_ssa_conv_padding`, and allows `surface_boundary_model='ssa_stat_kernel'`.
+- `vertical_wape_propagator.m`: passes the SSA-like random-scatter controls and frequency index into the surface boundary module; keeps the two-segment reflected PE path and `H_f = H_direct_f + H_reflect_f`.
+- `pm_surface_boundary_model.m`: adds the SSA-like PM-spectrum statistical boundary branch.
+- `vertical_comm_guide.md` and `PROJECT_CONTEXT.md`: document formulas, interfaces, limits, and validation status.
+
+Implemented interface and formulas:
+- `ssa_stat_kernel` does not synthesize `xi(x,y)`. It scales the PM height spectrum directly so `sum(W_eta(:))*dkx*dky = sigma_eta^2`, where `sigma_eta = sea_hs_target/4`.
+- The coherent term is now interpreted as the pressure-release / Dirichlet SSA coherent reflection coefficient:
+  `R_coh = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
+  In normal specular reflection this reduces to `R_coh = -exp(-2*k0^2*sigma_eta^2)` for `R0=-1`.
+- The raw incoherent power uses the corrected engineering baseline scale `P_sca_raw = surface_ssa_scatter_scale*abs(R0)^2*(k0*phase_factor_eff)^2*dkx*dky*circconv(W_eta,abs(Psi_inc_k).^2)`, where `phase_factor_eff` represents the effective `cos_i+cos_s` factor. The pre-correction `2*k0*phase_factor_eff` scale is retained only in metadata as a legacy audit value.
+- Energy limiting enforces `E_coh+E_sca <= E_inc`; after random scatter synthesis, the final combined reflected spectrum is also checked against `E_inc`.
+- The random scatter seed is `seed_ssa = sea_seed + surface_ssa_seed_offset + frequency_index - 1`, with default `surface_ssa_seed_offset=100000`.
+- The current engineering kernel is explicitly identified by `surface_ssa_kernel_mode='pm_convolution'`.
+- `pm_convolution` remains an engineering PM-spectrum baseline, not a strict SSA geometry kernel or a calibrated scattering cross section.
+- `ssa1_geometry` and `ssa1_debug_dense` implement the `SSA.md` first-order Dirichlet geometry factor `G_SSA1(K,K';f)=4*gamma(K,f)*gamma(K',f)`.
+
+Metadata:
+- `roughness_meta.ssa_stat_kernel_meta` records `sigma_eta_m`, `Hs_target_m`, `R_coh`, `P_sca` stats, `E_inc`, `E_coh`, `E_sca_raw`, `E_sca`, `E_ref`, energy scale factors, `seed_ssa`, formulas, normalization notes, and limitations.
+- The metadata now also records `kernel_mode`, `geometry_source_id`, `kz_branch`, `conv_padding`, `E_sca_limited`, `energy_limit_applied`, `energy_conservation_error`, and `propagating_bin_fraction`.
+- For this branch, `surface_elevation=[]`, `delta_phi=[]`, and `roughness_meta.surface_realization_generated=false`.
+
+Validation:
+- Reduced scalar defaults: `nx=ny=128`, `xw=yw=50`, `z_tx=100`, `z_rx=3`, `sigma_src_m=0.4`, `show_figures=false`, `save_mode='rx_only'`, `enforce_1_over_R=false`.
+- Default `kirchhoff_spatial`: invariant error `max(abs(H_f-H_direct_f-H_reflect_f)) = 0`.
+- `ssa_stat_kernel`, `sea_hs_target=0`: `R_coh=-1`, `E_sca=0`, and flat-model difference from `kirchhoff_spatial` was `7.76e-17`.
+- `ssa_stat_kernel`, `sea_hs_target=0.5`: `E_coh+E_sca = E_inc = 53831.9373`; same seed gave identical `H_f`, changed seed kept `H_direct_f` fixed and changed `H_reflect_f`.
+- `surface_ssa_random_scatter=false`: `P_sca.sum=53831.9373` remained available in metadata, while `E_sca=0` and no random scatter was added to `psi_ref`.
+- Direct-only with `ssa_stat_kernel`: `H_reflect_f=0` and the public channel fields remained present.
+- Reduced wideband PSK smoke: direct-only and direct-plus-reflect both consumed `H_f` and completed the baseband tap/equalizer flow.
+- Weak sea comparison with `sea_hs_target=0.05`: `kirchhoff_spatial` gave `|H|=0.074770323`, phase `-1.2009652`, BER `[0.11133 0 0]` at Eb/N0 `[0 10 20]`; `ssa_stat_kernel` gave `|H|=0.027797463`, phase `-1.7734442`, BER `[0.13086 0 0]`. The BER trend is consistent; pointwise channel equality is not expected.
+
+Limitations and remaining issues:
+- This is an SSA-like statistical kernel for validating the PM-spectrum-to-random-channel path. It is not a strict SSA/NLSSA scattering solver and does not include calibrated angular geometry factors or scattering cross sections.
+- `surface_ssa_scatter_scale` is an engineering normalization knob, not a physical calibration.
+- The old Kirchhoff realization models remain the default and should be used for legacy comparison unless the statistical branch is explicitly requested.
+
+## 2026-06-15 SSA Kernel Mode Interface and SSA1 Geometry
+
+Changed behavior:
+- `surface_ssa_kernel_mode='pm_convolution'` is the default and reproduces the current engineering PM-spectrum convolution baseline.
+- `surface_ssa_kernel_mode='ssa1_geometry'` implements the `SSA.md` first-order Dirichlet / pressure-release power geometry:
+  `G_SSA1(K,K';f)=4*gamma(K,f)*gamma(K',f)`.
+- The implemented FFT form is `A(K')=gamma(K',f)*abs(Psi_inc(K'))^2`, `B=circconv(W_eta,A)`, and `P_sca_raw(K)=4*C_norm*gamma(K,f)*B(K)*dkx*dky`, with `C_norm=surface_ssa_scatter_scale`.
+- `surface_ssa_kernel_mode='ssa1_debug_dense'` computes the same periodic sum explicitly on small grids for FFT-vs-dense validation.
+- `surface_ssa_kz_branch='downward_positive_real'` computes `kz(K)=sqrt(max(k0^2-|K|^2,0))`; non-propagating bins are excluded from the propagating fraction metadata but the baseline `pm_convolution` formula remains numerically unchanged.
+- `surface_ssa_conv_padding='periodic'` keeps the existing FFT circular convolution.
+- `surface_ssa_conv_padding='zero_padded'` now runs for `pm_convolution` and `ssa1_geometry`: inputs are `fftshift`ed to signed-k order, a full zero-padded linear convolution is computed on a `(2*ny-1,2*nx-1)` grid, and the original signed-k support is cropped back before returning to FFT order.
+
+Current formula status:
+- The first-order Dirichlet SSA geometry factor from `SSA.md` has been implemented.
+- No calibrated angular scattering cross section has been implemented.
+- No strict boundary-condition mapping from arbitrary `surface_reflect_coeff` to Dirichlet/Neumann/impedance SSA factors has been implemented; `ssa1_geometry` and `ssa1_debug_dense` require `surface_reflect_coeff=-1`.
+- The code must not be described as NLSSA, impedance-boundary SSA, or experimentally calibrated rough-surface scattering.
+
+Validation additions:
+- `validate_ssa_stat_kernel_vertical.m` checks that `pm_convolution` records the new metadata fields, `ssa1_geometry` degenerates correctly for `Hs=0`, `zero_padded` convolution runs for both `pm_convolution` and `ssa1_geometry`, and `ssa1_debug_dense` matches the periodic FFT sum on a small grid through compact `P_sca` metadata.
+- Sweep and communication summary tables carry kernel-mode energy audit fields: `E_sca_limited`, `energy_conservation_error`, `energy_limit_applied`, and `propagating_bin_fraction`.
+- `sweep_ssa_stat_kernel_surface_channel_vertical.m` and `monte_carlo_comm_ssa_stat_kernel_psk_vertical.m` compare `kirchhoff_spatial`, `ssa_pm_convolution`, and `ssa1_geometry`.
+- `plot_ssa_stat_kernel_report_vertical.m` emits `ssa_kernel_mode_*` figures; dense-vs-FFT is available through the validation result rather than default wideband sweeps.
+
+Latest executed validation:
+- `validate_ssa_stat_kernel_vertical` completed successfully.
+- `Hs=0` flat degeneration:
+  - `pm_convolution` vs `kirchhoff_spatial`: max response difference `7.7579e-17`.
+  - `ssa1_geometry` vs `kirchhoff_spatial`: max response difference `7.7579e-17`.
+- `ssa1_geometry` energy audit: `energy_conservation_error=1.3516e-16`, below the `1e-12` validation tolerance.
+- `ssa1_debug_dense` vs FFT `ssa1_geometry`: compact `P_sca_raw` relative sum error `2.5247e-15`.
+- `sweep_ssa_stat_kernel_surface_channel_vertical` completed with `SSA_STAT_MC_COUNT=1`, `Hs=[0 0.05 0.2 0.5]`, and model labels `kirchhoff_spatial`, `ssa_pm_convolution`, `ssa1_geometry`.
+- In that sweep, both statistical kernels matched the `Hs=0` flat Kirchhoff response within `1.2533e-16`.
+- `monte_carlo_comm_ssa_stat_kernel_psk_vertical` completed with `SSA_STAT_COMM_MC_COUNT=1`; all three model labels propagated through the existing `H_f` communication path and produced BER/SER summaries.
+- `plot_ssa_stat_kernel_report_vertical` completed and regenerated `ssa_stat_kernel_report_*` plus `ssa_kernel_mode_*` report figures.
+
+## 2026-06-15 SSA Statistical Validation and Report Scripts
+
+Changed files for this validation/report update:
+- `validate_ssa_stat_kernel_vertical.m`: new reduced scalar validation script.
+- `sweep_ssa_stat_kernel_surface_channel_vertical.m`: new multi-Hs, multi-seed channel statistics script.
+- `monte_carlo_comm_ssa_stat_kernel_psk_vertical.m`: new reduced QPSK BER/SER statistics script using the existing `H_f` communication path.
+- `sweep_ssa_scatter_scale_sensitivity_vertical.m`: new reduced scalar sensitivity script for `surface_ssa_scatter_scale`.
+- `plot_ssa_stat_kernel_report_vertical.m`: new plot-only report script that reads saved `.mat` results.
+- `vertical_comm_guide.md` and `PROJECT_CONTEXT.md`: document run order, outputs, validation scope, and limitations.
+
+Validation scope:
+- Sea states: `sea_hs_target=[0 0.05 0.2 0.5]`, `sea_wind_speed=5`.
+- Surface models: `kirchhoff_spatial` and `ssa_stat_kernel`.
+- Channel sweep default seeds: `12345+(0:7)`, override with `SSA_STAT_MC_COUNT`.
+- Communication default seeds: `12345+(0:3)`, override with `SSA_STAT_COMM_MC_COUNT`.
+- Scatter-scale sweep default seeds: `12345+(0:3)`, override with `SSA_SCALE_SWEEP_MC_COUNT`.
+- Scatter-scale sweep defaults: `sea_hs_target=[0.05 0.2 0.5]`, `surface_ssa_scatter_scale=[0 0.25 1 4]`, kernels `ssa_pm_convolution` and `ssa1_geometry`.
+- Smoke-test condition limits: `SSA_STAT_SWEEP_MAX_CONDITIONS` and `SSA_STAT_COMM_MAX_CONDITIONS`.
+- Scale-sweep smoke-test limit: `SSA_SCALE_SWEEP_MAX_CONDITIONS`.
+- Reduced wideband channel defaults: `enable_wideband=true`, `f_band_hz=[4000 8000]`, `Nf_min=Nf_max=16`, `f_ref_hz=6000`, `nx=ny=128`, `show_figures=false`, `enforce_1_over_R=false`.
+
+Acceptance metrics checked or summarized:
+- `max(abs(H_f-H_direct_f-H_reflect_f)) <= 1e-10`.
+- `h_total == H_f(idx_f_ref)` and `h_reflect == H_reflect_f(idx_f_ref)` within roundoff.
+- `direct_only` keeps `H_reflect_f=0` and public channel fields present.
+- `Hs=0` gives `sigma_eta_m=0`, `R_coh=surface_reflect_coeff`, `P_sca.sum=0`, `E_sca=0`, and a flat-response match against `kirchhoff_spatial`.
+- `E_coh+E_sca <= E_inc + 1e-12*max(E_inc,1)` and `E_ref <= E_inc + 1e-12*max(E_inc,1)` for `ssa_stat_kernel` metadata.
+- `surface_ssa_random_scatter=false` leaves finite `P_sca` metadata but sets realized `E_sca=0`, so downstream `H_reflect_f` receives only the coherent term.
+- `surface_ssa_scatter_scale=0` gives zero raw scatter energy in both `pm_convolution` and `ssa1_geometry`.
+- `E_sca_raw/E_inc` should be nondecreasing as `surface_ssa_scatter_scale` increases for a fixed kernel, sea state, and seed.
+- Statistical summaries report mean/std of `|H(f)|`, `|H_reflect(f)|`, `angle(H(f_ref))`, `|h_total|`, `|h_reflect|`, `E_sca/E_inc`, `E_ref/E_inc`, and energy scaling.
+- BER/SER summaries compare qualitative trends with paired bit/noise seeds, not pointwise equality between physical models.
+
+Report outputs:
+- Channel result: `sweep_ssa_stat_kernel_surface_channel_vertical_result.mat`.
+- Communication result: `monte_carlo_comm_ssa_stat_kernel_psk_vertical_result.mat`.
+- Validation result: `validate_ssa_stat_kernel_vertical_result.mat`.
+- Scale-sensitivity result: `sweep_ssa_scatter_scale_sensitivity_vertical_result.mat`.
+- Figures:
+  - `ssa_stat_kernel_report_abs_H_f_mean_std.png`
+  - `ssa_stat_kernel_report_abs_H_reflect_f_mean_std.png`
+  - `ssa_stat_kernel_report_phase_H_f_ref_vs_Hs.png`
+  - `ssa_stat_kernel_report_reflect_energy_vs_Hs.png`
+  - `ssa_stat_kernel_report_Esca_Einc_vs_Hs.png`
+  - `ssa_stat_kernel_report_energy_scale_vs_Hs.png`
+  - `ssa_stat_kernel_report_abs_h_total_model_compare.png`
+  - `ssa_stat_kernel_report_abs_h_reflect_model_compare.png`
+  - `ssa_stat_kernel_report_BER_model_compare.png`
+  - `ssa_stat_kernel_report_SER_model_compare.png`
+  - `ssa_stat_kernel_report_Hs0_flat_check.png`
+  - `ssa_stat_kernel_report_metadata_energy_table.mat`
+
+Limitations:
+- These scripts are validation and reporting harnesses around the current implementation. They do not modify `comm_main_vertical_psk.m`, modem/noise/MMSE policy, WAPE marching, or `local_march_field`.
+- Full spatial fields, `psi_ref`, `P_sca`, and `W_eta` matrices are intentionally not saved in the statistical result files.
+- The current model remains an SSA-like engineering/statistical kernel. Strict SSA angular geometry factors and calibrated scattering cross sections remain future work.
+
+Latest scale-sensitivity smoke result:
+- `sweep_ssa_scatter_scale_sensitivity_vertical` completed with `SSA_SCALE_SWEEP_MC_COUNT=1`, `Hs=[0.05 0.2 0.5]`, and scales `[0 0.25 1 4]`.
+- For `Hs=0.05`, `E_sca_raw/E_inc` was `[0 0.39478 1.5791 6.3165]` for `ssa_pm_convolution` and `[0 0.09768 0.39072 1.5629]` for `ssa1_geometry`.
+- `energy_conservation_error_max=0` for every listed scale-sweep condition.
+- The sweep uses `surface_ssa_random_scatter=false`; therefore `E_sca/E_inc=0` in the realized reflected field, while `E_sca_limited/E_inc` records the limited scatter-energy budget for metadata analysis.
+
+## 2026-06-16 Core MATLAB File Rename
+
+Changed core names:
+- `CARPE3D_vertical.m` -> `vertical_channel_model.m`.
+- `propWAPE_vertical.m` -> `vertical_wape_propagator.m`.
+- `pm_surface_kirchhoff_module.m` -> `pm_surface_boundary_model.m`.
+
+Behavioral intent:
+- This is a naming refactor only. It does not change `paramsV`, `cfg`, `output`, `H_f`, `H_direct_f`, `H_reflect_f`, `h_total`, or communication-chain result semantics.
+- No compatibility wrappers for the old core names are kept; active scripts call the new names directly.
+- The `old/` directory remains archival and was not migrated.
+
+Validation after rename:
+- Reduced scalar smoke through `vertical_channel_model` passed with `max(abs(H_f-H_direct_f-H_reflect_f))=0`.
+- Direct-only smoke passed with `max(abs(H_reflect_f))=0`.
+- `validate_ssa_stat_kernel_vertical` passed after updating expected error IDs to `pm_surface_boundary_model:*`.
+- `monte_carlo_comm_ssa_stat_kernel_psk_vertical` completed with the renamed entrypoint and existing `H_f` communication path.
+- `git diff --check` passed.
+
+## 2026-06-17 SSA-Like Statistical Kernel Increment
+
+Purpose:
+- Continue treating `ssa_stat_kernel` as a PM-spectrum-driven SSA-like statistical scattering kernel prototype.
+- Preserve `kirchhoff_spatial` as the realization-based phase-screen comparison path.
+- Keep `pm_convolution` as an engineering baseline and `ssa1_geometry` as the current first-order Dirichlet research kernel.
+- Do not claim complete SSA/NLSSA, T-matrix, impedance-boundary, multiple-scattering, or experimentally calibrated sea-surface scattering physics.
+
+Implementation updates:
+- `pm_convolution` and `ssa1_geometry` now support both `surface_ssa_conv_padding='periodic'` and `surface_ssa_conv_padding='zero_padded'`.
+- `periodic` remains the compatible FFT circular convolution path.
+- `zero_padded` computes an FFT-accelerated linear convolution using `(2*ny-1,2*nx-1)` padding, signed-k ordering via `fftshift`, center cropping back to the original signed-k support, and `ifftshift` back to the solver's FFT order.
+- `ssa1_debug_dense` remains a small-grid explicit periodic-sum validator for the periodic FFT path.
+- `compare_ssa_conv_padding_vertical.m` adds a reduced scalar-frequency comparison between `periodic` and `zero_padded` for `pm_convolution` and `ssa1_geometry`.
+
+Metadata additions:
+- `ssa_stat_kernel_meta` records `conv_operator`, `conv_padding_size`, `conv_crop_start_index`, `conv_crop_end_index`, and `conv_crop_rule`.
+- It also records compact angular-spectrum diagnostics for incident, coherent, scatter-power, and reflected spectra: total spectral energy, centroid, RMS transverse wavenumber, and 90% energy radius.
+- Existing energy audit fields remain unchanged: `E_inc`, `E_coh`, `E_sca_raw`, `E_sca_limited`, `E_sca`, `E_ref`, `energy_scale_applied`, `energy_limit_applied`, and `energy_conservation_error`.
+
+Validation updates:
+- `validate_ssa_stat_kernel_vertical` now expects `zero_padded` to run for both `pm_convolution` and `ssa1_geometry` and records its raw-scatter-energy difference from the periodic path.
+- The validation still covers `Hs=0`, direct-only invariants, deterministic seeding, changed-seed reflection sensitivity, `random_scatter=false`, scale monotonicity, non-Dirichlet rejection for `ssa1_geometry`, and periodic dense-vs-FFT consistency.
+- Wideband statistics scripts now carry convolution mode/operator and angular-spectrum broadening metrics in their run and condition summaries.
+
+Latest numerical validation:
+- `validate_ssa_stat_kernel_vertical` completed successfully after the zero-padding implementation.
+- `Hs=0` flat degeneration remained at roundoff level:
+  - `pm_convolution` vs flat `kirchhoff_spatial`: max response difference `7.7579e-17`.
+  - `ssa1_geometry` vs flat `kirchhoff_spatial`: max response difference `7.7579e-17`.
+- Energy audit checks remained within tolerance:
+  - `ssa1_geometry` energy conservation error `1.3516e-16`.
+  - zero-padded `pm_convolution` energy conservation error `0`.
+  - zero-padded `ssa1_geometry` energy conservation error `0`.
+- `ssa1_debug_dense` still matches the periodic FFT implementation for compact raw scatter power with relative sum error `2.5247e-15`.
+- The reduced zero-padded wideband invariant check passed with `max(abs(H_f-H_direct_f-H_reflect_f))=8.9974e-19` over four frequency bins.
+- `sweep_ssa_stat_kernel_surface_channel_vertical` completed a light statistical sweep with one seed over `Hs=[0 0.05 0.2 0.5]` and model labels `kirchhoff_spatial`, `ssa_pm_convolution`, and `ssa1_geometry`.
+- In the light sweep, both statistical kernels matched the `Hs=0` flat Kirchhoff response within `1.2533e-16`.
+- `compare_ssa_conv_padding_vertical` completed with one seed over `Hs=[0 0.05 0.2]` and kernels `pm_convolution` / `ssa1_geometry`.
+- Periodic-vs-zero-padded comparison highlights:
+  - `Hs=0`: both convolution paths match the flat `kirchhoff_spatial` reference within `7.7579e-17`.
+  - `pm_convolution`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `1.5791` to `1.5784`; `rel_diff_H_reflect_f=0.0031907`; `rel_diff_H_f=0.0032389`.
+  - `pm_convolution`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `25.266` to `25.254`; `rel_diff_H_reflect_f=0.0063383`; `rel_diff_H_f=0.0019823`.
+  - `ssa1_geometry`, `Hs=0.05`: `E_sca_raw/E_inc` changed from `0.39072` to `0.39054`; `rel_diff_H_reflect_f=0.0030922`; `rel_diff_H_f=0.0031332`.
+  - `ssa1_geometry`, `Hs=0.2`: `E_sca_raw/E_inc` changed from `6.2515` to `6.2486`; `rel_diff_H_reflect_f=0.0061289`; `rel_diff_H_f=0.0019182`.
+  - All periodic-vs-zero-padded comparison rows kept `energy_conservation_error=0`; maximum invariant error stayed below `3.6e-18`.
+- Comparison artifacts:
+  - `compare_ssa_conv_padding_vertical_result.mat`
+  - `ssa_conv_padding_compare_raw_scatter_energy.png`
+  - `ssa_conv_padding_compare_relative_difference.png`
+
+Documentation update:
+- `vertical_comm_guide.md` was rewritten as a human-readable mathematical model note.
+- The guide separates `kirchhoff_spatial`, `pm_convolution`, and `ssa1_geometry` by physical role.
+- It states that `periodic` is the default compatible convolution path and `zero_padded` is a linear-convolution aliasing audit path.
+- It keeps the current scope conservative: PM-spectrum-driven SSA-like statistical scattering prototype, not complete SSA/NLSSA, T-matrix, impedance-boundary, or experimentally calibrated rough-surface scattering physics.
+- It documents that periodic and zero-padded paths are not expected to match pointwise; acceptance is based on channel invariants, energy audit, and interpretable trends.
+- It now states two additional limitations:
+  - statistical scattering realization frequency correlation is still simplified, so wideband `H_f` continuity needs a dedicated model;
+  - under fixed `sea_hs_target`, wind-speed sweeps primarily change PM spectral shape and should not be read as monotonic sea-state intensity sweeps.
+
+Stage conclusion:
+- Current status: PM-spectrum-driven SSA-like statistical scattering has engineering integration, `periodic`/`zero_padded` convolution paths, energy audit, compact metadata, core reduced-grid validation, and an initial periodic-vs-zero-padded comparison report.
+- The module can serve as a data-generation component for random-channel and communication-algorithm evaluation.
+- It remains outside the scope of complete physical SSA/NLSSA sea-surface scattering theory, calibrated absolute scattering cross sections, impedance-boundary SSA, and higher-order multiple scattering.
+
+Recommended next stage, not implemented here:
+- frequency-correlated random scattering across wideband bins;
+- larger multi-seed convergence statistics;
+- numerical or experimental calibration of `surface_ssa_scatter_scale`;
+- larger-scale linkage between scatter statistics and BER/SER trends.
+
+## 2026-06-17 SSA Coherent Reflection Formula Correction
+
+Purpose:
+- Correct the `ssa_stat_kernel` coherent reflection coefficient so it matches the pressure-release / Dirichlet first-order SSA coherent reflection interpretation.
+- At this stage the Kirchhoff realization phase-screen path was not changed; a later correction updates its phase convention to `delta_phi=k0*(cos_i+cos_r)*eta`.
+- Keep `pm_convolution` as an engineering PM-spectrum convolution baseline and `ssa1_geometry` as the first-order pressure-release / Dirichlet scattering geometry.
+
+Formula correction:
+- Previous SSA coherent implementation used:
+  `R_coh = R0*exp(-0.5*(2*k0*phase_factor_eff)^2*sigma_eta^2)`.
+- Because `phase_factor_eff=2` in normal mode, that produced the unintended normal exponent `-8*k0^2*sigma_eta^2`.
+- The corrected SSA coherent implementation uses:
+  `R_coh = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
+- For normal specular reflection, `gamma_i=gamma_s=k0`, so with `R0=-1`:
+  `R_coh = -exp(-2*k0^2*sigma_eta^2)`.
+- Broschat 1993 is used as the coherent reflection coefficient reference for PM rough surfaces; it is not treated as the source of the noncoherent `P_sca` distribution.
+
+Implementation notes:
+- `phase_factor_eff` is still retained as the effective `cos_i+cos_s` geometry factor.
+- `coherent_gamma_sum_eff_rad_per_m = k0*phase_factor_eff` is now the quantity used in the SSA coherent exponent.
+- The SSA correction did not change Kirchhoff at that time. The current Kirchhoff phase screen now uses `delta_phi=k0*(cos_i+cos_r)*eta`, giving `2*k0*eta` for normal incidence.
+- The `pm_convolution` noncoherent baseline remains an engineering scalar normalization; after the Kirchhoff phase audit its phase scale is `k0*phase_factor_eff`, with the older `2*k0*phase_factor_eff` value kept only as legacy metadata.
+- `ssa1_geometry` still computes the first-order Dirichlet scattering power through `G_SSA1=4*gamma_s*gamma_i` and still rejects non-Dirichlet `surface_reflect_coeff`.
+
+Metadata additions:
+- `R_coh_raw`, `R_coh`.
+- `coherent_exponent`.
+- `coherent_gamma_sum_eff_rad_per_m`.
+- `coherent_vertical_factor_eff`.
+- `coherent_reflection_formula`.
+- `phase_factor_eff_legacy_note`.
+- `W_eta_variance_target`, `W_eta_variance_discrete`, `W_eta_variance_rel_error`.
+
+Validation results:
+- `validate_ssa_stat_kernel_vertical` completed successfully.
+- Normal-mode coherent reflection matched `R0*exp(-2*k0^2*sigma_eta^2)` within roundoff.
+- The validation explicitly rejected the old unintended `R0*exp(-8*k0^2*sigma_eta^2)` behavior; the checked difference was `2.6753e-09`.
+- `coherent_gamma_sum_eff_rad_per_m` equaled `2*k0` in normal mode.
+- PM spectrum normalization passed: `W_eta_variance_rel_error <= 8.6736e-15` across the Hs trend cases.
+- `Hs=[0 0.05 0.2 0.5]` gave monotone decreasing `|R_coh|` and nondecreasing `E_sca_limit`.
+- `ssa1_geometry` metadata recorded `G_SSA1` and `pressure-release / Dirichlet`; non-Dirichlet reflection coefficient rejection still passed.
+- `ssa1_debug_dense` vs periodic FFT raw scatter relative sum error remained `2.5247e-15`.
+- `compare_ssa_conv_padding_vertical` completed after the coherent correction, with energy conservation error `0` for all compared rows.
+
+Recommended naming:
+- In papers or method notes, describe the module as:
+  `PM-spectrum-driven first-order pressure-release / Dirichlet SSA statistical scattering branch`.
+- Avoid naming it complete SSA, NLSSA, T-matrix, impedance-boundary scattering, multiple-scattering, or experimentally calibrated sea-surface scattering.
+
+## 2026-06-17 SSA Physical Trend Validation Closeout
+
+Purpose:
+- Add a reduced-grid physical trend validation for the sea-surface SSA branch without running or modifying the communication chain.
+- Close the wording around the current SSA module as a PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model.
+- Keep `kirchhoff_spatial` as the default and preserve the existing `H_f = H_direct_f + H_reflect_f` channel semantics.
+
+New validation script:
+- `validate_ssa_physical_trends_vertical.m` scans:
+  - `Hs=[0 0.05 0.2 0.5 1.0]`;
+  - `f=[4000 6000 8000 10000]` Hz;
+  - `sea_wind_speed=5`;
+  - reduced grid `nx=ny=128`;
+  - `surface_ssa_random_scatter=false`;
+  - `surface_ssa_conv_padding='periodic'`.
+- Compared kernels:
+  - `pm_convolution`, retained as an engineering PM-spectrum convolution baseline;
+  - `ssa1_geometry`, retained as the first-order pressure-release / Dirichlet geometry kernel.
+- The script saves compact metadata tables only; it does not save full 2-D fields or full spectra.
+
+Recorded quantities:
+- Frequency, target sea state, `sigma_eta`, `k0`, `R_coh`, `abs(R_coh)`, coherent exponent, effective vertical factor, and PM spectrum variance audit.
+- Energy audit fields: `E_inc`, `E_coh`, `E_sca_raw`, `E_sca_limited`, `E_sca`, `E_sca_limit`, `E_ref`, and `energy_conservation_error`.
+- Kernel metadata: `kernel_mode`, `conv_padding`, `kernel_formula`, `G_SSA1_formula`, `boundary_condition`, `formula_source`, and limitations.
+
+Trend checks:
+- `Hs=0`: `R_coh=R0`, `W_eta_variance_discrete=0`, `E_sca_raw=0`, and `E_sca=0`.
+- Normal coherent formula at every scanned frequency and sea state:
+  `R_coh = R0*exp(-2*k0^2*sigma_eta^2)`.
+- Fixed frequency and increasing `Hs`: `abs(R_coh)` and `E_coh/E_inc` must not increase; `E_sca_limit/E_inc` must not decrease.
+- Fixed nonzero `Hs` and increasing frequency: `abs(R_coh)` must not increase and the coherent exponent must become more negative.
+- `ssa1_geometry` must record `G_SSA1(Ks,Ki;f)=4*gamma(Ks)*gamma(Ki)` and `pressure-release / Dirichlet`, and it must reject non-Dirichlet `surface_reflect_coeff`.
+- `pm_convolution` must remain clearly labeled as an engineering baseline and must not be described as strict SSA.
+
+Expected artifacts:
+- `validate_ssa_physical_trends_vertical_result.mat`, with `summary_table`, `trend_table`, and `validation_report`.
+- `validate_ssa_abs_R_coh_vs_Hs.png`.
+- `validate_ssa_abs_R_coh_vs_frequency.png`.
+- `validate_ssa_coherent_energy_fraction_vs_Hs.png`.
+- `validate_ssa_scatter_budget_fraction_vs_Hs.png`.
+- `validate_ssa_W_eta_variance_check.png`.
+
+Documentation update:
+- `vertical_comm_guide.md` now states that Broschat 1993 is used for coherent reflection coefficient interpretation, not as the source of `P_sca`.
+- It separates the Kirchhoff realization phase screen from the SSA coherent statistical average exponent.
+- It records the first-order Dirichlet noncoherent power kernel:
+  `P_sca(Ks)=4*C_norm*gamma(Ks)*[W_eta*(gamma(Ki)*abs(Psi_inc(Ki))^2)](Ks)*DeltaKx*DeltaKy`.
+- It states that `C_norm` / `surface_ssa_scatter_scale` is an engineering normalization parameter, not an experimentally calibrated absolute scattering cross-section constant.
+
+Remaining physical boundaries:
+- At this stage there was no second-order SSA coherent correction. This historical limitation was later superseded by the coherent-only `ssa2_broschat_coherent` diagnostic documented in the 2026-06-23 section.
+- No NLSSA.
+- No full T-matrix solver.
+- No impedance-boundary or Neumann-boundary SSA factor.
+- No multiple scattering.
+- No evanescent scattering injection into the communication reflected field.
+- No experimentally calibrated bistatic scattering cross section.
+
+## 2026-06-18 SSA1 vs Kirchhoff Surface Statistics Comparison
+
+Purpose:
+- Compare the PM-spectrum-driven first-order pressure-release Dirichlet SSA statistical reflection/scattering model against the default Kirchhoff realization phase-screen model.
+- Validate statistical trend compatibility, not sample-wise equivalence.
+- Keep communication scripts, BER/SER, WAPE marching, default `kirchhoff_spatial`, and `H_f = H_direct_f + H_reflect_f` semantics unchanged.
+
+New comparison script:
+- `compare_ssa1_kirchhoff_surface_statistics_vertical.m`.
+- Default scan:
+  - `Hs=[0 0.05 0.2 0.5 1.0]`;
+  - `f=[4000 6000 8000 10000]` Hz;
+  - `sea_seed=12345+(0:15)`;
+  - `sea_wind_speed=5`;
+  - reduced grid `nx=ny=64`;
+  - `show_figures=false`, `save_mode='rx_only'`, `enforce_1_over_R=false`;
+  - `surface_boundary_redistribution_diagnostics=true`.
+- Default model set:
+  - `kirchhoff_spatial`;
+  - `ssa_stat_kernel` with `surface_ssa_kernel_mode='ssa1_geometry'`.
+- Optional engineering baseline:
+  - `ssa_stat_kernel` with `surface_ssa_kernel_mode='pm_convolution'`;
+  - enabled only by environment flag, and not described as strict SSA.
+
+Outputs:
+- `compare_ssa1_kirchhoff_surface_statistics_vertical_result.mat`, containing:
+  - `run_table`;
+  - `summary_table`;
+  - `trend_table`;
+  - `validation_report`.
+- Report figures:
+  - `compare_ssa1_kirchhoff_abs_h_reflect_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_abs_R_coh_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_coherent_fraction_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_scatter_budget_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_rms_delta_k_vs_Hs.png`;
+  - `compare_ssa1_kirchhoff_phase_variance_vs_Hs.png`.
+
+Recorded run-level quantities:
+- Channel statistics: `h_reflect`, `abs_h_reflect`, `phase_h_reflect`, `h_total`, `abs_h_total`, and `h_reflect/h_direct` magnitude/phase.
+- SSA metadata where applicable: `R_coh`, `abs_R_coh`, `E_inc`, `E_coh`, `E_sca`, `E_sca_limit`, `E_ref`, and `energy_conservation_error`.
+- Angular-spectrum spread:
+  - SSA rows use `ssa_stat_kernel_meta.reflected_spectrum_stats`;
+  - Kirchhoff rows use `boundary_redistribution_diagnostics.reflect_rms_delta_k_rad_per_m`, `reflect_high_k_fraction`, and `centroid_shift_mag_rad_per_m`;
+  - unavailable fields remain `NaN` rather than fabricated.
+
+Validation interpretation:
+- Hard checks:
+  - all rows satisfy `max(abs(H_f-H_direct_f-H_reflect_f)) <= 1e-10`;
+  - `Hs=0` `ssa1_geometry` and `kirchhoff_spatial` reflected/total channel samples match to roundoff;
+  - `ssa1_geometry` keeps `energy_conservation_error <= 1e-12`;
+  - `ssa1_geometry` metadata records `G_SSA1=4*gamma(Ks)*gamma(Ki)` and `pressure-release / Dirichlet`.
+- Compatibility observations:
+  - as `Hs` increases, SSA1 `abs(R_coh)` and `E_coh/E_inc` decrease while `E_sca_limit/E_inc` increases;
+  - Kirchhoff reflected spectrum should broaden from flat to rough sea through RMS delta-k or high-k fraction;
+  - frequency trends are recorded as compatibility evidence, not as proof of realization-by-realization equivalence.
+
+Full 16-seed reduced-grid result:
+- The default comparison was completed with the default 16 seeds, 5 sea states, 4 frequencies, 2 models, and `nx=ny=64`.
+- Total reduced scalar cases: `640`.
+- Result tables:
+  - `run_table`: 640 rows;
+  - `summary_table`: 40 rows;
+  - `trend_table`: 156 rows.
+- Hard checks:
+  - `hard_checks_passed=true`;
+  - `hard_fail_count=0`;
+  - maximum channel invariant error `max(abs(H_f-H_direct_f-H_reflect_f))=1.5516e-17`;
+  - maximum `Hs=0` SSA1/Kirchhoff reflected/total channel difference `2.2205e-16`;
+  - maximum SSA1 `energy_conservation_error=9.9322e-16`.
+- Compatibility checks:
+  - `compatibility_observed_fraction=1.000`;
+  - `compat_fail_count=0`.
+- Kirchhoff reflected-spectrum broadening from `Hs=0` to `Hs=1.0` was observed at every tested frequency through the RMS delta-k metric:
+  - 4000 Hz: increase `3.4532 rad/m`;
+  - 6000 Hz: increase `3.2032 rad/m`;
+  - 8000 Hz: increase `3.1521 rad/m`;
+  - 10000 Hz: increase `3.1419 rad/m`.
+- Kirchhoff frequency-variability compatibility metrics were positive for every nonzero tested sea state:
+  - `Hs=0.05`: `0.80958`;
+  - `Hs=0.2`: `1.8987`;
+  - `Hs=0.5`: `0.23620`;
+  - `Hs=1.0`: `0.058270`.
+- The six `compare_ssa1_kirchhoff_*.png` figures were regenerated from the 16-seed result and copied into `ssa1_geometry_report_figures/`, replacing the earlier smoke-summary figures.
+
+Scope boundary:
+- This comparison does not prove Kirchhoff and SSA1 are pointwise equivalent.
+- Kirchhoff remains a concrete rough-surface realization phase-screen model.
+- SSA1 remains a PM-spectrum-driven first-order pressure-release Dirichlet statistical reflection/scattering model.
+- At the time of this comparison, the project did not include second-order SSA. The later `ssa2_broschat_coherent` addition covers only the coherent reflection coefficient; second-order incoherent scattering, NLSSA, T-matrix, impedance boundary, multiple scattering, evanescent scattering injection, and experimentally calibrated scattering cross sections remain outside the current model.
+
+## 2026-06-23 SSA1 vs Broschat-Style SSA2 Coherent Reflection Comparison
+
+Purpose:
+- Add an optional coherent reflection order inside `ssa_stat_kernel` for comparing the default first-order coherent coefficient against a Broschat 1993-style second-order coherent correction.
+- Keep default `surface_ssa_coherent_order='ssa1'`.
+- Keep `kirchhoff_spatial`, WAPE marching, communication scripts, BER/SER logic, random scatter synthesis, and the first-order `P_sca` formula unchanged.
+
+Implemented interface:
+- New validated parameter:
+  - `surface_ssa_coherent_order='ssa1'` by default;
+  - optional value `surface_ssa_coherent_order='ssa2_broschat_coherent'`.
+- The parameter is passed from `vertical_channel_model.m` through `vertical_wape_propagator.m` to `pm_surface_boundary_model.m`.
+- `ssa2_broschat_coherent` is accepted only for pressure-release / Dirichlet reflection, `surface_reflect_coeff=-1`; otherwise the code raises:
+  `pm_surface_boundary_model:Ssa2DirichletReflectCoeffRequired`.
+
+Implemented formula:
+- SSA1 coherent reflection remains:
+  `R1 = R0*exp(-0.5*(gamma_i+gamma_s)^2*sigma_eta^2)`.
+- In normal pressure-release reflection:
+  `R1 = -exp(-2*k0^2*sigma_eta^2)`.
+- The optional Broschat-style coherent correction uses the user-specified 2-D extension:
+  `R2 = R1 + 2*gamma_i*exp(-2*gamma_i^2*sigma_eta^2)*sum(W_eta(q)*(gamma(K_i+q)-gamma_i))*dkx*dky`.
+- The square-root branch is:
+  `gamma(K)=sqrt(complex(k0^2-|K|^2,0))`.
+  This keeps the full complex coherent integral and records propagating-only and evanescent contributions separately.
+- For normal tests, `K_i=[0,0]` and `gamma_i=k0`.
+- For oblique mode, the implementation records an effective 2-D approximation using an assumed `+kx` incident azimuth; physical conclusions should rely on normal or near-vertical cases.
+
+Metadata additions:
+- `coherent_order`.
+- `R_coh_ssa1`, `R_coh_ssa2`, and selected `R_coh`.
+- `abs_R_coh_ssa1`, `abs_R_coh_ssa2`.
+- `coherent_loss_ssa1_db`, `coherent_loss_ssa2_db`, `coherent_loss_delta_db`.
+- `delta_R_abs`, `delta_R_rel`.
+- `ssa2_correction_integral`, real/imag components, `ssa2_gamma_i_eff_rad_per_m`, `ssa2_K_i_eff_rad_per_m`.
+- `ssa2_sqrt_branch`, `ssa2_formula`, `ssa2_formula_source`, `ssa2_limitations`, `ssa2_evanescent_handling`.
+- `ssa2_propagating_integral`, `ssa2_evanescent_integral`, and `ssa2_evanescent_fraction_abs`.
+
+New validation script:
+- `compare_ssa1_ssa2_coherent_reflection_vertical.m`.
+- Default scan:
+  - `Hs=[0 0.05 0.2 0.5 1.0]`;
+  - `f=[4000 6000 8000 10000]` Hz;
+  - `surface_phase_mode='normal'`;
+  - `surface_boundary_model='ssa_stat_kernel'`;
+  - `surface_ssa_kernel_mode='ssa1_geometry'`;
+  - `surface_ssa_random_scatter=false`;
+  - reduced grid `nx=ny=128`.
+- The script saves:
+  - `compare_ssa1_ssa2_coherent_reflection_vertical_result.mat`;
+  - `run_table`, `summary_table`, and `validation_report`.
+- Figures:
+  - `compare_ssa1_ssa2_abs_R_coh_vs_Hs.png`;
+  - `compare_ssa1_ssa2_coherent_loss_vs_Hs.png`;
+  - `compare_ssa1_ssa2_loss_delta_vs_Hs.png`;
+  - `compare_ssa1_ssa2_loss_delta_vs_frequency.png`;
+  - `compare_ssa1_ssa2_negligible_region_heatmap.png`;
+  - `compare_ssa1_ssa2_evanescent_fraction_heatmap.png`.
+
+Executed validation:
+- `compare_ssa1_ssa2_coherent_reflection_vertical` completed successfully.
+- All checks passed:
+  - channel invariant maximum `4.0492e-18`;
+  - maximum energy conservation error `0`;
+  - maximum `W_eta` variance relative error `8.6736e-15`;
+  - `Hs=0` gives `R1=R2=R0`;
+  - normal SSA1 formula matched exactly within reported roundoff;
+  - `ssa2_broschat_coherent` rejected non-Dirichlet `surface_reflect_coeff=-0.8`.
+- Maximum absolute coherent-loss delta over the default grid was `0.370648 dB`.
+- With the `0.1 dB` negligible threshold:
+  - weak to moderate cases through `Hs<=0.5 m` stayed at or below about `0.1 dB`;
+  - the strongest low-frequency point `Hs=1 m`, `f=4000 Hz` exceeded the threshold at about `0.37065 dB`;
+  - high-frequency high-roughness cases can saturate the loss calculation near machine epsilon and should not be overinterpreted as accurate absolute loss.
+- `validate_ssa_stat_kernel_vertical` completed successfully after the new coherent-order metadata additions.
+
+Interpretation:
+- `ssa2_broschat_coherent` is a coherent-coefficient diagnostic, not a complete second-order SSA scattering model.
+- The first-order `ssa1_geometry` noncoherent scattering power remains:
+  `G_SSA1=4*gamma_s*gamma_i`.
+- The current recommendation is not to make SSA2 the default. It can be used as a sensitivity check, especially for strong roughness and lower frequencies.
+- A true second-order rough-surface model would still require second-order incoherent scattering, consistent normalization, and a broader validation basis.
+
+## 2026-06-23 SSA Scatter-Scale Calibration and Frequency-Correlation Diagnostics
+
+Purpose:
+- Keep the core WAPE propagation, communication scripts, BER/SER logic, and default `kirchhoff_spatial` behavior unchanged.
+- Add reduced-grid engineering diagnostics for two practical SSA statistical-kernel questions:
+  - how to choose the numerical normalization `surface_ssa_scatter_scale` against a Kirchhoff realization-based reference;
+  - how sensitive wideband random reflected channels are to the assumed cross-frequency correlation of the random scatter spectrum.
+
+Checkpoint status:
+- A checkpoint commit was created before these follow-up diagnostics:
+  - `ca913a5 feat: add SSA coherent diagnostics and validation scripts`.
+- Push to `origin/codex/rename-core-matlab-files` was attempted from the current environment but was blocked by the environment's external remote export policy. The local commit remains available.
+
+New random-scatter frequency-correlation interface:
+- `vertical_channel_model.m` now validates:
+  - `surface_ssa_frequency_correlation_mode`, default `'independent'`;
+  - allowed values: `'independent'`, `'shared_seed_phase'`, `'ar1_frequency'`;
+  - `surface_ssa_frequency_correlation_rho`, default `0.8`, constrained to `0 <= rho < 1`.
+- `vertical_wape_propagator.m` passes these fields into the surface-boundary configuration.
+- `pm_surface_boundary_model.m` uses them only when `surface_boundary_model='ssa_stat_kernel'` and `surface_ssa_random_scatter=true`.
+- Default `'independent'` preserves the previous seed rule and random spectrum generation.
+- `'shared_seed_phase'` reuses the same complex Gaussian random scatter spectrum across frequency bins.
+- `'ar1_frequency'` creates a deterministic first-order autoregressive complex Gaussian sequence along the frequency index.
+- Metadata records:
+  - `frequency_correlation_mode`;
+  - `frequency_correlation_rho`;
+  - random spectrum base and innovation seeds;
+  - frequency index and generation rule.
+
+Important scope boundary:
+- These frequency-correlation options are stochastic-channel generation diagnostics.
+- They are not new SSA physics, not a sea-surface time-evolution model, and not an experimentally calibrated cross-frequency coherence law.
+- They do not alter the direct path, coherent reflection formula, `P_sca` formula, or `H_f = H_direct_f + H_reflect_f` semantics.
+
+New scatter-scale calibration script:
+- `calibrate_ssa_scatter_scale_vertical.m`.
+- It uses `kirchhoff_spatial` multi-seed reduced-grid statistics as a realization-based reference and compares `ssa_stat_kernel + ssa1_geometry` across candidate `surface_ssa_scatter_scale` values.
+- Calibration metrics include:
+  - `abs(h_reflect)` mean/std;
+  - `abs(h_reflect/h_direct)` mean/std;
+  - reflected spectrum RMS delta-k;
+  - SSA scatter budget terms such as `E_sca_limit/E_inc`.
+- Outputs:
+  - `calibrate_ssa_scatter_scale_vertical_result.mat`;
+  - `calibrate_ssa_scatter_scale_summary.png`;
+  - `run_table`, `summary_table`, `calibration_table`, `candidate_table`, `global_scale_table`, and `validation_report`.
+- Interpretation:
+  - `surface_ssa_scatter_scale` remains an engineering/numerical normalization parameter;
+  - it is not an experimentally calibrated absolute scattering cross-section constant.
+
+Scatter-scale smoke validation:
+- Command overrides used:
+  - `SSA_SCALE_CAL_HS_LIST='0.05 0.2'`;
+  - `SSA_SCALE_CAL_F_LIST_HZ='4000 8000'`;
+  - `SSA_SCALE_CAL_SEED_COUNT='2'`;
+  - `SSA_SCALE_CAL_SCALE_VALUES='0 1 4'`;
+  - `SSA_SCALE_CAL_GRID_N='64'`.
+- The script completed successfully.
+- Recommended condition-wise scales in the smoke run:
+  - `Hs=0.05`, `4000 Hz`: scale `0`;
+  - `Hs=0.05`, `8000 Hz`: scale `1`;
+  - `Hs=0.2`, `4000 Hz`: scale `1`;
+  - `Hs=0.2`, `8000 Hz`: scale `1`.
+- Global candidate objective in the smoke run:
+  - scale `0`: mean objective `0.31582`;
+  - scale `1`: mean objective `0.085728`;
+  - scale `4`: mean objective `0.085728`.
+- Smoke-run global recommendation: scale `1`.
+- Because this was a two-seed smoke run, it should not be treated as a final physical calibration.
+
+New frequency-correlation validation script:
+- `validate_ssa_frequency_correlation_vertical.m`.
+- It compares:
+  - `'independent'`;
+  - `'shared_seed_phase'`;
+  - `'ar1_frequency'`.
+- It computes random reflected-channel residuals by subtracting a `surface_ssa_random_scatter=false` coherent reference from random-scatter runs.
+- Validation metrics include:
+  - adjacent-frequency random-reflection coherence;
+  - repeatability with fixed seed;
+  - direct-path stability;
+  - `H_f = H_direct_f + H_reflect_f` invariant error.
+- Outputs:
+  - `validate_ssa_frequency_correlation_vertical_result.mat`;
+  - `validate_ssa_frequency_correlation_summary.png`;
+  - `run_table`, `summary_table`, `trend_table`, and `validation_report`.
+
+Frequency-correlation smoke validation:
+- Command overrides used:
+  - `SSA_FREQ_CORR_SEED_COUNT='2'`;
+  - `SSA_FREQ_CORR_GRID_N='64'`;
+  - `SSA_FREQ_CORR_RHO='0.85'`.
+- The script completed successfully.
+- Adjacent-frequency random-reflection coherence means:
+  - independent: `0.24155`;
+  - shared seed phase: `0.99993`;
+  - AR(1): `0.78367`.
+- Maximum channel invariant error: `7.1524e-18`.
+- Repeatability error for fixed seed: `0`.
+- Direct-path difference across correlation modes: `0`.
+- Interpretation:
+  - correlated modes increase random reflected-frequency continuity relative to the independent baseline;
+  - only the random reflected component changes;
+  - the channel interface and direct path remain stable.
+
+New applicability summary script:
+- `summarize_ssa_applicability_vertical.m`.
+- It only reads existing compact result files; it does not run PE/WAPE or communication simulations.
+- It combines available diagnostics from:
+  - SSA1/SSA2 coherent comparison;
+  - periodic vs zero-padded convolution comparison;
+  - scatter-scale calibration;
+  - frequency-correlation validation.
+- Outputs:
+  - `summarize_ssa_applicability_vertical_result.mat`;
+  - `summarize_ssa_applicability_vertical_table.csv`.
+- The table is an engineering guide with columns for:
+  - recommended kernel;
+  - recommended scale when available;
+  - SSA2 coherent-loss attention flag;
+  - padding-difference attention flag;
+  - wideband frequency-correlation risk note.
+- It is not an experimental validity map and not a full SSA/NLSSA applicability proof.
+
+Current recommendation:
+- Keep `kirchhoff_spatial` as the default realization-based surface model.
+- Keep `ssa_stat_kernel + ssa1_geometry` as the current PM-spectrum-driven first-order pressure-release / Dirichlet statistical reflection/scattering research branch.
+- Keep `surface_ssa_coherent_order='ssa1'` by default; use `ssa2_broschat_coherent` as a coherent-loss sensitivity diagnostic.
+- Use `surface_ssa_frequency_correlation_mode='independent'` by default for backward compatibility.
+- Treat `shared_seed_phase` and `ar1_frequency` as optional wideband random-channel diagnostics until a physical or empirical frequency-correlation model is established.
+
+## 2026-06-24 Incident and Surface-Reflected Wavefield Visualization
+
+Purpose:
+- Show the shape of the incident wave approaching the sea surface and the reflected/scattered wave leaving the surface.
+- Keep the diagnostic separate from channel generation and communication processing.
+
+Interface:
+- New disabled-by-default configuration:
+  - `surface_wavefield_diagnostics=false`;
+  - `surface_wavefield_slice_axis='x'`;
+  - `surface_wavefield_max_z_samples=256`.
+- New stable output field:
+  - `output.surface_wavefield_meta`.
+- When disabled, the field remains present with `enabled=false` and empty arrays.
+- When enabled, only the reference-frequency center slice is sampled. Full three-dimensional propagation volumes are not saved.
+
+Recorded data:
+- incident complex-envelope slice for `z_tx -> 0`;
+- reflected complex-envelope slice for `0 -> z_rx`;
+- sea-surface incident and reflected complex fields;
+- transverse and depth coordinates;
+- reference frequency, `k0`, boundary model, normalization amplitude;
+- endpoint consistency errors against the existing surface and receiver fields;
+- carrier-reconstruction formulas and their visualization-only limitation.
+
+Core `output.surface_wavefield_meta` fields:
+- state and coordinates:
+  - `enabled`, `reference_frequency_hz`, `k0_rad_per_m`, `omega_rad_per_s`, `c0_m_per_s`;
+  - `slice_axis`, `fixed_coordinate_m`, `transverse_coordinate_m`;
+  - `incident_z_m`, `reflected_z_m`, `x_m`, `y_m`;
+- complex fields:
+  - `incident_field_slice`, `reflected_field_slice`;
+  - `surface_incident_xy`, `surface_reflected_xy`;
+- interpretation and audit:
+  - `surface_boundary_model`, `ssa_kernel_mode`, `phase_mode`;
+  - `normalization_amplitude`;
+  - `endpoint_consistency`;
+  - `carrier_reconstruction`.
+
+Visualization script:
+- `visualize_surface_reflection_wavefield_vertical.m`.
+- Default demonstration:
+  - `ssa_stat_kernel + ssa1_geometry`;
+  - `f=6000 Hz`;
+  - `Hs=0.2 m`;
+  - `128 x 128` transverse grid;
+  - `zero_padded` SSA convolution.
+- The model can be changed with `SURFACE_WAVEFIELD_MODEL`, including `kirchhoff_spatial`.
+- Outputs:
+  - `surface_wavefield_xz_comparison.png`;
+  - `surface_wavefield_xy_comparison.png`;
+  - `surface_wavefield_spectrum_comparison.png`;
+  - `surface_wavefield_instantaneous_pressure.mp4`;
+  - compact `surface_wavefield_visualization_result.mat`.
+
+Physical interpretation:
+- Static `x-z` plots show PE/WAPE complex-envelope magnitude, not instantaneous pressure.
+- Surface-plane phase plots show the complex phase of the incident and reflected envelopes.
+- Spectrum plots show discrete angular-spectrum redistribution. They are not calibrated bistatic scattering cross sections.
+- The animation reconstructs one nominal carrier period using:
+  - incident: `real(Psi_inc*exp(i*k0*(z_tx-z)-i*omega*t))`;
+  - reflected: `real(Psi_ref*exp(i*k0*z-i*omega*t))`.
+- The pressure-release phase reversal is already included in `Psi_ref`.
+- The carrier restoration uses nominal `c0` and is not a separate time-domain propagation solution.
+
+Reduced validation:
+- Script: `validate_surface_wavefield_visualization_vertical.m`.
+- Settings:
+  - `nx=ny=64`;
+  - `z_tx=20 m`, `z_rx=2 m`;
+  - `f=6000 Hz`, plus a `[4000,6000,8000] Hz` wideband invariant case;
+  - `ssa1_geometry` and `kirchhoff_spatial`.
+- Results:
+  - diagnostics-on versus diagnostics-off differences in `H_f`, `H_direct_f`, and `H_reflect_f`: `0`;
+  - flat pressure-release phase-reversal relative error: `2.6158e-16`;
+  - flat reflected-magnitude relative error: `2.0828e-16`;
+  - maximum wideband channel invariant error: `1.5516e-17`;
+  - incident-surface, reflected-surface, and reflected-receiver endpoint errors: `0`;
+  - all validation checks passed.
+
+Generated-example diagnostics:
+- Example settings:
+  - `ssa_stat_kernel + ssa1_geometry`;
+  - `f=6000 Hz`, `Hs=0.2 m`;
+  - `nx=ny=128`;
+  - `surface_ssa_conv_padding='zero_padded'`;
+  - `sea_seed=12345`.
+- Angular-spectrum results:
+  - incident RMS transverse wavenumber: `3.3332019367144 rad/m`;
+  - reflected RMS transverse wavenumber: `3.36650468954104 rad/m`;
+  - RMS increase: `0.0333027528266383 rad/m`;
+  - incident 90% energy radius: `5.06133446181766 rad/m`;
+  - reflected 90% energy radius: `5.11307005973656 rad/m`;
+  - 90% energy-radius increase: `0.0517355979189071 rad/m`.
+- These values describe one reduced-grid realization. They are visualization diagnostics, not universal rough-surface scattering coefficients.
+- Static PNG generation completed and `surface_wavefield_instantaneous_pressure.mp4` was written successfully.
+
+Regression coverage after integration:
+- Existing `validate_ssa_stat_kernel_vertical` completed successfully:
+  - all Hs=0, energy, seed, scatter-scale, Dirichlet-boundary, zero-padding, and dense-vs-FFT checks passed;
+  - maximum `W_eta` variance relative error: `8.6736e-15`;
+  - dense periodic sum versus FFT raw-scatter relative difference: `2.5247e-15`;
+  - maximum reduced wideband invariant error: `2.1346e-18`;
+  - reported energy-conservation errors remained `0`.
+- A one-condition reduced wideband communication smoke run completed through the existing `H_f -> H_baseband -> h_bb -> peak_sync/MMSE` consumer with diagnostics left at their default disabled state.
+- `git diff --check` passed.
+
+## 2026-06-30 Specular vs Incoherent SSA Reflection Contribution Diagnostics
+
+Purpose:
+- Quantify whether the SSA1 incoherent scatter component can be ignored under selected sea-surface and frequency settings.
+- Keep the default `kirchhoff_spatial` model, WAPE marching, communication scripts, BER/SER logic, and `H_f = H_direct_f + H_reflect_f` semantics unchanged.
+
+New disabled-by-default interface:
+- `vertical_channel_model.m` validates `surface_ssa_component_diagnostics=false` by default.
+- When enabled with `surface_boundary_model='ssa_stat_kernel'`, `vertical_wape_propagator.m` decomposes the sea-surface reflected field as:
+  - `Psi_coh = R_coh * Psi_inc`;
+  - `Psi_sca = Psi_ref - Psi_coh`.
+- It then marches `Psi_coh` and `Psi_sca` separately from the sea surface to the receiver and stores the result in `output.surface_ssa_component_meta`.
+- The original reflected field and public channel fields are unchanged:
+  - `H_reflect_f` remains the result of the full reflected field;
+  - `H_f = H_direct_f + H_reflect_f` remains the only channel composition used by downstream scripts.
+
+Core diagnostic fields:
+- Receiver components:
+  - `h_reflect_coh_f`;
+  - `h_reflect_sca_f`;
+  - `h_reflect_total_f`;
+  - `scatter_to_coherent_rx_db_f`;
+  - `component_sum_error_rel_f`.
+- Surface spectral energy audit:
+  - `surface_E_inc_f`;
+  - `surface_E_coh_f`;
+  - `surface_E_sca_f`;
+  - `surface_E_sca_limited_f`;
+  - `surface_E_ref_f`;
+  - `scatter_energy_fraction_db_f`;
+  - `energy_conservation_error_f`;
+  - `W_eta_variance_rel_error_f`.
+
+New comparison script:
+- `compare_specular_incoherent_surface_reflection_vertical.m`.
+- Default reduced scan:
+  - wind speed `[3,5,8,12] m/s`;
+  - frequency `[4000,6000,8000,10000] Hz`;
+  - fixed `Hs_target=0.5 m`;
+  - `seed=12345+(0:7)`;
+  - `nx=ny=128`;
+  - `ssa_stat_kernel + ssa1_geometry`;
+  - `surface_ssa_random_scatter=true`.
+- Environment variables can reduce the run for smoke tests:
+  - `SPEC_INCOH_WIND_LIST`;
+  - `SPEC_INCOH_F_LIST_HZ`;
+  - `SPEC_INCOH_SEED_COUNT`;
+  - `SPEC_INCOH_GRID_N`;
+  - `SPEC_INCOH_HS_TARGET`;
+  - `SPEC_INCOH_SCATTER_SCALE`;
+  - `SPEC_INCOH_CONV_PADDING`;
+  - `SPEC_INCOH_RESULT_FILE`.
+
+Outputs:
+- `compare_specular_incoherent_surface_reflection_vertical_result.mat`;
+- `compare_specular_incoherent_surface_reflection_vertical_summary.csv`;
+- `run_table`, `summary_table`, `decision_table`, and `validation_report`;
+- PNG figures:
+  - `specular_incoherent_Ecoh_Esca_vs_frequency.png`;
+  - `specular_incoherent_rx_ratio_vs_frequency.png`;
+  - `specular_incoherent_rx_abs_vs_frequency.png`;
+  - `specular_incoherent_decision_heatmap.png`;
+  - `specular_incoherent_energy_limit_heatmap.png`.
+
+Decision rule:
+- `negligible`: both the receiver scatter/coherent ratio and surface scatter/coherent energy ratio are below `-20 dB`.
+- `borderline`: between `-20 dB` and `-10 dB`.
+- `not_negligible`: above `-10 dB`, or the scatter/coherent receiver ratio has large seed-to-seed spread.
+- This is an engineering diagnostic for the current grid, `Hs_target`, `surface_ssa_scatter_scale`, seed set, and SSA1 Dirichlet model. It is not an experimentally calibrated scattering threshold.
+
+Interpretation boundary:
+- The default sweep fixes `Hs_target`, so changing `sea_wind_speed` changes the normalized PM spectral shape, not total roughness variance.
+- `surface_ssa_scatter_scale` remains an engineering normalization parameter, not an absolute scattering cross section.
+- Scatter-only receiver propagation is a diagnostic decomposition; it is not a new channel model and does not replace the full reflected channel.
+
+Smoke validation:
+- Command overrides used:
+  - `SPEC_INCOH_WIND_LIST='3 8'`;
+  - `SPEC_INCOH_F_LIST_HZ='4000 8000'`;
+  - `SPEC_INCOH_SEED_COUNT='2'`;
+  - `SPEC_INCOH_GRID_N='64'`;
+  - `SPEC_INCOH_RESULT_FILE='compare_specular_incoherent_surface_reflection_vertical_smoke_result.mat'`.
+- The script completed successfully and generated all five PNG figures.
+- Diagnostics-disabled versus diagnostics-enabled differences:
+  - `H_f`: `0`;
+  - `H_direct_f`: `0`;
+  - `H_reflect_f`: `0`.
+- Validation maxima:
+  - channel invariant error: `6.9929e-18`;
+  - receiver component sum relative error: `1.3409e-15`;
+  - energy-conservation error: `1.6554e-16`;
+  - `W_eta` variance relative error: `2.2204e-15`.
+- Smoke decision table:
+  - `U=3 m/s`, `4000 Hz`: scatter/coherent receiver ratio `+74.55 dB`, scatter/coherent energy ratio `+76.20 dB`, decision `not_negligible`;
+  - `U=3 m/s`, `8000 Hz`: scatter/coherent receiver ratio `+282.63 dB`, scatter/coherent energy ratio `+197.63 dB`, decision `not_negligible`;
+  - `U=8 m/s`, `4000 Hz`: scatter/coherent receiver ratio `+75.10 dB`, scatter/coherent energy ratio `+76.20 dB`, decision `not_negligible`;
+  - `U=8 m/s`, `8000 Hz`: scatter/coherent receiver ratio `+283.82 dB`, scatter/coherent energy ratio `+197.63 dB`, decision `not_negligible`.
+- Interpretation:
+  - For this smoke case, `Hs_target=0.5 m` and `surface_ssa_scatter_scale=1` cause very strong SSA coherent mirror loss, so the coherent receiver component is extremely small and the scatter-only reflected contribution dominates.
+  - This result supports retaining the incoherent term for the tested roughness/frequency settings; weaker `Hs_target` and calibrated smaller `surface_ssa_scatter_scale` should be checked before making a broader simplification.
+
+## Surface-Only Plane-Wave Coherent Reflection Diagnostic
+
+Purpose:
+- `compare_plane_wave_surface_coherent_reflection_vertical.m` isolates the sea-surface boundary response from PE/WAPE propagation.
+- The incident field is a vertical plane wave; on the sea-surface plane this is represented by a constant transverse envelope:
+  - `Psi_inc(x,y)=1`.
+- The diagnostic compares coherent specular reflection strength, not full channel gain, communication BER/SER, or receiver propagation.
+
+Raw PM roughness:
+- This script intentionally does not apply `Hs_target` normalization.
+- For each wind speed, the PM spectrum is integrated directly:
+  - `sigma_eta_raw^2 = sum(Phi2D(:))*dkx*dky`;
+  - `Hs_raw = 4*sigma_eta_raw`.
+- Therefore wind speed changes both PM spectral shape and integrated roughness variance in this diagnostic.
+
+Compared coherent-reflection quantities:
+- SSA1 pressure-release normal-incidence coherent reflection:
+  - `R_SSA1 = -exp(-2*k0^2*sigma_eta_raw^2)`.
+- Kirchhoff realization coherent reflection:
+  - for each random surface realization, the script forms a phase screen `G(x,y)=R0*exp(i*delta_phi(x,y))`;
+  - the coherent mirror component for one finite surface is the spatial mean `mean(G(:))`;
+  - the ensemble coherent estimate is `abs(mean(R_sample))` across realizations, where `R_sample=mean(G(:))`;
+  - `mean(abs(R_sample))` is also reported as a finite-aperture residual, but it is not the strict ensemble coherent coefficient.
+- Two Kirchhoff phase conventions are reported:
+  - `kirchhoff_corrected`: `delta_phi=2*k0*eta` for normal incidence, the corrected two-way height phase convention whose Gaussian coherent expectation matches SSA1;
+  - `kirchhoff_legacy_4k_eta`: `delta_phi=2*k0*2*eta`, the pre-fix diagnostic convention that produces stronger `exp(-8*k0^2*sigma_eta^2)`-type coherent attenuation.
+- The script also reports `mean(abs(G(:)).^2)`, which should stay near 1 for a pure pressure-release phase screen. This distinguishes total reflected surface power from coherent specular strength.
+- The script also records realization variance `std(eta)^2` against the PM spectrum variance and writes a controlled i.i.d. Gaussian validation table. The controlled validation checks that `abs(E[-exp(i*2*k0*eta)])` follows `exp(-2*k0^2*sigma_eta^2)` within Monte Carlo tolerance.
+
+Outputs:
+- `compare_plane_wave_surface_coherent_reflection_vertical_result.mat`;
+- `compare_plane_wave_surface_coherent_reflection_vertical_summary.csv`;
+- `compare_plane_wave_surface_coherent_reflection_vertical_controlled_gaussian.csv`;
+- `plane_wave_coherent_absR_vs_wind.png`;
+- `plane_wave_coherent_power_vs_wind.png`;
+- `plane_wave_coherent_loss_vs_wind.png`;
+- `plane_wave_kirchhoff_vs_ssa_absR_heatmap.png`;
+- `plane_wave_raw_pm_sigma_vs_wind.png`.
+
+Validation checks:
+- flat synthetic case gives `|R_SSA1|=1` and `|R_Kirchhoff|=1`;
+- PM variance identity is checked from the discrete spectrum;
+- Kirchhoff phase-screen total reflected power is checked against 1;
+- all checks are recorded in `validation_report`.
+
+## 2026-07-02 Kirchhoff K-Stat Statistical Phase-Screen Branch
+
+Changed files:
+- `vertical_channel_model.m`: accepts `surface_boundary_model='kirchhoff_kstat'` and validates `surface_kstat_random_scatter`, `surface_kstat_seed_offset`, `surface_kstat_conv_padding`, and `surface_kstat_trusted_angle_deg`.
+- `vertical_wape_propagator.m`: passes the kstat configuration to `pm_surface_boundary_model.m` and preserves disabled `roughness_meta.kirchhoff_kstat_meta` when surface reflection is off.
+- `pm_surface_boundary_model.m`: implements `local_apply_kirchhoff_kstat` without generating a concrete `eta(x,y)`.
+- `scripts/validation/validate_kirchhoff_kstat_vertical.m`: validates flat-surface degeneration, coherent formula, phase-screen energy closure, propagation-window diagnostics, deterministic seeds, explicit Kirchhoff phase-screen mean comparison, and weak SSA1 coherent-reference consistency.
+
+Interface:
+- Select the branch with `paramsV.surface_boundary_model='kirchhoff_kstat'`.
+- `surface_kstat_random_scatter=true` synthesizes `Psi_sca_k=sqrt(P_sca).*Z`, `Z~CN(0,1)`.
+- `surface_kstat_random_scatter=false` returns the coherent reflected field only, while still recording `P_sca` and all energy diagnostics.
+- `surface_kstat_seed_offset=200000` gives `seed_kstat=sea_seed+surface_kstat_seed_offset+frequency_index-1`.
+- `surface_kstat_conv_padding` supports `periodic` and `zero_padded`, reusing the existing FFT convolution helper.
+- `surface_kstat_trusted_angle_deg=NaN` disables the optional trusted-angle window; finite values record `K_h<=k0*sind(angle)` energy without renormalizing it.
+
+Implemented formulas:
+- PM height spectrum is converted to the continuous convention used by this branch so that
+  `C_eta(0)=sum(W_eta(:))*dkx*dky/(2*pi)^2=(Hs_target/4)^2`.
+- `C_eta_xy = real(ifft2(W_eta))*numel(W_eta)*dkx*dky/(2*pi)^2`.
+- Near-vertical first version uses `alpha=2*k0`.
+- `<G>=exp(-0.5*alpha^2*sigma_eta^2)` and `R_coh=R0*<G>`. For pressure-release `R0=-1`, this is `-exp(-2*k0^2*sigma_eta^2)`.
+- `C_deltaG(rho)=exp(-alpha^2*sigma_eta^2)*(exp(alpha^2*C_eta(rho))-1)`, implemented in the algebraically equivalent stable form `exp(alpha^2*(C_eta-sigma_eta^2))-exp(-alpha^2*sigma_eta^2)`.
+- `S_deltaG=fft2(C_deltaG)*dx*dy`. Only `S_deltaG` is used for incoherent scatter; the coherent delta spike from total `S_G` is not used.
+- `P_sca(Ks)=|R0|^2*circconv(S_deltaG,abs(Psi_inc_k).^2)*dkx*dky/(2*pi)^2`.
+
+Metadata:
+- `output.roughness_meta.kirchhoff_kstat_meta` records `sigma_eta2_m2`, `alpha_rad_per_m`, `G_mean`, `R_coh`, `S_deltaG`, `P_sca`, seed fields, FFT normalization notes, negative-spectrum clipping diagnostics, and spectrum moment summaries.
+- Full-grid phase-screen energy is checked as `abs(G_mean)^2 + sum(S_deltaG(:))*dkx*dky/(2*pi)^2`.
+- Propagating-window energy `K_h<=k0` and optional trusted-angle energy are recorded separately and are not normalized to `1-abs(G_mean)^2`.
+
+Validation summary:
+- Reduced kstat validation with `KSTAT_VALIDATE_ENSEMBLE_COUNT=2` completed successfully.
+- `Hs=0` flat kstat versus `kirchhoff_spatial` maximum `H_f` difference: `7.7579e-17`.
+- Coherent formula check `abs(R_coh - R0*exp(-2*k0^2*sigma_eta^2))`: `0`.
+- Full-grid phase-screen energy closure error for the reduced rough case: `6.6613e-16`.
+- `H_f = H_direct_f + H_reflect_f` invariant for the rough kstat case: `2.6026e-18`.
+- Fixed seed repeat difference in `H_f`: `0`; changed seed changed reflected response by `0.011905` while direct path drift stayed `0`.
+- Explicit Kirchhoff phase-screen mean comparison relative error with 2 seeds: `0.26709`, recorded as a finite-Monte-Carlo trend check.
+- Weak roughness coherent reference against `ssa_stat_kernel + ssa1_geometry`: difference `0`.
+
+Interpretation boundary:
+- `kirchhoff_kstat` is a Kirchhoff / Gaussian statistical phase-screen model, not SSA/NLSSA, not a T-matrix, and not a calibrated scattering cross-section model.
+
+## 2026-07-02 Raw-PM Kirchhoff Wind Comparison
+
+Changed files:
+
+- `vertical_channel_model.m`: adds `paramsV.surface_roughness_scale_mode`.
+- `vertical_wape_propagator.m`: forwards the roughness scale mode into `pm_surface_boundary_model.m`.
+- `pm_surface_boundary_model.m`: supports `roughness_scale_mode='target_hs'` and `roughness_scale_mode='raw_pm'`.
+- `scripts/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical.m`: compares `kirchhoff_kdomain` and `kirchhoff_kstat` across wind speeds using raw PM roughness.
+
+Interface:
+
+- `surface_roughness_scale_mode='target_hs'` remains the default and preserves prior behavior: PM spectra or realizations are scaled to `sea_hs_target`.
+- `surface_roughness_scale_mode='raw_pm'` disables `sea_hs_target` amplitude scaling. `sea_hs_target` is retained in config/metadata but does not set the surface variance.
+- Roughness metadata records `roughness_scale_mode`, `sigma_eta_raw_m`, `Hs_raw_m`, `Hs_target_m`, `scale_factor`, and raw PM variance audits.
+
+Formula and convention notes:
+
+- Explicit `kirchhoff_kdomain` uses the existing discrete PM realization convention, where the raw realization is generated from `Phi2D*dkx*dky` and `Hs_raw=4*std(eta(:))`.
+- Raw-PM wind comparisons use the project discrete PM variance as the main convention: `sigma_eta_raw^2=sum(Phi2D(:))*dkx*dky`.
+- `kirchhoff_kstat` still evaluates `C_eta(0)=sum(W_eta(:))*dkx*dky/(2*pi)^2` internally, so in `raw_pm` mode it sets `W_eta=Phi2D*(2*pi)^2` and records `scale_factor=2*pi`.
+- The metadata includes both `pm_variance_raw_discrete_m2` and `pm_variance_raw_continuous_m2`; `sigma_eta_raw_m` and `Hs_raw_m` use the discrete convention for the two Kirchhoff branches.
+
+Comparison script defaults:
+
+- `wind_list=[3,5,8,10,12,15]` m/s.
+- `seed_count=32`, `seed_list=12345+(0:31)`.
+- `f0=6000` Hz, `nx=ny=128`, `save_mode='rx_only'`, `show_figures=false`.
+- Environment overrides: `KIRCH_WIND_LIST`, `KIRCH_SEED_COUNT`, `KIRCH_SEED_LIST`, `KIRCH_F0_HZ`, `KIRCH_GRID_N`, `KIRCH_NX`, `KIRCH_NY`, `KIRCH_XW_M`, and `KIRCH_YW_M`.
+
+Outputs:
+
+- `results/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical_result.mat`.
+- `results/comparisons/compare_kirchhoff_kdomain_kstat_wind_vertical_summary.csv`.
+- `kirchhoff_raw_pm_Hs_vs_wind.png`, `kirchhoff_coherent_R_vs_wind.png`, `kirchhoff_abs_h_reflect_vs_wind.png`, `kirchhoff_incoherent_energy_vs_wind.png`, and `kirchhoff_propagating_energy_vs_wind.png`.
+
+Validation intent:
+
+- The script checks `H_f = H_direct_f + H_reflect_f` for both branches.
+- For `kirchhoff_kstat`, it records phase-screen full-K energy closure and propagating-window incoherent energy without renormalizing the propagating window.
+- The comparison is a raw-PM wind-speed diagnostic. It should not be mixed with older sweeps where wind speed changed PM spectral shape after fixed-`Hs_target` rescaling.
+- Its full phase-screen energy is internally conserved by the coherent plus `S_deltaG` split.
+- SSA1 is retained as a weak-roughness/small-angle reference check; it is not the main generation formula for this branch.
+- The first version uses near-vertical `alpha=2*k0`; oblique `gamma_i+gamma_s` phase statistics remain future work.
+
+## 2026-07-11 Raw-PM Grid and Joint-Frequency K-Stat Prerequisite Validation
+
+New independent prototype interfaces:
+
+- `raw_pm_spectrum_grid_vertical.m` reproduces the project PM spectrum and records analytic infinite-domain variance, `K_min`, `K_peak`, `K_nyquist`, implied `Hs`, discrete/infinite variance ratio, and an idealized radial-support ratio.
+- `sample_raw_pm_surface_vertical.m` reproduces the explicit raw-PM surface convention for mapping tests.
+- `sample_kirchhoff_kstat_joint_frequency_vertical.m` generates zero-mean joint-frequency Kirchhoff phase screens from the analytic cross-frequency covariance and pseudo-covariance. It uses augmented `K,-K` spectral pairs; `mode='independent'` is retained only as an engineering comparison.
+- These interfaces do not change `vertical_channel_model`, public defaults, the existing independent kstat branch, or the communication chain.
+
+Validation scripts and results:
+
+- `validate_raw_pm_grid_coverage_vertical.m` scans wind, aperture, and resolution. At fixed `dx=50/128 m`, U=5 is well resolved by a 100 m/256^2 PM grid (`variance ratio=0.9983`). U=15 requires approximately 400 m/1024^2 (`variance ratio=0.9913`, idealized support ratio `0.9967`).
+- A same-dx central crop from U=5, 100 m/256^2 PM to 50 m/128^2 PE coordinates retained ensemble mean energy within `2.04%` over 32 seeds. This supports PM/PE grid separation for the prototype, but larger seed confidence intervals are still required.
+- `validate_kstat_joint_frequency_boundary_vertical.m` compares one shared explicit Gaussian surface, independent kstat, and covariance+pseudocovariance joint kstat at U=5, 4--8 kHz, F=32, 64^2, and 64 realizations.
+- Joint kstat achieved cross-frequency covariance relative error `0.0067`, adjacent-correlation RMSE `2.15e-4`, boundary PDP correlation `0.9837`, and boundary LFM matched-filter correlation `0.9842`. Independent kstat gave `0.9526`, `0.9899`, `0.4890`, and `0.5163`, respectively.
+- The analytic U=5 zero-lag pseudo/covariance Frobenius ratio was `2.09e-10`; finite explicit/joint sample ratios were `0.0027/0.0034`. Pseudo-covariance remains implemented because this near-proper result is condition-specific.
+- `audit_pe_caching_vertical.m` shows that fixed source/environment/frequency incident fields, direct response, coherent reflection, propagation kernels, and medium terms are cacheable. For F=32 and L=64, PE step and FFT counts are projected to fall by about `42.9x` and `41.1x` when only random surface-to-receiver propagation is repeated.
+
+Current boundary:
+
+- The joint model is a boundary-only prototype and is not yet connected to PE receiver outputs.
+- Full joint storage scales as `F^2*Nxy`; large PM grids need frequency low rank, K-domain blocking, or a low/high-wavenumber decomposition before production use.
+- The next stage is one U=5 cached joint-kstat + PE receiver validation, not a multi-wind channel library.
+- Detailed report: `reports/raw_pm_joint_kstat_prerequisite_validation_report.md`.
+
+## 2026-07-11 Cached Joint-Kstat + PE Receiver Validation
+
+The validation-only cached executor now stores the fixed incident surface
+field, direct receiver response, coherent reflected receiver response,
+surface-to-receiver PE factors/screens, and the same-dx PM-to-PE crop. The
+public propagator and defaults are unchanged.
+
+At U=5 m/s, raw PM, 4--8 kHz, F=32, PM 100 m/256^2, PE 50 m/128^2,
+Ltrain=128, and Ltest=64, reflected-only joint kstat achieved covariance
+relative error 0.2704 versus 0.9750 for independent kstat. PDP and LFM
+correlations against explicit same-surface kdomain were 0.9714 and 0.9917.
+The explicit kdomain train/test covariance split itself differed by 0.2610,
+so the joint result is near the present sampling floor.
+
+Double same-input cached/public validation gave a maximum total-response
+difference of 7.04e-16. Public F=32 time was 43.71 s versus 0.233 s for one
+cached surface-to-receiver propagation. Joint generation plus cached PE used
+74.14 s for L=128. Cache/model build times were 10.92/32.85 s; stored cache
+and factor arrays were 20/360 MiB, with a 3.018 GiB MATLAB memory snapshot.
+
+Seven of eight receiver-entry criteria pass. The unresolved item is whether
+receiver pseudo-covariance can be ignored: finite L=64 sample P/C ratios are
+about 0.26 for both kdomain and joint, and require a proper-null finite-sample
+calibration before interpretation. F=32 also places the 99% scatter tail near
+the 7.75 ms ambiguity window. Detailed report:
+`reports/cached_joint_kstat_pe_receiver_validation_report.md`.
+
+## 2026-07-12 U=5 Conditional Receiver Generator, F=64
+
+Independent modules now estimate one-condition receiver `mu/C/P`, sample
+proper or augmented-real improper channels, and build physical CIRs without
+changing the public propagator or communication chain. The validated model is
+U=5 m/s raw PM, 4--8 kHz, F=64, PM 100 m/256^2, PE 50 m/128^2,
+Ltrain=128, and held-out Ltest=64.
+
+Joint receiver PDP/LFM correlations against explicit kdomain were
+0.9525/0.9839; independent-frequency results were 0.0048/0.4104. The shortest
+circular 99% energy interval was 4.657 ms versus Tmax=15.75 ms. Joint
+properness was not rejected (observed P/C=0.1911, central 95% null interval
+[0.1364,0.3476], p_upper=0.7326). Explicit kdomain stayed inside its central
+95% interval but has a one-sided p=0.0405 warning; the improper sampler remains
+available.
+
+Held-out selection chose full numerical rank 34. Full/99.9%/99% ranks were
+34/7/5 with covariance errors 0.3922/0.4000/0.3992 and PDP correlations
+0.9548/0.9501/0.9533. Ten thousand H+CIR samples required 0.178 s without PE;
+MAT saving required another 1.007 s. The receiver model is about 694 KB.
+
+The expensive training frontend remains the main risk: F=64 joint factors
+took 631 s, total model construction 840 s, peak MATLAB memory 6.626 GiB, and
+the reusable spatial cache is about 815 MB. Detailed report:
+`reports/u5_conditional_channel_generator_f64_report.md`.
+
+## 2026-07-12 Streaming Joint Builder and U=8 Aperture
+
+The F=64 joint builder now uses a converged covariance/pseudo-covariance
+series, scalar spatial FFT modes, a global augmented-frequency basis, and
+blockwise local EVDs. It never allocates an `F x F x N_K` tensor. At U=5 its
+factor build fell from 631.3 s to 6.50 s, the MATLAB memory snapshot from
+6.626 to 1.664 GiB, and disk storage from about 815 MB to 109.6 MiB. Receiver
+PDP/LFM correlations against the original builder were 0.9986/0.9993.
+Short-batch expanded-factor sampling measured 0.948x old throughput, so
+sampling parity remains a small engineering issue even though construction
+targets pass.
+
+The U=8 raw-PM aperture audit used 128 seeds at common PE spacing. The chosen
+grid is 150 m/384^2: implied Hs=1.3636 m, discrete/infinite capture=0.99780,
+Kpeak/Kmin=2.570, and central-crop energy ratio 0.9579 with 95% CI
+[0.9143,1.0015]. The 100 m grid undersamples below the PM peak; moving from
+150 to 200 m changes implied Hs by only 0.146%.
+
+The U=8 full 128/128 cached receiver validation now passes. Joint covariance
+error is 0.3554, close to the kdomain split floor 0.3403 and far below the
+independent result 0.9703. Joint reflected-only PDP/LFM correlations are
+0.9809/0.9911, and T99/Tmax is 0.2910. U=8 properness is not rejected
+(observed P/C=0.2351, central 95% null interval [0.1770,0.2802], upper-tail
+p=0.3318). Full receiver rank 42 remains the physical default; ranks 14/11
+are compression candidates.
+
+Ten thousand U=8 H+CIR samples take 0.0154 s before file saving and make zero
+PE calls. The exact-node U=5/U=8 library is built and smoke-tested; unsupported
+U=6 is rejected and component sums are exact. U=8 builder-only memory is
+3.062 GiB, but expanded runtime sampling reaches a 6.858 GiB snapshot and the
+384^2 cache is 1.060 GB, so runtime factor streaming/grouping is required
+before higher-wind production. See
+`reports/u8_joint_optimization_two_node_library_report.md`.
+
+## 2026-07-13 Two-Node Communication Validation
+
+The existing MPSK entry now has an optional, disabled-by-default external
+H(f)/h(t) MAT-file input. The default direct-only/direct-plus-reflect PE path
+and receiver-side noise placement are unchanged. Independent reusable code
+converts H(f) to symbol taps and evaluates channel ensembles with common bits,
+noise seeds, peak synchronization, known-channel MMSE, Wilson intervals, and
+channel-cluster bootstrap intervals.
+
+At U=5 and U=8, 32 fresh channels per source and 8000 QPSK symbols per
+channel were tested over 0:2:20 dB. Statistical-full versus kdomain BER-curve
+log10 RMSE was 0.127/0.194 decades; joint versus kdomain was 0.242/0.086.
+All BER and SER cluster-95% intervals overlapped at every Eb/N0 point. Mean
+BER increased from U=5 to U=8 by 1.93x for kdomain, 1.35x for joint, and 1.69x
+for statistical-full channels, so the wind trend is consistent.
+
+The H-to-tap audit found that the legacy unshifted IFFT prefix retained all
+2048 zero-padded samples and could discard 61.8% pre-peak energy. The
+validation path now unwraps the shortest circular interval containing 99.9%
+energy. It preserves at least 0.999 energy, has about 1e-15 FFT closure, and
+keeps the distinction between 0.25 ms physical resolution and 1 ms symbol
+tap spacing.
+
+A 128-pair shared-latent test found no significant U=8 BER change between
+full rank 42 and 99.9% rank 14. U=5 rank 7 differed only at 20 dB by
+1.08e-4 BER. Full rank remains the reference; 99.9% is an acceptable
+compression candidate.
+
+The present frequency-domain MMSE has a noiseless BER floor of roughly
+0.2--0.5%, caused by finite linear-convolution boundaries, circular FFT
+equalization, tap truncation, and fixed regularization. The two-node library
+is approved for comparative communication research, but the next priority is
+a zero-error noiseless block/equalizer baseline before adding U=10. Detailed
+report: `reports/two_node_statistical_channel_communication_validation_report.md`.
+
+## 2026-07-16 Exact Discrete Adjoint PE Receiver Projection
+
+An independent validation-only prototype now implements the exact discrete conjugate transpose of the cached uniform surface-to-receiver PE. The public `vertical_channel_model`, `vertical_wape_propagator`, default surface model, and communication entrypoint remain unchanged. The v1 scope is CPU double, uniform sound speed, fixed transmitter/grid/frequency axis, one nearest-grid receiver, no bubbles, and no Doppler.
+
+The shared forward primitive preserves the existing `fr -> ifft2 -> screen -> fft2 -> fr` ordering. The adjoint reverses depth steps and uses `conj(fr)` and `conj(screen)` without inverse sponge gain or empirical FFT scaling. The receiver weight is `a_PE=conj(psi_inc).*q`. The PM weight is the exact central-crop adjoint `a_PM=E^H*a_PE`, and all covariance operations remain on the PM periodic grid. The current joint variable remains `deltaG=R0*exp(1i*alpha*eta)-Rcoh`; `C_deltaG/P_deltaG` already contain `R0`, so the projection weight does not multiply it again.
+
+Full validation passed. The maximum adjoint and receiver-projection errors were `7.77e-15` and `5.10e-15`; the refactored cached runner matched its original loop exactly. PM 16^2 / PE 8^2 dense-versus-FFT errors were `6.18e-16` for covariance and `9.35e-16` for pseudo-covariance. F=9 with 4096 realizations and F=64 with 512 realizations both placed analytic/sample covariance and pseudo-covariance errors below `1.25x` their split-sample floors. Same-realization cached-forward/projection errors were `2.52e-13` and `1.07e-13`.
+
+At F=64, PE 128^2, and PM 256^2, kernel construction took `0.497 s`, analytic `C/P` took `7.10 s`, and batched projection was about `35.2x` faster per realization than cached forward PE. The PM embedded/FFT weights require about `128 MiB`; the implementation streams frequency pairs and never stores spatial F^2 covariance blocks. The main analytic bottleneck is the F^2 frequency-pair PM FFT/contraction, not kernel construction.
+
+Recommended roles are: adjoint projection for exact fixed-environment receiver realizations; analytic FFT contraction for direct second-order `C/P`; cached forward PE as the physical regression oracle; and the conditional statistical generator for large communication Monte Carlo after analytic/sample validation. The prototype is suitable for main-branch inclusion as an isolated research module, but not yet for the public default propagation path. See `reports/adjoint_pe_receiver_projection_feasibility_report.md`.
+
+## 2026-07-18 PE Propagation Visual Atlas
+
+A report-only atlas now connects the existing PE and rough-surface diagnostics into one reproducible visual narrative. `scripts/reporting/generate_pe_propagation_atlas_vertical.m` reads the accepted F=64 adjoint `C/P`, U=5/U=8 conditional models, and prior LFM validation, while directly collecting one deterministic U=5 spatial realization at 6 kHz. It stores only center x-z slices, selected x-y planes, receiver-frequency quantities, and plot metadata; no full 3-D wavefield volume is retained.
+
+The 14 outputs cover geometry, direct and reflected PE marching, surface components and angular spectra, flat/explicit Kirchhoff/joint-kstat/SSA1 boundary fields, receiver-plane components and profiles, cached-versus-adjoint projection, reflected-only frequency response and `C/P`, PDP/eigen/distribution views, U=5/U=8 receiver statistics, an optional noiseless LFM probe, and a carrier-reconstruction MP4. Spatial comparisons share coordinates, reference amplitude, and color limits. The animation is a complex-envelope carrier reconstruction, not a time-domain PE solve.
+
+Comparison semantics are intentionally restricted. Flat and explicit Kirchhoff fields may be compared for the same incident field; cached PE and adjoint projection use the same `deltaG` and are compared numerically. Independent explicit and joint-kstat realizations are compared only at ensemble/statistical level. Analytic FFT `C/P` and the conditional generator produce receiver statistics or channels, not spatial propagation fields. Acceptance metrics remain reflected-scatter based; total-channel plots are contextual only.
+
+This atlas does not modify `vertical_channel_model`, `vertical_wape_propagator`, the default surface model, or `comm_main_vertical_psk`. Its scope remains uniform sound speed, CPU double, fixed grids/frequencies, one nearest-grid receiver, and no bubbles or Doppler. Outputs and provenance are under `results/visualization/pe_propagation_atlas/`.
+
+## 2026-07-19 Stage-1 PE/Bellhop Flat-Surface Cross-Validation
+
+`scripts/validation/validate_pe_bellhop_flat_surface_vertical.m` adds an external-model validation layer without changing the PE propagation core or public output fields. It locates Bellhop through the optional function override, `BELLHOP_EXE`, the MATLAB path, or the operating-system path; writes a standard Bellhop ASCII-arrivals `.env`; runs the executable in the result directory; parses the `.arr`; and compares it with the existing `vertical_channel_model` direct and reflected components.
+
+The shared deterministic environment is a 100 m isovelocity water column with (c=1500\ \mathrm{m/s}), a flat pressure-release sea surface, transmitter at ([0,0,80]\ \mathrm{m}), receiver at ([5,0,10]\ \mathrm{m}), and center frequency 4 kHz. The 5 m horizontal offset avoids the degenerate zero-range ray geometry while retaining near-vertical propagation. PE uses CPU double, a (128\times128) grid over (32\times32\ \mathrm{m}), `stepz_lamb=0.5`, `sea_hs_target=0`, `surface_reflect_coeff=-1`, `surface_boundary_model='kirchhoff_spatial'`, bubbles off, and 65 equally spaced frequencies from 3--5 kHz. Bellhop uses 5001 geometric hat beams in an angle fan restricted to the direct and one-surface-bounce paths. Bottom-bounce arrivals are excluded from the stage-1 comparison.
+
+The PE outputs are reduced envelopes, so the validation layer reconstructs physical path phase separately:
+
+\[
+H_{\rm PE}^{\rm phys}(f)=
+H_{\rm dir}(f)e^{-i2\pi fL_{\rm dir}/c}
++H_{\rm ref}(f)e^{-i2\pi fL_{\rm surf}/c},
+\]
+
+with (L_{\rm dir}=\sqrt{r^2+(z_{\rm tx}-z_{\rm rx})^2}) and (L_{\rm surf}=\sqrt{r^2+(z_{\rm tx}+z_{\rm rx})^2}). A Hann-windowed, 8-times-zero-padded CIR is used to extract component/PDP peak times. Zero padding interpolates the delay grid but does not improve the 0.5 ms physical resolution set by the 2 kHz bandwidth. The reconstruction exists only in the validator; the public PE arrays and `build_physical_cir_vertical` convention are unchanged.
+
+The accepted run found two main paths in both models. Direct arrival was 46.785563 ms in both to reported precision; the single surface arrival was 60.016332 ms for PE and 60.092516 ms for Bellhop, a 0.076184 ms difference. Maximum reconstructed-PDP peak difference was 0.061538 ms. Raw PE TL was 33.9582/35.7698 dB for direct/reflected paths, while Bellhop was 36.9241/39.0982 dB. The approximately 3 dB common offset is consistent with the finite-width PE Gaussian initial-field normalization versus Bellhop's unit point source. After a single direct-path amplitude calibration, the reflected-path TL residual was 0.3625 dB; this calibration is reported but never written back to PE outputs.
+
+Regression checks also ran a scalar-frequency direct-only case, a scalar flat-reflection case, and the 65-frequency reflected case. `H_f=H_direct_f+H_reflect_f` held to (1.73\times10^{-18}), disabling reflection produced exactly zero reflected response and no direct-path change, and both scalar and wideband 1/R checks passed. Acceptance limits were two paths exactly, arrival/PDP peak error no more than 0.75 ms, raw TL error no more than 6 dB, relative-path and direct-calibrated reflected TL error no more than 3 dB, and channel invariant error no more than (10^{-10}).
+
+Artifacts are written to `results/validation/pe_bellhop_flat_surface/`: Bellhop input/raw arrivals/print output, comparison CSV, MAT result, PDP/TL PNG, and `pe_bellhop_flat_surface_report.md`. This first stage does not validate rough surfaces, Kirchhoff/SSA scattering, stochastic channels, bottom interaction, modulation, or communication performance. The remaining visible PE PDP sidelobe structure is attributable to finite-band reconstruction and frequency-dependent PE envelope amplitude/phase and must not be counted as additional Bellhop eigenrays.
+
+## 2026-07-20 PE Phase Audit and Bellhop Geometry/Convergence Matrix
+
+**Superseded in implementation status by the 2026-07-22 carrier-phase
+unification entry below.** The carrier-sign and Bellhop timing measurements
+remain valid historical evidence, but statements that carrier restoration is
+validation-only or that the public/CIR/communication path is unchanged no
+longer describe the current code.
+
+Two validation-only entrypoints now qualify the 2026-07-19 result without
+changing `vertical_channel_model`, `vertical_wape_propagator`,
+`build_physical_cir_vertical`, or the communication chain. The phase audit
+`scripts/validation/validate_pe_phase_convention_uniform_vertical.m` derives
+the reduced PE operator identity
+
+\[
+\exp\!\left[-i d\frac{\kappa^2}{\sqrt{k^2-\kappa^2}+k}\right]
+=\exp[i d(k_z-k)]
+\]
+
+and compares the marched direct envelope with an independent one-step
+discrete angular-spectrum propagation of the same Gaussian source. Under the
+validation synthesis convention `exp(-i*omega*t)`, the correct physical
+carrier is `exp(+i*k*d)`. The audit suppresses sponge influence with the
+smallest validation-compatible positive coefficient (`1e-14`); it does not
+relax the public API validation. At receiver offsets 3/6/9 m, the maximum
+operator error was `2.2741e-13`, positive-carrier phase RMS was
+`3.1021e-11 rad`, PE/reference group-delay difference was
+`1.2768e-12 ms`, and validation-local CIR peak differences were exactly zero
+on the sampled delay grid. No-carrier and negative-carrier candidates were
+worse by many orders of magnitude.
+
+The follow-on
+`scripts/validation/validate_pe_bellhop_flat_surface_matrix_vertical.m` uses
+the unchanged flat pressure-release PE path with the same 100 m isovelocity
+environment and an open Bellhop launch fan of -89.5 to -60 degrees with
+10001 beams. Bellhop arrivals are classified after the run by bottom/top
+bounce count and 0.1 ms delay clustering; the validator does not preselect
+exactly two launch angles. It tests offsets 3/6/9 m and restores only the
+nominal longitudinal carriers: `exp(+ik(z_tx-z_rx))` for the direct component
+and `exp(+ik(z_tx+z_rx))` for the image-source component. This makes the
+remaining transverse phase, and therefore the extracted path delay, a PE
+prediction rather than injected full-path geometry.
+
+Timing and algebra passed the prescribed strict checks. Across all six paths,
+the maximum PE-versus-analytic/Bellhop delay difference was `0.027285 ms`;
+Bellhop-versus-analytic error was `4.0135e-06 ms`. Each expected Bellhop path
+formed one classified cluster. `H_f=H_direct_f+H_reflect_f` held within
+`3.5762e-18`, the scalar direct-only response had exactly zero reflection,
+and all 1/R checks passed.
+
+Amplitude and one convergence criterion did not meet the deliberately strict
+targets, so the matrix result is recorded as `passed=false` rather than being
+retuned after inspection. One global direct-path amplitude scale left a
+`1.6540 dB` scale spread across geometry (limit 1 dB); reflected-path TL
+residual RMS/max were `1.6295/2.0751 dB` (limits 1/2 dB). These trends are
+consistent with comparing the finite-width PE Gaussian initial field against
+Bellhop's unit point source, especially at the 9 m off-axis receiver, but they
+remain a measured model mismatch rather than a proven normalization constant.
+
+The x=6 m PE convergence matrix used C0=128^2/32 m/0.5 lambda,
+C1=256^2/32 m/0.5 lambda, C2=256^2/64 m/0.5 lambda,
+C3=128^2/32 m/0.25 lambda, and C4=256^2/32 m/0.25 lambda. All reconstructed
+arrival changes were zero on the interpolated delay grid; the maximum
+direct/reflected relative-TL change was `0.14445 dB`. C1, C3, and C4 phase
+RMS values were at most `0.00201 rad`, while the doubled-window C2 reflected
+phase RMS was `0.22559 rad`, exceeding the 0.15 rad target. This isolates the
+remaining numerical concern to transverse-window/sponge sensitivity rather
+than longitudinal step size or transverse sampling density.
+
+Reports and machine-readable outputs are under
+`results/validation/pe_phase_convention_uniform/` and
+`results/validation/pe_bellhop_flat_surface_matrix/`. The earlier
+single-geometry 2026-07-19 arrival times used a full geometric carrier and a
+restricted launch fan; they remain useful historical smoke results but must
+not be cited as an independent PE delay validation. The 2026-07-20 matrix is
+the authoritative phase/timing result. The appropriate next work is a
+validation-only study of source normalization/directivity and transverse
+window/sponge placement, not a change to the main PE propagation framework.
+
+## 2026-07-21 Bellhop Flat-Surface Visualization Layer
+
+`scripts/reporting/generate_bellhop_flat_surface_visuals_vertical.m` adds an
+independent Bellhop display and consistency-check entrypoint. It reads the
+saved 3/6/9 m PE/Bellhop matrix, writes and runs standard Bellhop `R`, `C`, and
+`I` environments, and parses ASCII `.ray` plus binary two-dimensional
+rectilinear `.shd` files without adding the Acoustic Toolbox MATLAB plotting
+directories to the path. No propagation-core, public-channel, CIR-builder, or
+communication-chain file is modified.
+
+The representative environment remains the 100 m isovelocity (1500 m/s)
+water column, 80 m transmitter depth, 10 m receiver depth, and 4 kHz
+frequency. The ray fan uses 51 beams over -89.5 to -60 degrees. The coherent
+and incoherent TL fields use 5001 and 10001 beams on a 199-depth by 241-range
+grid spanning 0.5--99.5 m and 0.25--12 m. The formal figures use 10001 beams,
+a shared 20--80 dB color scale, and a 1 m source mask. `ZBOX=99.9 m`, together
+with a 0.01 m ray-display step, prevents displayed seabed reflections while
+retaining direct and pressure-release surface-reflected rays.
+
+All visualization-layer checks passed. The 5001-to-10001-beam coherent and
+incoherent TL RMS differences were 0.19041 and 0.10193 dB; their 95th
+percentile absolute differences were 1.0183e-5 and 9.0626e-7 dB. At the
+3/6/9 m receiver points, the maximum coherent `.shd` versus saved Bellhop
+arrival-synthesis TL difference was 0.04491 dB. The saved PE invariant
+`H_f=H_direct_f+H_reflect_f` remained within 3.5762e-18. These successful
+display checks do not override the strict cross-geometry matrix result, which
+remains `passed=false` because of its documented PE/Bellhop amplitude and C2
+window-phase criteria.
+
+Outputs are under `results/visualization/bellhop_flat_surface/`: three PNG
+figures, all `.env/.ray/.shd/.prt` files, convergence and receiver CSV tables,
+a reusable MAT file, and `bellhop_flat_surface_visual_report.md`. The PE
+overlay is restricted to the three saved, globally scaled receiver responses;
+the visualization does not invent a PE two-dimensional field.
+
+## 2026-07-22 PE Carrier-Phase Reference Unification
+
+> **Superseded validation status:** the implementation description below
+> remains valid, but its reduced-grid-only validation status and stated need
+> to rerun F=64 were superseded later on 2026-07-22 by the release-candidate
+> closure entry and `reports/pe_phase_reference_release_candidate_report.md`.
+
+### Objective
+
+The direct and surface-reflected PE paths previously removed their own
+nominal longitudinal carriers and then added the two reduced envelopes at the
+receiver. For the standard geometry the nominal spans are 97 and 103 m, so
+the missing relative reference delay is 4 ms. This entry supersedes all prior
+statements that public `H_direct_f` and `H_reflect_f` remain unaligned reduced
+envelopes or that carrier restoration occurs only inside validators.
+
+### Changed implementation
+
+- Added `apply_pe_channel_phase_reference_vertical.m` as the single
+  post-propagation conversion layer.
+- Added `paramsV.channel_phase_reference`, default `direct_dsp`, with
+  `legacy_reduced` retained for regression.
+- Public output now includes selected `H_direct_f/H_reflect_f/H_f`, explicit
+  `H_*_reduced_f`, explicit `H_*_physical_f`, reference-frequency scalars,
+  and `phase_reference_meta`.
+- Cached forward and adjoint runners return reduced, direct-DSP, and physical
+  receiver components without changing their PE operators or `q/a` weights.
+- Analytic receiver statistics retain reduced `C/P` and expose direct-DSP
+  defaults using `C=D*C_red*D^H` and `P=D*P_red*D^T`.
+- Conditional models/libraries use schema `2.0.0` / `2.0.0-discrete`.
+  `upgrade_conditional_channel_phase_vertical.m` rotates legacy project
+  means, `C/P`, complex eigenvectors, and augmented-real structures.
+- Added `build_channel_cir_vertical.m`; the old
+  `build_physical_cir_vertical.m` remains a common-shift compatibility
+  wrapper. Unknown external `H(f)` without project metadata is assumed
+  DSP-ready rather than silently rotated.
+
+The joint-kstat definition remains
+`deltaG=R0*exp(1i*alpha*eta)-R_coh`; no additional `R0` or deterministic
+path carrier is inserted into `deltaG`, the PM lag covariance, `q`, or `a`.
+
+### Validation
+
+`scripts/validation/validate_pe_channel_phase_reference_vertical.m` covers
+the F=65 analytic delay audit, all four public surface branches, scalar
+direct-only, legacy reproduction, cached/adjoint projection, PM 16^2 dense
+versus FFT statistics, schema-1 migration, and unknown-external-H policy.
+The generated summary reports:
+
+- nominal/measured relative delay: `4/4 ms`;
+- cached/adjoint direct-DSP error: `3.75814e-16`;
+- dense/FFT `C/P`: `3.64406e-16/4.16399e-16`;
+- migration `C/P`: `3.61301e-16/4.26365e-16`;
+- all gates passed.
+
+The existing adjoint smoke also passed its mathematical gates: exact
+adjoint `7.77e-15`, projection `5.10e-15`, dense/FFT approximately `1e-15`,
+and F=9 split-floor statistics accepted. The reporting helper path was added
+to that validator so the smoke run now completes. The F=32 public/cached
+double regression passed with `6.9292e-16` total error, and the minimal
+wideband communication validation completed. The two-node communication
+smoke was then regenerated with explicit direct-DSP metadata for U=5/U=8
+cached PE, joint PE, full-rank, and 99.9% conditional sources; total-only
+legacy ensemble caches are rejected for reuse because their direct and
+reflected components cannot be migrated separately.
+
+### Outputs, documentation, and remaining work
+
+Generated validation data is under
+`results/validation/pe_channel_phase_reference/`. The implementation and
+compatibility decision are summarized in
+`reports/pe_channel_phase_reference_migration_report.md`. `README.md` is now
+the concise repository entrypoint; `vertical_comm_guide.md` is the current
+technical reference; this file remains the full append-only model log.
+
+The expensive F=64/512 ensemble was not regenerated during this migration.
+Its second-order conclusions are invariant under the unitary deterministic
+phase rotation, but a future release candidate should rerun the full suite
+before removing the `legacy_reduced` compatibility option. Bellhop amplitude
+normalization and transverse-window sensitivity remain separate open issues.
+
+## 2026-07-22 Li et al. (2009) Explicit Rough-Surface Validation
+
+An independent pure-acoustic validation path was added without changing the
+public PE, surface-boundary defaults, statistical channel generators, or
+communication entrypoint. `li2009_u10_to_u195.m` solves the paper's Charnock
+Eqs. (12)--(13). `li2009_explicit_surface_validation.m` generates one raw-PM
+surface per seed, shares that exact array across every frequency of a 12 kHz,
+6 ms CW pulse, applies only `G=-exp(i*2*k*eta)`, and evaluates a monostatic
+bottom--surface--bottom uniform split-step PE through an exact discrete
+receiver projection. The driver is
+`scripts/validation/validate_li2009_explicit_surface_vertical.m`.
+
+The 128-realization reduced baseline uses H=256 m, PE 100 m/128^2, PM
+200 m/256^2, dz=4 m, and 65 frequencies from 11.5--12.5 kHz. U10=5/10 m/s
+maps to U19.5=5.2684/10.6203 m/s. PM discrete/infinite variance coverage is
+0.9953/0.9911, and sample-mean Hs is 0.5908/2.3966 m. Flat pressure-release,
+local-amplitude, and `2*k*eta` phase checks are 0, 6.94e-18, and 2.78e-16 rad.
+
+The fixed 20% first-threshold travel-time width increases from 0.3208 to
+0.7238 ms, and its shifted-Rayleigh b increases from 0.5531 to 1.6110 ms.
+Peak-time width changes only from 2.0713 to 2.0801 ms and fails the 5 percent
+broadening gate. Sample convergence passes at 128 for both first-threshold
+conditions and the U10=5 peak, but not for the U10=10 peak. Step size,
+frequency count, sponge, and PE window comparisons are stable; transverse
+grid refinement from dx=0.78125 to 0.52083/0.390625 m remains nonconverged.
+The 1024 m/200 m/256^2 coarse-grid check gives the correct flat time but is
+not statistically accepted.
+
+Public direct-only/direct-plus-reflect regression passed with component error
+3.47e-18 and no direct-path drift. The minimal peak-synced QPSK regression
+also completed with zero noiseless and 20 dB BER/SER for the accepted cases.
+The full audit, figures, convergence table, interpretation boundaries, and
+remaining work are in
+`reports/li2009_explicit_surface_validation_report.md` and
+`results/validation/li2009_explicit_surface/`.
+
+## 2026-07-22 PE Carrier-Phase Release Candidate Closure
+
+### Goal and scope
+
+The carrier-reference fix was taken through a formal release-candidate
+closure without changing the PE marching operator, public surface default,
+or unsupported physics. The active run is `phase_rc_20260722_174945`, with
+source fingerprint
+`14ccc63217ae08a11948e9fb489f2abe8148331f079f6ec7a136a2e607712df1`.
+The final decision is **PASS: recommend main-branch integration**.
+
+### Interfaces and artifact policy
+
+- `pe_phase_release_run_meta_vertical.m` creates a reproducible run identity
+  containing revision/dirty state, MATLAB version, geometry, frequency axis,
+  seed definition, and SHA-256 source fingerprint. A partial run may resume
+  only when this fingerprint is unchanged.
+- `audit_phase_reference_artifacts_vertical.m` classifies registered MAT
+  files without modifying them. `prepare_pe_phase_reference_release_candidate_vertical.m`
+  archives phase-sensitive outputs by moving them under
+  `results/archive/pe_phase_reference_pre_rc/<timestamp>/`, preserving names
+  and relative paths, then creates migration-test copies where valid.
+- Required current MAT outputs carry `schema_version`,
+  `phase_reference_meta`, and `validation_run_meta`. The atlas refuses inputs
+  from a different run ID.
+- `finalize_pe_phase_reference_release_candidate_vertical.m` emits only
+  `PASS`, `FAIL`, or `INCOMPLETE` and writes the authoritative report at
+  `reports/pe_phase_reference_release_candidate_report.md`.
+
+Two archive batches were retained. The first prepared run was invalidated
+when the existing U=8 aperture contract was found to be PM `384^2`, not the
+adjoint suite's PM `256^2`; its partial results were archived before creating
+the final run. No old result was deleted or overwritten. Schema-1 migration
+copies were used only for closure tests, not as replacements for the newly
+trained schema-2 models.
+
+### Formula and convention
+
+The direct-DSP receiver representation remains
+
+\[
+H_{\rm dir}^{\rm dsp}=H_{\rm dir}^{\rm red},\qquad
+H_{\rm ref}^{\rm dsp}=e^{-i2\pi f\Delta\tau_0}H_{\rm ref}^{\rm red}.
+\]
+
+Receiver statistics are rotated after reduced-domain spatial contraction:
+
+\[
+\mu_{\rm dsp}=D\mu_{\rm red},\qquad
+C_{\rm dsp}=DC_{\rm red}D^H,\qquad
+P_{\rm dsp}=DP_{\rm red}D^T.
+\]
+
+No carrier factor enters the marching operator, sea-surface model,
+`deltaG`, adjoint kernel `q`, receiver weight `a`, or PM spatial covariance.
+The 4 ms standard-geometry delay is a deterministic longitudinal reference,
+not an alignment of realization-dependent peaks.
+
+### Formal configurations and results
+
+- F=65 phase audit: 4--8 kHz at 62.5 Hz spacing. Nominal/measured relative
+  delay closed within one sample; phase representation round trips and
+  migration closure passed.
+- Exact adjoint full: F=9 used 4096 realizations in batches of 16; F=64 used
+  512 realizations in batches of 8 on PE `128^2` / PM `256^2`. Exact-adjoint,
+  projection, dense/FFT `C/P`, and same-realization cached/projection checks
+  all passed. F=9 and F=64 analytic/sample covariance ratios to split floors
+  were `0.593078` and `0.850502`, both below `1.25`.
+- Conditional nodes: U=5 used 128/64 train/test; U=8 used 128/128 and its
+  audited PE `128^2` / PM `384^2` aperture. Full, 99.9%, and 99% variants and
+  10,000-sample generator checks passed; models are schema 2.x direct-DSP
+  with zero common CIR shift.
+- Two-node communication: all four channel sources completed at U=5 and U=8
+  with 32 channels per source and 8000 QPSK symbols. Full/low-rank paired
+  comparisons used the same latent variables and all inputs were finite,
+  direct-DSP tagged, and IFFT-consistent.
+- Public scalar/direct-only/direct-plus-reflect and F=64 cached/public
+  regressions passed. The F=64 total consistency error was
+  `9.88957e-16`; the public default remained `kirchhoff_spatial`.
+- The rebuilt same-run atlas passed its artifact checks and contains 13 PNG,
+  one MP4, MAT, manifest, and summary. Spatial panels remain reduced complex
+  envelopes; carrier reference is applied only to receiver combinations.
+
+### Architecture decision and remaining limitations
+
+The approved roles are: public PE for general propagation; cached forward as
+the fixed-path regression oracle; adjoint projection for exact fixed-environment
+receiver realizations; analytic FFT `C/P` for receiver second-order
+statistics; and the conditional generator for large communication Monte
+Carlo after physical/statistical validation. This does not extend the exact
+adjoint v1 beyond uniform CPU-double, fixed grids/frequencies, one
+nearest-grid receiver, or into bubbles/Doppler/layered/GPU modes.
+
+Bellhop source normalization and doubled-window sensitivity remain separate
+open studies. The atlas produced one harmless title-format warning involving
+`\Delta`; it did not affect saved data, validation checks, or deliverables.
+
+## 2026-07-23 Current-Version PE/Bellhop Flat-Surface Revalidation
+
+### Task and implementation
+
+This task replaced the old mixed-version Bellhop interpretation with an
+independent, run-ID-scoped validation batch. New interfaces are
+`pe_bellhop_current_run_meta_vertical.m`,
+`run_bellhop_flat_surface_arrivals_vertical.m`,
+`scripts/validation/validate_pe_bellhop_flat_surface_current_vertical.m`, and
+`scripts/reporting/generate_pe_bellhop_comparison_atlas_vertical.m`. The
+existing phase validator now accepts an explicit output directory and shared
+run metadata; the old Bellhop smoke validator explicitly requests
+`direct_dsp` and documents the public physical-field sign. No public PE
+marching, default surface model, communication entry, or carrier formula was
+changed.
+
+Formal mode requires a stable absolute non-Temp `BELLHOP_EXE`. The accepted
+external executable was
+the historical AcousticsToolbox 2017 Bellhop executable (external dependency), size 683637 bytes,
+SHA-256
+`e6f9c1bcfd2b0945bfb59607909af589fa7b3f823df8bd5121425736eaebd796`.
+The wrapper writes standard uniform/flat pressure-release `.env` cases,
+parses `.arr`, and classifies direct and one-surface paths by top/bottom bounce
+count and 0.1 ms delay clusters. It rejects case roots with filename
+extensions to avoid Bellhop root-name truncation.
+
+### Configuration, formulas, and semantics
+
+The final run is `bellhop_current_20260723_rc5`: Tx `[0,0,80] m`, Rx depth
+10 m, 3/6/9 m baselines, 4 kHz, PE 3--5 kHz/33 frequencies, `128^2` over
+32 m, `stepz_lamb=0.5`, uniform 1500 m/s, flat pressure-release surface,
+CPU double. The independent phase audit used F=65. Small-offset cases were
+0/0.25/0.5/1/3 m; Bellhop was not called at strict zero range. Bellhop fields
+used R/C/I and 5001/10001 beams. The PE window audit separated sampling,
+no-sponge 32/64 m aperture, sponge ratio 0.10/0.12/0.15, and sponge strength
+0.05/0.15/0.30. Window cases used `save_mode='slice'` so edge amplitude was
+measured from an actual receiver plane.
+
+The validator never restores a carrier manually. Reduced fields are used
+only for conversion closure, public `H_*_physical_f` for physical-delay
+comparisons, and direct-DSP fields for public/IFFT regression. Bellhop's
+4 kHz arrivals are extended over the PE frequency band only for delay/PDP
+diagnostics, not presented as frequency-resolved Bellhop amplitudes.
+
+### Results and decision
+
+The final layered decision is **FAIL_CORE**, with
+`amplitude_status=OPEN`. Passed evidence includes: independent phase audit;
+reduced/physical/direct-DSP conversion; `H_f` component closure; direct and
+surface path classification; baseline and small-offset delays; Bellhop beam
+convergence; PE sampling/step; sponge location/strength; scalar direct-only,
+direct-plus-reflect, wideband closure; and unchanged public defaults.
+
+Maximum PE--analytic and PE--Bellhop delay errors were `0.027281981 ms` and
+`0.027280961 ms`; Bellhop--analytic was `3.930416e-06 ms`. Coherent and
+incoherent beam-count RMS differences were `0.190410/0.101930 dB`. Phase
+conversion error was zero and the maximum public component closure error was
+`3.576224e-18`.
+
+The failed core item is specifically aperture validity. With sponge disabled,
+the 32/64 m receiver-plane edge levels were `-1.087/-14.532 dB`, not below the
+required `-40 dB`; the 32--64 m phase RMS and relative TL difference were
+`3.526186 rad` and `-3.896489 dB`. These results cannot serve as an aperture
+convergence reference. This failure does not overturn the independently
+closed phase, path, delay, or Bellhop beam results and does not motivate a PE
+core or carrier-reference change.
+
+Raw amplitude remained open: one global direct scale produced `1.65401 dB`
+cross-geometry spread and reflected RMS/max residuals of
+`1.62948/2.07510 dB`. The Gaussian angular-spectrum direct-only diagnostic
+reduced RMS from `0.815` to `0.502 dB`, but it never replaces raw Bellhop point
+source values or changes acceptance.
+
+### Artifacts, documentation, and remaining work
+
+The final MAT/CSV/Bellhop artifacts are under
+`results/validation/pe_bellhop_flat_surface_current/bellhop_current_20260723_rc5/`.
+The same-run visualization directory contains 10 numbered PNGs, an atlas MAT
+with comparison tables/checks, manifest, summary, and raw R/C/I field evidence.
+The current report is
+`reports/pe_bellhop_flat_surface_current_validation_report.md`; the 2026-07-21
+complete report is retained and marked Superseded. README, technical guide,
+and script index were synchronized.
+
+Remaining Bellhop work is deliberately separate from this task: enlarge the
+no-sponge aperture until the edge prerequisite is met, then repeat the
+aperture comparison; establish a common point/finite-width source amplitude
+normalization. Rough surfaces, joint-kstat, bottom interaction, stochastic
+channels, and communication performance were not part of this validation.
+
+## 2026-08-12 Reflection-Free PE/Bellhop Free-Space Audit
+
+The validation layer now has an additive custom initial-field hook while the
+public default remains Gaussian. `source_mode='custom_field_fn'` is used only
+by the free-space validators to initialize a virtual point source on the PE
+plane. `alpha_max_np_per_m=0` is an explicit, valid sponge-off setting. The
+production marching equations, exported channel fields, reflection branches,
+and communication consumers are unchanged.
+
+The evidence chain is separated into four levels: Bellhop normalization,
+production multi-step PE versus an independently coded one-step exact
+discrete angular spectrum, source-referenced PE versus
+`exp(i*k*R)/(4*pi*R)`, and source-referenced PE versus converted Bellhop.
+The validation stores both `H_plane` and `H_source=exp(i*k*s0)*H_plane` so the
+virtual-source carrier is restored only for physical comparisons.
+
+Bellhop uses the matched upper/lower halfspace construction from its official
+free-space point-source example. The audit measures `|p|R`, spatial phase
+sign, one constant source phase, beam/step convergence, and zero-bounce delay.
+The `1/(4*pi)` conversion is fixed once for every distance and frequency; no
+pointwise calibration is permitted. Outputs are under
+`results/validation/pe_bellhop_freefield/formal/`, with the decision report in
+`reports/pe_bellhop_freefield_validation_report.md`.
+
+The formal run used 3/4/5 kHz, `s0=[5,10,20] m`, `L=[20,40,70,100] m`,
+offsets `[0,0.5,1,2] m`, and a 256-square PE grid over 64 m. PE--AS passed at
+`1.42870e-13` maximum relative L2 error. Bellhop normalization and analytic
+comparison passed (`1.99322e-6 dB` maximum TL error), but PE--Bellhop failed
+with `18.2012 dB` maximum TL error, `1.38356 rad` phase RMS, and a
+`3.76572 ms` representative group-delay residual. The 32-to-64 m field study
+improved but did not converge to the infinite-aperture spherical field. The
+status is therefore `passed=false`: the production propagation operator is
+verified, while validation-local finite-plane point-source reconstruction is
+not. No PE marching formula or threshold was changed to force acceptance.
+
+## 2026-08-12 Point-Source Window/Sponge Error Budget
+
+The PE square-root marching operator and public Gaussian source semantics were
+explicitly frozen. A validation-only fixed-`dx=0.25 m` series used 24, 32, 48,
+64, 80, and 100 m transverse windows with sponge disabled. Production PE and
+independent one-step AS continued to agree within `8.65585e-13`, but neither
+the spatially truncated spherical plane nor the discrete FFT-Weyl plane
+converged monotonically to the analytic point source. At the public 100 m
+limit the spatial-plane amplitude error remained `+12.8509 dB`, equivalently
+`TL_PE - TL_analytic = -12.8509 dB`; the last two discrete
+Weyl windows differed by `3.23331 dB`.
+
+The raw Weyl `1/kz` spectrum has a grazing-circle integrable singularity, so a
+separate continuous axisymmetric Weyl reference was implemented with
+propagating `kz` and evanescent `q` substitutions. It matched
+`exp(i*k*R)/(4*pi*R)` to `2.41716e-13` relative error and is the reliable
+free-space baseline. The discrete FFT-Weyl initializer remains an explicitly
+failed diagnostic rather than a replacement production source.
+
+The sponge audit now covers the complete 6-window x 3-ratio x 6-strength
+matrix (108 rows). It defines `dA=20*log10(|H_sponge|/|H_no_sponge|)` and
+`dTL=TL_sponge-TL_no_sponge=-dA`. Across the complete matrix the maximum
+on-axis additional loss is `35.6811 dB` (24 m, ratio 0.15, 0.3 Np/m); in the
+100 m window alone the maximum is `5.99769 dB` (ratio 0.15, 0.3 Np/m).
+
+In the final 4 kHz, `s0=10 m`, `L=70 m`, offset 0/0.5/1/2 m Bellhop rerun,
+finite-window amplitude errors are `+12.851/+5.520/-0.613/+9.612 dB`, hence
+the correctly signed TL errors are `-12.851/-5.520/+0.613/-9.612 dB`. For
+the selected ratio 0.12/strength 0.15 sponge, the amplitude changes are
+`-4.585/-16.223/-6.268/-5.092 dB`, equivalently additional TL values of
+`+4.585/+16.223/+6.268/+5.092 dB`. The axis phase change is `-0.980475 rad`.
+At the terminal plane, center (`rho<=2 m`), edge (ratio-defined sponge band),
+and total energies change by `-2.40739/-5.16144/-3.83990 dB`, respectively.
+Final PE--Bellhop TL errors are `-8.266/+10.703/+6.881/-4.520 dB`.
+Bellhop--analytic remained below `8e-7 dB`.
+The post-budget comparison therefore remains `passed=false`; its disagreement
+is quantitatively assigned to finite-plane/periodic-image and sponge effects,
+not to the already verified PE marching operator.
+
+## 2026-08-12 Production Gaussian Window/Sponge Audit
+
+This follow-up stops point-source/Bellhop expansion and freezes the square-root
+marching operator, FFT convention, Gaussian mathematics, surface model, and
+communication modulation. The exact production Gaussian expression was moved
+without algebraic change into `gaussian_source_initial_field_vertical.m` so
+production and validation call the same implementation; direct comparison to
+the old expression is exactly zero. Validation-only opt-ins permit 0.05--0.20
+sponge ratios and windows up to 200 m while normal public defaults and limits
+remain unchanged.
+
+The homogeneous direct-only audit uses 4 kHz, `sigma=0.3 m`, fixed
+`dx=50/256 m`, path lengths 20/40/70/97/100 m, and no bubbles, surface,
+Doppler, randomness, or communication processing. Gaussian PE--independent AS
+passed with maximum full/center complex L2 `2.56337e-13/1.45326e-13`.
+No-sponge 128 m converged to 160 m at 4 kHz, but 128 m had a 3--5 kHz maximum
+TL error of `0.100293 dB`, narrowly exceeding the preregistered 0.1 dB target.
+
+At the production 50 m/97 m case the no-sponge field reaches the FFT boundary:
+outer 5%/10% energy fractions are `0.1130/0.2176` and boundary amplitude is
+only `-1.2879 dB` relative to the plane maximum. The current ratio 0.12,
+alpha 0.15 sponge gives `dA=+0.62225 dB`, `dTL=-0.62225 dB`, axis phase
+change `-0.148555 rad`, center (`rho<=2 m`) energy change `-0.047554 dB`,
+edge change `-2.77763 dB`, and total change `-0.824556 dB`. None of the 126
+window/ratio/strength rows met all fixed center targets plus 3 dB edge
+suppression.
+
+Against 160 m/no-sponge over 3--5 kHz, production/default has maximum TL error
+`0.842225 dB`, phase RMS/max `0.131866/0.285952 rad`, and group-delay RMS/max
+`232.649/1326.814 us`. The 128 m/no-sponge compromise gives
+`0.100293 dB`, `0.003286/0.011962 rad`, and `8.636/33.558 us`.
+The strict recommendation is therefore 160 m/no-sponge; 128 m/no-sponge is a
+near-threshold cost option. No production default was changed. Full report and
+16 figures are under `reports/pe_gaussian_window_sponge_validation_report.md`
+and `results/validation/pe_gaussian_window_sponge/`.
+
+## 2026-08-13 Full Reflected-Chain Window Convergence
+
+The complete production Gaussian PE -> Kirchhoff surface -> PE chain was
+validated without changing the PE marching operator or defaults. A single
+seed-12345, U=5 m/s PM surface was generated on the maximum domain, normalized
+once to Hs=0.5 m, and centrally cropped at fixed `dx=50/256 m`; crops were
+never renormalized. The 4 kHz no-sponge sequence tested actual widths
+50.0000, 128.1250, 160.1563, and 192.1875 m.
+
+The 160-to-192 m comparison gave reflected TL/phase differences of
+`-0.0015395 dB / 0.0006122 rad` and receiver-center complex L2 `4.546e-4`.
+Nevertheless, 160 m had outer-5% energy fraction `1.1769e-4`, narrowly above
+the fixed `1e-4` gate. The 192.1875 m field passed with boundary amplitude
+`-52.29 dB` and outer-5% energy `1.7699e-5`; it is therefore the strict
+minimum qualified window. Edge tracking attributes the main contamination to
+the 100 m upward march, with only modest additional spreading after the
+Kirchhoff screen and 3 m downward march.
+
+Across 3--5 kHz/33 points, 160.1563 m/no-sponge versus 192.1875 m/no-sponge
+has maximum reflected TL, phase, and internal group-delay differences of
+`0.019205 dB`, `0.0023817 rad`, and `4.0507 us`. The 50 m/default-sponge case
+fails at `1.3203 dB`, `0.17782 rad`, and `70.943 us`; its total-channel TL and
+phase differences reach `8.4134 dB` and `0.64120 rad`. All complex component
+closures are below `3.9e-18`. The strict recommendation is therefore
+192.1875 m/no-sponge; 160 m is a response-accurate cost option but does not
+pass the preregistered edge gate. Production defaults were not changed.
+
+Implementation adds `surface_elevation_override_xy` and low-memory
+`surface_wavefield_meta` energy/receiver diagnostics as disabled-by-default
+interfaces. Formal evidence is in
+`reports/pe_reflected_chain_window_validation_report.md` and
+`results/validation/pe_reflected_chain_window/`.
+
+## 2026-08-13 Random-Surface Window Robustness
+
+The fixed-realization conclusion was extended at 4 kHz to three target sea
+surface strengths (`Hs=0.05/0.5/1.0 m`) and five seeds per strength. Each
+realization was generated and normalized once on a 255.8594 m master grid;
+160.1563 and 192.1875 m cases are exact central crops at fixed
+`dx=50/256 m` and are never renormalized. All paths use sponge off and the
+unchanged production Gaussian PE -> Kirchhoff spatial -> PE chain.
+
+Relative to the matching 256 m reference, 192 m passed all response,
+center-field, boundary, and outer-5% energy gates in `15/15` realizations.
+Its worst 4 kHz errors were `0.0185269 dB` TL, `0.000698941 rad` phase, and
+`8.02062e-4` receiver-center complex L2; worst outer-5% energy was
+`5.94925e-5`. The 160 m cases passed the response and center-field gates in
+`15/15`, but passed the full edge gate in `0/15`; worst outer-5% energy was
+`1.89970e-4`. Stronger Hs increased lateral spreading, but did not require a
+window larger than 192 m in this sample.
+
+The selected random-realization 3--5 kHz qualification was stopped before a
+complete set of candidate--256 m pairs was obtained, so no random-ensemble
+worst group-delay claim is made. The production recommendation remains
+192.1875 m with sponge off; 160 m is only a monitored cost option. Production
+defaults were not changed. See
+`reports/pe_random_surface_window_robustness_report.md` and
+`results/validation/pe_random_surface_window_robustness/`.
+
+## 2026-08-20 Repository Layout Migration and Documentation Consolidation
+
+### Goal and status
+
+Reorganized the repository with compatibility-first semantics after multiple
+validation windows had added files at the root. Status: **IMPLEMENTED** for
+layout and documentation; lightweight post-migration regression results are
+recorded in `reports/current_project_status_20260820.md`. No expensive
+F=64/512 ensemble, complete Bellhop matrix, or 192/256 m formal aperture run
+was repeated for this organizational change.
+
+### Changed paths and interfaces
+
+- Root public names remain `vertical_channel_model`, `main_vertical`,
+  `explain_main_vertical`, and `comm_main_vertical_psk`.
+- `vertical_channel_model.m` is now a short compatibility wrapper around
+  `src/channel/vertical_channel_model_impl.m`.
+- The three demonstration entrypoints run the corresponding scripts in
+  `examples/` and preserve script-workspace behavior.
+- Reusable code moved into `src/channel`, `src/propagation`, `src/surface`,
+  `src/receiver`, `src/statistics`, `src/communication`, and `src/bubble`.
+- Bellhop/Weyl/Li2009/properness/release-metadata helpers moved into
+  `scripts/validation/support/`.
+- `setup_vertical_project.m` is the idempotent initializer and does not
+  change the current directory. `scripts/bootstrap_project.m` delegates path
+  setup to it before applying the existing result-directory behavior.
+- The root 2k scripts moved to `scripts/validation/`; their PNG/CSV outputs
+  moved to `results/validation/ssa_2k_phase/`, and their reports moved to
+  `reports/`.
+- `SSA.md`, `BUBBLE_EXTENSION_SPEC.md`, and
+  `README_CODE_STRUCTURE_AND_OUTPUTS.md` moved verbatim to `docs/history/`.
+  They are explicitly non-authoritative. Active SSA metadata now refers to
+  `vertical_comm_guide.md` and the cited formal literature.
+
+The migration mapping and pre-migration SHA-256 evidence are recorded in
+`reports/repository_layout_migration_20260820.csv` and its Markdown summary.
+Dirty files were moved using their current contents; no reset, checkout,
+deletion of user work, or overwrite of prior validation results was used.
+
+### Physics and compatibility
+
+This change deliberately does not modify the PE split-step order, Gaussian
+source, sponge formula, surface reflection formula, joint-kstat `deltaG`,
+adjoint `q/a`, PM covariance contraction, carrier-phase conversion, public
+surface default, window default, or bubble default. Existing output field
+names and `H_f=H_direct_f+H_reflect_f` semantics remain required.
+
+### Documentation
+
+- `README.md` is now the concise Chinese repository entry and navigation.
+- `vertical_comm_guide.md` is the current Chinese technical authority for
+  coordinates, PE envelope, surfaces, adjoint/statistics, CIR/LFM,
+  communication outputs, validation boundaries, and recommendations.
+- `PROJECT_CONTEXT.md` remains append-only long-term model memory: history is
+  preserved and this top index points to current paths and conclusions.
+- `scripts/README.md`, `src/README.md`, `docs/history/README.md`, and the
+  dated status report define non-overlapping operational roles.
+
+### Post-migration validation
+
+- Root/external-directory setup and single-definition `which -all` checks
+  passed. Code Analyzer scanned 155 MATLAB files with zero parse errors.
+- Reduced scalar direct-only/direct-plus-reflect closure passed; wrapper vs
+  implementation difference was zero, total component closure was
+  `3.47e-18`, and seeded/override/diagnostic transparency passed.
+- PE 32^2 / PM 64^2, 4/6/8 kHz cached/adjoint smoke gave inner-product error
+  `3.35e-15` and reduced/direct-DSP projection errors
+  `1.04e-15/1.05e-15`.
+- The F=9, PE 64^2 QPSK/AWGN smoke had IFFT closure `2.96e-16`, channel
+  closure `5.55e-17`, and no NaN/Inf.
+- Both relocated 2k scripts completed; all five key CSV SHA-256 values were
+  identical to the pre-migration files.
+- Several MATLAB batches (including cold setup and FFT-heavy checks) printed
+  passing assertions and then hit a local R2025b DDUX/threadpool
+  `std::terminate` during process shutdown. Other batches exited normally;
+  the shutdown issue is recorded rather than reported as a clean process
+  exit.
+
+### Remaining issues
+
+- Public 50 m/default-sponge settings remain unchanged although the strict
+  complete-reflection recommendation is 192.1875 m/no-sponge.
+- Random-surface paired wideband convergence is incomplete.
+- Bellhop absolute amplitude/source normalization and infinite-aperture point
+  source equivalence remain open.
+- Li2009/SSA transverse convergence and higher-order validation remain open.
+- The exact-adjoint/statistics v1 scope is still uniform CPU double, fixed
+  grid/frequency, one nearest-grid receiver, and no bubble/Doppler.
+
+## 2026-08-20 Unfolded-coordinate Gaussian PE--Bellhop validator
+
+Added the validation-only entry
+`scripts/validation/validate_pe_bellhop_unfolded_flat_gaussian_vertical.m`.
+It maps the vertical 100 m-to-3 m geometry to a Bellhop horizontal free-space
+case: the direct path is 97 m, while the pressure-release image path is 103 m
+and is multiplied by `-1` at the comparison stage. Bellhop uses matched upper
+and lower halfspaces, so the artificial depth boundaries do not add rays.
+
+The entry calls the existing production Gaussian source through
+`vertical_channel_model` (sigma `0.3 m`), keeps the converged PE aperture
+(`192.1875 m`, `N=984`) and sponge off by default, writes a frequency-dependent
+`.sbp` directionality from the Gaussian angular spectrum, and compares PE,
+independent one-step continuous Weyl/Hankel axis references, and Bellhop using
+relative quantities `G=H/H(0)`, `Q=H_reflect/H_direct`, and `1+Q`. It includes
+5001/10001 beam convergence checks, 4--8 kHz relative PDP/group-delay outputs,
+spatial profiles, the separate PE unfolded identity, and the existing small
+offset native-coordinate arrival regression. Bellhop SHD files with source
+beam patterns are parsed by the dedicated
+`scripts/validation/support/read_bellhop_shd_unfolded_vertical.m`; no external
+Acoustic Toolbox plotting path is retained.
+
+The 128x128, 32 m smoke run completed and correctly passed beam convergence,
+the PE unfolded identity (`2.51e-13`) and component closure
+(`3.47e-18`). Its spatial/wideband checks fail as expected because that small
+aperture is intentionally contaminated by periodic-window effects. The full
+984x984, 65-frequency run subsequently completed and saved 65 formal Bellhop
+shade files, 3 spatial-profile files, 6 beam-audit files, MAT/CSV/PNG output,
+and the generated report. Beam convergence, wideband TL/phase, group delay,
+PDP, the independent PE--AS identity (`4.74e-13`), native auxiliary arrivals,
+and `H_f=H_direct_f+H_reflect_f` closure (`3.88e-18`) passed. The only failed
+hard checks were the transverse profile phase (`0.0612 rad` versus `0.05`) and
+transverse profile complex L2 (`0.0613` versus `0.02`); axial/wideband relative
+channel agreement passed, so the validator remains `passed=false` and no
+threshold was relaxed. The point-source normalization layer used the prior
+validated saved audit because the installed legacy Bellhop executable crashed
+on a fresh ±180° point-source audit; this external limitation is recorded in
+the report. A 256x256, 8/16-frequency direct-plus-reflect communication smoke
+and the reduced reflected-chain diagnostic regression also completed
+successfully. No PE marching, Gaussian source, public window, or sponge
+defaults were changed.
+
+The detailed report now recommends a low-cost transverse three-way audit as
+the next action: compare the saved 4/6/8 kHz PE slices against an independent
+one-step exact angular-spectrum slice and then against Bellhop. This should
+separate PE extraction errors from Bellhop source-mapping/2D-ray-beam phase
+effects without rerunning the 65-frequency production PE batch. Until that
+audit explains the `0.0612 rad` outer-profile discrepancy, the formal status
+remains failed even though the axial 4--8 kHz relative channel passed.
+
+## 2026-08-25 Independent PE--AS transverse audit and Bellhop scan
+
+The follow-up entry `scripts/validation/validate_pe_as_bellhop_transverse_vertical.m`
+now reads the saved formal result and independently computes one-step discrete
+angular-spectrum propagation at 4/6/8 kHz for the 97 m direct and 103 m image
+paths. PE--AS agrees to numerical precision: the maximum complex errors are
+`5.10e-13` (direct) and `2.43e-13` (reflected). Bellhop--AS retains the formal
+outer-profile discrepancy: `0.01582 dB / 0.06120 rad / 0.06117` direct and
+`0.01274 dB / 0.05167 rad / 0.05165` reflected (TL/phase/complex). This
+independently rules out the PE marching operator and field extraction as the
+source of the failed transverse hard check.
+
+The validation-only entry
+`scripts/validation/validate_bellhop_transverse_parameter_scan_vertical.m`
+then ran 27 Bellhop-only cases at 8 kHz, varying step (`0.1/0.05/0.025 m`),
+angle half-width (`20/30/45 deg`), and SBP sampling (`1201/2401/4801`) with
+10001 beams. All 27 `.env/.sbp/.shd/.prt` cases parsed successfully, but no
+case passed the transverse limits. The best maximum complex error was
+`0.061166`, with phase still `0.061204 rad`; numerical step, angle, and SBP
+sampling therefore do not explain the discrepancy. Bellhop outputs were
+conjugated once to match the formally selected spatial phase convention; no
+frequency- or distance-dependent fit was used.
+
+Artifacts are under `results/validation/pe_as_bellhop_transverse/` and the
+reports are `reports/pe_as_bellhop_transverse_audit_report.md` and
+`reports/bellhop_transverse_parameter_scan_report.md`. The formal unfolded
+validator remains `passed=false` solely because its transverse phase/complex
+hard checks fail. The next investigation is the 2-D/3-D Gaussian source
+mapping (`.sbp` amplitude/Jacobian/phase interpretation), not PE core changes,
+window changes, sponge changes, or threshold relaxation.
+
+## 2026-08-25 Bellhop unfolded-coordinate rotation-limit audit
+
+Added the Bellhop-only entry
+`scripts/validation/validate_bellhop_rotation_limit_vertical.m`. It compares
+the current unfolded geometry (97/103 m direct/image ranges) with native flat
+pressure-release-surface cases whose direct rays are `-89` and `-89.5` degrees.
+All three cases use the same 4 kHz, c=1500 m/s, Tx=100 m, Rx=3 m Gaussian
+`.sbp` pattern; native horizontal offsets are 1.69314 m and 0.846506 m.
+The native bottom is placed far away and no bottom-bounce arrival is accepted.
+
+The run found two required paths in every case. Maximum analytic delay error was
+`3.13 ns`; after removing the known geometric path length and rotated Gaussian
+directivity, native-vs-unfolded amplitude differences were below `1.23e-6 dB`
+and phase differences below `9.30e-5 rad`. The corrected reflection coefficient
+was within `1.23e-4` of `-1`. All five structural/consistency checks passed.
+This supports the unfolded construction as a near-vertical limit for the
+uniform flat-surface Bellhop case only; it does not extend to rough surfaces,
+depth-dependent SSPs, or actual-transducer source patterns.
+
+## 2026-08-26 Current PE--Bellhop validation overview
+
+`reports/pe_bellhop_complete_validation_overview.md` is now the current
+cross-stage summary for the uniform, flat pressure-release-surface comparison.
+It links the historical native-coordinate path matrix, Bellhop free-space
+normalization, independent PE--AS checks, production-Gaussian aperture work,
+the 4--8 kHz unfolded comparison, the transverse three-way audit, the 27-case
+Bellhop numerical scan, and the 89/89.5-degree coordinate-limit result.
+
+The summary deliberately retains both parts of the current decision: axial
+relative `Q(f)`, `1+Q(f)`, delay, group delay, and PDP checks pass, and PE--AS
+agrees at about `1e-13`; however, the formal unfolded validator remains
+`passed=false` because the 8 kHz outer transverse phase (`0.061204 rad`) and
+complex error (`0.061277`) exceed their fixed hard limits. The three-way audit
+assigns that residual to the Bellhop/source-mapping or 2-D/3-D representation
+side rather than the PE marching operator. The overview supersedes the old
+2026-07 “complete” report only as a status summary; historical files and raw
+results remain unchanged.
+
+## 2026-09-03 PE--Bellhop PM model-discrepancy statistical study (M=50)
+
+The fixed-4 kHz Stage-4 PM ensemble used the frozen Stage-3B independent
+Gaussian coefficient-amplitude chain.  The user stopped the conditional
+extension after 50 complete seeds (`260001:260050`); no PE or Bellhop core
+physics, source normalization, receiver selector, or influence formula was
+changed.  The active report is
+`reports/pe_bellhop_pm_model_discrepancy_statistics_report.md`; seed-level
+tables and figures are under
+`results/validation/pe_bellhop_pm_model_discrepancy_statistics/`.
+
+At M=50 the mean delta TL is `-0.00748 dB` (sample standard deviation
+`0.96223 dB`) and the circular mean phase difference is `-0.37534 rad`.
+The 24-to-32 engineering gates pass for mean delta-TL, PE/Bellhop power
+change, and circular phase change; the bootstrap mean-delta-TL half-width is
+`0.25835 dB`, just above the prescribed `0.25 dB` gate.  Classification is
+therefore `PRELIMINARY_MODEL_DISCREPANCY`, not statistical establishment.
+All 50 rows pass finite-value, shared-profile, beam-hit, non-grazing,
+wall-residual, pressure-release phase, beam-state, positive-range, and PE
+edge/seam guards.  Native backward-range amplitude remains diagnostic only,
+and the dimensionality sensitivity (`-0.15886 dB`, `+0.01251 rad`) is
+reported separately rather than subtracted.
+
+## 2026-09-10 Controlled PE--Bellhop Goal: Stage 0/1 status
+
+The authoritative sequential driver is
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`, governed by
+`reports/pe_bellhop_controlled_comparison_GOAL_revised_stage1x.md`.  P0 and Stage 0 passed,
+including PE--AS closure, flat parametric internal-wall closure, receiver
+mapping, phase/tau/positive-range guards, and 5001/10001-beam checks.
+
+Stage 1 weak-sinusoid runs at `A=0.01`, `0.005`, and `0.0025 m` all passed
+profile/geometry/finite guards but did not return to the Stage-0 numerical
+floor: model M99 L2 was `0.47247`, `0.23875`, and `0.11969`, respectively;
+phase RMS was `0.47920`, `0.23960`, and `0.11980 rad`.  The controlled
+comparison is therefore blocked by model comparability at the current weak
+limit, not by PE marching, Bellhop geometry, or solver convergence.  The
+read-only Stage 1X audit
+`reports/pe_bellhop_controlled_comparison_stage1x_phase_convention_audit.md`
+identifies a fixed PE conjugation convention that closes all three amplitudes
+(the mirror-conjugate is degenerate for the centered/even profile).  This does
+not rewrite the original Stage-1 PASS/FAIL: Stage 2--7 remain locked pending a
+narrow convention-only rerun.  Per the latest user execution override, future
+Bellhop runs use 10,001 beams only; no 20,001-beam endpoint is to be started.
+
+The convention-only regression is recorded under
+`results/validation/pe_bellhop_controlled_comparison/stage1_convention_fixed/`.
+It uses `G_BH_comparison=conj(G_BH)` only in the rough/flat comparison layer:
+Stage 0 was rerun and passed, A=0.01 was rerun through the main driver, and the
+A=0.005/A=0.0025 outputs are comparison-only reconstructions from preserved raw
+solver MAT files.  The original Stage-1 FAIL data remain under `stage1/`;
+Stage 2--7 are not automatically unlocked.
+
+## 2026-09-10 Controlled PE--Bellhop Goal: Stage 1Y convention closure
+
+Stage 1Y is complete and is documented in
+`reports/pe_bellhop_controlled_comparison_stage1y_theoretical_convention_closure.md`.
+Without new PE/Bellhop runs, the source audit independently closes the PE
+`exp(-i*omega*t)`/`exp(+i*(kz-k0)L)` convention, Bellhop 2020 coherent
+`exp(-i*(omega*tau-phase))` influence convention, the direct real/imag SHD
+reader, the real X-source normalization, and the single vacuum `+pi` phase in
+`Reflect2D`. Existing free-field and non-sinusoidal constant-height audits
+support the analytic prediction; no per-case conjugation, fitting, or core
+physics change is used.
+
+The permanently frozen comparison fields are
+`B_abs=conj(B_raw)` and `G_BH_comparison=conj(G_BH_abs)=G_BH_raw`. The original
+raw Stage-1 FAIL outputs remain unchanged, while the convention-fixed
+regression remains PASS. Stage 1Y is
+`CONVENTION_THEORETICALLY_CLOSED`, so Stage 2 is unlocked by the Goal gate;
+Stage 2 was subsequently completed and is summarized in the Stage-2 status
+entry below. The remaining Bellhop--AS/flat
+residual (~`0.006` normalized complex L2) is retained as a finite
+source/beam mapping floor, not treated as a convention blocker.
+
+## 2026-09-11 Controlled PE--Bellhop Goal: Stage 2 execution status
+
+Stage 2 height-sweep orchestration is present in
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`. It fixes
+`K=0.10 rad/m`, X/C source settings, `N=4097`, and the user-mandated 10,001
+beams, and supports case-granular resume without rerunning completed cases.
+The prescribed A=`0.01/0.02/0.05/0.10/0.20 m` cases are complete; A=0.01
+reused the convention-fixed result and the other four points ran one Bellhop
+case each. All solver/mapping/finite guards pass. Metrics rise with height:
+`E_G`=`0.004093/0.008234/0.021036/0.044179/0.100485` and phase RMS
+`0.004059/0.008166/0.020869/0.043877/0.100142 rad` in that A order.
+The authoritative report is
+`reports/pe_bellhop_controlled_comparison_stage2_height_sweep_report.md`:
+Stage 2 is `PASS`. Its summary was later augmented with the Goal-required
+`rho_raw`, maximum slope, and maximum/RMS curvature columns without rerunning
+the solvers.
+
+## 2026-09-12 Controlled PE--Bellhop Goal: Stage 3 execution status
+
+Stage 3 is implemented as the `stage3` branch of
+`scripts/validation/validate_pe_bellhop_controlled_comparison.m`. The frozen
+manifest selects `A=0.02 m`, the largest Stage-2 point satisfying every Region-I
+gate, and scans `K=0.10/0.20/0.35/0.47 rad/m` at X/C, `N=4097`, and 10,001
+beams. All four solver/mapping/geometry/finite guards pass. The classifications
+are `I/II/II/II`; corresponding `E_G` values are
+`0.008234/0.008369/0.014140/0.022816`, and phase RMS values are
+`0.008166/0.007579/0.009428/0.012906 rad`. The largest sampled curvature is
+`0.004418 1/m`; Bellhop hit-curvature, native `Reflect2D` state, wall residual,
+and positive transformed range remain finite and consistent. The authoritative
+report is
+`reports/pe_bellhop_controlled_comparison_stage3_slope_curvature_report.md`.
+Stage 4 subsequently completed as a read-only validity-map aggregation with
+zero solver calls. At `K=0.10 rad/m`, the sampled Region-I to non-I transition
+is bracketed by `A=(0.02,0.05] m`; at `A=0.02 m`, it is bracketed by
+`K=(0.10,0.20] rad/m`. These are not interpolated or extrapolated boundaries.
+See `reports/pe_bellhop_controlled_comparison_stage4_validity_map_report.md`.
+
+## 2026-09-12 Controlled PE--Bellhop Goal: Stage 5 attribution
+
+Stage 5 completed as a zero-solver-call diagnostic on three Region-II
+representatives: `(A,K)=(0.05,0.10)`, `(0.20,0.10)`, and `(0.02,0.47)` in
+meter/rad-per-meter units. Global phase alignment reduces `E_G` by only
+`7.85%/20.24%/7.94%`, so every case is classified as `spatial distortion`
+under the frozen Goal rule rather than global/coherent-phase dominated.
+Bellhop differs from the analytic stationary-path phase by only
+`1.7e-6/6.2e-6/1.3e-5 rad` RMS, whereas the corresponding PE residual is
+`0.02087/0.10014/0.01290 rad`. These quantities are validation diagnostics;
+the production PE phase screen and Bellhop physics remain unchanged. See
+`reports/pe_bellhop_controlled_comparison_stage5_phase_attribution_report.md`.
+
+## 2026-09-13 Controlled PE--Bellhop Goal: Stages 6--7
+
+Stage 6 copied and verified the canonical seed-260001 coefficients with
+SHA-256 `1f7eda465e4ae85b8ac038310edf053f2d062563a3b943bfd83bd59d07015f67`,
+then ran the sole allowed 4 kHz X/C, 10,001-beam fixed-PM case. All Bellhop
+geometry, incidence, reflection-phase, beam-state, positive-range and finite
+guards pass. The axis sanity result is `0.310370739 dB / -2.24820073 rad`,
+matching the historical X audit, while the complete M99 line has
+`E_G=0.958269`, phase RMS `1.107714 rad`, TL RMS `1.273990 dB`,
+`rho_shape=0.771213`, and is Region III. See
+`reports/pe_bellhop_controlled_comparison_stage6_fixed_pm_report.md`.
+
+Stage 7 made zero solver calls and reproduced the existing M=50 published
+statistics directly from the authoritative CSV: mean delta TL `-0.00747858 dB`,
+PE/BH mean powers `1.004510/1.007007`, and circular mean phase
+`-0.375345 rad`. It explicitly retains historical point-source R provenance;
+the data are neither relabeled X nor empirically corrected. Together with
+Stages 4--6, near-equal ensemble power is compatible with realization-level
+spatial reflection-model discrepancy, and the nonzero circular phase is not a
+remaining convention error. See
+`reports/pe_bellhop_controlled_comparison_stage7_historical_m50_interpretation_report.md`.
+
+The controlled Goal is now complete. Its final report is
+`reports/pe_bellhop_controlled_comparison_final_report.md`, with status
+`PHASE_MECHANISM_IDENTIFIED`. All requirements for `COMMON_LIMIT_CONFIRMED` are
+also met, but the more informative final label is used because Stage 5 locates
+the residual as spatial reflection-model distortion. The conditional BIE/BEM
+branch was not triggered for convention adjudication; it remains necessary only
+for a future absolute-accuracy claim in the Region-III PM regime.
+
+## 2026-09-14 Helmholtz BIE third-reference Goal: R0--R2
+
+The R0 formulation audit is complete and frozen in
+`reports/pe_bellhop_helmholtz_bie_R0_formulation_audit.md`. The selected
+validation-only reference is the two-dimensional sound-soft rough-surface
+combined-layer equation built with a Dirichlet half-plane Green function,
+`exp(-i*omega*t)`, an inward-to-water normal, and a slow-rise smooth finite
+section. The outgoing combined layer is `D_h-i*k*S_h`; an initial R1 smoke
+run exposed that the provisional plus sign was refinement-dependent and nearly
+singular, so the sign was corrected from the frozen time/radiation/normal
+conventions before accepting any result. It is specifically limited to the localized Gaussian angular-spectrum
+incidence and graph surfaces required by this Goal. Closed-obstacle BEM,
+quasi-periodic/Bloch formulations, and abrupt free-space truncation were
+rejected for R1--R5. R1 flat self-validation passes: the accepted 12-ppw
+result has boundary residual `9.276e-10`, image-field complex L2 `1.236e-7`,
+and phase RMS `9.268e-8 rad`. R2 also passes for the fixed C2-tapered
+`A=0.01 m`, `K=0.10 rad/m` benchmark. Its receiver-line BIE uncertainty is
+`6.002e-8` complex L2, `4.220e-8 rad` phase RMS, and `3.596e-7 dB` TL RMS.
+The physical surface support remains fixed while spatial, close-panel
+quadrature, and BIE-window convergence are varied independently. R3 weak
+PE--Bellhop--BIE closure also passes on that exact benchmark: PE--BIE has
+`E_G=0.003158` and phase RMS `0.003118 rad`, Bellhop--BIE has
+`E_G=8.092e-6` and phase RMS `5.886e-6 rad`, and PE--Bellhop has
+`E_G=0.003159`. Both native Helmholtz ratios (Bellhop and BIE) are mapped by
+the same fixed conjugation into the PE comparison convention; no scalar is
+fitted. Bellhop geometry and receiver guards pass. R4 (`A=0.05 m`) gives
+PE--BIE/Bellhop--BIE complex errors `0.016090/3.890e-5`; R5 (`A=0.20 m`)
+gives `0.080908/9.976e-5`. The ranking is unchanged at every spatial/window
+level and both separations exceed `5 U_BIE` by many orders of magnitude.
+The final first-round status is `BELLHOP_CLOSER_TO_HELMHOLTZ_REFERENCE`; see
+`reports/pe_bellhop_helmholtz_bie_final_report.md`. The R5 strong-height
+boundary residual has an explicit `1.1e-8`--`2.9e-8` plateau, while an
+independent higher-order receiver field agrees within `3.291e-8`, below its
+declared `U_BIE=6.179e-8`. Optional R6 and fixed PM are not needed for this
+adjudication and were not run.
+
+## 2026-09-15 PE rough-surface reflection-operator improvement Goal
+
+The BIE workflow was extended with the frozen high-K G0 case
+`A=0.02 m, K=0.47 rad/m`. All numerical and Bellhop geometry gates pass;
+Model-0 PE/BIE `E_G=0.0229061`, while Bellhop/BIE `E_G=1.36812e-4`.
+
+G1 measures the actual sigma=0.3 m Gaussian angular spectrum:
+`kx_rms=2.35702 rad/m`, `theta_rms=8.14401 deg`, and
+`<kz>/k=0.9899505`. G2 adds a validation-only `model1_kz_aware` branch to the
+1T helper. It uses componentwise `exp(+i*2*kz*eta)`, changes the flat field by
+only `1.83e-13`, reproduces legacy Model-0 exactly when selected, and reduces
+controlled-case phase RMS by factors `25.0/5.11/1.61/1.22` in
+weak/Region-II/strong-height/high-K order. This establishes
+`NORMAL_APPROXIMATION_CONFIRMED`.
+
+G3 adds analytic local-normal specular `kzr` and `(kzi+kzr)*eta` phase without
+fitted coefficients. It produces only `0.01%--1.5%` further improvement and
+fails the high-K gate, despite positive reflected `kz`, zero non-returning
+components, and finite fields. The Goal therefore stops before fixed PM with
+`NONLOCAL_EFFECT_REQUIRED`. Production PE, PE marching, the production surface
+model, Bellhop, and the BIE solver are unchanged. See
+`reports/pe_surface_operator_improvement_final_report.md`.
+
+## 2026-09-20 Strict-normal Gaussian-width applicability audit
+
+The validation-only sigma sweep keeps the 4 kHz controlled benchmark, accepted
+Helmholtz BIE, X-source Bellhop convention, receiver map, and surface geometry
+fixed while changing only the analytic Gaussian width. For the low-slope
+`A=0.05 m, K=0.10 rad/m` family, sigma `0.3/0.5/1/2 m` corresponds to
+theta95 `15.97/9.55/4.70/2.35 deg`. Legacy Model-0 phase RMS contracts from
+`0.01589` to a `0.00460--0.00469 rad` floor, its theta-rms-squared fit has
+`R2=0.9881`, and the Model-0/Model-1 complex gap contracts from `0.01558` to
+`0.000231`. Total complex/TL error is not monotone and no point passes the
+complete all-metric Region-I gate. At high K (`A=0.02 m, K=0.47 rad/m`) and
+theta95 `2.35 deg`, both PE variants agree to `1.56e-4` but remain about
+`0.0256` from BIE with phase RMS `0.0110 rad`, confirming a separate
+nonlocal/spectral-coupling residual. The final status is
+`STRICT_NORMAL_APPROXIMATION_PARTIAL`; for this smooth low-K family,
+theta95 around `9.5 deg` is supported for the phase criterion, not as a
+universal total-field bound. Optional sigma `4 m` is excluded because fixed
+Bellhop receiver influence yields sparse `0/0` ratios. Production PE remains
+unchanged. See `reports/pe_strict_normal_sigma_sweep_report.md`.
+
+The same audit now includes a strong-height discriminator
+`A=0.20 m, K=0.10 rad/m` at sigma `0.3/2 m`. Its Model-0/Model-1 gap falls
+from `0.06227` to `0.000924` as theta95 narrows from `15.97` to `2.35 deg`,
+while PE--BIE remains `0.08091/0.08708` and phase RMS remains about
+`0.075 rad`. Thus the finite-angle normal approximation is removed by a narrow
+source, but strong-height phase-screen/nonlocal error remains. This result is
+part of the same `STRICT_NORMAL_APPROXIMATION_PARTIAL` report.

@@ -1,0 +1,18 @@
+{
+  "rotated_field_real": -0.004859556443989277,
+  "rotated_field_imag": 0.008404999040067196,
+  "native_total_real": 0.0001471368013881147,
+  "native_total_imag": -0.00026700927992351353,
+  "native_direct_real": 0.005154639016836882,
+  "native_direct_imag": -0.008928096853196621,
+  "native_reflected_real": -0.005007502215448767,
+  "native_reflected_imag": 0.008661087573273107,
+  "field_phase_difference_rad": 1.0219374055455663e-05,
+  "field_tl_difference_db": -0.2606439123197839,
+  "fan_phase_min_rad": -1.4097193008848123e-11,
+  "fan_phase_max_rad": 3.3510152889032614e-05,
+  "fan_amplitude_ratio_min": 1.0000000000000717,
+  "fan_amplitude_ratio_max": 1.0000039705119754,
+  "fan_sum_phase_difference_rad": 1.0210035699395792e-05,
+  "fan_sum_tl_difference_db": 1.0507909716361973e-05
+}
