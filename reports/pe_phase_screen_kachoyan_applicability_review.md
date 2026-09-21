@@ -93,6 +93,149 @@ arbitrarily rough surface,” *JASA* 82(5), 1720--1726 (1987)，见
 坡度修正也没有关闭误差。现有证据因此支持：**法向相位近似是偏差的一部分，但
 主要剩余量来自局部乘法 phase screen 未包含的非局部表面耦合/衍射与幅度效应。**
 
+## 重新分析：为什么尺度条件看似满足，结果仍然很差
+
+这里首先需要修正一个容易产生误解的说法：当前实验并不是“完整满足论文的全部
+条件后仍然失败”，而是**较好满足了 `kL >> 1` 和 `h/L << 1` 两个表面尺度条件，
+但没有完整满足 phase-screen 等效所需的入射场、观测量和算子条件**。论文的两个
+无量纲参数说明 Kirchhoff 类近似可能进入有效区，却不是针对任意波束、任意接收
+距离和逐点复场误差的充分上界。
+
+### 1. `kL` 和 `h/L` 是渐近参数，不是二元 PASS/FAIL 门限
+
+`kL=35.6` 可以合理称为大于 1，却不是无穷大；相应的 `1/(kL)` 量级仍约为
+`2.8%`。对强相干叠加问题，几个百分点的局部边界误差不一定只产生几个百分点的
+接收场误差：它可移动干涉零点、焦散和相位绕转位置。PM case 又有
+`2k sigma_eta=6.25 rad`，所以局部近似误差经过多周相位调制后可能形成
+`O(1)` 的归一化复场差异。
+
+同样，`h/L` 的 RMS 值小并不等价于每个局部片段、每个谱分量和每个相互作用项
+都有统一的小参数。fixed PM 的高 q 部分贡献 86.7% slope variance 和 97.8%
+curvature variance；用一个 `L_eff` 压缩整个宽谱会丢失这一信息。
+
+### 2. 论文讨论的基准是平面波；当前是有限宽度 Gaussian 波束
+
+论文结论中的 `kL`、`h/L` 明确针对 plane-wave surface scatter。当前入射场为
+`sigma=0.3 m` 的 Gaussian，其中心方向虽为法向，但完整角谱并不窄：
+
+```text
+theta_rms = 8.144 deg
+theta_95  = 15.97 deg
+theta_99  = 21.28 deg
+```
+
+再叠加最高 `6.65 deg` 的局部表面倾角，fixed-PM Bellhop hits 中相对局部法线的
+入射角可达约 `33.7 deg`。这些射线不属于 grazing，但也不能再视为对整个场都
+严格近法向。因此当前实验满足“中心射线法向”，不满足“所有重要角谱分量都处于
+法向渐近极限”。
+
+G1/G2 已经直接验证这一点：将统一 `2k eta` 改为逐分量 `2k_z eta` 后，弱低 K
+case 的 phase error 改善约 25 倍。这说明论文条件与项目结果并不矛盾；项目实际
+输入比论文的单一法向平面波更宽。
+
+### 3. 当前 Model-0 只是 phase-only 乘法，不是完整 Kirchhoff 表面积分
+
+当前 validation Model-0 执行的是
+
+```text
+incident field on mean plane
+-> multiply by -exp(+i 2k eta(x))
+-> propagate again from the mean plane.
+```
+
+完整 Kirchhoff/tangent-plane 表面积分还涉及真实表面坐标上的 incident field、
+Green kernel、法向导数、obliquity/amplitude factor 和弧长 Jacobian。把该积分继续
+约化为 mean-plane 上的纯相位乘法，需要比 `kL >> 1`、`h/L << 1` 更具体的
+近法向和传播近似。也就是说，论文支持的是某一参数区间内的等效关系，并不能
+自动证明本项目这条最简 phase-only 实现已经保留了完整 Kirchhoff 算子的全部
+leading-order 项。
+
+Model-2 已加入局部入射角和局部坡度相位，但高 K case 几乎没有继续改善。这表明
+缺失量并非另一个可以写成 `c eta` 或局部 slope phase 的标量修正，更可能位于
+amplitude/normal-derivative 以及不同表面位置、不同横向波数之间的非局部耦合。
+
+### 4. band-limited `eta` 不代表 phase screen 本身仍是同一带宽
+
+即使 `eta(x)` 只包含到 `q_max=0.471 rad/m`，非线性函数
+`exp(i 2k eta(x))` 也会产生卷积级联和高次谐波。对单一正弦面，这对应
+Jacobi--Anger/Bessel harmonics；对 PM 面，则对应各 Fourier mode 的多重卷积。
+当 `2k sigma_eta=6.25 rad` 时，这些高阶项不会都很小。
+
+所以用原始海面 `q_max` 得到的 `kL_min=35.6` 只能描述几何输入带宽，不能直接
+界定 phase-screen 输出场的谱宽、焦散或相干零点。高度 sweep 和 fixed-PM 的
+差别也由此变得清楚：`kh` 不必小才能使用 Kirchhoff，但较大的 phase modulation
+index 会使任何被遗漏的 amplitude 或 spectral-coupling 项更容易在复场中显现。
+
+### 5. 当前接收量比论文条件本身更苛刻
+
+物理 Rx 位于 `z=3 m`，也就是反射后仅传播约 3 m。当前比较的是该近表面接收线
+上的 normalized coherent complex field，而不是只比较总散射能量、平均强度或
+远场主瓣。近表面场对高横向波数、局部聚焦、干涉零点和边界附近的非传播/弱传播
+分量更敏感；一个在能量意义下仍“相当好”的 Kirchhoff approximation，可以在
+逐点 complex-field 指标上表现明显较差。
+
+这与论文的观察相容：论文既讨论近场强度涨落，也指出随入射变斜，视场外的
+specular/near-specular surface portions 会越来越重要。当前有限波束和有限接收
+窗口进一步加强了这种空间非局部性。
+
+### 6. PM 的大误差不是单纯的指标或 Bellhop 故障
+
+fixed-PM 的 `E_G=0.958` 确实会受到相干零点和归一化的敏感性影响，但
+`E_aligned=0.679`、`rho_shape=0.771`、TL RMS `1.274 dB` 和 phase RMS
+`1.108 rad` 同时表明：它不只是一个可去除的全局相位常数。另一方面，Bellhop
+wall intersection、pressure-release phase、`p/q` rotation、receiver selector 和
+收敛检查都通过，因此也没有证据把该残差重新归于 internal-wall bookkeeping。
+
+需要保留一个重要限定：独立 BIE 已经在四个正弦环境中证明 Bellhop 明显更接近
+Helmholtz 解，但尚未对完整 fixed-PM realization 运行 BIE。因此“PM 大残差主要
+来自 PE phase screen”是由正弦 BIE、Model-1/2 趋势和 PM 谱诊断共同支持的最强
+当前判断，而不是已经由 PM 全波解最终证明的事实。
+
+### 7. 与论文随机面结论并不矛盾
+
+论文的结论需要细分：随机调制表面在某些 case 中可能比简单周期正弦面更适合
+Kirchhoff approximation，因为误差更局域；但包含很宽尺度范围、具有更强 fractal
+特征或较低 correlation differentiability 的 modified-PM 面，又比平滑 Gaussian
+spectrum 更困难。不能把论文简化成“随机面一定更好”或“PM 一定失败”。
+
+当前 fixed PM 是有限带宽且几何可微的，并非真正数学分形面；不过其高 q 分量
+已经主导几何导数，同时强相位调制和宽入射角谱并存，因此恰好集中体现了论文所
+警告的宽尺度敏感性。
+
+## 进一步建议
+
+下一步不建议继续调节 `2k eta` 系数，也不建议用 amplitude/phase calibration
+强迫 PE 与 Bellhop 重合。建议按以下顺序缩小物理归因范围：
+
+1. **先建立完整 Kirchhoff surface-integral 中间基准。** 使用已经保存的 incident
+   field，在真实表面坐标上保留 Green kernel、normal derivative、obliquity factor
+   和 surface Jacobian；不拟合参数。先对现有四个 BIE 正弦 case 比较
+   `phase screen -> full Kirchhoff integral -> Helmholtz BIE`。这会直接判断失败发生
+   在 Kirchhoff approximation 本身，还是发生在 Kirchhoff 到纯 phase-screen 的
+   二次约化。
+2. **做入射角谱收窄审计。** 对弱低 K、强高度低 K 和弱高 K 三个代表 case，
+   validation-only 地增大 Gaussian `sigma`，把 `theta_rms` 依次降至约
+   `4 deg、2 deg、1 deg`，并始终对 BIE 比较。如果误差随角宽明显下降，可定量
+   分离“near-normal 不充分”与“surface nonlocality”。这不是修改生产源，而是
+   验证论文平面波极限。
+3. **做 receiver distance 审计。** 保持 source/surface 不变，把反射后接收距离从
+   `3 m` 扩展到 `10/30 m`，同时比较反射系数谱和 receiver field。若近场误差快速
+   衰减，而远场角谱闭合，则当前问题主要是 phase screen 的 near-field 重建；若
+   不衰减，则是边界算子本身的谱权重错误。
+4. **优先比较 outgoing transverse spectrum，而不只比较接收线。** 按论文的
+   reflection-coefficient 思路，保存每个入射 `k_x` 到每个出射 `k_x'` 的耦合，
+   区分 specular phase、off-specular redistribution 和 amplitude error。当前单条
+   receiver line 会把这些机制混合在一起。
+5. **最后才进入 PM 全波基准。** 先选同一 fixed realization 的短支持或低
+   `K_max` 版本，用现有 BIE/WGF 思路收敛；随后固定低 q coefficients，只逐级加入
+   高 q modes。这样可以判断误差从哪个 `K_max` 开始增长，而不是直接面对完整 PM
+   的计算成本。必要时再采用 windowed Green function、FMM 或 H-matrix 加速。
+
+建议的最小下一步不是完整 PM BIE，而是第 1 项：在四个已有正弦 BIE case 上加入
+**无拟合的完整 Kirchhoff surface integral**。它复用所有现有 source、surface、
+receiver 和 BIE artifacts，变量最少，同时最直接回答“论文近似失败”还是“当前
+phase-only 实现过度简化”。
+
 ## 当前工况和谱范围
 
 - 声学参数：`f=4 kHz`，`c=1500 m/s`，`k=16.7551608 rad/m`，

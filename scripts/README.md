@@ -781,3 +781,13 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
 - G0--G2 pass. G3 fails the high-K improvement gate, so fixed PM is locked.
   See `reports/pe_surface_operator_improvement_final_report.md`; the final
   conclusion is `NONLOCAL_EFFECT_REQUIRED`.
+- `validation/validate_pe_strict_normal_sigma_sweep.m` performs the subsequent
+  4 kHz Gaussian-width applicability audit without changing production PE.
+  Run the `lowk` cases at sigma `0.3/0.5/1/2 m`, the `highk` cases at
+  `0.3/2 m`, then `aggregate`. It compares legacy `2*k*eta`, validation-only
+  kz-aware PE, 10,001-beam X-source Bellhop, and the accepted Helmholtz BIE;
+  artifacts are under `results/validation/pe_strict_normal_sigma_sweep/` and
+  the report is `reports/pe_strict_normal_sigma_sweep_report.md`. The accepted
+  status is `STRICT_NORMAL_APPROXIMATION_PARTIAL`. Optional sigma `4 m` is a
+  diagnostic only because the fixed Bellhop receiver influence produces
+  sparse-support `0/0` ratios, so it is excluded from hard gates.

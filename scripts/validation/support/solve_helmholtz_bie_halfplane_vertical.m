@@ -91,9 +91,15 @@ end
 A(1:node_count+1:end) = A(1:node_count+1:end) + 1;
 
 u_inc_nodes = cfg.incident_fn(x,z);
+if size(u_inc_nodes,1) ~= node_count && size(u_inc_nodes,2) == node_count
+    u_inc_nodes = u_inc_nodes.';
+end
+if size(u_inc_nodes,1) ~= node_count
+    error('incident_fn must return node_count-by-Nrhs values.');
+end
 rhs = -2*u_inc_nodes;
 psi = A\rhs;
-linear_residual = norm(A*psi-rhs)/max(norm(rhs),realmin);
+linear_residual = vecnorm(A*psi-rhs,2,1)./max(vecnorm(rhs,2,1),realmin);
 
 receiver_x = cfg.receiver_x_m(:);
 receiver_z = cfg.receiver_z_m + zeros(size(receiver_x));
@@ -107,8 +113,14 @@ mask_check = abs(x_check) <= cfg.window_plateau_ratio*cfg.half_width_m;
 x_check = x_check(mask_check);
 z_check = cfg.eta_fn(x_check);
 u_check = cfg.incident_fn(x_check,z_check);
-psi_check = zeros(size(x_check));
-u_layer_check = complex(zeros(size(x_check)));
+if size(u_check,1) ~= numel(x_check) && size(u_check,2) == numel(x_check)
+    u_check = u_check.';
+end
+if size(u_check,1) ~= numel(x_check) || size(u_check,2) ~= size(psi,2)
+    error('incident_fn returned inconsistent boundary-check dimensions.');
+end
+psi_check = complex(zeros(size(u_check)));
+u_layer_check = complex(zeros(size(u_check)));
 for tt = 1:numel(x_check)
     pp = find(x_check(tt) >= edges(1:end-1) & x_check(tt) <= edges(2:end),1,'first');
     if isempty(pp), error('Could not locate boundary check panel.'); end
@@ -119,14 +131,14 @@ for tt = 1:numel(x_check)
             edges(ps),edges(ps+1),gx,k,cfg.halfplane_h_m, ...
             cfg.window_plateau_ratio,cfg.half_width_m,cfg.eta_fn, ...
             cfg.eta_prime_fn,cfg.self_quadrature_order,singular);
-        u_layer_check(tt) = u_layer_check(tt) + weights*psi(cols);
+        u_layer_check(tt,:) = u_layer_check(tt,:) + weights*psi(cols,:);
     end
     cols = (pp-1)*cfg.panel_order + (1:cfg.panel_order);
     basis0 = local_lagrange_matrix(gx,local_barycentric_weights(gx),0);
-    psi_check(tt) = basis0*psi(cols);
+    psi_check(tt,:) = basis0*psi(cols,:);
 end
 boundary_total = u_check + 0.5*psi_check + u_layer_check;
-boundary_residual = norm(boundary_total)/max(norm(u_check),realmin);
+boundary_residual = vecnorm(boundary_total,2,1)./max(vecnorm(u_check,2,1),realmin);
 
 out = struct( ...
     'schema_version','1.0.0', ...
@@ -179,13 +191,13 @@ weights = (kernel(:).*physical_weights(:)).'*B;
 end
 
 function u = local_evaluate_off_surface(xt,zt,xs,zs,nxs,nzs,weights,psi,k,h)
-u = complex(zeros(numel(xt),1));
+u = complex(zeros(numel(xt),size(psi,2)));
 block_size = 256;
 source_strength = weights.*psi;
 for first = 1:block_size:numel(xt)
     rows = first:min(first+block_size-1,numel(xt));
     [S,K] = local_halfplane_kernels(xt(rows),zt(rows),xs,zs,nxs,nzs,k,h);
-    u(rows) = (K-1i*k*S)*source_strength;
+    u(rows,:) = (K-1i*k*S)*source_strength;
 end
 end
 

@@ -4042,3 +4042,23 @@ components, and finite fields. The Goal therefore stops before fixed PM with
 `NONLOCAL_EFFECT_REQUIRED`. Production PE, PE marching, the production surface
 model, Bellhop, and the BIE solver are unchanged. See
 `reports/pe_surface_operator_improvement_final_report.md`.
+
+## 2026-09-20 Strict-normal Gaussian-width applicability audit
+
+The validation-only sigma sweep keeps the 4 kHz controlled benchmark, accepted
+Helmholtz BIE, X-source Bellhop convention, receiver map, and surface geometry
+fixed while changing only the analytic Gaussian width. For the low-slope
+`A=0.05 m, K=0.10 rad/m` family, sigma `0.3/0.5/1/2 m` corresponds to
+theta95 `15.97/9.55/4.70/2.35 deg`. Legacy Model-0 phase RMS contracts from
+`0.01589` to a `0.00460--0.00469 rad` floor, its theta-rms-squared fit has
+`R2=0.9881`, and the Model-0/Model-1 complex gap contracts from `0.01558` to
+`0.000231`. Total complex/TL error is not monotone and no point passes the
+complete all-metric Region-I gate. At high K (`A=0.02 m, K=0.47 rad/m`) and
+theta95 `2.35 deg`, both PE variants agree to `1.56e-4` but remain about
+`0.0256` from BIE with phase RMS `0.0110 rad`, confirming a separate
+nonlocal/spectral-coupling residual. The final status is
+`STRICT_NORMAL_APPROXIMATION_PARTIAL`; for this smooth low-K family,
+theta95 around `9.5 deg` is supported for the phase criterion, not as a
+universal total-field bound. Optional sigma `4 m` is excluded because fixed
+Bellhop receiver influence yields sparse `0/0` ratios. Production PE remains
+unchanged. See `reports/pe_strict_normal_sigma_sweep_report.md`.
