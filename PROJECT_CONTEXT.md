@@ -4118,3 +4118,55 @@ this deterministic envelope. A reduced nonlocal Kirchhoff operator is the
 next diagnostic target; SSA is not required by these cases because Full
 Kirchhoff already closes to BIE. Production PE, BIE, and surface physics are
 unchanged. See `reports/pe_bie_full_kirchhoff_parameter_sweep_report.md`.
+
+## 2026-09-22 Full Kirchhoff reduced-operator Stage 1 diagnostic
+
+The validation-only `validate_full_kirchhoff_reduced_operator_stage1.m`
+compares the accepted Full-Kirchhoff field against the PE phase screen for
+weak/low-K, strong-height/low-K, and weak/high-K cases. Removing physical
+surface height/path phase produces complex L2 errors `0.230`, `1.217`, and
+`0.464`; removing the curved normal produces only `2.12e-6`, `1.32e-4`, and
+`9.81e-5`; removing the arc-length Jacobian produces `3.13e-7`, `1.25e-4`,
+and `2.70e-5`. Physical height/path phase is therefore essential, but PE
+already contains its local `2*k*eta` proxy. The remaining discrepancy is the
+failure of that local proxy to reproduce complete surface-to-receiver path
+phase and nonlocal coherent integration; normal and Jacobian effects are
+secondary at the tested slopes.
+
+Receiver-centered truncation of the complete integral requires approximately
+`64 m`, `8 m`, and `32 m` respectively to reduce the PE--Full-Kirchhoff error
+by half. This support is case-dependent, so it is evidence for a nonlocal
+short-range operator rather than a universal tiny convolution kernel. No
+reduced production operator was implemented; PE/BIE/Full-Kirchhoff physics
+remain unchanged. See
+`reports/pe_bie_full_kirchhoff_reduced_operator_stage1_report.md`.
+
+## 2026-09-22 Finite-aperture Reduced Kirchhoff prototype
+
+The validation-only finite-aperture prototype retains the complete accepted
+Full-Kirchhoff kernel and truncates only source contributions outside
+`|x_r-x_s|<L`. Its three representative-case results are retained in
+`reports/pe_bie_full_kirchhoff_finite_aperture_report.md`; the runnable
+finite- and adaptive-aperture workflow is now
+`validate_reduced_kirchhoff_adaptive_aperture_stage1.m`. No empirical
+correction, SSA, or production-model change was made.
+
+## 2026-09-22 Adaptive-aperture Reduced Kirchhoff Stage 1
+
+The validation-only adaptive-aperture database reuses the accepted A sweep
+at `K=0.10 rad/m` and K sweep at `A=0.02 m` (eleven unique cases). For each
+case it searches `L=4,8,16,32,64,128,Inf m` for the first finite aperture
+whose Reduced-Kirchhoff/BIE complex L2 is below `1e-3`. All eleven first pass
+at `L=128 m`, where the aperture already covers the entire relevant accepted
+surface support on the fixed M99 receiver mask; all `L=Inf` results reproduce
+their accepted Full-Kirchhoff fields exactly.
+
+Consequently this strict accuracy gate produces no observed
+`L_min(A,K)` variation and does not support an empirical adaptive-aperture
+rule or demonstrate an advantage over the fixed `128 m` aperture. This is a
+negative but useful result: at this accuracy level the hard spatial truncation
+is effectively global. A complete A-K matrix would not resolve that censoring
+without a different error target or a different reduction basis. The next
+better reduction investigation is a low-rank or locally-stationary kernel
+approximation, rather than fitting aperture to height/slope/curvature. See
+`reports/pe_bie_full_kirchhoff_adaptive_aperture_stage1_report.md`.

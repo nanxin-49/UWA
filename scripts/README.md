@@ -824,3 +824,17 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   `reports/pe_bie_full_kirchhoff_parameter_sweep_report.md`. The checkpoints
   permit continuation after a long MATLAB run without changing the numerical
   settings.
+- `validation/validate_full_kirchhoff_reduced_operator_stage1.m` is the first
+  validation-only reduced-operator audit. It compares the accepted
+  Full-Kirchhoff field with the PE phase screen, consistently removes surface
+  height, normal, or arc-length terms, and scans receiver-centered finite
+  integration radii. It writes diagnostic MAT/CSV tables and figures under
+  `results/validation/pe_bie_full_kirchhoff_reduced_stage1/`; the report is
+  `reports/pe_bie_full_kirchhoff_reduced_operator_stage1_report.md`.
+- `validation/validate_reduced_kirchhoff_adaptive_aperture_stage1.m` builds
+  the deterministic finite-aperture and adaptive-aperture database from the
+  accepted A and K sweeps. It searches `L=4,8,16,32,64,128,Inf m` against a
+  fixed Reduced--BIE complex-L2 gate, verifies the `Inf` regression against
+  accepted Full Kirchhoff, and writes CSV/MAT data, sparse A-K maps,
+  relationships, and representative field/convergence figures under
+  `results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/`.
