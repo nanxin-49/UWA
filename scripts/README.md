@@ -792,3 +792,16 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   status is `STRICT_NORMAL_APPROXIMATION_PARTIAL`. Optional sigma `4 m` is a
   diagnostic only because the fixed Bellhop receiver influence produces
   sparse-support `0/0` ratios, so it is excluded from hard gates.
+- `validation/validate_pe_bie_error_decomposition.m` is a read-only diagnostic
+  that reuses the authoritative R3/R4/R5/G0 PE--Helmholtz artifacts, recomputes
+  only the missing validation-only kz-aware field, and separates normalized
+  complex, magnitude, and wrapped-phase residuals. It writes
+  `results/validation/pe_bie_error_decomposition/` and
+  `reports/pe_bie_error_decomposition_report.md`; it does not modify
+  production PE, BIE, or Bellhop code.
+- `validation/validate_full_kirchhoff_bie_vertical.m` runs the independent
+  2-D Full Kirchhoff line-integral diagnostic against the frozen R3/R5/G0
+  PE--BIE cases. Its solver is isolated in
+  `validation/support/solve_full_kirchhoff_2d.m`; outputs are written under
+  `results/validation/pe_bie_full_kirchhoff/` and summarized in
+  `reports/pe_bie_full_kirchhoff_validation_report.md`.
