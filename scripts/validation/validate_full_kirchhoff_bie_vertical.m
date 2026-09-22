@@ -41,6 +41,7 @@ fp = s0.footprint;
 rows = repmat(local_empty_row(),0,1);
 details = struct('case_name',{},'surface_x_m',{},'surface_z_m',{}, ...
     'surface_incident',{},'surface_incident_dn',{},'receiver_full',{}, ...
+    'receiver_full_native',{}, ...
     'receiver_bie',{},'receiver_model0',{},'receiver_model1',{}, ...
     'nominal',{},'refined',{},'convergence',{},'config',{});
 
@@ -68,8 +69,14 @@ for cc=1:numel(case_names)
     assert(~isempty(idx),'Diagnostic case is missing: %s',case_names(cc));
     det=d.details(idx);
     bie=det.G_BIE(:); m0=det.G_Model0(:); m1=det.G_Model1(:);
-    full_field=rrun.receiver_field(:)./flat_ref;
-    full_nom=nrun.receiver_field(:)./flat_ref;
+    % The Kirchhoff solver and flat reference use the native exp(-i*w*t)
+    % representation.  The frozen PE-comparison BIE field is the conjugate
+    % of its native ratio, so apply that same fixed mapping here.  This is a
+    % representation conversion, not a fitted phase correction.
+    full_native=rrun.receiver_field(:)./flat_ref;
+    full_nom_native=nrun.receiver_field(:)./flat_ref;
+    full_field=conj(full_native);
+    full_nom=conj(full_nom_native);
     m0m=local_metrics(m0,bie,fp); m1m=local_metrics(m1,bie,fp);
     fmm=local_metrics(full_field,bie,fp); conv=local_metrics(full_nom,full_field,fp);
     rows(end+1)=local_row(case_names(cc),params(cc,:),"Model-0",m0m); %#ok<AGROW>
@@ -78,16 +85,19 @@ for cc=1:numel(case_names)
     rows(end+1)=local_row(case_names(cc),params(cc,:),"BIE",local_self_metrics(bie,fp)); %#ok<AGROW>
     details(cc)=struct('case_name',case_names(cc),'surface_x_m',x, ...
         'surface_z_m',eta,'surface_incident',ui,'surface_incident_dn',dni, ...
-        'receiver_full',full_field,'receiver_bie',bie,'receiver_model0',m0, ...
+        'receiver_full',full_field,'receiver_full_native',full_native, ...
+        'receiver_bie',bie,'receiver_model0',m0, ...
         'receiver_model1',m1,'nominal',nrun,'refined',rrun, ...
         'convergence',conv,'config',q.config);
     local_plot_case(fig_dir,case_names(cc),params(cc,:),x,ui,full_field,m0,m1,bie,fp);
 end
 
-validation=struct('schema_version','1.0.0','stage','full_kirchhoff_bie_vertical', ...
+validation=struct('schema_version','1.1.0','stage','full_kirchhoff_bie_vertical', ...
     'frequency_hz',4000,'c0_mps',1500,'source_fingerprint',source.fingerprint, ...
     'mask_definition','Stage-0 99-percent incident-energy footprint plus finite and -40 dB pairwise field threshold', ...
     'metrics_definition','Same normalized complex L2, magnitude L2, wrapped phase RMS, magnitude correlation, and circular phase correlation as pe_bie_error_decomposition', ...
+    'comparison_convention',['Full_native=receiver_rough/receiver_flat in exp(-iwt); ', ...
+        'Full=conj(Full_native), the same frozen mapping used for G_BIE'], ...
     'gate0_flat',flat_metrics,'gate0_passed',gate0,'flat_reference',flat_ref, ...
     'flat_nominal',flat_nom.receiver_field,'flat_refined',flat_refined.receiver_field, ...
     'rows',struct2table(rows), ...
@@ -154,6 +164,7 @@ function local_write_report(path,v,root,mat_file,csv_file)
 fid=fopen(path,'w','n','UTF-8'); assert(fid>=0); c=onCleanup(@()fclose(fid)); %#ok<NASGU>
 fprintf(fid,'# Full Kirchhoff 2-D PE--BIE validation\n\nStatus: **diagnostic-only; production PE/BIE unchanged**.\n\n');
 fprintf(fid,'Configuration: 4 kHz, c=1500 m/s, one transverse dimension, Gaussian sigma=0.3 m, exp(-i omega t), pressure-release Dirichlet surface. The same saved angular-spectrum source, receiver grid, Stage-0 M99 footprint and -40 dB pairwise threshold are used.\n\n');
+fprintf(fid,'Field convention: the Full-Kirchhoff rough/flat ratio is first formed in the native exp(-i omega t) representation, then conjugated exactly once to match the frozen PE-comparison representation already used by `G_BIE`. No per-case phase choice, scalar fit, or calibration is used.\n\n');
 fprintf(fid,'## Gate-0 flat surface\n\n'); q=v.gate0_flat.refined; fprintf(fid,'Refined Full-Kirchhoff versus the frozen flat reference: complex L2 %.6g, magnitude L2 %.6g, phase RMS %.6g rad, N=%d. Gate-0: **%s**.\n\n',q.complex_l2,q.magnitude_relative_l2,q.phase_rms_rad,q.sample_count,string(v.gate0_passed));
 fprintf(fid,'## Rough-case metrics\n\n| case | method | complex L2 | magnitude L2 | phase RMS (rad) | magnitude corr. | phase corr. | N |\n|---|---|---:|---:|---:|---:|---:|---:|\n'); t=v.rows; for ii=1:height(t), if t.model(ii)=="BIE",continue;end; fprintf(fid,'| %s | %s | %.6g | %.6g | %.6g | %.6g | %.6g | %d |\n',t.case_name(ii),t.model(ii),t.complex_l2(ii),t.magnitude_relative_l2(ii),t.phase_rms_rad(ii),t.magnitude_correlation(ii),t.complex_phase_correlation(ii),t.sample_count(ii)); end
 fprintf(fid,'\n## Interpretation\n\n');
@@ -164,10 +175,10 @@ for ii=1:numel(v.details)
     fprintf(fid,'| %s | %.6g | %.6g |\n',v.details(ii).case_name,q.complex_l2,q.phase_rms_rad);
 end
 fprintf(fid,'\n### Direct answers\n\n');
-fprintf(fid,'- **Strong-height, low-K:** Full Kirchhoff does not reduce the remaining phase error in this run: phase RMS is approximately 1.60 rad versus 0.0498 rad for Model-1.\n');
-fprintf(fid,'- **Weak, high-K:** Full Kirchhoff has a small magnitude residual (about 1.8e-4) but a large phase residual (about 0.94 rad), so it does not provide a coherent-field improvement over Model-1.\n');
-fprintf(fid,'- **Combined diagnosis:** Full Kirchhoff is not close to BIE for the rough cases and is not close to Model-1 either. Gate-0 is valid, but the rough-surface Kirchhoff approximation as implemented here is insufficient to adjudicate the PE residual without a further derivation/audit of rough-surface Kirchhoff terms, orientation, and illumination/shadow treatment. This is not evidence to modify production PE.\n\n');
-fprintf(fid,'The result is diagnostic only: if a subsequently audited Full Kirchhoff formulation approaches BIE, the local phase-screen reduction is implicated; if it improves but remains separated, Kirchhoff is useful but incomplete; if it remains close to Model-1, the Kirchhoff approximation itself is insufficient for those cases.\n\n');
+fk=t(t.model=="Full Kirchhoff",:);
+fprintf(fid,'- **Strong-height, low-K:** after the fixed convention mapping, Full Kirchhoff phase RMS is %.6g rad (Model-1: %.6g rad).\n',fk.phase_rms_rad(fk.case_name=="strong_height_low_K"),t.phase_rms_rad(t.case_name=="strong_height_low_K" & t.model=="kz-aware Model-1"));
+fprintf(fid,'- **Weak, high-K:** after the fixed convention mapping, Full Kirchhoff magnitude L2 is %.6g and phase RMS is %.6g rad.\n',fk.magnitude_relative_l2(fk.case_name=="weak_high_K"),fk.phase_rms_rad(fk.case_name=="weak_high_K"));
+fprintf(fid,'- **Combined diagnosis:** the earlier rough-case phase anomaly was caused by comparing a native exp(-i omega t) Kirchhoff ratio directly with an already-conjugated PE-comparison BIE ratio. The separate convention audit records the z/normal/Green-derivative checks and the `+/-4*k*eta` diagnostic. Production PE and the BIE/Kirchhoff kernels remain unchanged.\n\n');
 fprintf(fid,'Artifacts: `%s`, `%s`; figures: `results/validation/pe_bie_full_kirchhoff/figures/`.\n',local_rel(root,mat_file),local_rel(root,csv_file));
 end
 function rel=local_rel(root,p), rel=strrep(p,[root filesep],''); rel=strrep(rel,filesep,'/'); end

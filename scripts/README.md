@@ -804,4 +804,23 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   PE--BIE cases. Its solver is isolated in
   `validation/support/solve_full_kirchhoff_2d.m`; outputs are written under
   `results/validation/pe_bie_full_kirchhoff/` and summarized in
-  `reports/pe_bie_full_kirchhoff_validation_report.md`.
+  `reports/pe_bie_full_kirchhoff_validation_report.md`. The native
+  `exp(-i*omega*t)` rough/flat ratio is conjugated exactly once to match the
+  frozen PE-comparison representation already used by `G_BIE`.
+- `validation/validate_full_kirchhoff_convention_audit.m` is the independent
+  sign/convention audit for that comparison. It reuses authoritative BIE
+  fields, compares internally consistent `z_s=+eta` and `z_s=-eta` charts,
+  checks native-vs-native and comparison-vs-comparison fields, and plots the
+  legacy phase residual against `+/-4*k*eta`. Outputs are under
+  `results/validation/pe_bie_full_kirchhoff_convention_audit/`; the report is
+  `reports/pe_bie_full_kirchhoff_convention_audit_report.md`.
+- `validation/validate_full_kirchhoff_parameter_sweep.m` performs the
+  validation-only deterministic sinusoidal height and wavenumber sweeps using
+  the same 4 kHz source, PE receiver grid, Helmholtz BIE convention, and
+  fixed Full-Kirchhoff native-to-comparison conjugation. It writes checkpointed
+  MAT/CSV data and representative geometry, incident-field, receiver-field,
+  error, and sweep figures under
+  `results/validation/pe_bie_full_kirchhoff_parameter_sweep/`; the summary is
+  `reports/pe_bie_full_kirchhoff_parameter_sweep_report.md`. The checkpoints
+  permit continuation after a long MATLAB run without changing the numerical
+  settings.

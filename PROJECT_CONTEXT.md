@@ -4070,3 +4070,51 @@ while PE--BIE remains `0.08091/0.08708` and phase RMS remains about
 `0.075 rad`. Thus the finite-angle normal approximation is removed by a narrow
 source, but strong-height phase-screen/nonlocal error remains. This result is
 part of the same `STRICT_NORMAL_APPROXIMATION_PARTIAL` report.
+
+## 2026-09-22 Full Kirchhoff sign/convention audit
+
+The independent 2-D Full Kirchhoff validation originally compared its native
+`exp(-i*omega*t)` rough/flat ratio directly with `G_BIE`, although the frozen
+PE-comparison `G_BIE` had already been mapped as `conj(G_BIE_native)`. Flat
+Gate-0 did not expose this mixed representation because both flat quantities
+were native. The validation driver now applies the same fixed, single
+conjugation to `G_FK_native`; neither the Kirchhoff kernel nor production PE or
+BIE physics was changed.
+
+The dedicated `validate_full_kirchhoff_convention_audit.m` confirms that the
+authoritative geometry is `z_s=+eta` for the downward-positive coordinate,
+with water normal `(-eta',1)/sqrt(1+eta'^2)`, outgoing
+`(i/4)H_0^(1)`, and reflected-only BIE output. For weak/low-K, the old mixed
+phase residual follows `-4*k*eta` with `0.01837 rad` weighted RMS, while the
+corrected phase RMS is `1.806e-4 rad`. Corrected Full-Kirchhoff/BIE complex L2
+is `2.535e-4`, `2.570e-4`, and `2.711e-4` for weak/low-K,
+strong-height/low-K, and weak/high-K respectively; corresponding phase RMS is
+`1.806e-4`, `1.868e-4`, and `2.052e-4 rad`. The mirrored diagnostic geometry
+`z_s=-eta`, with its slope, normal, and incident evaluation all recomputed,
+retains the large phase mismatch and is not the same physical case. Thus the
+previous Full-Kirchhoff rough-case anomaly was a comparison-convention bug,
+not evidence that the Kirchhoff approximation fails in these controlled
+cases. See `reports/pe_bie_full_kirchhoff_convention_audit_report.md` and the
+corrected `reports/pe_bie_full_kirchhoff_validation_report.md`.
+
+## 2026-09-22 Full Kirchhoff deterministic parameter sweep
+
+The validation-only height sweep (`K=0.10 rad/m`, `A=0.005--0.20 m`) and
+wavenumber sweep (`A=0.02 m`, `K=0.05--0.70 rad/m`) use the same 4 kHz
+Gaussian source, Stage-0 receiver grid/mask, analytic C2-tapered surface,
+12-points-per-wavelength Helmholtz BIE, and corrected Full-Kirchhoff field
+convention. Full-Kirchhoff/BIE complex L2 remains between `2.536e-4` and
+`3.316e-4`; its phase RMS remains between `1.786e-4` and `2.796e-4 rad`.
+The 2049--4097 Full-Kirchhoff integration change is at most `3.720e-5` in
+complex L2 and `2.669e-5 rad` in phase RMS.
+
+No Full-Kirchhoff failure boundary is observed through nominal `A*K=0.02`
+and `A*K^2=0.0098 1/m`. By contrast, PE/BIE complex L2 grows from
+`0.00158` to `0.08091` over the height sweep and reaches `0.04843` at
+`K=0.70 rad/m`; the low-K growth is phase-led, while high-K develops a large
+magnitude residual. This supports the local phase-screen reduction, especially
+its missing nonlocal coherent redistribution, as the discrepancy source in
+this deterministic envelope. A reduced nonlocal Kirchhoff operator is the
+next diagnostic target; SSA is not required by these cases because Full
+Kirchhoff already closes to BIE. Production PE, BIE, and surface physics are
+unchanged. See `reports/pe_bie_full_kirchhoff_parameter_sweep_report.md`.
