@@ -850,3 +850,10 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   angular-spectrum quantiles, receiver errors, source-beam figures, and
   theta99/error trends under
   `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/`.
+- `validation/validate_full_kirchhoff_gaussian_sigma_kzaware_comparison.m`
+  reuses that accepted sigma sweep and adds the existing PE
+  `model1_kz_aware` result. It compares Model-0, Model-1, Full Kirchhoff and
+  BIE on the same sigma-specific footprint, computes Model-0/Model-1
+  improvement and remaining-fraction diagnostics, and writes the master/detail
+  CSV/MAT tables and figures under
+  `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_kzaware/`.

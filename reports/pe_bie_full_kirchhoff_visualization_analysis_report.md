@@ -204,3 +204,67 @@ kz-aware Model-1 在 weak/low-K 可显著减少 phase error，但在 strong-heig
 `Full Kirchhoff ≈ BIE`，而 `PE local phase screen` 在 height 增大或 K 增大时逐步偏离；偏离结构主要来自完整非局部表面积分及其相干抵消，而不是单纯 amplitude normalization 或 Full Kirchhoff 数值不稳定。
 
 有限 aperture 能改善 PE 误差，但严格精度目标要求的支持范围接近全局。因此下一阶段应优先研究 **low-rank / locally-stationary reduced Kirchhoff operator**，而不是继续拟合固定 aperture 规律。
+
+## 11. Gaussian 源宽度与 angular-spectrum 结果
+
+此前未纳入本汇总的图件：
+
+- [angular spectrum versus sigma](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/angular_spectrum_sigma.png)
+- [source beam magnitude versus sigma](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/source_beam_magnitude_sigma.png)
+- [error versus sigma](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/error_vs_sigma.png)
+- [theta99 versus PE error](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/theta99_vs_pe_error.png)
+- [weak/low-K receiver fields](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/weak_low_K_receiver_fields_sigma.png)
+- [strong-height/low-K receiver fields](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/strong_height_low_K_receiver_fields_sigma.png)
+- [weak/high-K receiver fields](../results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures/weak_high_K_receiver_fields_sigma.png)
+
+减小 sigma 会收窄角谱：`theta99` 从 `21.28 deg`（sigma=`0.3 m`）降到 `1.23 deg`（sigma=`5 m`）。在 weak/low-K case 中，PE phase RMS 从约 `0.0158 rad` 降到 `0.0040 rad`，说明有限入射角确实是 Model-0 误差的一部分。可是 PE complex error 没有单调降到 Full Kirchhoff/BIE floor；strong-height/low-K 仍保持约 `0.076` 的 complex error，weak/high-K 在窄角端的 magnitude error 反而上升到约 `0.0266`。
+
+因此这些图只支持有限角度贡献的判断，不能把 strong-height 或 high-K residual 归因于角谱宽度。Full Kirchhoff–BIE 在同一 sigma sweep 中仍保持约 `1e-5` 到 `2.7e-4`。
+
+## 12. Sign / convention audit 可视化
+
+- [weak/low-K before-after](../results/validation/pe_bie_full_kirchhoff_convention_audit/figures/weak_low_K_before_after.png)
+- [strong-height/low-K before-after](../results/validation/pe_bie_full_kirchhoff_convention_audit/figures/strong_height_low_K_before_after.png)
+- [weak/high-K before-after](../results/validation/pe_bie_full_kirchhoff_convention_audit/figures/weak_high_K_before_after.png)
+- [weak/low-K delta-phi](../results/validation/pe_bie_full_kirchhoff_convention_audit/figures/weak_low_K_delta_phi_vs_4keta.png)
+- [strong-height delta-phi](../results/validation/pe_bie_full_kirchhoff_convention_audit/figures/strong_height_low_K_delta_phi_vs_4keta.png)
+- [weak/high-K delta-phi](../results/validation/pe_bie_full_kirchhoff_convention_audit/figures/weak_high_K_delta_phi_vs_4keta.png)
+
+审计图显示旧的 native rough/flat ratio 与已经 conjugated 的 comparison field 混合比较时，会出现接近 `-4*k*eta` 的系统相位结构。统一 `z_s=+eta`、water normal、`exp(-i omega t)` outgoing Green function，并只应用一次 conjugation 后，phase residual 回到约 `1e-4 rad` 到 `2e-4 rad` 的 integration floor。
+
+因此 surface-z、normal、Green derivative 和 field-definition mismatch 已被排除为当前 PE–BIE residual 的主来源。`z_s=-eta` 的 Case B 是镜像物理曲面，不是同一 authoritative case。
+
+## 13. 物理项消融和 PE–Full Kirchhoff 趋势
+
+- [weak/low-K ablations](../results/validation/pe_bie_full_kirchhoff_reduced_stage1/figures/weak_low_K_ablations.png)
+- [strong-height/low-K ablations](../results/validation/pe_bie_full_kirchhoff_reduced_stage1/figures/strong_height_low_K_ablations.png)
+- [weak/high-K ablations](../results/validation/pe_bie_full_kirchhoff_reduced_stage1/figures/weak_high_K_ablations.png)
+- [PE–Full Kirchhoff parameter trends](../results/validation/pe_bie_full_kirchhoff_reduced_stage1/figures/PS_FK_parameter_trends.png)
+
+将实际 surface height/path phase 替换为 flat surface `z=0` 会造成约 `0.23`、`1.22` 和 `0.46` 的 complex error；把 curved normal 换成 flat normal，或把 `ds` 换成 `dx`，误差通常只有 `1e-6` 到 `1e-4`。这说明 surface height/path phase 是必要物理项，而 normal 和 Jacobian 在当前坡度范围内不是主要缺失项。
+
+PE–Full Kirchhoff 趋势图进一步显示：weak/low-K 的误差主要是 phase；strong-height/low-K 的 phase residual 随 height 增长；weak/high-K 同时出现相干幅度重分配。kz-aware Model-1 能明显削弱弱低 K 的有限角度 phase 误差，但不能处理完整的 nonlocal surface coupling。
+
+## 14. Aperture reduction 的补充解释
+
+- [finite-aperture reduction factor](../results/validation/pe_bie_full_kirchhoff_finite_aperture/figures/reduced_aperture_reduction_factor.png)
+- [finite-aperture convergence](../results/validation/pe_bie_full_kirchhoff_finite_aperture/figures/reduced_aperture_convergence.png)
+- [strong-height reduced versus Full error](../results/validation/pe_bie_full_kirchhoff_finite_aperture/figures/strong_height_low_K_reduced_full_error.png)
+- [weak/high-K reduced versus Full error](../results/validation/pe_bie_full_kirchhoff_finite_aperture/figures/weak_high_K_reduced_full_error.png)
+- [sparse A–K L_min map](../results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/figures/Lmin_sparse_AK_map.png)
+- [L_min relationships](../results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/figures/Lmin_relationships.png)
+
+当 `E_PE,BIE/E_RK,BIE>1` 时，有限 aperture 已经比 PE phase screen 更接近 BIE；但严格 `Ec<1e-3` gate 下，11 个 Stage-1 case 均首次在 `L=128 m` 通过。A–K map 和关系图呈现的是统一的 right-censoring，而不是已确定的 `L_min(A,K)` 规律。
+
+这组图支持“有限支持有用”，但不支持“固定小 aperture 已足够”或“简单 aperture law 已确定”。
+
+## 15. 当前可视化证据链
+
+1. angular-spectrum 图说明窄角只消除部分低 K phase residual；
+2. convention audit 图排除了 Full Kirchhoff 的比较符号错误；
+3. ablation 图表明 surface height/path phase 是必要项，normal/Jacobian 是次要项；
+4. kernel/contribution 图显示 receiver field 依赖广泛的相干抵消；
+5. aperture 图说明达到严格误差门槛需要接近全局 support；
+6. height/K sweep 图说明 PE residual 随海面高度和空间 wavenumber 增大，而 Full Kirchhoff 仍接近 BIE。
+
+综合判断仍是：剩余差异主要来自 PE local phase-screen 对完整非局部 surface integral 的降阶误差。下一步应优先研究 geometry-dependent 的 low-rank 或 locally-stationary reduced operator。

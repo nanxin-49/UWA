@@ -4183,6 +4183,15 @@ model. The generated report and artifacts are under
 `reports/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity_report.md` and
 `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/`.
 
+The validation-only `validate_full_kirchhoff_gaussian_sigma_kzaware_comparison.m`
+reuses the accepted sigma-sensitivity PE/Full-Kirchhoff/BIE fields and adds the
+existing `model1_kz_aware` PE fields. It uses the same sigma-specific M99 plus
+pairwise -40 dB mask for all comparisons, and does not change production PE,
+Full Kirchhoff, BIE, or surface physics. Missing Model-1 sigma/case files are
+computed only with the existing PE validation helper. Artifacts are under
+`results/validation/pe_bie_full_kirchhoff_gaussian_sigma_kzaware/`; the report
+is `reports/pe_bie_full_kirchhoff_gaussian_sigma_kzaware_comparison_report.md`.
+
 ## 2026-09-23 Full-Kirchhoff operator visualization atlas
 
 The reporting-only `generate_full_kirchhoff_operator_visuals.m` reconstructs
