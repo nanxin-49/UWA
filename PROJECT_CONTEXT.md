@@ -4170,3 +4170,28 @@ without a different error target or a different reduction basis. The next
 better reduction investigation is a low-rank or locally-stationary kernel
 approximation, rather than fitting aperture to height/slope/curvature. See
 `reports/pe_bie_full_kirchhoff_adaptive_aperture_stage1_report.md`.
+
+## 2026-09-23 Gaussian source angular-spectrum sensitivity
+
+The validation-only `validate_full_kirchhoff_gaussian_sigma_sensitivity.m`
+holds the accepted 4 kHz one-transverse geometry and deterministic sinusoidal
+surfaces fixed while sweeping Gaussian source sigma over `0.3, 0.5, 1, 2,
+5 m`. It measures propagating theta90/theta95/theta99 quantiles and compares
+PE, Full Kirchhoff, and Helmholtz BIE using the frozen Stage-0 M99 and -40 dB
+receiver mask. It does not modify PE, BIE, Full Kirchhoff, or the surface
+model. The generated report and artifacts are under
+`reports/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity_report.md` and
+`results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/`.
+
+## 2026-09-23 Full-Kirchhoff operator visualization atlas
+
+The reporting-only `generate_full_kirchhoff_operator_visuals.m` reconstructs
+the saved Full-Kirchhoff integrand density for the weak/low-K,
+strong-height/low-K, and weak/high-K cases. It does not rerun PE, BIE, or a
+parameter sweep. The reconstruction sums to the saved native Full-Kirchhoff
+field with zero relative discrepancy at the stored precision. The atlas adds
+integrand magnitude/phase maps, single-receiver coherent contributions,
+explicit geometry/support/aperture figures, common-mask receiver error plots,
+and all-metric height/K sweep plots under
+`results/visualization/pe_bie_full_kirchhoff_operator_atlas/`; the interpretation
+is recorded in `reports/pe_bie_full_kirchhoff_operator_visualization_report.md`.

@@ -838,3 +838,15 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   accepted Full Kirchhoff, and writes CSV/MAT data, sparse A-K maps,
   relationships, and representative field/convergence figures under
   `results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/`.
+- `reporting/generate_full_kirchhoff_operator_visuals.m` is a saved-data-only
+  visualization workflow. It reconstructs the validated Full-Kirchhoff
+  integrand density, asserts its sum reproduces the saved native field, and
+  writes kernel/contribution, geometry/support, common-mask receiver-error,
+  aperture, and all-metric sweep figures under
+  `results/visualization/pe_bie_full_kirchhoff_operator_atlas/`.
+- `validation/validate_full_kirchhoff_gaussian_sigma_sensitivity.m` compares
+  PE, Full Kirchhoff, and Helmholtz BIE for sigma=`0.3, 0.5, 1, 2, 5 m` on
+  three accepted deterministic sinusoidal cases. It reports propagating
+  angular-spectrum quantiles, receiver errors, source-beam figures, and
+  theta99/error trends under
+  `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/`.
