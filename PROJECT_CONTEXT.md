@@ -4192,6 +4192,18 @@ computed only with the existing PE validation helper. Artifacts are under
 `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_kzaware/`; the report
 is `reports/pe_bie_full_kirchhoff_gaussian_sigma_kzaware_comparison_report.md`.
 
+The validation-only `validate_full_kirchhoff_receiver_depth_sensitivity.m`
+holds the accepted 4 kHz, sigma=1 m setup fixed and scans receiver depths
+1--30 m for the three deterministic sinusoidal cases. It reuses one BIE
+boundary density per case for the depth evaluations, holds the accepted
+sigma=1 M99 footprint and weights fixed, and performs a nominal/refined
+Full-Kirchhoff sampling check at z_rx=1 m. The artifacts are under
+`results/validation/pe_bie_full_kirchhoff_receiver_depth_sensitivity/`; the
+report is `reports/pe_bie_full_kirchhoff_receiver_depth_sensitivity_report.md`.
+The z_rx=1 m Full-Kirchhoff check is not converged at the nominal sampling
+(relative difference about 0.172), so FK/BIE at that depth is reported as a
+numerical warning; depths >=2 m have stable FK/BIE control errors.
+
 ## 2026-09-23 Full-Kirchhoff operator visualization atlas
 
 The reporting-only `generate_full_kirchhoff_operator_visuals.m` reconstructs

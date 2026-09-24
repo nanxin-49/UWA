@@ -857,3 +857,10 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   improvement and remaining-fraction diagnostics, and writes the master/detail
   CSV/MAT tables and figures under
   `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_kzaware/`.
+- `validation/validate_full_kirchhoff_receiver_depth_sensitivity.m` evaluates
+  the accepted sigma=1 m Model-1, Full Kirchhoff and BIE comparison at
+  receiver depths `1, 2, 3, 5, 10, 20, 30 m`, holding the x grid, M99
+  footprint and weights fixed. It writes depth metrics, normalized E(z)/E(3 m)
+  tables, receiver lines, shared-scale field maps, difference maps and the
+  z=1 m Full-Kirchhoff sampling check under
+  `results/validation/pe_bie_full_kirchhoff_receiver_depth_sensitivity/`.
