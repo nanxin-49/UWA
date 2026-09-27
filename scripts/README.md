@@ -58,6 +58,13 @@ run('scripts/reporting/plot_c35_core_heatmaps_vertical.m')
 
 公共可复用实现已移到 `src/`。下文脚本名仍按 `validation/`、`reporting/` 等相对于 `scripts/` 的短路径描述。
 
+## Kachoyan--Macaskill (1987) rough-surface reproduction
+
+- `validation/validate_kachoyan_macaskill_1987.m`: validation-only implementation of the 1987 Fredholm collocation, Kirchhoff (kernel-disabled), propagating-mode reflection coefficients, energy balance, near-field reconstruction, Gaussian/PM fixed-seed substitutes, center-128 truncation, and Table-II sinusoid controls.
+- Support solver: `validation/support/solve_kachoyan_macaskill_1987.m`.
+- Results: `results/validation/kachoyan_macaskill_1987/`; report: `reports/kachoyan_macaskill_1987_reproduction_report.md`.
+- Run with `validate_kachoyan_macaskill_1987(struct('run_mode','smoke'))` for a reduced check or omit the override for the paper-size run. The paper does not publish the original random arrays/seeds, so random-surface figures are explicitly approximate replacements.
+
 ## 2k 相位与海谱诊断
 
 ```matlab
