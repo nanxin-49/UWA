@@ -4200,6 +4200,14 @@ sigma=1 M99 footprint and weights fixed, and performs a nominal/refined
 Full-Kirchhoff sampling check at z_rx=1 m. The artifacts are under
 `results/validation/pe_bie_full_kirchhoff_receiver_depth_sensitivity/`; the
 report is `reports/pe_bie_full_kirchhoff_receiver_depth_sensitivity_report.md`.
+
+The independent numerical audit `validate_receiver_depth_numerical_audit.m`
+reuses those saved fields, applies a fixed sigma=1 M99 mask and energy weights,
+and adds flat-control, raw/common-convention, angular-spectrum, and z=1 m
+convergence diagnostics. Its artifacts are under
+`results/validation/pe_bie_receiver_depth_numerical_audit/` and its report is
+`reports/pe_bie_receiver_depth_numerical_audit_report.md`. The audit does not
+modify production PE, Full Kirchhoff, BIE, or surface physics.
 The z_rx=1 m Full-Kirchhoff check is not converged at the nominal sampling
 (relative difference about 0.172), so FK/BIE at that depth is reported as a
 numerical warning; depths >=2 m have stable FK/BIE control errors.
@@ -4216,3 +4224,16 @@ explicit geometry/support/aperture figures, common-mask receiver error plots,
 and all-metric height/K sweep plots under
 `results/visualization/pe_bie_full_kirchhoff_operator_atlas/`; the interpretation
 is recorded in `reports/pe_bie_full_kirchhoff_operator_visualization_report.md`.
+
+## 2026-09-24 Incident/reflection field covariance audit
+
+The validation-only `validate_incident_reflection_field_covariance.m` reuses
+the receiver-depth fields at z_rx=2 and 3 m for the three deterministic
+sinusoidal cases. It compares the existing PE Model-1 surface incident field
+with the same angular-spectrum source used by Full Kirchhoff/BIE, after
+applying the fixed PE envelope-to-carrier factor. It then compares reflected
+PE/FK/BIE fields in receiver space and transverse kx spectra using the saved
+M99 support and weights. Artifacts are under
+`results/validation/pe_bie_incident_reflection_covariance/`; the report is
+`reports/pe_bie_incident_reflection_covariance_report.md`. No production PE,
+Full Kirchhoff, BIE, or surface model was changed.
