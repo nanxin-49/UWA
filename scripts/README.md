@@ -762,3 +762,101 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   status is `STRICT_NORMAL_APPROXIMATION_PARTIAL`. Optional sigma `4 m` is a
   diagnostic only because the fixed Bellhop receiver influence produces
   sparse-support `0/0` ratios, so it is excluded from hard gates.
+- `validation/validate_pe_bie_error_decomposition.m` is a read-only diagnostic
+  that reuses the authoritative R3/R4/R5/G0 PE--Helmholtz artifacts, recomputes
+  only the missing validation-only kz-aware field, and separates normalized
+  complex, magnitude, and wrapped-phase residuals. It writes
+  `results/validation/pe_bie_error_decomposition/` and
+  `reports/pe_bie_error_decomposition_report.md`; it does not modify
+  production PE, BIE, or Bellhop code.
+- `validation/validate_full_kirchhoff_bie_vertical.m` runs the independent
+  2-D Full Kirchhoff line-integral diagnostic against the frozen R3/R5/G0
+  PE--BIE cases. Its solver is isolated in
+  `validation/support/solve_full_kirchhoff_2d.m`; outputs are written under
+  `results/validation/pe_bie_full_kirchhoff/` and summarized in
+  `reports/pe_bie_full_kirchhoff_validation_report.md`. The native
+  `exp(-i*omega*t)` rough/flat ratio is conjugated exactly once to match the
+  frozen PE-comparison representation already used by `G_BIE`.
+- `validation/validate_full_kirchhoff_convention_audit.m` is the independent
+  sign/convention audit for that comparison. It reuses authoritative BIE
+  fields, compares internally consistent `z_s=+eta` and `z_s=-eta` charts,
+  checks native-vs-native and comparison-vs-comparison fields, and plots the
+  legacy phase residual against `+/-4*k*eta`. Outputs are under
+  `results/validation/pe_bie_full_kirchhoff_convention_audit/`; the report is
+  `reports/pe_bie_full_kirchhoff_convention_audit_report.md`.
+- `validation/validate_full_kirchhoff_parameter_sweep.m` performs the
+  validation-only deterministic sinusoidal height and wavenumber sweeps using
+  the same 4 kHz source, PE receiver grid, Helmholtz BIE convention, and
+  fixed Full-Kirchhoff native-to-comparison conjugation. It writes checkpointed
+  MAT/CSV data and representative geometry, incident-field, receiver-field,
+  error, and sweep figures under
+  `results/validation/pe_bie_full_kirchhoff_parameter_sweep/`; the summary is
+  `reports/pe_bie_full_kirchhoff_parameter_sweep_report.md`. The checkpoints
+  permit continuation after a long MATLAB run without changing the numerical
+  settings.
+- `validation/validate_full_kirchhoff_reduced_operator_stage1.m` is the first
+  validation-only reduced-operator audit. It compares the accepted
+  Full-Kirchhoff field with the PE phase screen, consistently removes surface
+  height, normal, or arc-length terms, and scans receiver-centered finite
+  integration radii. It writes diagnostic MAT/CSV tables and figures under
+  `results/validation/pe_bie_full_kirchhoff_reduced_stage1/`; the report is
+  `reports/pe_bie_full_kirchhoff_reduced_operator_stage1_report.md`.
+- `validation/validate_reduced_kirchhoff_adaptive_aperture_stage1.m` builds
+  the deterministic finite-aperture and adaptive-aperture database from the
+  accepted A and K sweeps. It searches `L=4,8,16,32,64,128,Inf m` against a
+  fixed Reduced--BIE complex-L2 gate, verifies the `Inf` regression against
+  accepted Full Kirchhoff, and writes CSV/MAT data, sparse A-K maps,
+  relationships, and representative field/convergence figures under
+  `results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/`.
+- `reporting/generate_full_kirchhoff_operator_visuals.m` is a saved-data-only
+  visualization workflow. It reconstructs the validated Full-Kirchhoff
+  integrand density, asserts its sum reproduces the saved native field, and
+  writes kernel/contribution, geometry/support, common-mask receiver-error,
+  aperture, and all-metric sweep figures under
+  `results/visualization/pe_bie_full_kirchhoff_operator_atlas/`.
+- `reporting/regenerate_full_kirchhoff_figure_conventions.m` is a strictly
+  saved-MAT post-processing workflow. It does not call PE, BIE, or
+  Full-Kirchhoff solvers; it only refreshes the parameter-sweep and Gaussian
+  sigma-sweep figures with the corrected depth-axis direction, LaTeX labels,
+  and explicit sigma/model line conventions.
+- `reporting/plot_gaussian_sigma_angle_sensitivity_atlas.m` is a saved-data-only
+  paper/report plotting workflow for the 15 Gaussian-sigma PE Model-0,
+  kz-aware Model-1, Full Kirchhoff, and BIE cases. It validates both MAT
+  sources, preserves the original pairwise-mask metrics, recomputes a clearly
+  labeled four-field common M99/-40 dB mask, and writes PDF/300-dpi PNG
+  figures plus the complete CSV/MAT audit table under
+  `results/visualization/pe_bie_gaussian_sigma_angle_sensitivity/`.
+- `validation/validate_full_kirchhoff_gaussian_sigma_sensitivity.m` compares
+  PE, Full Kirchhoff, and Helmholtz BIE for sigma=`0.3, 0.5, 1, 2, 5 m` on
+  three accepted deterministic sinusoidal cases. It reports propagating
+  angular-spectrum quantiles, receiver errors, source-beam figures, and
+  theta99/error trends under
+  `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/`.
+- `validation/validate_full_kirchhoff_gaussian_sigma_kzaware_comparison.m`
+  reuses that accepted sigma sweep and adds the existing PE
+  `model1_kz_aware` result. It compares Model-0, Model-1, Full Kirchhoff and
+  BIE on the same sigma-specific footprint, computes Model-0/Model-1
+  improvement and remaining-fraction diagnostics, and writes the master/detail
+  CSV/MAT tables and figures under
+  `results/validation/pe_bie_full_kirchhoff_gaussian_sigma_kzaware/`.
+- `validation/validate_full_kirchhoff_receiver_depth_sensitivity.m` evaluates
+  the accepted sigma=1 m Model-1, Full Kirchhoff and BIE comparison at
+  receiver depths `1, 2, 3, 5, 10, 20, 30 m`, holding the x grid, M99
+  footprint and weights fixed. It writes depth metrics, normalized E(z)/E(3 m)
+  tables, receiver lines, shared-scale field maps, difference maps and the
+  z=1 m Full-Kirchhoff sampling check under
+  `results/validation/pe_bie_full_kirchhoff_receiver_depth_sensitivity/`.
+- `validation/validate_receiver_depth_numerical_audit.m` performs the
+  validation-only receiver-depth numerical audit using the saved sensitivity
+  fields, fixed M99 mask/weights, flat control, common-convention raw-field
+  diagnostics, angular spectra, and the stored z=1 m FK convergence check.
+  Outputs are under
+  `results/validation/pe_bie_receiver_depth_numerical_audit/`; report:
+  `reports/pe_bie_receiver_depth_numerical_audit_report.md`.
+- `validation/validate_incident_reflection_field_covariance.m` first checks
+  the PE Model-1 incident field against the saved Full-Kirchhoff angular-
+  spectrum source at the reference plane and the sampled rough surface, then
+  localizes the reflected-field PE/FK/BIE differences at z=2 and 3 m in both
+  receiver space and kx space. It reuses the receiver-depth MAT and writes
+  `results/validation/pe_bie_incident_reflection_covariance/`; report:
+  `reports/pe_bie_incident_reflection_covariance_report.md`.

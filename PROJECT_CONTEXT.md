@@ -4070,3 +4070,170 @@ while PE--BIE remains `0.08091/0.08708` and phase RMS remains about
 `0.075 rad`. Thus the finite-angle normal approximation is removed by a narrow
 source, but strong-height phase-screen/nonlocal error remains. This result is
 part of the same `STRICT_NORMAL_APPROXIMATION_PARTIAL` report.
+
+## 2026-09-22 Full Kirchhoff sign/convention audit
+
+The independent 2-D Full Kirchhoff validation originally compared its native
+`exp(-i*omega*t)` rough/flat ratio directly with `G_BIE`, although the frozen
+PE-comparison `G_BIE` had already been mapped as `conj(G_BIE_native)`. Flat
+Gate-0 did not expose this mixed representation because both flat quantities
+were native. The validation driver now applies the same fixed, single
+conjugation to `G_FK_native`; neither the Kirchhoff kernel nor production PE or
+BIE physics was changed.
+
+The dedicated `validate_full_kirchhoff_convention_audit.m` confirms that the
+authoritative geometry is `z_s=+eta` for the downward-positive coordinate,
+with water normal `(-eta',1)/sqrt(1+eta'^2)`, outgoing
+`(i/4)H_0^(1)`, and reflected-only BIE output. For weak/low-K, the old mixed
+phase residual follows `-4*k*eta` with `0.01837 rad` weighted RMS, while the
+corrected phase RMS is `1.806e-4 rad`. Corrected Full-Kirchhoff/BIE complex L2
+is `2.535e-4`, `2.570e-4`, and `2.711e-4` for weak/low-K,
+strong-height/low-K, and weak/high-K respectively; corresponding phase RMS is
+`1.806e-4`, `1.868e-4`, and `2.052e-4 rad`. The mirrored diagnostic geometry
+`z_s=-eta`, with its slope, normal, and incident evaluation all recomputed,
+retains the large phase mismatch and is not the same physical case. Thus the
+previous Full-Kirchhoff rough-case anomaly was a comparison-convention bug,
+not evidence that the Kirchhoff approximation fails in these controlled
+cases. See `reports/pe_bie_full_kirchhoff_convention_audit_report.md` and the
+corrected `reports/pe_bie_full_kirchhoff_validation_report.md`.
+
+## 2026-09-22 Full Kirchhoff deterministic parameter sweep
+
+The validation-only height sweep (`K=0.10 rad/m`, `A=0.005--0.20 m`) and
+wavenumber sweep (`A=0.02 m`, `K=0.05--0.70 rad/m`) use the same 4 kHz
+Gaussian source, Stage-0 receiver grid/mask, analytic C2-tapered surface,
+12-points-per-wavelength Helmholtz BIE, and corrected Full-Kirchhoff field
+convention. Full-Kirchhoff/BIE complex L2 remains between `2.536e-4` and
+`3.316e-4`; its phase RMS remains between `1.786e-4` and `2.796e-4 rad`.
+The 2049--4097 Full-Kirchhoff integration change is at most `3.720e-5` in
+complex L2 and `2.669e-5 rad` in phase RMS.
+
+No Full-Kirchhoff failure boundary is observed through nominal `A*K=0.02`
+and `A*K^2=0.0098 1/m`. By contrast, PE/BIE complex L2 grows from
+`0.00158` to `0.08091` over the height sweep and reaches `0.04843` at
+`K=0.70 rad/m`; the low-K growth is phase-led, while high-K develops a large
+magnitude residual. This supports the local phase-screen reduction, especially
+its missing nonlocal coherent redistribution, as the discrepancy source in
+this deterministic envelope. A reduced nonlocal Kirchhoff operator is the
+next diagnostic target; SSA is not required by these cases because Full
+Kirchhoff already closes to BIE. Production PE, BIE, and surface physics are
+unchanged. See `reports/pe_bie_full_kirchhoff_parameter_sweep_report.md`.
+
+## 2026-09-22 Full Kirchhoff reduced-operator Stage 1 diagnostic
+
+The validation-only `validate_full_kirchhoff_reduced_operator_stage1.m`
+compares the accepted Full-Kirchhoff field against the PE phase screen for
+weak/low-K, strong-height/low-K, and weak/high-K cases. Removing physical
+surface height/path phase produces complex L2 errors `0.230`, `1.217`, and
+`0.464`; removing the curved normal produces only `2.12e-6`, `1.32e-4`, and
+`9.81e-5`; removing the arc-length Jacobian produces `3.13e-7`, `1.25e-4`,
+and `2.70e-5`. Physical height/path phase is therefore essential, but PE
+already contains its local `2*k*eta` proxy. The remaining discrepancy is the
+failure of that local proxy to reproduce complete surface-to-receiver path
+phase and nonlocal coherent integration; normal and Jacobian effects are
+secondary at the tested slopes.
+
+Receiver-centered truncation of the complete integral requires approximately
+`64 m`, `8 m`, and `32 m` respectively to reduce the PE--Full-Kirchhoff error
+by half. This support is case-dependent, so it is evidence for a nonlocal
+short-range operator rather than a universal tiny convolution kernel. No
+reduced production operator was implemented; PE/BIE/Full-Kirchhoff physics
+remain unchanged. See
+`reports/pe_bie_full_kirchhoff_reduced_operator_stage1_report.md`.
+
+## 2026-09-22 Finite-aperture Reduced Kirchhoff prototype
+
+The validation-only finite-aperture prototype retains the complete accepted
+Full-Kirchhoff kernel and truncates only source contributions outside
+`|x_r-x_s|<L`. Its three representative-case results are retained in
+`reports/pe_bie_full_kirchhoff_finite_aperture_report.md`; the runnable
+finite- and adaptive-aperture workflow is now
+`validate_reduced_kirchhoff_adaptive_aperture_stage1.m`. No empirical
+correction, SSA, or production-model change was made.
+
+## 2026-09-22 Adaptive-aperture Reduced Kirchhoff Stage 1
+
+The validation-only adaptive-aperture database reuses the accepted A sweep
+at `K=0.10 rad/m` and K sweep at `A=0.02 m` (eleven unique cases). For each
+case it searches `L=4,8,16,32,64,128,Inf m` for the first finite aperture
+whose Reduced-Kirchhoff/BIE complex L2 is below `1e-3`. All eleven first pass
+at `L=128 m`, where the aperture already covers the entire relevant accepted
+surface support on the fixed M99 receiver mask; all `L=Inf` results reproduce
+their accepted Full-Kirchhoff fields exactly.
+
+Consequently this strict accuracy gate produces no observed
+`L_min(A,K)` variation and does not support an empirical adaptive-aperture
+rule or demonstrate an advantage over the fixed `128 m` aperture. This is a
+negative but useful result: at this accuracy level the hard spatial truncation
+is effectively global. A complete A-K matrix would not resolve that censoring
+without a different error target or a different reduction basis. The next
+better reduction investigation is a low-rank or locally-stationary kernel
+approximation, rather than fitting aperture to height/slope/curvature. See
+`reports/pe_bie_full_kirchhoff_adaptive_aperture_stage1_report.md`.
+
+## 2026-09-23 Gaussian source angular-spectrum sensitivity
+
+The validation-only `validate_full_kirchhoff_gaussian_sigma_sensitivity.m`
+holds the accepted 4 kHz one-transverse geometry and deterministic sinusoidal
+surfaces fixed while sweeping Gaussian source sigma over `0.3, 0.5, 1, 2,
+5 m`. It measures propagating theta90/theta95/theta99 quantiles and compares
+PE, Full Kirchhoff, and Helmholtz BIE using the frozen Stage-0 M99 and -40 dB
+receiver mask. It does not modify PE, BIE, Full Kirchhoff, or the surface
+model. The generated report and artifacts are under
+`reports/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity_report.md` and
+`results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/`.
+
+The validation-only `validate_full_kirchhoff_gaussian_sigma_kzaware_comparison.m`
+reuses the accepted sigma-sensitivity PE/Full-Kirchhoff/BIE fields and adds the
+existing `model1_kz_aware` PE fields. It uses the same sigma-specific M99 plus
+pairwise -40 dB mask for all comparisons, and does not change production PE,
+Full Kirchhoff, BIE, or surface physics. Missing Model-1 sigma/case files are
+computed only with the existing PE validation helper. Artifacts are under
+`results/validation/pe_bie_full_kirchhoff_gaussian_sigma_kzaware/`; the report
+is `reports/pe_bie_full_kirchhoff_gaussian_sigma_kzaware_comparison_report.md`.
+
+The validation-only `validate_full_kirchhoff_receiver_depth_sensitivity.m`
+holds the accepted 4 kHz, sigma=1 m setup fixed and scans receiver depths
+1--30 m for the three deterministic sinusoidal cases. It reuses one BIE
+boundary density per case for the depth evaluations, holds the accepted
+sigma=1 M99 footprint and weights fixed, and performs a nominal/refined
+Full-Kirchhoff sampling check at z_rx=1 m. The artifacts are under
+`results/validation/pe_bie_full_kirchhoff_receiver_depth_sensitivity/`; the
+report is `reports/pe_bie_full_kirchhoff_receiver_depth_sensitivity_report.md`.
+
+The independent numerical audit `validate_receiver_depth_numerical_audit.m`
+reuses those saved fields, applies a fixed sigma=1 M99 mask and energy weights,
+and adds flat-control, raw/common-convention, angular-spectrum, and z=1 m
+convergence diagnostics. Its artifacts are under
+`results/validation/pe_bie_receiver_depth_numerical_audit/` and its report is
+`reports/pe_bie_receiver_depth_numerical_audit_report.md`. The audit does not
+modify production PE, Full Kirchhoff, BIE, or surface physics.
+The z_rx=1 m Full-Kirchhoff check is not converged at the nominal sampling
+(relative difference about 0.172), so FK/BIE at that depth is reported as a
+numerical warning; depths >=2 m have stable FK/BIE control errors.
+
+## 2026-09-23 Full-Kirchhoff operator visualization atlas
+
+The reporting-only `generate_full_kirchhoff_operator_visuals.m` reconstructs
+the saved Full-Kirchhoff integrand density for the weak/low-K,
+strong-height/low-K, and weak/high-K cases. It does not rerun PE, BIE, or a
+parameter sweep. The reconstruction sums to the saved native Full-Kirchhoff
+field with zero relative discrepancy at the stored precision. The atlas adds
+integrand magnitude/phase maps, single-receiver coherent contributions,
+explicit geometry/support/aperture figures, common-mask receiver error plots,
+and all-metric height/K sweep plots under
+`results/visualization/pe_bie_full_kirchhoff_operator_atlas/`; the interpretation
+is recorded in `reports/pe_bie_full_kirchhoff_operator_visualization_report.md`.
+
+## 2026-09-24 Incident/reflection field covariance audit
+
+The validation-only `validate_incident_reflection_field_covariance.m` reuses
+the receiver-depth fields at z_rx=2 and 3 m for the three deterministic
+sinusoidal cases. It compares the existing PE Model-1 surface incident field
+with the same angular-spectrum source used by Full Kirchhoff/BIE, after
+applying the fixed PE envelope-to-carrier factor. It then compares reflected
+PE/FK/BIE fields in receiver space and transverse kx spectra using the saved
+M99 support and weights. Artifacts are under
+`results/validation/pe_bie_incident_reflection_covariance/`; the report is
+`reports/pe_bie_incident_reflection_covariance_report.md`. No production PE,
+Full Kirchhoff, BIE, or surface model was changed.
