@@ -53,3 +53,21 @@
 !/results/validation/bellhop_curved_wall_beam_frame_audit/*.json
 !/results/validation/bellhop_internal_vertical_tangent_poc/*.csv
 !/results/validation/bellhop_internal_vertical_tangent_poc/*.json
+
+# Recoverable local copy of ignored artifacts from the retired cl-verfication
+# worktree. Its data payload is intentionally kept outside Git.
+/results/archive/cl-verification-worktree-unmanaged-20260930/
+
+# The matching archival manifest is tracked separately under reports/.
+!/reports/cl-verification-worktree-archive-20260930/MANIFEST.csv
+
+# Track the generated project-level skill lock and the explicitly selected
+# Scientific Agent Skills packages, including their reference/script assets.
+!/skills-lock.json
+!/.agents/skills/matlab/**
+!/.agents/skills/scientific-critical-thinking/**
+!/.agents/skills/statistical-analysis/**
+!/.agents/skills/experimental-design/**
+!/.agents/skills/scientific-visualization/**
+!/.agents/skills/literature-review/**
+!/.agents/skills/scientific-writing/**

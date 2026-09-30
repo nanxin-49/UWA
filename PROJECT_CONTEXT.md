@@ -9,6 +9,30 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Unified development mainline and project-level skills（2026-09-30）
+
+- `main` is the sole development mainline. The `phase_show` and
+  `cl-verfication` research results have both been merged into `main`; the
+  integration baseline is commit `e78c24d` (the mainline may have later
+  maintenance commits).
+- The `cl-verfication` worktree has been removed. Its 1,144 ignored,
+  non-Git files (1,389,680,270 bytes) were preserved locally under
+  `results/archive/cl-verification-worktree-unmanaged-20260930/`. Original
+  `results/` relative directory structure is retained below that archive root.
+  The files were checked against a per-file SHA-256 manifest. The archive
+  payload is excluded from Git; only its manifest and preservation note are
+  tracked at `reports/cl-verification-worktree-archive-20260930/`.
+- Start future development, validation, and new worktrees from `main`.
+  The project is entering the unified-mainline and project-level Agent Skills
+  phase; the existing project instructions remain in `AGENTS.md`. The
+  project-local skills are in `.agents/skills/`: `matlab`,
+  `scientific-critical-thinking`, `statistical-analysis`,
+  `experimental-design`, `scientific-visualization`, `literature-review`,
+  and `scientific-writing`. They were copied from the official
+  `K-Dense-AI/scientific-agent-skills` repository at commit
+  `65d6e786832e2c52832713117bbbf5096b56f77f`; `skills-lock.json` records
+  content hashes for reproducibility.
+
 ### Bellhop task supersession / 当前任务补充（2026-08-27）
 
 **Latest user decision:** use a physical 1 m source clearance, i.e. water
