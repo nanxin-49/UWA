@@ -39,6 +39,7 @@ for ii = 1:numel(tags)
     row = local_integrand_row(d.nominal,rx_index);
     local_plot_geometry(fig_dir,d,xr,tags(ii));
     local_plot_fields(fig_dir,d,mask,tags(ii));
+    local_plot_fk_bie_formal(fig_dir,d,mask,weights,tags(ii));
     local_plot_errors(fig_dir,d,mask,tags(ii));
     local_plot_kernel(fig_dir,d.nominal,mask,tags(ii));
     local_plot_contribution(fig_dir,d.nominal,row,xr,tags(ii));
@@ -99,7 +100,8 @@ end
 
 function local_plot_geometry(fd,d,xr,tag)
 sx = d.surface_x_m(:); sz = d.surface_z_m(:); cfg = d.config;
-f = figure('Visible','off'); hold on;
+f = figure('Visible','off'); tiledlayout(1,2,'TileSpacing','compact');
+nexttile; hold on;
 patch([sx(1);sx(end);sx(end);sx(1)],[min(sz)-0.02;min(sz)-0.02;max(sz)+0.02;max(sz)+0.02], ...
     [0.92 0.92 0.92],'EdgeColor','none','DisplayName','Full surface support');
 plot(sx,sz,'k','LineWidth',1.4,'DisplayName','rough surface');
@@ -111,9 +113,19 @@ for L = [4 16 64 128]
     plot([xr-L xr+L],[min(sz)-0.015 min(sz)-0.015],'LineWidth',2, ...
         'DisplayName',sprintf('aperture L=%g m',L));
 end
-set(gca,'YDir','reverse'); axis tight; grid on; xlabel('x (m)'); ylabel('z (m)');
-title(sprintf('%s: geometry, Full-K support, and receiver-centered apertures',tag));
-legend('Location','eastoutside');
+set(gca,'YDir','reverse'); axis tight; grid on; xlabel('x (m)','Interpreter','latex'); ylabel('z (m)','Interpreter','latex');
+title(sprintf('%s: full geometry',tag),'Interpreter','none'); legend('Location','eastoutside');
+nexttile; hold on;
+plot(sx,sz,'k','LineWidth',1.5,'DisplayName','rough surface');
+zbar = min(sz)-0.03 - (0:3)*0.04;
+for jj=1:4
+    L=[4 16 64 128]; plot([xr-L(jj) xr+L(jj)],[zbar(jj) zbar(jj)],'LineWidth',2, ...
+        'DisplayName',sprintf('L=%g m',L(jj)));
+end
+xlim([min(sx) max(sx)]); ylim([min(sz)-0.20 max(sz)+0.20]); set(gca,'YDir','reverse');
+grid on; xlabel('$x_s$ (m)','Interpreter','latex'); ylabel('$z_s$ (m)','Interpreter','latex');
+title('surface support and aperture zoom','Interpreter','none');
+sgtitle(sprintf('%s: geometry and aperture support',tag),'Interpreter','none');
 saveas(f,fullfile(fd,[char(tag) '_geometry_support_aperture.png']));
 saveas(f,fullfile(fd,[char(tag) '_geometry_support_aperture.pdf'])); close(f);
 end
@@ -122,13 +134,29 @@ function local_plot_fields(fd,d,mask,tag)
 x=d.nominal.receiver_x_m(:); f=figure('Visible','off'); tiledlayout(2,1);
 nexttile; plot(x(mask),abs(d.receiver_model0(mask)),'--',x(mask),abs(d.receiver_model1(mask)),'-', ...
     x(mask),abs(d.receiver_full(mask)),'-.',x(mask),abs(d.receiver_bie(mask)),':','LineWidth',1.1); grid on;
-legend('Model-0','Model-1','Full Kirchhoff','BIE','Location','best'); ylabel('normalized magnitude');
-title([char(tag) ' receiver line on M99 / -40 dB mask']);
+legend('Model-0','Model-1','Full Kirchhoff','BIE','Location','best'); ylabel('normalized magnitude','Interpreter','latex');
+title([char(tag) ' receiver line on formal M99 / -40 dB mask'],'Interpreter','none');
 nexttile; plot(x(mask),angle(d.receiver_model0(mask)),'--',x(mask),angle(d.receiver_model1(mask)),'-', ...
     x(mask),angle(d.receiver_full(mask)),'-.',x(mask),angle(d.receiver_bie(mask)),':','LineWidth',1.1); grid on;
-ylabel('wrapped phase (rad)'); xlabel('receiver x (m)');
+ylabel('wrapped phase (rad)','Interpreter','latex'); xlabel('receiver x (m)','Interpreter','latex');
 saveas(f,fullfile(fd,[char(tag) '_receiver_fields_masked.png']));
 saveas(f,fullfile(fd,[char(tag) '_receiver_fields_masked.pdf'])); close(f);
+end
+
+function local_plot_fk_bie_formal(fd,d,mask,w,tag)
+x=d.nominal.receiver_x_m(:); fk=d.receiver_full(:); bie=d.receiver_bie(:);
+peak=max([abs(fk(mask));abs(bie(mask))]); mask=mask(:)&isfinite(fk)&isfinite(bie) & ...
+    abs(fk)>=10^(-40/20)*peak & abs(bie)>=10^(-40/20)*peak;
+w=w(:); w=w(mask)/max(sum(w(mask)),realmin); a=fk(mask); b=bie(mask);
+ec=sqrt(sum(w.*abs(a-b).^2)/max(sum(w.*abs(b).^2),realmin));
+f=figure('Visible','off'); tiledlayout(2,1,'TileSpacing','compact');
+nexttile; plot(x(mask),abs(a),'k-',x(mask),abs(b),'r--','LineWidth',1.2); grid on;
+legend('Full Kirchhoff','BIE','Location','best'); ylabel('normalized magnitude','Interpreter','latex');
+title(sprintf('FK/BIE on formal mask: $E_c=%.6g$',ec),'Interpreter','latex');
+nexttile; plot(x(mask),angle(a),'k-',x(mask),angle(b),'r--','LineWidth',1.2); grid on;
+ylabel('wrapped phase (rad)','Interpreter','latex'); xlabel('receiver x (m)','Interpreter','latex');
+saveas(f,fullfile(fd,[char(tag) '_FK_BIE_formal_mask.png']));
+saveas(f,fullfile(fd,[char(tag) '_FK_BIE_formal_mask.pdf'])); close(f);
 end
 
 function local_plot_errors(fd,d,mask,tag)
@@ -138,11 +166,11 @@ x=d.nominal.receiver_x_m(:); pairs = {d.receiver_model1,d.receiver_bie,'PE Model
 f=figure('Visible','off'); tiledlayout(3,3,'TileSpacing','compact');
 for ii=1:3
     a=pairs{ii,1}; b=pairs{ii,2};
-    nexttile(ii); plot(x(mask),20*log10(max(abs(a(mask)),realmin)./max(abs(b(mask)),realmin)));grid on;title(pairs{ii,3});ylabel('magnitude diff (dB)');
-    nexttile(ii+3); plot(x(mask),angle(a(mask).*conj(b(mask))));grid on;ylabel('phase diff (rad)');
-    nexttile(ii+6); plot(x(mask),abs(a(mask)-b(mask)));grid on;ylabel('|complex error|');xlabel('x (m)');
+    nexttile(ii); plot(x(mask),20*log10(max(abs(a(mask)),realmin)./max(abs(b(mask)),realmin)));grid on;title(pairs{ii,3},'Interpreter','none');ylabel('magnitude diff (dB)','Interpreter','latex');
+    nexttile(ii+3); plot(x(mask),angle(a(mask).*conj(b(mask))));grid on;ylabel('phase diff (rad)','Interpreter','latex');
+    nexttile(ii+6); plot(x(mask),abs(a(mask)-b(mask)));grid on;ylabel('|complex error|','Interpreter','latex');xlabel('x (m)','Interpreter','latex');
 end
-sgtitle([char(tag) ' error decomposition on common mask']);
+sgtitle([char(tag) ' error decomposition on formal common mask'],'Interpreter','none');
 saveas(f,fullfile(fd,[char(tag) '_receiver_error_decomposition.png']));
 saveas(f,fullfile(fd,[char(tag) '_receiver_error_decomposition.pdf'])); close(f);
 end
@@ -152,8 +180,8 @@ rxidx=find(mask); rxidx=rxidx(round(linspace(1,numel(rxidx),min(401,numel(rxidx)
 sxidx=round(linspace(1,numel(nominal.surface_x_m),min(801,numel(nominal.surface_x_m))));
 sub=local_integrand_subset(nominal,rxidx,sxidx);
 f=figure('Visible','off'); tiledlayout(2,1);
-nexttile; imagesc(nominal.surface_x_m(sxidx),nominal.receiver_x_m(rxidx),log10(max(abs(sub),realmin)));axis xy;colorbar;ylabel('receiver x_r (m)');title([char(tag) ' log_{10}|I(x_r,x_s)|']);
-nexttile; imagesc(nominal.surface_x_m(sxidx),nominal.receiver_x_m(rxidx),angle(sub));axis xy;colorbar;clim([-pi pi]);xlabel('surface x_s (m)');ylabel('receiver x_r (m)');title('integrand phase (rad)');
+nexttile; imagesc(nominal.surface_x_m(sxidx),nominal.receiver_x_m(rxidx),log10(max(abs(sub),realmin)));axis xy;colorbar;ylabel('$x_r$ (m)','Interpreter','latex');title([char(tag) ': integrand magnitude'],'Interpreter','none');
+nexttile; imagesc(nominal.surface_x_m(sxidx),nominal.receiver_x_m(rxidx),angle(sub));axis xy;colorbar;clim([-pi pi]);xlabel('$x_s$ (m)','Interpreter','latex');ylabel('$x_r$ (m)','Interpreter','latex');title('integrand phase (rad)','Interpreter','none');
 saveas(f,fullfile(fd,[char(tag) '_integrand_kernel.png']));
 saveas(f,fullfile(fd,[char(tag) '_integrand_kernel.pdf']));close(f);
 end
@@ -167,10 +195,10 @@ end
 
 function local_plot_contribution(fd,nominal,row,xr,tag)
 xs=nominal.surface_x_m(:);row=row(:);f=figure('Visible','off');tiledlayout(4,1,'TileSpacing','compact');
-nexttile;plot(xs,abs(row));grid on;ylabel('|I|');title(sprintf('%s: surface contribution to receiver x_r=%.3g m',tag,xr));
-nexttile;plot(xs,angle(row));grid on;ylabel('phase(I) rad');
-nexttile;plot(xs,real(row),xs,imag(row));grid on;legend('real','imag','Location','best');ylabel('I');
-nexttile;cs=-cumsum(row);plot(xs,abs(cs));grid on;ylabel('|-cumsum(I)|');xlabel('surface x_s (m)');
+nexttile;plot(xs,abs(row));grid on;ylabel('$|I|$','Interpreter','latex');title(sprintf('%s: surface contribution to receiver x_r=%.3g m',tag,xr),'Interpreter','none');
+nexttile;plot(xs,angle(row));grid on;ylabel('$\arg I$ (rad)','Interpreter','latex');
+nexttile;plot(xs,real(row),xs,imag(row));grid on;legend('real','imag','Location','best');ylabel('$I$','Interpreter','latex');
+nexttile;cs=-cumsum(row);plot(xs,abs(cs));grid on;ylabel('$| -\sum_{j\leq i} I_j |$','Interpreter','latex');xlabel('$x_s$ (m)','Interpreter','latex');
 saveas(f,fullfile(fd,[char(tag) '_single_receiver_contribution.png']));
 saveas(f,fullfile(fd,[char(tag) '_single_receiver_contribution.pdf']));close(f);
 end
@@ -181,7 +209,7 @@ for ii=1:numel(names)
     q=t(strcmp(t.case_name,names{ii}),:); L=q.L_m; L(isinf(L))=256;
     semilogy(L,q.complex_l2,'o-','DisplayName',names{ii},'LineWidth',1.1);
 end
-yline(r.complex_l2_gate,'k--','E_c=10^{-3}');grid on;xlabel('L (m); 256 denotes Inf');ylabel('Reduced Kirchhoff-BIE complex L2');title('Finite-aperture convergence for saved adaptive database');legend('Location','eastoutside');
+yline(r.complex_l2_gate,'k--','$E_c=10^{-3}$','Interpreter','latex');grid on;xlabel('$L$ (m); 256 denotes Inf','Interpreter','latex');ylabel('Reduced Kirchhoff-BIE complex L2','Interpreter','latex');title('Finite-aperture convergence for saved adaptive database','Interpreter','none');legend('Location','eastoutside');
 saveas(f,fullfile(fd,'all_cases_aperture_convergence.png'));saveas(f,fullfile(fd,'all_cases_aperture_convergence.pdf'));close(f);
 end
 
@@ -193,8 +221,8 @@ end
 
 function local_plot_one_sweep(fd,x,c,xlabel_text,title_text,stem)
 f=figure('Visible','off');tiledlayout(1,3); labels={'complex L2','magnitude L2','phase RMS (rad)'}; fields={'complex_l2','magnitude_relative_l2','phase_rms_rad'};
-for ii=1:3,nexttile;semilogy(x,arrayfun(@(q)q.metrics_PE_BIE.(fields{ii}),c),'o--',x,arrayfun(@(q)q.metrics_FK_BIE.(fields{ii}),c),'s-','LineWidth',1.1);grid on;xlabel(xlabel_text);ylabel(labels{ii});title(title_text);if ii==1,legend('PE-BIE','Full Kirchhoff-BIE','Location','best');end,end
-sgtitle(['Saved deterministic sweep: ' title_text]);saveas(f,fullfile(fd,[stem '.png']));saveas(f,fullfile(fd,[stem '.pdf']));close(f);
+for ii=1:3,nexttile;semilogy(x,arrayfun(@(q)q.metrics_PE_BIE.(fields{ii}),c),'o--',x,arrayfun(@(q)q.metrics_FK_BIE.(fields{ii}),c),'s-','LineWidth',1.1);grid on;xlabel(xlabel_text,'Interpreter','latex');ylabel(labels{ii},'Interpreter','latex');title(title_text,'Interpreter','none');if ii==1,legend('PE-BIE','Full Kirchhoff-BIE','Location','best');end,end
+sgtitle(['Saved deterministic sweep: ' title_text],'Interpreter','none');saveas(f,fullfile(fd,[stem '.png']));saveas(f,fullfile(fd,[stem '.pdf']));close(f);
 end
 
 function s=local_summary(),s=struct('case_name','','receiver_x_m',NaN,'mask_samples',NaN,'reconstruction_relative_l2',NaN,'selected_receiver_native_relative_l2',NaN,'selected_receiver_contribution_peak',NaN,'selected_receiver_cancellation_ratio',NaN);end

@@ -844,6 +844,18 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   writes kernel/contribution, geometry/support, common-mask receiver-error,
   aperture, and all-metric sweep figures under
   `results/visualization/pe_bie_full_kirchhoff_operator_atlas/`.
+- `reporting/regenerate_full_kirchhoff_figure_conventions.m` is a strictly
+  saved-MAT post-processing workflow. It does not call PE, BIE, or
+  Full-Kirchhoff solvers; it only refreshes the parameter-sweep and Gaussian
+  sigma-sweep figures with the corrected depth-axis direction, LaTeX labels,
+  and explicit sigma/model line conventions.
+- `reporting/plot_gaussian_sigma_angle_sensitivity_atlas.m` is a saved-data-only
+  paper/report plotting workflow for the 15 Gaussian-sigma PE Model-0,
+  kz-aware Model-1, Full Kirchhoff, and BIE cases. It validates both MAT
+  sources, preserves the original pairwise-mask metrics, recomputes a clearly
+  labeled four-field common M99/-40 dB mask, and writes PDF/300-dpi PNG
+  figures plus the complete CSV/MAT audit table under
+  `results/visualization/pe_bie_gaussian_sigma_angle_sensitivity/`.
 - `validation/validate_full_kirchhoff_gaussian_sigma_sensitivity.m` compares
   PE, Full Kirchhoff, and Helmholtz BIE for sigma=`0.3, 0.5, 1, 2, 5 m` on
   three accepted deterministic sinusoidal cases. It reports propagating
@@ -864,3 +876,17 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   tables, receiver lines, shared-scale field maps, difference maps and the
   z=1 m Full-Kirchhoff sampling check under
   `results/validation/pe_bie_full_kirchhoff_receiver_depth_sensitivity/`.
+- `validation/validate_receiver_depth_numerical_audit.m` performs the
+  validation-only receiver-depth numerical audit using the saved sensitivity
+  fields, fixed M99 mask/weights, flat control, common-convention raw-field
+  diagnostics, angular spectra, and the stored z=1 m FK convergence check.
+  Outputs are under
+  `results/validation/pe_bie_receiver_depth_numerical_audit/`; report:
+  `reports/pe_bie_receiver_depth_numerical_audit_report.md`.
+- `validation/validate_incident_reflection_field_covariance.m` first checks
+  the PE Model-1 incident field against the saved Full-Kirchhoff angular-
+  spectrum source at the reference plane and the sampled rough surface, then
+  localizes the reflected-field PE/FK/BIE differences at z=2 and 3 m in both
+  receiver space and kx space. It reuses the receiver-depth MAT and writes
+  `results/validation/pe_bie_incident_reflection_covariance/`; report:
+  `reports/pe_bie_incident_reflection_covariance_report.md`.

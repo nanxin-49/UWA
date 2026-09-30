@@ -89,9 +89,60 @@ function r=corrw(a,b,w),a=a-sum(w.*a);b=b-sum(w.*b);r=abs(sum(w.*a.*b))/max(sqrt
 function r=local_case(),r=struct('case_name','','A_m',NaN,'K_radpm',NaN,'sigma_m',NaN,'src',[],'spectrum',[],'x_m',[],'surface_x_m',[],'surface_z_m',[],'surface_incident',[],'receiver_PE',[],'receiver_FK',[],'receiver_BIE',[],'metrics',[],'footprint',[],'bie_residual',NaN,'bie_boundary_residual',NaN);end
 function r=local_row(),r=struct('case_name','','A_m',NaN,'K_radpm',NaN,'sigma_m',NaN,'theta90_deg',NaN,'theta95_deg',NaN,'theta99_deg',NaN,'kx99_radpm',NaN,'PE_BIE_Ec',NaN,'PE_BIE_mag',NaN,'PE_BIE_phase',NaN,'PE_BIE_mag_corr',NaN,'PE_BIE_phase_corr',NaN,'FK_BIE_Ec',NaN,'FK_BIE_mag',NaN,'FK_BIE_phase',NaN,'FK_BIE_mag_corr',NaN,'FK_BIE_phase_corr',NaN,'PE_FK_Ec',NaN,'PE_FK_mag_corr',NaN,'PE_FK_phase_corr',NaN);end
 function r=local_row_from(d),r=local_row();r.case_name=d.case_name;r.A_m=d.A_m;r.K_radpm=d.K_radpm;r.sigma_m=d.sigma_m;r.theta90_deg=d.spectrum.theta90_deg;r.theta95_deg=d.spectrum.theta95_deg;r.theta99_deg=d.spectrum.theta99_deg;r.kx99_radpm=d.spectrum.kx99_radpm;r.PE_BIE_Ec=d.metrics.PE_BIE.complex_l2;r.PE_BIE_mag=d.metrics.PE_BIE.magnitude_l2;r.PE_BIE_phase=d.metrics.PE_BIE.phase_rms;r.PE_BIE_mag_corr=d.metrics.PE_BIE.magnitude_corr;r.PE_BIE_phase_corr=d.metrics.PE_BIE.phase_corr;r.FK_BIE_Ec=d.metrics.FK_BIE.complex_l2;r.FK_BIE_mag=d.metrics.FK_BIE.magnitude_l2;r.FK_BIE_phase=d.metrics.FK_BIE.phase_rms;r.FK_BIE_mag_corr=d.metrics.FK_BIE.magnitude_corr;r.FK_BIE_phase_corr=d.metrics.FK_BIE.phase_corr;r.PE_FK_Ec=d.metrics.PE_FK.complex_l2;r.PE_FK_mag_corr=d.metrics.PE_FK.magnitude_corr;r.PE_FK_phase_corr=d.metrics.PE_FK.phase_corr;end
-function plot_spectra(c,d),f=figure('Visible','off');tiledlayout(3,2);for i=1:numel(c.sigmas),q=d(i);ok=q.spectrum.propagating_mask;nexttile;plot(q.src.kx(ok)/(2*pi*c.f/c.c),sqrt(q.spectrum.power(ok)/max(q.spectrum.power(ok))));grid on;xlim([-1 1]);xlabel('kx/k');ylabel('|A|');title(sprintf('%s sigma %.3g theta99 %.2f',q.case_name,q.sigma_m,q.spectrum.theta99_deg));end;saveas(f,fullfile(c.fig,'angular_spectrum_sigma.png'));saveas(f,fullfile(c.fig,'angular_spectrum_sigma.pdf'));close(f);end
-function plot_beams(c),f=figure('Visible','off');tiledlayout(2,3);x=linspace(-60,60,241);z=linspace(0,100,241);[xx,zz]=meshgrid(x,z);for i=1:numel(c.sigmas),s=source(c,c.sigmas(i));u=s.eval(xx(:),zz(:),c.ztx,'coordinate');nexttile;imagesc(x,z,abs(reshape(u,size(xx))));axis xy;colorbar;title(sprintf('sigma %.3g m',c.sigmas(i)));end;saveas(f,fullfile(c.fig,'source_beam_magnitude_sigma.png'));saveas(f,fullfile(c.fig,'source_beam_magnitude_sigma.pdf'));close(f);end
-function plot_fields(c,d),for ic=1:numel(c.cases),q=d(strcmp({d.case_name},c.cases(ic).name));f=figure('Visible','off');tiledlayout(2,1);for i=1:numel(q),nexttile(1);hold on;plot(q(i).x_m,abs(q(i).receiver_PE),'--');plot(q(i).x_m,abs(q(i).receiver_FK),'-');plot(q(i).x_m,abs(q(i).receiver_BIE),':');nexttile(2);hold on;plot(q(i).x_m,angle(q(i).receiver_PE),'--');plot(q(i).x_m,angle(q(i).receiver_FK),'-');plot(q(i).x_m,angle(q(i).receiver_BIE),':');end;nexttile(1);grid on;ylabel('magnitude');title(c.cases(ic).name);nexttile(2);grid on;ylabel('phase');xlabel('x');saveas(f,fullfile(c.fig,[c.cases(ic).name '_receiver_fields_sigma.png']));saveas(f,fullfile(c.fig,[c.cases(ic).name '_receiver_fields_sigma.pdf']));close(f);end;end
-function plot_errors(c,T),f=figure('Visible','off');tiledlayout(1,3);for ic=1:numel(c.cases),q=T(strcmp(T.case_name,c.cases(ic).name),:);nexttile;plot(q.sigma_m,q.PE_BIE_Ec,'o--',q.sigma_m,q.PE_FK_Ec,'s-',q.sigma_m,q.FK_BIE_Ec,'d:');set(gca,'XScale','log','YScale','log');grid on;title(c.cases(ic).name);xlabel('sigma');ylabel('Ec');end;saveas(f,fullfile(c.fig,'error_vs_sigma.png'));saveas(f,fullfile(c.fig,'error_vs_sigma.pdf'));close(f);f=figure('Visible','off');hold on;for ic=1:numel(c.cases),q=T(strcmp(T.case_name,c.cases(ic).name),:);plot(q.theta99_deg,q.PE_BIE_Ec,'o-','DisplayName',c.cases(ic).name);end;set(gca,'XScale','log','YScale','log');grid on;legend;title('theta99 versus PE-BIE error');xlabel('theta99 deg');ylabel('Ec');saveas(f,fullfile(c.fig,'theta99_vs_pe_error.png'));saveas(f,fullfile(c.fig,'theta99_vs_pe_error.pdf'));close(f);end
+function plot_spectra(c,d)
+f=figure('Visible','off'); tiledlayout(3,2);
+for i=1:numel(c.sigmas)
+    q=d(i); ok=q.spectrum.propagating_mask; nexttile;
+    plot(q.src.kx(ok)/(2*pi*c.f/c.c),sqrt(q.spectrum.power(ok)/max(q.spectrum.power(ok))));
+    grid on; xlim([-1 1]); xlabel('$k_x/k$','Interpreter','latex'); ylabel('$|A|$','Interpreter','latex');
+    title(sprintf('%s, $\sigma=%.3g$ m, $\theta_{99}=%.2f^\circ$',q.case_name,q.sigma_m,q.spectrum.theta99_deg),'Interpreter','latex');
+end
+saveas(f,fullfile(c.fig,'angular_spectrum_sigma.png')); saveas(f,fullfile(c.fig,'angular_spectrum_sigma.pdf')); close(f);
+end
+
+function plot_beams(c)
+f=figure('Visible','off'); tiledlayout(2,3); x=linspace(-60,60,241); z=linspace(0,100,241); [xx,zz]=meshgrid(x,z);
+for i=1:numel(c.sigmas)
+    s=source(c,c.sigmas(i)); u=s.eval(xx(:),zz(:),c.ztx,'coordinate'); nexttile;
+    imagesc(x,z,abs(reshape(u,size(xx)))); set(gca,'YDir','reverse'); colorbar;
+    title(sprintf('$\sigma=%.3g$ m',c.sigmas(i)),'Interpreter','latex'); xlabel('$x$ (m)','Interpreter','latex'); ylabel('$z$ (m)','Interpreter','latex');
+end
+saveas(f,fullfile(c.fig,'source_beam_magnitude_sigma.png')); saveas(f,fullfile(c.fig,'source_beam_magnitude_sigma.pdf')); close(f);
+end
+
+function plot_fields(c,d)
+for ic=1:numel(c.cases)
+    q=d(strcmp({d.case_name},c.cases(ic).name)); f=figure('Visible','off'); tiledlayout(2,1); colors=lines(numel(c.sigmas));
+    for i=1:numel(q)
+        nexttile(1); hold on; plot(q(i).x_m,abs(q(i).receiver_PE),'--','Color',colors(i,:), ...
+            'DisplayName',sprintf('$\\sigma=%.3g$ m',q(i).sigma_m));
+        plot(q(i).x_m,abs(q(i).receiver_FK),'-','Color',colors(i,:),'HandleVisibility','off'); plot(q(i).x_m,abs(q(i).receiver_BIE),':','Color',colors(i,:),'HandleVisibility','off');
+        nexttile(2); hold on; plot(q(i).x_m,angle(q(i).receiver_PE),'--','Color',colors(i,:), ...
+            'DisplayName',sprintf('$\\sigma=%.3g$ m',q(i).sigma_m));
+        plot(q(i).x_m,angle(q(i).receiver_FK),'-','Color',colors(i,:),'HandleVisibility','off'); plot(q(i).x_m,angle(q(i).receiver_BIE),':','Color',colors(i,:),'HandleVisibility','off');
+    end
+    nexttile(1); grid on; ylabel('magnitude','Interpreter','latex'); title(c.cases(ic).name,'Interpreter','none'); legend('Location','best','Interpreter','latex');
+    nexttile(2); grid on; ylabel('phase','Interpreter','latex'); xlabel('receiver $x$ (m)','Interpreter','latex');
+    saveas(f,fullfile(c.fig,[c.cases(ic).name '_receiver_fields_sigma.png'])); saveas(f,fullfile(c.fig,[c.cases(ic).name '_receiver_fields_sigma.pdf'])); close(f);
+end
+end
+
+function plot_errors(c,T)
+f=figure('Visible','off'); tiledlayout(1,3);
+for ic=1:numel(c.cases)
+    q=T(strcmp(T.case_name,c.cases(ic).name),:); nexttile;
+    plot(q.sigma_m,q.PE_BIE_Ec,'o--',q.sigma_m,q.PE_FK_Ec,'s-',q.sigma_m,q.FK_BIE_Ec,'d:');
+    set(gca,'XScale','log','YScale','log'); grid on; title(c.cases(ic).name,'Interpreter','none');
+    xlabel('$\sigma$ (m)','Interpreter','latex'); ylabel('$E_c$','Interpreter','latex');
+end
+saveas(f,fullfile(c.fig,'error_vs_sigma.png')); saveas(f,fullfile(c.fig,'error_vs_sigma.pdf')); close(f);
+f=figure('Visible','off'); hold on;
+for ic=1:numel(c.cases)
+    q=T(strcmp(T.case_name,c.cases(ic).name),:); plot(q.theta99_deg,q.PE_BIE_Ec,'o-','DisplayName',c.cases(ic).name);
+end
+set(gca,'XScale','log','YScale','log'); grid on; legend('Interpreter','none','Location','best');
+title('$\theta_{99}$ versus PE-BIE error','Interpreter','latex'); xlabel('$\theta_{99}$ (deg)','Interpreter','latex'); ylabel('$E_c$','Interpreter','latex');
+saveas(f,fullfile(c.fig,'theta99_vs_pe_error.png')); saveas(f,fullfile(c.fig,'theta99_vs_pe_error.pdf')); close(f);
+end
 function write_report(path,r,root,mat,csv),fid=fopen(path,'w','n','UTF-8');cl=onCleanup(@()fclose(fid));fprintf(fid,'# Gaussian source angular-spectrum sensitivity study\n\nStatus: validation-only; PE, Full Kirchhoff, BIE and surface physics unchanged.\n\n');fprintf(fid,'Setup: 2D one-transverse, 4 kHz, c=1500 m/s, Tx=100 m, Rx=3 m, sigma=[0.3 0.5 1 2 5] m. Cases: weak low-K (A=0.05,K=0.10), strong-height low-K (A=0.20,K=0.10), weak high-K (A=0.02,K=0.47).\n\n');fprintf(fid,'Mask: sigma-specific 99-percent source-energy footprint (strict-normal footprint when available; source-path footprint for sigma=5) plus pairwise -40 dB threshold, with weights renormalized on that footprint. Source uses the existing discrete Gaussian exp(-i omega t) evaluator; only sigma varies.\n\n## Results\n\n|case|sigma|theta90|theta95|theta99|PE-BIE Ec|PE-BIE mag|PE-BIE phase|FK-BIE Ec|FK-BIE mag|FK-BIE phase|PE-FK Ec|\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n');for i=1:height(r.table),t=r.table(i,:);fprintf(fid,'|%s|%.6g|%.6g|%.6g|%.6g|%.6g|%.6g|%.6g|%.6g|%.6g|%.6g|%.6g|\n',t.case_name{1},t.sigma_m,t.theta90_deg,t.theta95_deg,t.theta99_deg,t.PE_BIE_Ec,t.PE_BIE_mag,t.PE_BIE_phase,t.FK_BIE_Ec,t.FK_BIE_mag,t.FK_BIE_phase,t.PE_FK_Ec);end;fprintf(fid,'\n## Direct answers\n\n');fprintf(fid,'- sigma=0.3 is the broad-angle endpoint: theta99=21.2801 deg. sigma=5 narrows this to theta99=1.22986 deg.\n');fprintf(fid,'- weak low-K: PE-BIE Ec changes from 0.01609 (sigma=0.3) to 0.0113287 (sigma=5), while PE-BIE phase RMS changes from 0.015816 to 0.00397518 rad; FK-BIE remains at 2.53723e-4 and 7.24358e-6. This supports a finite-angle contribution but not complete error removal.\n');fprintf(fid,'- strong-height low-K: PE-BIE Ec changes from 0.0809081 to 0.0763957 and phase RMS from 0.0799395 to 0.0636058 rad. A large residual remains after narrowing, so strong-height path/nonlocal phase effects are not explained by angle width alone.\n');fprintf(fid,'- weak high-K: PE-BIE Ec changes from 0.0229061 to 0.0288541; phase RMS decreases from 0.0129506 to 0.0111636 rad while magnitude error increases from 0.0188514 to 0.026609. Narrowing therefore does not improve total high-K error.\n');fprintf(fid,'\n## Interpretation\n\nThe result is **PARTIAL_FINITE_ANGLE_CONTRIBUTION**: sigma=0.3 is demonstrably broad, and narrowing the source reduces the low-K phase-screen component, but PE does not converge monotonically to Full Kirchhoff/BIE across the tested cases. Full Kirchhoff remains close to BIE (approximately 1e-5 to 2.7e-4 complex L2), so the remaining PE residual is attributable primarily to the local phase-screen/nonlocal rough-surface coupling rather than to Full Kirchhoff error. A narrow source should be used for deep-vertical links only when its measured theta95/theta99 lies within the validated case envelope; sigma alone is not a universal accuracy control.\n\nArtifacts: %s, %s; figures are under results/validation/pe_bie_full_kirchhoff_gaussian_sigma_sensitivity/figures.\n',rel(root,mat),rel(root,csv));end
 function p=rel(root,p),p=strrep(p,[root filesep],'');p=strrep(p,filesep,'/');end

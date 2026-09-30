@@ -19,6 +19,14 @@
 - `results/validation/pe_bie_full_kirchhoff/figures/strong_height_low_K_reflected.png`
 - `results/validation/pe_bie_full_kirchhoff/figures/weak_high_K_reflected.png`
 
+Formal FK/BIE-only views:
+
+- `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_low_K_FK_BIE_formal_mask.png`
+- `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/strong_height_low_K_FK_BIE_formal_mask.png`
+- `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_high_K_FK_BIE_formal_mask.png`
+
+图注：这组三联 receiver-line 图对比 PE、Full Kirchhoff 与 BIE 的复场幅度和相位；本轮正式 mask 版另见 `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/*_FK_BIE_formal_mask.png`。正式结论只看 M99 与共同 `-40 dB` 门槛内的样本，图外的低幅度尾部不参与指标。
+
 ### weak/low-K
 
 PE Model-0、kz-aware Model-1、Full Kirchhoff 和 BIE 在有效中心 receiver 区域基本重合。该图说明在小高度、长空间波长条件下，local phase-screen 已能保留主要场形；剩余差异主要是小的有限角度/归一化误差。
@@ -41,6 +49,8 @@ PE 场出现明显的准周期幅度起伏，而 Full Kirchhoff/BIE 仍保持一
 - `results/validation/pe_bie_full_kirchhoff_reduced_stage1/figures/strong_height_low_K_PS_FK_error.png`
 - `results/validation/pe_bie_full_kirchhoff_reduced_stage1/figures/weak_high_K_PS_FK_error.png`
 
+图注：误差分解图逐个 receiver 展示 magnitude difference、wrapped phase difference 和 complex-error magnitude；它们用于识别结构化的 PE–FK 偏差，而不是替代加权正式指标。
+
 误差不是白噪声，而是随 receiver 横向坐标变化的平滑、相关结构。典型趋势是：
 
 - weak/low-K：误差较小，主要由 phase difference 构成；
@@ -56,6 +66,8 @@ PE 场出现明显的准周期幅度起伏，而 Full Kirchhoff/BIE 仍保持一
 - `results/validation/pe_bie_full_kirchhoff_parameter_sweep/figures/weak_lowK_incident_xz.png`
 - `results/validation/pe_bie_full_kirchhoff_parameter_sweep/figures/weak_lowK_incident_surface.png`
 
+图注：二维图显示入射场在整个 `x-z` 网格上的幅度，纵轴已按物理深度方向反转，因此海面 `z=0` 在图上方、发射端 `z=100 m` 在图下方；surface 图显示海面采样线上的复入射场。
+
 入射场从 `z=100 m` 的 Gaussian source 向上扩展，在 surface 附近仍具有有限横向 footprint。不同 surface point `x_s` 的 incident field 并非只对应同一横向 receiver；Full Kirchhoff 会把各 surface point 经 Green propagation 后的贡献重新相干叠加。
 
 这解释了为什么 local phase screen 在强高度或高 K 下失效：它只保留局部边界相位，而没有显式保留完整的 source-point-to-receiver coupling。
@@ -67,6 +79,8 @@ PE 场出现明显的准周期幅度起伏，而 Full Kirchhoff/BIE 仍保持一
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_low_K_integrand_kernel.png`
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/strong_height_low_K_integrand_kernel.png`
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_high_K_integrand_kernel.png`
+
+图注：kernel 图画的是完整离散积分密度 `I(x_r,x_s)` 的幅度对数和相位，而不是单独 Green 函数 `G`；横轴为海面位置，纵轴为 receiver 位置。
 
 这里显示的不是单独 `|G|`，而是完整的离散积分密度：
 
@@ -83,6 +97,8 @@ PE 场出现明显的准周期幅度起伏，而 Full Kirchhoff/BIE 仍保持一
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_low_K_single_receiver_contribution.png`
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/strong_height_low_K_single_receiver_contribution.png`
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_high_K_single_receiver_contribution.png`
+
+图注：四个子图依次为 `|I_j|`、`arg(I_j)`、`Re(I_j)/Im(I_j)` 和复数累积和的模 `|-∑_{j\le i}I_j|`。其中 `I_j` 已包含 Green 项、法向导数项和弧长求积权重。
 
 代表 receiver 为 `x_r≈19.92 m`。图中同时给出：
 
@@ -103,6 +119,8 @@ PE 场出现明显的准周期幅度起伏，而 Full Kirchhoff/BIE 仍保持一
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/strong_height_low_K_geometry_support_aperture.png`
 - `results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/weak_high_K_geometry_support_aperture.png`
 
+图注：几何图现在为双面板：左侧保留完整 Tx/Rx/rough-support 几何，右侧放大海面局部并明确画出 `L=4,16,64,128 m` 的 receiver-centered aperture。
+
 这些图明确标出：
 
 - rough surface support；
@@ -121,6 +139,8 @@ PE 场出现明显的准周期幅度起伏，而 Full Kirchhoff/BIE 仍保持一
 - `results/validation/pe_bie_full_kirchhoff_parameter_sweep/figures/wavenumber_sweep_complex_error.png`
 - 多指标版本：`results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/height_sweep_all_metrics.png`
 - 多指标版本：`results/visualization/pe_bie_full_kirchhoff_operator_atlas/figures/wavenumber_sweep_all_metrics.png`
+
+图注：sweep 图分别显示 complex L2、magnitude L2 和 phase RMS 随高度或空间波数变化的趋势；横轴和数学符号已统一使用 LaTeX interpreter。
 
 ### Height sweep，固定 `K=0.10 rad/m`
 
@@ -254,6 +274,8 @@ PE–Full Kirchhoff 趋势图进一步显示：weak/low-K 的误差主要是 pha
 - [sparse A–K L_min map](../results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/figures/Lmin_sparse_AK_map.png)
 - [L_min relationships](../results/validation/pe_bie_full_kirchhoff_adaptive_aperture_stage1/figures/Lmin_relationships.png)
 
+图注：收敛图把有限 aperture 结果与 `L=Inf` Full Kirchhoff 基线并列，`L=128 m` 在当前 gate 下首次通过；关系图中的相同 `L_min` 是右删失现象，不应解读为已经得到经验 aperture law。
+
 当 `E_PE,BIE/E_RK,BIE>1` 时，有限 aperture 已经比 PE phase screen 更接近 BIE；但严格 `Ec<1e-3` gate 下，11 个 Stage-1 case 均首次在 `L=128 m` 通过。A–K map 和关系图呈现的是统一的 right-censoring，而不是已确定的 `L_min(A,K)` 规律。
 
 这组图支持“有限支持有用”，但不支持“固定小 aperture 已足够”或“简单 aperture law 已确定”。
@@ -268,3 +290,46 @@ PE–Full Kirchhoff 趋势图进一步显示：weak/low-K 的误差主要是 pha
 6. height/K sweep 图说明 PE residual 随海面高度和空间 wavenumber 增大，而 Full Kirchhoff 仍接近 BIE。
 
 综合判断仍是：剩余差异主要来自 PE local phase-screen 对完整非局部 surface integral 的降阶误差。下一步应优先研究 geometry-dependent 的 low-rank 或 locally-stationary reduced operator。
+
+## 16. 本轮图件核查与可视化修订
+
+### 16.1 FK/BIE 图与正式指标是否一致
+
+原 operator atlas 的 `*_receiver_fields_masked.png` 和新增的 `*_FK_BIE_formal_mask.png` 都直接读取 `pe_bie_full_kirchhoff_validation.mat` 中保存的 `receiver_full` 与 `receiver_bie` comparison fields；没有重新生成场，也没有使用 rough/flat ratio 代替正式 comparison field。mask 是 `Stage-0 M99` 与双方同时高于共同 `-40 dB` pair peak 的交集，权重再在保留样本上归一化。
+
+新增正式 mask 图重新计算的 FK--BIE complex L2 为：
+
+| case | 有效样本数 | complex L2 |
+|---|---:|---:|
+| weak_low_K | 411 | 2.53489884e-4 |
+| strong_height_low_K | 411 | 2.57000813e-4 |
+| weak_high_K | 411 | 2.71131880e-4 |
+
+因此肉眼看到的差异主要来自完整横向坐标、相位包裹和低幅度尾部的可视放大；正式有效区域内两条曲线接近，数值指标与图中数据一致。
+
+### 16.2 Gaussian sigma sweep 的节点和模型
+
+`weak_low_K_receiver_fields_sigma.png` 的完整 sigma 节点为 `0.3, 0.5, 1, 2, 5 m`。每个 sigma 对应三条同色曲线：虚线为 PE Model-0，实线为 Full Kirchhoff，点线为 BIE；颜色对应 sigma，线型对应模型。该图不是只比较 PE 与 FK，而是三种模型在相同 sigma 下的 receiver-line amplitude/phase 对照。
+
+当前没有生成 sigma `\ne 0.3 m` 的 Full Kirchhoff integrand kernel `K(x_r,x_s)` 或 `I(x_r,x_s)` 图。现有 `*_integrand_kernel.png` 只来自固定 sigma=`0.3 m` 的 operator atlas。
+
+### 16.3 单 receiver 四子图和 cancellation ratio
+
+对代表性 receiver `x_r`，代码先构造
+
+`I_j = [G(x_r,x_{s,j})\,\partial_n p_{inc}(x_{s,j}) + \partial_{n_s}G(x_r,x_{s,j})\,p_{inc}(x_{s,j})] w_j`。
+
+四个子图准确对应：
+
+1. `|I_j|`；
+2. `angle(I_j)`；
+3. `real(I_j)` 与 `imag(I_j)`；
+4. `abs(-cumsum(I_j))`，即复数累积和的模，不是实部、虚部或额外归一化量。
+
+报告中的 cancellation ratio 定义为 `C = sum_j |I_j| / |sum_j I_j|`。代码实现是 `sum(abs(row))/abs(sum(row))`；最终整体负号不影响该比值。当前三个代表 case 的 `C` 约为 `22.824, 22.846, 22.871`。
+
+### 16.4 Geometry/aperture 与坐标方向修订
+
+`geometry_support_aperture` 现在明确绘制 `L=4/16/64/128 m`，并采用“完整几何 + 海面局部放大”双面板。`weak_lowK_incident_xz` 已设置深度轴反向：`z=0` 在图上方，`z=100 m` 发射端在图下方；这只改变绘图属性，不改变任何求解坐标。
+
+本轮同时把相关 operator、parameter-sweep 和 sigma-sweep 图的 `x_r/x_s,z_s,\sigma,\theta_{99},E_c` 等数学标签统一为 LaTeX interpreter；case 名称保留普通文本解释器，避免下划线被误读为数学下标。
