@@ -1,0 +1,4 @@
+case_name,receiver_x_m,mask_samples,reconstruction_relative_l2,selected_receiver_native_relative_l2,selected_receiver_contribution_peak,selected_receiver_cancellation_ratio
+weak_low_K,19.921875,411,0,0,0.00408027991849292,22.8236586511576
+strong_height_low_K,19.921875,411,0,0,0.00419682331100314,22.8455149147147
+weak_high_K,19.921875,411,0,0,0.00407726658392011,22.8708137632784
