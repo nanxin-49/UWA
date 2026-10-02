@@ -4,6 +4,15 @@
 
 ## 目录
 
+- `validation/validate_full_kirchhoff_spectral_rank_audit.m`: 第一阶段 Full FK
+  spectral separability audit。执行 `setup_vertical_project` 后调用
+  `audit=validate_full_kirchhoff_spectral_rank_audit()`；复用保存参数/源谱，
+  比较残余高度耦合的 weighted/unweighted SVD，并在三个真实曲面上做完整
+  FK 运算 reconstruction。结果为
+  `results/validation/full_kirchhoff_spectral_rank_audit/`，报告为
+  `reports/full_kirchhoff_spectral_rank_audit_report.md`。不是生产 Fast FK；
+  不运行 PE/BIE 或 PM Monte Carlo，不改变 cwd。
+
 - `validation/`: smoke tests, invariants, communication-chain checks, and disabled-path regressions.
 - `comparisons/`: surface-model, bubble-model, and coherent/incoherent comparison studies.
 - `experiments/`: Monte Carlo runs, parameter sweeps, and calibration scripts.

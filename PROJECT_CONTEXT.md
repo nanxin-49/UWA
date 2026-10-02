@@ -9,6 +9,30 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Full Kirchhoff spectral rank audit（2026-09-30）
+
+- Stage 1 is complete: validation-only saved-data audit in
+  `reports/full_kirchhoff_spectral_rank_audit_report.md`, with artifacts in
+  `results/validation/full_kirchhoff_spectral_rank_audit/` and entrypoint
+  `validate_full_kirchhoff_spectral_rank_audit` after project setup.
+- At 4 kHz, deterministic C2 sinusoidal A/K cases and saved Gaussian spectra,
+  the residual `exp(i*(k-kz)*eta)` needs weighted ranks 1–2 / 1–2 / 1–3 for
+  relative Frobenius errors 1e-2 / 1e-3 / 1e-4 across 15 small audit cases.
+  All saved propagating spectral bins are retained for the engineering result.
+  Fixed-band sampling refinement has stable ranks. Chi=A*(k-kz(theta99))
+  and source energy distribution explain separability better than kA alone;
+  K is absent from the uniform-height matrix but still affects full scattering.
+- Three complete-support FK contraction checks at sigma=.3 m, Rx=3 m
+  (A/K=.01/.1, .2/.1, .02/.47) have weighted rank-2 ratio errors
+  1.664e-6, 6.613e-4, 7.177e-6. Exact reconstruction closes to saved FK at
+  about 6e-14. No PE, BIE, reference Full FK or production interface changed.
+- Recommendation: investigate a Spectral Fast FK prototype next. Full
+  outgoing-kernel FFT complexity O(r*N*log(N)), PM/wider-angle behavior,
+  evanescent/outgoing bandwidth and performance remain UNVERIFIED. This task
+  stops at the audit; no complete fast solver or production integration exists.
+- GitHub PR #3 was verified as Draft/open (not merged) during this audit;
+  the local main at 02a29d9 already contains the research-branch integration.
+
 ### Unified development mainline and project-level skills（2026-09-30）
 
 - `main` is the sole development mainline. The `phase_show` and

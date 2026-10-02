@@ -421,3 +421,24 @@ M=50 的平均 `delta TL=-0.00748 dB`、圆均值相位差 `-0.37534 rad`；所�
 `0.25835 dB`，略超 `0.25 dB`，故状态仍记为
 `PRELIMINARY_MODEL_DISCREPANCY`。该结果用于判断模型差异的稳定性，不用于
 校准或强行消除 native backward-range 幅度偏差。
+
+## Full Kirchhoff spectral separability audit — validation boundary (2026-09-30)
+
+The independent 2-D validation in
+`reports/full_kirchhoff_spectral_rank_audit_report.md` factors
+`exp(-i*kz*eta)=exp(-i*k*eta)*exp(i*(k-kz)*eta)` and preserves the strong
+carrier phase exactly. Its weighted SVD uses the square root of saved incident
+spectral energy as a column weight and relative Frobenius matrix error.
+At 4 kHz, the saved deterministic near-vertical cases need rank 1–2 at 1e-3;
+three complete Full FK contractions at Rx=3 m also pass 1e-3 at weighted rank 2.
+The 99% angular interval describes effective bandwidth; full saved-spectrum
+tails are retained for the strict engineering reconstruction checks.
+
+This is evidence for a future spectral prototype, not a replacement of the
+production surface boundary or a communication-channel validation. Outgoing
+Green-kernel separability, O(r*N*log(N)) performance, PM surfaces, wider angles
+and wideband communication remain unverified. All public paramsV/output/H_f
+and results.channel semantics remain unchanged; no new configuration option
+or physical model is introduced. The existing PE/local screen, BIE and Full FK
+reference implementations were not edited. Run the audit after
+`setup_vertical_project` via `validate_full_kirchhoff_spectral_rank_audit()`.
