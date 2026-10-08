@@ -424,6 +424,68 @@ M=50 的平均 `delta TL=-0.00748 dB`、圆均值相位差 `-0.37534 rad`；所�
 
 ## Full Kirchhoff spectral separability audit — validation boundary (2026-09-30)
 
+### PM 物理适用域的受控审查（2026-10-07；最新）
+
+在冻结 4 kHz、c=1500 m/s、Tx=100 m、Rx=3 m、Gaussian 离散源和 C2 嵌入后，
+已围绕同一个 canonical realization 完成八个嵌套 cutoff 与七个受控 Fourier
+对照。共有系数完全相同；高度匹配、照明 slope 匹配及固定 Kmax 的新增模态
+幅度序列分别检查混杂因素，不把接收采样点视为独立 PM realization。
+
+当前 master-prefix 家族在 Kmax=.706858 rad/m 的原始复误差为8.5275e-4，
+.746128 rad/m 为1.19749e-3。边界端点、等 slope 高 K 及75%新增模态幅度点
+使用 Full4097/8193、BIE ppw/order8→10 与 L60/L70 护栏，合计变化约6.8e-6。
+这些是离散、单 realization、固定 M99 核心孔径下的数值护栏结论，不能外推为
+所有 PM 海面或整个接收线的统一 Kmax 门槛。
+
+相同 Kmax 的幅度序列从7.96e-4 增至1.20e-3；等高度与等照明 slope 对照
+支持把照明加权曲率/k 和 high-K 幅度/谱结构共同作为候选适用域描述量。
+尚未识别唯一控制参数，也未拟合经验公式。幅度误差约1.3e-4，主要差异来自
+原始相位起伏；没有相位对齐或 complex scalar fitting。共同核心复谱受513个
+BIE接收采样的 Nyquist 限制，保留全部复数据并明确区分孔径谱与远场通量。
+
+**保留有限适用域内的 Full FK/Fast FK 路线。** 若目标必须覆盖当前超标的
+高 K/幅度结构，下一阶段先做有限 SSA/SSA2 物理模型比较。Fast rank3/8 与
+padding2 的算法成果保持冻结，本轮没有扩频、Monte Carlo、BER、SSP、3D
+或生产集成，paramsV/output/H_f 和通信方法保持既有语义。详见
+`reports/full_kirchhoff_pm_validity_boundary_report.md`；前一阶段 PM pilot 的
+高 cutoff 物理失败结论仍成立，其“适用域尚待研究”建议已由本轮受控审查接续。
+
+### 固定 PM pilot 的最新边界（2026-10-07）
+
+验证专用 pilot 已完成三个固定 seed 和一组嵌套物理 cutoff，完整保留高度、
+解析法向、ds、强相位与非局部 Green 作用。冻结 3/6 rank 在 PM 高度界
+A=.5 m 下失败；统一 3/8 在全部五个嵌入及无包络 PM 案例上通过 FastFK–FullFK
+的 1e-3 算法 fidelity。物理 Kmax=.275/.471/.746 rad/m，与 dx 决定的
+Nyquist=107.23 rad/m 明确分开。没有每个 seed 单独拟合 rank 或相位。
+
+**整体 PM pilot 未通过预设物理门槛。** FullFK–BIE 的固定 M99 加权误差为
+canonical 8.00e-4、high-cutoff 1.199e-3；BIE 与 Full 积分精化已将数值误差压至
+明显更小的水平。BIE 使用共同 C2 嵌入海面，其物理结论不覆盖整个接收线
+的窗口边缘或无限周期海面。算法精度与模型物理精度仍分别报告。
+
+下一步应先明确 PM 下 Full FK 的适用边界或比较独立 SSA/SSA2 reference，
+本轮不进入 multi-frequency、Monte Carlo、生产 PE 或通信/BER。详见
+`reports/spectral_fast_kirchhoff_pm_pilot_report.md`。生产 paramsV/output/H_f
+语义与本指南通信模型保持不变；下面的 prototype-only PM 建议为上一阶段记录。
+
+### 后续 FFT prototype 验证边界（2026-10-07）
+
+验证专用 `solve_spectral_fast_kirchhoff_2d` 已用全局入射分离与出射高度分离，
+把完整 lag Green/法向导数作用转为 FFT 线性卷积；Prototype-B 保留真实海面、
+法向、弧长和两项 Green 积分。它没有替换本指南描述的生产信道/通信算法。
+选定入射/出射 rank 分别为 3/6；单独的入射 rank 2 不是完整核 rank。
+4 kHz、三个确定性正弦面、sigma=.3 m、Rx=3 m 的原生 FastFK–FullFK
+复误差均小于 1e-4。padding=2/4 对应同一完整线性卷积，padding=1 会回绕；
+验证中没有 sponge 或逐案例经验相位/尺度拟合。
+
+参见 `reports/spectral_fast_kirchhoff_prototype_method.md` 的严格/低秩/几何简化
+分类，以及 `reports/spectral_fast_kirchhoff_prototype_report.md` 的 rank、padding、
+出射谱、CPU/内存和冷/热启动速度证据。FullFK–BIE 的物理模型有效性与
+FastFK–FullFK 的算法 fidelity 仍分开。固定 PM pilot 仅为下一阶段建议；
+宽带、随机海面、3D 与 BER 尚未验证，公开 paramsV/output/H_f 不变。
+
+### 上阶段审计记录（2026-09-30，后续 FFT 证据见上节）
+
 The independent 2-D validation in
 `reports/full_kirchhoff_spectral_rank_audit_report.md` factors
 `exp(-i*kz*eta)=exp(-i*k*eta)*exp(i*(k-kz)*eta)` and preserves the strong

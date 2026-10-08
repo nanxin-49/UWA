@@ -9,6 +9,108 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Full Kirchhoff PM validity boundary（2026-10-07；最新物理适用域审查）
+
+- Validation-only continuation of one canonical realization: 15 controlled cases,
+  eight master-prefix cutoffs (modes7/10/12/14/16/17/18/19), identical 4 kHz,
+  c1500, Tx100/Rx3, discrete Gaussian source and C2 embedding. Common Fourier
+  coefficients are exact; no new random realization, phase fit or global scaling.
+- In the sampled master-prefix family, mode18/Kmax=.706858 rad/m has native
+  weighted FullFK--BIE error8.5275e-4; mode19/.746128 has1.19749e-3. Four
+  selected cases have Full4097/8193, BIE ppw8/order8 to ppw10/order10, and
+  L60/L70 guards. Summed numerical changes are about6.8e-6, below1e-4.
+  The scope is the frozen M99 receiver core, not whole-line window edges or
+  infinite-ocean flux. Detailed converged values/classifications are in the report.
+- Equal-height and equal-illuminated-slope controls favor illuminated curvature/k
+  jointly with high-K amplitude/modal structure as useful descriptors. They do not
+  identify a unique causal scalar. At the same positive-amplitude Kmax=.746128,
+  factors .25/.50/.75/1 give errors .000796/.000874/.001015/.001197; the guarded
+  .75 case also fails. Kmax alone and height alone cannot define a universal gate.
+- The error is mainly varying native phase, with magnitude error near1.3e-4.
+  Canonical/high phase contributions account for97.1/98.7 percent of complex
+  error energy; sampled core spectral discrepancy is concentrated inside incoming99.
+  Raw field/spectral means and standard deviations are saved; no alignment is used.
+- **Retain FullFK/FastFK in the measured conditional domain.** If the intended
+  spectrum must include rejected high-K/amplitude structures, the next physics task
+  is a limited SSA/SSA2 comparison. No population failure rate is inferred from one
+  realization. Fast ranks3/8/padding2 and all production/reference physics are frozen;
+  no frequency extension, Monte Carlo, SSA implementation or production integration.
+- Report: `reports/full_kirchhoff_pm_validity_boundary_report.md`; artifacts:
+  `results/validation/full_kirchhoff_pm_validity_boundary/`; entrypoint:
+  `validate_full_kirchhoff_pm_validity_boundary`. Three metric/source tests, artifact
+  assertions, Code Analyzer and nine frozen reference/input hashes are checked.
+  This completes the physical-domain investigation proposed by the prior PM pilot;
+  that pilot's overall high-cutoff failure remains valid.
+
+### Fixed PM Spectral Fast FK pilot（2026-10-07；最新验证状态）
+
+- Complete validation-only pilot: three saved coefficient realizations
+  (canonical seed260001 and Gaussian seeds260002/260003), 4 kHz, U=6 m/s,
+  Tx100/Rx3 m. Canonical physical Kmax=.471239 rad/m; nested cutoff controls
+  .274889/.746128 preserve all common Fourier coefficients without scaling.
+  Numerical Nyquist107.233 rad/m is independently fixed by dx=.029296875 m.
+- Frozen rank3/6 fails with field errors about .0035--.0047. Bounded common
+  rank diagnosis identifies outgoing truncation as the main baseline issue.
+  Common rank3/8 passes all five cases: weighted errors .000187--.000248,
+  whole-grid below .0003 for C2-embedded PM and below .000311 for unmodified
+  Fourier PM segments. Common4/8 diagnostic reaches1e-4 on embedded cases.
+  Incoming/outgoing matrix ranks at1e-3 are3/7 and do not grow on refinement.
+- Canonical Full4097/8193 weighted convergence6.56e-6, padding2/4 about4e-16,
+  height-node33/65 difference2.51e-6. High-cutoff outgoing theta99=25.54deg;
+  8.685 percent of reflected propagating aperture-spectrum energy lies outside
+  incoming99. No incident-angle outgoing cutoff is applied.
+- **Algorithm compression PASS; overall PM pilot NOT PASS at the declared
+  physical-reference gate1e-3.** Native FullFK--BIE weighted error is8.001e-4
+  for canonical and1.199e-3 for high cutoff after Full quadrature refinement.
+  High-cutoff BIE spatial/window changes are6.62e-8/1.43e-7, so the latter
+  deviation is not removed by numerical refinement. Physical comparisons
+  concern the fixed M99 core of the common C2-embedded surface; whole-grid
+  BIE edge errors remain window-sensitive and are not physically certified.
+- N4097 embedded Fast warm speedups89--112x, cold11.7--13.9x. Memory values
+  are named-array payload estimates, not peak RSS. The PM full model's
+  physical validity is the next issue; increasing Fast rank cannot correct it.
+  **Do not enter multi-frequency/Monte Carlo yet.** Establish a PM validity
+  boundary or compare an independent SSA/SSA2 reference first; neither is run.
+- Reports/data: `reports/spectral_fast_kirchhoff_pm_pilot_report.md` and
+  `results/validation/spectral_fast_kirchhoff_pm_pilot/`. Entrypoint:
+  `validate_spectral_fast_kirchhoff_pm_pilot`, checkpoint stages fast/bie/raw/
+  quadrature/render. Five numerical unit tests and artifact assertions pass.
+  No PE/WAPE, Full FK, BIE, local screen, production API or communications
+  physics is changed. Previous prototype-only PM recommendations below are
+  historical; this dated pilot judgment supersedes them.
+
+### Spectral Fast Kirchhoff FFT prototype（2026-10-07）
+
+- Validation-only Prototype-A (flat normal/dx) and Prototype-B (true normal,
+  arc-length weights and both Green derivative directions) are implemented
+  under `scripts/validation/support/`, independent of the frozen Full FK,
+  PE/WAPE, BIE and local-screen reference implementations. No production API
+  or configuration has changed.
+- The complete outgoing Hankel/derivative lag kernels are globally compressed
+  in height, then applied using FFT linear convolution. No dense receiver×surface
+  kernel remains in the Fast implementation. Strong `exp(-ik*eta)` phases are
+  retained exactly on both sides. Outgoing rank is separate from incident rank:
+  global `r_in=3,r_out=6` is the selected prototype, not an alleged total rank 3.
+- At N_surface=N_receiver=4097, padding=2, sigma=.3 m and Rx=3 m, Prototype-B
+  FastFK/FullFK weighted native complex L2 is 2.899e-9 (weak .01/.1),
+  3.208e-5 (strong .2/.1), 2.115e-8 (high-K .02/.47). K=.70, sigma=1,
+  and Rx=2 controls also pass 1e-3. Padding 2/4 differs near 3e-16;
+  padding=1 retains an explicit wrap-around failure. No sponge is used.
+- One four-grid timing run found dense Full apply exponent 1.937 versus Fast
+  warm apply .854; at N=4097, warm speedup is 140.9x and including-setup speedup
+  is 14.73x. N=513 cold speedup is .897x: setup can outweigh benefits on small
+  grids. These are finite single-host benchmarks, not asymptotic or real-time
+  claims; memory values are array payloads, not peak RSS.
+- Reports: `reports/spectral_fast_kirchhoff_prototype_report.md` and its method
+  note. Results: `results/validation/spectral_fast_kirchhoff_prototype/`.
+  Entrypoint: `validate_spectral_fast_kirchhoff_prototype` after setup.
+- Recommendation: a fixed PM random-surface pilot is justified as a next
+  validation stage. PM/Monte Carlo, wider bands, SSP, 3D, BER and production
+  integration remain unstarted/unverified; this task stops at the prototype.
+  Incoming theta99 must not be used as an outgoing cutoff: the sigma=1
+  control has about 2.76% of reflected propagating aperture-spectrum energy
+  outside the incident99 interval, which this full-kernel method retains.
+
 ### Full Kirchhoff spectral rank audit（2026-09-30）
 
 - Stage 1 is complete: validation-only saved-data audit in

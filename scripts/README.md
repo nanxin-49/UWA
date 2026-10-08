@@ -4,6 +4,42 @@
 
 ## 目录
 
+- `validation/validate_full_kirchhoff_pm_validity_boundary.m`：固定 canonical PM
+  realization 的单频物理适用域审查。先运行 `'init'` 保存受控 Fourier 设计并复用
+  原有锚点；重复 `'next'` 每次只执行一个基准案例；六个初始 cutoff 完成后
+  `'adapt'` 增加最多两个边界附近 cutoff；完成 `'next'` 后运行 `'plan'`，再重复
+  `'refine'` 逐个执行 Full 积分、BIE ppw/order 和窗口护栏；`'render'` 从保存数据
+  生成报告与图。入口在 `setup_vertical_project` 后从任意目录运行。
+  结果：`results/validation/full_kirchhoff_pm_validity_boundary/`；报告：
+  `reports/full_kirchhoff_pm_validity_boundary_report.md`。`'init'` 拒绝覆盖已有审查。
+  `test_pm_validity_metrics` 检查原始相位误差、幅相误差恒等式及冻结离散源。
+  本流程不运行 Fast FK 优化、multi-frequency、Monte Carlo 或生产集成。
+
+- `validation/validate_spectral_fast_kirchhoff_pm_pilot.m`: 固定 PM 海面的单频
+  FastFK–FullFK pilot。复用 canonical 与两个 Gaussian coefficient seed；保持
+  共同 Fourier 模式，检查 physical cutoff、网格、padding 与少量独立 BIE。
+  先测冻结 3/6 rank，失败时执行统一的有限 rank 诊断。运行 `'full'`，或分段
+  `'fast'` / `'bie'` / `'raw'` / `'quadrature'`；`'raw'` 检查无包络 Fourier PM，
+  `'quadrature'` 精化 high-K FullFK 的独立 BIE receiver 比较；
+  `'render'` 只读取本轮 MAT。输出在
+  `results/validation/spectral_fast_kirchhoff_pm_pilot/`，结论见
+  `reports/spectral_fast_kirchhoff_pm_pilot_report.md`。新 helper 仅供验证；
+  `test_spectral_fast_kirchhoff_pm_surface` 检查解析导数与 C2 嵌入。
+  `assert_spectral_fast_kirchhoff_pm_pilot_artifacts` 核对保存数据、共同系数、
+  固定 rank 与几何；算法 PASS 不替代整体 pilot 的物理门槛。
+
+- `validation/validate_spectral_fast_kirchhoff_prototype.m`: 真正的 FFT 非局部
+  Full FK prototype。全局入射 weighted basis + 出射 lag/height 分离 + 有限
+  Toeplitz 线性 FFT 卷积；选定 `r_in=3,r_out=6,padding=2`，不建立 receiver×surface
+  dense kernel。执行 `result=validate_spectral_fast_kirchhoff_prototype()`；
+  `'render'` 仅从本轮 MAT 重绘。三个主案例、K=.70/sigma=1/Rx=2 控制、padding
+  1/2/4、N=513/1025/2049/4097 的 fidelity/scaling 输出到
+  `results/validation/spectral_fast_kirchhoff_prototype/`。方法与数值报告在
+  `reports/spectral_fast_kirchhoff_prototype_method.md` 和
+  `reports/spectral_fast_kirchhoff_prototype_report.md`。
+  `validation/test_spectral_fast_kirchhoff_fft_controls.m` 是独立 flat Green、
+  坐标导数、padding 与复插值控制；三个新增 support helpers 仅供验证。
+
 - `validation/validate_full_kirchhoff_spectral_rank_audit.m`: 第一阶段 Full FK
   spectral separability audit。执行 `setup_vertical_project` 后调用
   `audit=validate_full_kirchhoff_spectral_rank_audit()`；复用保存参数/源谱，
