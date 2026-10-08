@@ -9,6 +9,39 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Full/Fast FK multi-frequency consistency（2026-10-08；最新扩频验证）
+
+- **PASS**, validation only: canonical seed260001, actual Kmax=.471238898 rad/m,
+  unchanged 12 Fourier modes, C2 plateau42/support50 m, uniform c1500,
+  frozen Gaussian source and Tx100/Rx3 research fixture. Sparse4/5/6/7/8 kHz
+  gates preceded65 frequencies at delta-f62.5 Hz. This fixture is distinct
+  from the approved Tx99 Bellhop installation visualization.
+- Frozen rank3/8 fails from6 kHz; common3/10 narrowly fails at8 kHz. One
+  **3/12** rank with padding2 passes the complete band: max weighted complex
+  error2.30670e-4, whole-grid2.87485e-4. BIE anchor errors at4/6/8 kHz are
+  8.00096e-4 / 5.30379e-4 / 4.08269e-4 in the frozen M99 core. All three
+  surface-grid, interpolation and padding guards pass.
+- Native exp(-i omega t) physical FK fields require a documented full-envelope
+  Fourier-sign bridge for MATLAB IFFT: `H=conj(P)*exp(+i*omega*tau_direct0)`.
+  Supplying conjugated native reduced envelopes to the unchanged helper's
+  direct_dsp target closes this bridge at2.07e-13. Native reduced fields are
+  not silently treated as public PE reduced fields; native physical outputs
+  are preserved separately. The unadapted carrier-only import is diagnostic.
+- Max Full/Fast relative phase1.74394e-4 rad, delay difference70.19 ns,
+  reflected CIR complex error7.17177e-5. Native group delay is about3.595 ms;
+  sampled CIR peak3.69231 ms. The16 ms periodic window is diagnostic and does
+  not establish unaliased long-path tails or a final converged CIR.
+- Minimum measured cold/warm speedups are9.83 / 41.94 across65 samples.
+  Memory figures are named arrays and block estimates, not process peaks.
+  Five independent phase/surface tests and saved-artifact assertions pass.
+  FullFK/BIE/FastFK references and all production/public interfaces remain
+  unchanged. Next scope may be fixed-PM broadband plus a small realization
+  set with explicit phase metadata; no database/Monte Carlo/BER/SSP/3D or
+  production integration is performed here.
+- Entry: `validate_spectral_fast_kirchhoff_multifrequency_consistency`;
+  report: `reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md`;
+  artifacts: `results/validation/spectral_fast_kirchhoff_multifrequency_consistency/`.
+
 ### Full Kirchhoff PM validity boundary（2026-10-07；最新物理适用域审查）
 
 - Validation-only continuation of one canonical realization: 15 controlled cases,
@@ -4387,3 +4420,34 @@ M99 support and weights. Artifacts are under
 `results/validation/pe_bie_incident_reflection_covariance/`; the report is
 `reports/pe_bie_incident_reflection_covariance_report.md`. No production PE,
 Full Kirchhoff, BIE, or surface model was changed.
+
+## 2026-10-08 Full/Fast FK small multi-frequency consistency
+
+Completed the sparse-to-dense frozen canonical PM audit described in the
+current-state index. New validation files are the orchestration entrypoint,
+`test_spectral_fast_kirchhoff_multifrequency_phase`,
+`support/audit_fk_multifrequency_phase`, and
+`support/assert_spectral_fast_kirchhoff_multifrequency_artifacts`. The report
+and case-specific artifacts preserve the original3/8 failures and every
+uniform-rank trial. No reference implementation, public configuration,
+exported channel field or communication consumer changed. README navigation
+and the technical guide document the native-to-IFFT phase bridge and the
+conditional scope of PASS. The source/geometry and C2 embedding are frozen;
+no new model, empirical phase fit or per-frequency height normalization was
+introduced. The next data-generation stage is permitted under these tested
+conditions but was not run.
+
+## 2026-10-08 — FK optimization PPT visualization (presentation only)
+
+- Main research progression paused for the requested presentation task. Render-only
+  entry `scripts/reporting/generate_fk_optimization_ppt_visuals.m` reads saved
+  prototype/PM pilot/PM boundary/multifrequency evidence; no new scattering solve,
+  benchmark, random realization, production physics or public interface change.
+- Eleven 16:9 PNG/vector-PDF figures under
+  `results/visualization/fk_optimization_ppt/figures/`, including exact saved-source
+  Incident reconstruction and native Reflected receiver profiles. Geometry uses
+  Tx100/Rx3 research fixture, not the Tx99 Bellhop installation.
+- Algorithm fidelity and physical validity remain separate. Fixed canonical
+  broadband consistency does not certify a PM population; 16 ms CIR remains
+  diagnostic. Report and recommended slide order:
+  `reports/fk_optimization_ppt_visualization_report.md`.

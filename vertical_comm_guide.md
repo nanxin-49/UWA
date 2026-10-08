@@ -40,6 +40,34 @@ H_{\mathrm{ref}}^{\mathrm{phys}}=e^{+i2\pi f\tau_{\mathrm{ref},0}}H_{\mathrm{ref
 
 载波相位只在各传播分量完成后转换，不进入 PE marching、海面边界、`deltaG`、伴随核或 PM 空间协方差。载波相位发布候选已通过，详见 `reports/pe_phase_reference_release_candidate_report.md`。
 
+### 验证专用 Full/Fast FK 原生物理场的输入桥接（2026-10-08）
+
+独立 FullFK/BIE/FastFK reference 保存的是 `exp(-iωt)` 原生物理相量
+`P_native`，冻结表面坐标为 `z=eta(x)`。不能只除去其载波，就自动把得到的
+native reduced envelope 当作上述公共 PE reduced 字段。对正序声学频率轴，
+MATLAB IFFT 的原生物理对应传递函数在同一个直达时刻参考下是
+
+\[
+H_{\mathrm{native,DSP}}(f)
+=\operatorname{conj}(P_{\mathrm{native}}(f))
+ e^{+i2\pi f\tau_{\mathrm{dir},0}}.
+\]
+
+反射路径等价于先构造
+`R_native=P_ref*exp(-i2*pi*f*tau_ref0)`，再把 `conj(R_native)` 送入现有
+helper 的 `direct_dsp` target。直达包络对应
+`conj(P_dir*exp(-i2*pi*f*tau_dir0))`。这是一次数学定义的全包络 Fourier
+符号转换，所有频点和分量共享同一个 time origin，不是逐频 phase alignment
+或 complex scalar fitting。原生物理 `P_native` 独立保留；不得用 helper 的
+`absolute_physical` target 从 DSP-adapted envelope 反推它。本轮不改公共
+PE 字段语义或生产 API。
+
+固定非零横向波数的解析控制表明，只旋转载波的未转换导入会给出错误的
+原生物理群时延解释，而上述桥接与独立构造的 IFFT transfer 复误差约
+`2.07e-13`。因此新报告主结果使用明确标记的 native physical direct-DSP
+表示，未转换导入只作诊断。报告见
+`reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md`。
+
 ## 2. PE/WAPE complex envelope
 
 传播核心位于 `src/propagation/vertical_wape_propagator.m`。均匀介质的一步 cached transverse operator 保持以下顺序：
@@ -423,6 +451,30 @@ M=50 的平均 `delta TL=-0.00748 dB`、圆均值相位差 `-0.37534 rad`；所�
 校准或强行消除 native backward-range 幅度偏差。
 
 ## Full Kirchhoff spectral separability audit — validation boundary (2026-09-30)
+
+### 小规模跨频一致性（2026-10-08；最新扩频结果）
+
+固定 canonical seed260001、12个 Fourier 模态、Kmax=.471238898 rad/m、
+C2嵌入和 Tx100/Rx3 的研究夹具，已完成4/5/6/7/8 kHz sparse gates，再完成
+4–8 kHz、F65、delta-f62.5 Hz 的 dense diagnostic，结论为 **PASS**。
+冻结3/8从6 kHz起不够；3/10在8 kHz仍略超1e-3，因此采用整频带统一3/12，
+padding2不变，没有逐频 tuning。最大 Fast–Full 加权/whole-grid复误差为
+2.30670e-4 / 2.87485e-4；三个 Full–BIE 物理锚点为8.00096e-4、
+5.30379e-4、4.08269e-4，物理范围仍限定在冻结M99核心孔径。
+
+原生物理对应的 direct-DSP 相位与群时延经上节桥接保持一致：最大相对相位
+1.74394e-4 rad，群时延差70.19 ns，reflected-only CIR复误差7.17177e-5。
+观测群时延约3.595 ms，采样CIR峰约3.69231 ms，二者受有限带宽与时间bin
+影响，不能逐路径对齐。1 kHz sparse spacing只有1 ms窗，不能认证时延；
+F65的16 ms窗覆盖名义4 ms超额时延，但有限积分边缘允许约53.129 ms的
+几何长路径，尚未证明弱散射尾部无混叠。这仍是phase-consistency diagnostic，
+不是最终支持收敛的CIR。
+
+三个频率的padding2/4、height nodes33/65和surface4097/8193护栏通过；
+65点最小cold/warm加速约9.83/41.94，内存按named arrays和块估计记录。
+Reference和生产PE/通信代码不变。允许下一阶段在此条件和显式phase metadata
+下开展固定PM宽带及小规模realization数据；未外推到PM总体、SSP、3D、
+time-varying或生产API集成。输出与完整限制见对应多频报告。
 
 ### PM 物理适用域的受控审查（2026-10-07；最新）
 

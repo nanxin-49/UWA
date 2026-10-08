@@ -31,6 +31,11 @@ comm_main_vertical_psk     % MPSK 通信演示
 
 ## 公共入口与目录
 
+FK 优化汇报图集（仅重绘已有验证数据）：
+[图集与展示顺序](reports/fk_optimization_ppt_visualization_report.md)。执行
+`setup_vertical_project; generate_fk_optimization_ppt_visuals();` 输出 11 张 PNG/PDF，
+包含 Incident/Reflected 场图，并分别展示算法保真和物理适用域。
+
 | 路径 | 用途 |
 |---|---|
 | `vertical_channel_model.m` | 稳定公共 API 包装；初始化路径并调用信道实现 |
@@ -57,6 +62,7 @@ comm_main_vertical_psk     % MPSK 通信演示
 | U=5/U=8 条件统计生成器 | 已有 F=64 验证证据；适用于已登记固定条件 |
 | bubble、SSA 诊断分支 | 已实现，但适用范围和验证强度不同，见技术指南 |
 | layered、Doppler、GPU、多接收机、插值接收的伴随统计链 | 尚未纳入当前原型 |
+| 验证专用 Full/Fast FK 跨频一致性 | 固定 PM、4–8 kHz/F65、统一3/12 rank PASS；包含原生物理到IFFT桥接，未生产集成 |
 
 当前公共窗口参数仍保持兼容默认值，并未自动切换到近期收敛验证的推荐窗口。正式研究运行前请阅读技术指南中的窗口建议和证据边界。
 
@@ -69,6 +75,7 @@ comm_main_vertical_psk     % MPSK 通信演示
 | `PROJECT_CONTEXT.md` | 后续模型与维护任务 | 顶部当前索引和完整追加式项目日志 |
 | `scripts/README.md` | 运行验证的人 | 脚本入口、环境变量、成本和输出位置 |
 | `reports/current_project_status_20260820.md` | 项目审阅者 | 已完成、部分完成、开放问题和推荐配置差异 |
+| `reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md` | FK扩频研究人员 | 固定海面、统一rank、BIE锚点、绝对相位与诊断CIR |
 | `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 
 历史文件原文保存在 `docs/history/`，不得作为当前 API、默认值或验证状态的唯一依据。
@@ -81,7 +88,7 @@ comm_main_vertical_psk     % MPSK 通信演示
 - 大型正式结果不放回根目录，也不由目录整理任务自动删除或重算。
 - `cash/` 仅在用户明确要求归档操作时访问；禁止日常自动读取或恢复。用途及约束见 `AGENTS.md`（`AGENT.md` 为说明入口）。
 
-当前技术状态日期为 2026-08-20。目录迁移仅改变文件位置和初始化方式，没有改变 PE marching、相位公式、海面统计公式或公共默认配置。
+公共能力基线日期为 2026-08-20；最新研究验证索引见 `PROJECT_CONTEXT.md`（FK跨频验证更新于2026-10-08）。目录迁移仅改变文件位置和初始化方式，没有改变 PE marching、相位公式、海面统计公式或公共默认配置。
 
 Bellhop 是外部验证依赖，不随仓库分发。运行 Bellhop 验证时可设置
 `BELLHOP_EXE` 指向可执行文件，或设置 `BELLHOP_TOOLBOX_ROOT` 指向外部

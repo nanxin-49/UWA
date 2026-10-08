@@ -4,6 +4,31 @@
 
 ## 目录
 
+- `reporting/generate_fk_optimization_ppt_visuals.m`：从已有 Prototype、PM pilot、
+  PM validity boundary 和 multi-frequency CSV/MAT 重绘 11 张 PPT 宽屏图。
+  `setup_vertical_project; generate_fk_optimization_ppt_visuals();` 不运行新求解或计时。
+  输出 `results/visualization/fk_optimization_ppt/`，讲述顺序与证据边界见
+  `reports/fk_optimization_ppt_visualization_report.md`。
+
+- `validation/validate_spectral_fast_kirchhoff_multifrequency_consistency.m`：
+  固定 canonical seed260001、C2 海面与 Gaussian 源的 4–8 kHz 跨频验证。
+  在 `setup_vertical_project` 后先 `'init'`，五次 `'next'`；只有冻结 3/8
+  fidelity 失败时运行 `'rank'` 检查统一频带 rank，`'timing'` 重测选定 rank。
+  三次 `'anchor'` 检查低/中/高频 BIE，三次 `'guard'` 检查 padding、插值和
+  网格。仅全部 sparse 门通过后，65 次 `'dense'` 逐频 checkpoint；
+  `'render'` 生成报告与图，`'status'` 查看状态。原始 3/8 结果和统一 rank
+  诊断保留，不做逐频 tuning。输出目录
+  `results/validation/spectral_fast_kirchhoff_multifrequency_consistency/`，报告
+  `reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md`。
+  FullFK/BIE/FastFK reference 与生产代码保持冻结。
+  `test_spectral_fast_kirchhoff_multifrequency_phase` 使用独立解析时延与
+  固定横向波数控制；`support/audit_fk_multifrequency_phase` 处理原生复向量
+  （禁止意外共轭转置），artifact helper 核对CSV复数符号、相位闭合和CIR。
+  主H表为`dense_native_physical_H.csv`，主CIR为`reflected_cir.csv`；MAT的
+  `phase_reference_meta`区分native physical、native reduced与DSP输入桥接。
+  本轮8 kHz BIE超过MCP300秒等待，但共享会话原计算在481秒后完成checkpoint；
+  遇到类似等待超时，应先核对checkpoint/会话，避免盲目重复昂贵任务。
+
 - `validation/validate_full_kirchhoff_pm_validity_boundary.m`：固定 canonical PM
   realization 的单频物理适用域审查。先运行 `'init'` 保存受控 Fourier 设计并复用
   原有锚点；重复 `'next'` 每次只执行一个基准案例；六个初始 cutoff 完成后
