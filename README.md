@@ -76,6 +76,9 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 | `scripts/README.md` | 运行验证的人 | 脚本入口、环境变量、成本和输出位置 |
 | `reports/current_project_status_20260820.md` | 项目审阅者 | 已完成、部分完成、开放问题和推荐配置差异 |
 | `reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md` | FK扩频研究人员 | 固定海面、统一rank、BIE锚点、绝对相位与诊断CIR |
+| [Deep-sea research handoff](reports/deep_sea_channel_research_background_for_new_ai.md) | 新的研究评估者 | 英文自包含需求、历史证据、单点计时转向和待论证计划 |
+| [External-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md) | 研究路线讨论者 | 英文外部建议核查、公开深海部署案例与建议测试范围；未改变生产模型 |
+| [Recommended deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 英文完整计划：三维单点参考、统计候选、配对实验、通信验收、全成本和时变扩展；属于计划而非验证结果 |
 | `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 
 历史文件原文保存在 `docs/history/`，不得作为当前 API、默认值或验证状态的唯一依据。
@@ -94,6 +97,20 @@ Bellhop 是外部验证依赖，不随仓库分发。运行 Bellhop 验证时可
 `BELLHOP_EXE` 指向可执行文件，或设置 `BELLHOP_TOOLBOX_ROOT` 指向外部
 Acoustics Toolbox 根目录；脚本会检查其 `windows-bin-20201102/bellhop.exe`。
 缺少外部依赖时，验证入口应停在依赖检查，不得伪造运行成功。
+
+## 深海图12(b)原生Bellhop复现尝试（2026-10-10）
+
+独立入口 `setup_vertical_project; validate_bellhop_fig12b('full');` 建立5000 m
+Munk、Tx4950 m、10 kHz的34个有符号距离声场/声线案例，结果在
+`results/validation/bellhop_fig12b/`。原生点声源把r=0整列置零；全角近轴
+幅值与声束数不稳定，本轮仅完成部分定性复现，不能作为已验证通信信道。
+见[中文报告及补充假设](reports/bellhop_fig12b_reproduction_report.md)。本案例独立
+于下述100 m安装验证，没有改变生产参数或公共API。
+
+随后按用户限定完成三种追加方案（高斯点源、Cerveny点源、高斯线源），
+每种含声束/步长及均匀介质控制，共15次运行，仍未可信复现，现已停止搜索。
+入口`validate_bellhop_fig12b_three_attempts('full')`；见
+[三次尝试与停止报告](reports/bellhop_fig12b_three_attempts_stop_report.md)。
 
 ## PE--Bellhop 展开坐标验证
 

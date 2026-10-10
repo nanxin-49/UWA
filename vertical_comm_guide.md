@@ -282,6 +282,17 @@ backward-range amplitude 仍只作 diagnostic；详情见
 原 500 m 粗糙海面试验和完整声线图已退役，不能作为 100 m 全多途信道的证据。
 旧运行与绘图代码保留，但不得按其 500 m 默认设置继续当前任务。
 
+2026-10-10新增独立的5000 m Munk、Tx4950 m、10 kHz图12(b)复现尝试：
+`validate_bellhop_fig12b('full')`，见[假设、34例结果及限制](reports/bellhop_fig12b_reproduction_report.md)。
+原生点声源把零水平距离整列置零；严格垂直声线成功不代表相干幅相已验证。
+全角近轴幅值未通过解析1/R控制，窄角扇声束收敛仍不足，当前复场不可直接
+当作已验证通信H_f。本任务不构造CIR、不做调制/BER，也不改变下述100 m安装。
+
+随后按用户限定追加三种原生束/源方案，共15次声束、步长及均匀控制运行；
+仍未可信复现，已停止参数搜索。外观最接近的Cerveny方案左右不对称且幅值
+失败；线源替换也未解决轴列。见[最终停止报告](reports/bellhop_fig12b_three_attempts_stop_report.md)。
+这些新增诊断同样不构成可直接使用的通信信道响应。
+
 **最新决定覆盖上述贴底安装：用户已接受实际离底1 m，Tx改为99 m，Rx仍为3 m。**
 以下epsilon诊断仅保留为历史，不再继续。新入口
 `generate_bellhop_100m_source1m_visuals_vertical`仅用于Bellhop代表案例及声线图，

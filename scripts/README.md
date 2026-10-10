@@ -4,6 +4,31 @@
 
 ## 目录
 
+- `validation/validate_bellhop_fig12b_three_attempts.m`：用户限定的三种追加
+  原生方案（`CB R/CR R/CB X`），固定15例，`next/full/status/render`分段或
+  复用；`reporting/generate_bellhop_fig12b_three_attempt_visuals.m`绘制保存复场。
+  50/500/2000束、1.25/.625 m步长及均匀控制均已完成，仍未可信复现，已停止
+  额外搜索。输出`results/validation/bellhop_fig12b_three_attempts/`；
+  [最终停止报告](../reports/bellhop_fig12b_three_attempts_stop_report.md)。
+
+- `validation/validate_bellhop_fig12b.m`：独立5000 m Munk/Tx4950 m/10 kHz
+  图12(b)复现尝试。`setup_vertical_project; validate_bellhop_fig12b('full');`
+  完成或复用34例；也可`init/next/status/render`分段。正负坐标均实际求解，
+  50/500/2000束及扩展8000/10000束、步长、严格垂直、解析1/R控制均保留。
+  `reporting/generate_bellhop_fig12b_visuals.m`只读本轮MAT绘图；
+  `support/audit_bellhop_fig12b_artifacts.m`核对原始文件，文件检查通过不等于
+  物理复现通过。输出`results/validation/bellhop_fig12b/`，
+  [报告](../reports/bellhop_fig12b_reproduction_report.md)。原生点源r=0置零、
+  全角声束未收敛、部分细步长触存储上限；未改Bellhop核心或通信链。
+
+- `validation/validate_fast_fk_single_receiver_timing.m`：冻结已验证 canonical PM、
+  4 kHz、4097点、rank3/12，严格FullFK单点(x0,z3)对当前FastFK整场取点。
+  `setup_vertical_project; validate_fast_fk_single_receiver_timing();` 执行预热及
+  9轮×10次计算，分别记录准备/计算；不重测Full整场、不改reference算法。
+  原始数据在 `results/validation/fast_fk_single_receiver_timing/`，结论见
+  `reports/fast_fk_single_receiver_timing_report.md`。本机计算阶段Full单点快
+  36.57倍，含准备快1.925倍；此前整场速度比不能代表单点任务。
+
 - `reporting/generate_fk_optimization_ppt_visuals.m`：从已有 Prototype、PM pilot、
   PM validity boundary 和 multi-frequency CSV/MAT 重绘 11 张 PPT 宽屏图。
   `setup_vertical_project; generate_fk_optimization_ppt_visuals();` 不运行新求解或计时。

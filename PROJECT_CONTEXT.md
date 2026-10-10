@@ -9,6 +9,48 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Deep-sea Fig12(b) native Bellhop reproduction attempt（2026-10-10）
+
+- Final stop:the user capped further work at three strategies.All three completed
+  (`CB R/CR R/CB X`,15 additional native runs with beam/step/free-field controls).
+  No strategy passed credible whole-figure reproduction;parameter search stopped.
+  Cerveny is visually closest but strongly asymmetric and fails amplitude control;
+  the line-source alternative remains axis-empty and is too bright.
+  [Final Chinese stop report](reports/bellhop_fig12b_three_attempts_stop_report.md);
+  fixed entry:`validate_bellhop_fig12b_three_attempts('full')`;
+  data:`results/validation/bellhop_fig12b_three_attempts/`.
+- Independent validation only:5000 m Munk,Tx4950 m,10 kHz,flat pressure-release
+  surface and assumed fluid halfspace.34 native field/ray runs;known paper
+  information and added assumptions are separated in the
+  [Chinese report](reports/bellhop_fig12b_reproduction_report.md).
+- Partial qualitative reproduction only;not a validated full field.Native point
+  source forces the entire r=0 pressure column to zero;strict vertical ray works
+  while the degenerate one-beam coherent field is zero.Full-angle near-axis
+  magnitude fails a homogeneous1/R control;beam convergence remains incomplete.
+- Bilateral[-90.06,-89.94]deg,8000 beams,STEP.625 m is the most refined tested
+  narrow fan without storage warnings.2000-to8000 field change remains.1129;
+  smaller.3125 m steps hit100000-step storage limits for386 narrow rays.
+  34 records have no nonfinite complex pressure;artifact PASS is not physics PASS.
+- Entry:`validate_bellhop_fig12b('full')`;data:`results/validation/bellhop_fig12b/`.
+  Production physics,public interfaces,100 m Bellhop installation and communication
+  chain remain unchanged.No CIR,wideband communication or BER is performed.
+
+### Deep-sea single-link research plan（2026-10-09；planning only）
+
+- Current recommended roadmap: [complete research plan](reports/deep_sea_channel_research_plan.md).
+  User target is Tx deeper than 1000 m, cable-deployed Rx3–10 m, 3D propagation
+  over a 2D rough surface, initially static/uniform and preferably4–8 kHz.
+- Proposed sequence: analytic 3D controls and single-receiver rough-surface
+  candidate; independent physical/cost pilot; paired mechanism study;
+  conditional statistical generator and communication acceptance; domain
+  extension; continuous surface dynamics and Doppler. Analytic homogeneous
+  illumination is the first candidate, not a production WAPE replacement.
+- Scenario levels, sample counts, tolerances and effort bands are proposals,
+  not completed experiments or newly confirmed engineering requirements.
+  No solver, public interface or validation status changed in this planning task.
+- Background and evidence: [handoff](reports/deep_sea_channel_research_background_for_new_ai.md)
+  and [external-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md).
+
 ### Full/Fast FK multi-frequency consistency（2026-10-08；最新扩频验证）
 
 - **PASS**, validation only: canonical seed260001, actual Kmax=.471238898 rad/m,
@@ -4451,3 +4493,25 @@ conditions but was not run.
   broadband consistency does not certify a PM population; 16 ms CIR remains
   diagnostic. Report and recommended slide order:
   `reports/fk_optimization_ppt_visualization_report.md`.
+
+## 2026-10-08 — FullFK single receiver versus current FastFK
+
+- Added one validation-only timing entry, `validate_fast_fk_single_receiver_timing`.
+  Frozen canonical seed260001, 4 kHz, N4097, Tx100/Rx3, geometry B,
+  rank3/12, padding2; the only receiver is existing index2049 (x0,z3).
+  FullFK receives scalar coordinates and computes only one integral row;
+  unchanged FastFK computes the full grid then extracts that point.
+- Shared MATLAB R2025b Update6, one warmup and9 alternating rounds of10 calls:
+  median Full single apply0.00098571 s versus Fast grid0.0360479 s;
+  Full is36.57 times faster. Preparation plus one application medians are
+  0.11155524 /0.21469579 s, so Full is1.925 times faster including setup.
+  Relative complex error1.76692919e-4; both outputs reproduce saved fields
+  within1e-12 relative tolerance. Frozen reference hashes pass; new entry has
+  clean Code Analyzer output. No Full grid solve was run for this benchmark.
+- Current whole-grid FastFK advantage does not carry to this single-buoy task;
+  prefer direct FullFK single-point evaluation with reusable incident input.
+  Historical full-grid timings are documented separately, not mixed into the
+  new speed ratios. No physics, public API, communication method or guide
+  equation changed; `vertical_comm_guide.md` needs no method revision.
+  Report: `reports/fast_fk_single_receiver_timing_report.md`; raw9-round
+  CSV/MAT: `results/validation/fast_fk_single_receiver_timing/`.

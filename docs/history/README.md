@@ -5,6 +5,8 @@
 - `SSA.md`
 - `BUBBLE_EXTENSION_SPEC.md`
 - `README_CODE_STRUCTURE_AND_OUTPUTS.md`
+- `bellhop_fig12b_premerge_20261010/`：图12(b)两份报告合并前的原文和哈希；
+  当前统一报告位于`reports/bellhop_fig12b_reproduction_report.md`。
 
 这些文件保留原文和当时的根目录路径，因此可能与当前 `src/` 布局、公共字段语义、默认相位参考或验证状态不一致。后续开发不得只依据这里的内容修改代码。
 
