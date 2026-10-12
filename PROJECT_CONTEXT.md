@@ -9,6 +9,21 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Deep-sea WP0 / minimum 3D WP1（2026-10-12；validation only）
+
+- Tx1500/Rx5、q=0/.10、c1500、单位3D Green点源、均匀无损压力释放半空间。
+  G0 PASS：24组平面/移位/旋转/表示控制，最大代数/相位误差7.28e-12/5.26e-12。
+- 单Rx三维FullFK保留真实eta(x,y)、法向/面积、解析源导数及两项Green积分。
+  解析无限平面加紧支撑密度差。flat、weak(.001 m)、dual(.002/.001 m)的
+  6 kHz数值门通过，再通过4/8 kHz网格检查；不是PM海况或3D FastFK。
+- 一阶Dirichlet参考完成12个振幅/几何对照、Gauss网格/支持护栏及Fourier交叉检查。
+  相消控制最大条件数约271；8项实现测试通过。
+- **有限粗糙度物理G1仍OPEN**：没有有限振幅余项界或匹配3D BIE。
+  不批准WP2/PM总体/统计/SSP/动态/CIR/BER；允许继续三维独立物理参考补强。
+- 入口`validate_deepsea3d_wp0_wp1`；数据`results/validation/deepsea3d_wp0_wp1/`；
+  [中文报告](reports/deepsea3d_wp0_wp1_report.md)、[协议](reports/deepsea3d_wp0_wp1_protocol.md)。
+  计划修订避免重做已完成2D域审查/单Rx算法。生产PE、公共接口与既有2D基准不变。
+
 ### 固定 Tx–单 Rx Kirchhoff 原型与有条件冻结（2026-10-12；validation only）
 
 - 独立完成FastIn + FullOut与固定Tx–Rx复合偏导核，保留真实高度、法向、

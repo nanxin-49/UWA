@@ -2,7 +2,19 @@
 
 Date: 2026-10-09 (Asia/Shanghai).
 
-Status: recommended research plan, not completed validation or an approved engineering operating envelope. This document synthesizes the user's requirements, the existing MATLAB work, the single-receiver timing result, and the reassessment of the external AI proposal. All new experiments, tolerances, sample counts, and milestones below are proposals. Preparing this plan did not change production physics or run new simulations.
+Status: recommended research plan with limited WP0/WP1 progress below; not an approved engineering operating envelope. Unperformed experiments and acceptance levels remain proposals. Production physics is unchanged.
+
+### Current execution update — 2026-10-12
+
+[Chinese stage report](deepsea3d_wp0_wp1_report.md) and [frozen protocol](deepsea3d_wp0_wp1_protocol.md) supersede the initial execution order where specified here.
+
+- The 2D PM physical-domain audit is complete (15 controlled inputs, four guarded cases). Do not repeat it as a blanket prerequisite. Its conditional boundary is not a universal cutoff or 3D acceptance criterion.
+- Newer 2D single-Rx FastIn/composite prototypes are conditionally frozen only at original Rx(0,3), with cancellation-position failures. They add algorithm fidelity, not BIE physics; no acceleration/rank work is required for this 3D stage.
+- WP0/G0 is PASS for Tx1500/Rx5, q=0/.10, unit Green point source, image fields, shifted planes, rotations and native/DSP algebra.
+- Minimum WP1 now has the full two-term single-Rx 3D Kirchhoff integral with analytic gradients and exact infinite-flat background subtraction for compact C2 perturbations. Numerical gates pass at 6 kHz, then 4/8 kHz. Millimetric weak/dual-direction controls do not represent the future Hm0=.5/1 m PM pilot.
+- One independent first-order Dirichlet shape-reference formulation is implemented: 12 amplitude/geometry comparisons, Gauss grid/support guards and Fourier cross-check. This is a weak-limit check, not finite-roughness BIE certification. Full G1 remains OPEN; these results do not authorize WP2/PM ensembles.
+- Next: a matched finite-amplitude 3D reference with explicit infinite-boundary treatment, or a higher-order expansion with quantified remainder. Probe one case and its refinement before a batch. An open BEM patch or a 1% FK–first-order discrepancy is not full G1.
+- Section 9 numerical 1e-3 and physical screening 1% proposals remain distinct from the historical 2D physical 1e-3 gate. No tolerance was relaxed to pass this campaign.
 
 ## 1. Recommended direction and intended contribution
 
@@ -50,9 +62,10 @@ Hull scattering, wakes, bubbles, and motion are not declared negligible. Initial
 | Existing result | Appropriate use now | Consequence |
 |---|---|---|
 | PE/WAPE, receiver adjoint, cross-frequency statistics, and MPSK tools | Reuse conventions, interfaces, and independently verified numerical components | Do not assume that old local-screen statistics are statistics of a new rough-boundary solver |
-| Selected FullFK–BIE comparisons | Reuse 2D regression cases and evidence of approximation failures | No automatic transfer of physical validity to 3D or deep source geometries |
+| Completed FullFK–BIE deterministic/PM-domain comparisons | Reuse 2D regressions, conditional passes and guarded failures | Do not repeat the completed audit; no automatic physical transfer to 3D |
 | Fixed-PM 4–8 kHz FastFK study, ranks 3/12 | Algorithm-fidelity and phase-convention regression | No reason to retain those ranks, sample counts, or surface cutoff in the new model |
 | Single-receiver timing reversal | Match computation to the requested output | Suspend dense-field FastFK optimization as the main research activity |
+| 2026-10-12 single-Rx conditional freeze | Reuse algorithm contracts and cancellation diagnostics | Not additional BIE physics or a 3D speed forecast |
 | Finite-band CIR agreement | Reuse native-to-DSP conversion tests | Re-establish delay support and frequency-grid convergence |
 | External AI suggestions | Retain useful questions and candidate methods | Recompute geometry, roughness moments, and budgets; do not inherit unsupported thresholds |
 
@@ -136,7 +149,8 @@ The following are research settings, not user-approved installation limits or pu
 | Role | Geometry and sea setting | Purpose |
 |---|---|---|
 | First analytic control | Tx1500 m, Rx5 m, c1500 m/s, flat surface, q=0 and 0.10 | Establish deep geometry and absolute conventions |
-| First roughness pilot | Same geometry; Hm0=0.5 and 1 m crossed with q=0 and 0.10 | Distinguish roughness effects, offset effects, and their interaction |
+| First numerical roughness controls | Same geometry; compact weak sinusoid and dual-direction perturbations | Executed WP1; amplitudes .001 and (.002,.001) m, not PM |
+| Subsequent roughness mechanism pilot | Hm0=0.5 and 1 m crossed with q=0 and 0.10 | Deferred until finite-roughness G1 and surface definition are established |
 | Nearby validation | Tx3000 m; Rx3 and 10 m; q up to 0.25; Hm0 up to 2 m | Test transfer one controlled extension at a time, then selected interactions |
 | Later stress cases | Tx6000 m, q=0.50, Hm0=3 m | Extend only after the core domain and cost are understood |
 
@@ -189,7 +203,7 @@ Include a uniformly shifted flat reflector to show how random phase/delay can su
 
 **Question:** Can the selected rough-surface approximation produce a defensible response at an acceptable cost?
 
-Implement the transparent single-receiver 3D candidate with analytic point-source illumination. Begin at 6 kHz with flat, weak sinusoidal, and mixed-direction deterministic surfaces. Use nested amplitudes, wavelength/orientation changes, and matched source/receiver geometry. Check surface quadrature, integration support, parent-domain effects, and stable cancellation separately.
+Reuse the completed minimal candidate and controls recorded above rather than restarting WP1. Compact perturbations use exact infinite-flat background plus rough/flat full-density differences, with raw finite-aperture flat errors retained separately. Future noncompact random surfaces require justified boundary/support treatment. Enlarging a C2 embedding changes the physical surface; it is sensitivity, not proof of infinite-ocean convergence.
 
 Apply 4 and 8 kHz only after the first control passes. Organize at most 12 initial independent-reference evaluations across easy, representative, and deliberately difficult cases after a one-case runtime/memory probe. This is a scope ceiling for an exploratory pilot, not a claim that 12 cases establish population validity. Repeat a selected reference with tighter resolution and support to quantify its uncertainty.
 

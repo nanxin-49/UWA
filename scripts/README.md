@@ -4,6 +4,14 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_wp0_wp1.m`：Tx1500/Rx5、q=0/.10 独立三维WP0及
+  紧支撑海面单Rx FullFK。setup后依次`'wp0'`、`'pilot'`、`'extend'`、`'reference'`、
+  `'spectral'`、`'cancellation'`、`'audit'`；测试`runtests('test_deepsea3d_controls')`。
+  helpers为`validation/support/deepsea3d_*`和`solve_deepsea3d_*`。
+  输出`results/validation/deepsea3d_wp0_wp1/`；
+  [协议](../reports/deepsea3d_wp0_wp1_protocol.md)、[中文报告](../reports/deepsea3d_wp0_wp1_report.md)。
+  G0与原型数值门通过，独立参考仅一阶弱扰动，有限粗糙度G1开放。
+
 - `validation/validate_fk_single_receiver_methods.m`：固定Tx100–Rx(0,3)的独立
   FastIn + FullOut与复合偏导核原型，4/6/8 kHz、12个PM输入及5个控制。
   `setup_vertical_project; validate_fk_single_receiver_methods();`；`'render'`
