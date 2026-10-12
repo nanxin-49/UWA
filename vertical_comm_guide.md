@@ -4,6 +4,17 @@
 
 状态日期：2026-09-03。
 
+补充验证（2026-10-12）：固定Tx100–单Rx(0,3)的两种独立Kirchhoff原型见
+[中文方案对比](reports/fk_single_receiver_methods_report.md)与
+[公式/协议](reports/fk_single_receiver_methods_protocol.md)。FastIn只压缩入射，
+出射保留标量FullFK；复合核使用`P=G*u_inc`的物理偏导表，并按真实海面高度
+插值，法向及弧长每次重新计算。两者仅在验证目录，不改变本指南公共信道接口、
+生产PE或通信方法，不提供新的统计信道、CIR、BER或3-D物理证据。
+同日验证补强及[冻结审核](reports/fk_single_receiver_baseline_freeze_report.md)
+仅冻结Rx(0,3)原fixture。FastIn可复用入射plan到新Rx，但已有相消点诊断
+不满足rank3的1e-3复误差门槛；复合核新Rx必须重建。零点相位及raw相对误差
+无定义时明确标记，不用分母保护值宣称准确；这些研究状态不改变公共接口。
+
 ## 1. 坐标、时间与载波相位参考
 
 - 海面为 `z=0`，深度向下为正。

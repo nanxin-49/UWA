@@ -4,6 +4,19 @@
 
 ## 目录
 
+- `validation/validate_fk_single_receiver_methods.m`：固定Tx100–Rx(0,3)的独立
+  FastIn + FullOut与复合偏导核原型，4/6/8 kHz、12个PM输入及5个控制。
+  `setup_vertical_project; validate_fk_single_receiver_methods();`；`'render'`
+  仅刷新中文报告；`audit_fk_single_receiver_methods_artifacts()`审计保存证据。
+  helpers位于`validation/support/fk_single_receiver_*`，生产PE及原基准不变。
+  输出`results/validation/fk_single_receiver_methods/`，
+  [方法与协议](../reports/fk_single_receiver_methods_protocol.md)、
+  [方案对比报告](../reports/fk_single_receiver_methods_report.md)。
+  补强后另输出`plan_controls.csv`、`cancellation.csv`、扫描CSV及
+  `freeze_manifest.json`；补强前证据保留于同case`pre_hardening/`。
+  [有条件冻结审核](../reports/fk_single_receiver_baseline_freeze_report.md)明确
+  Rx0可冻结与相消点FastIn误差失败；严格匹配错误ID，不用无关异常过关。
+
 - `validation/validate_bellhop_fig12b_three_attempts.m`：用户限定的三种追加
   原生方案（`CB R/CR R/CB X`），固定15例，`next/full/status/render`分段或
   复用；`reporting/generate_bellhop_fig12b_three_attempt_visuals.m`绘制保存复场。

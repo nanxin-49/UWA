@@ -9,6 +9,30 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 固定 Tx–单 Rx Kirchhoff 原型与有条件冻结（2026-10-12；validation only）
+
+- 独立完成FastIn + FullOut与固定Tx–Rx复合偏导核，保留真实高度、法向、
+  弧长权重及完整两项积分；未改变生产PE/公共接口或FullFK/BIE/FastFK基准。
+- Tx100/Rx(0,3)、c1500、4/6/8 kHz、4097点、Gaussian入射，12个PM输入
+  加5控制；算法复误差最大7.35e-4 / 3.30e-13，全部数值护栏通过。
+- 本轮建议FastIn为默认验证原型，复合核为高算法精度备选；精确入射已提供
+  时继续使用原始标量FullFK。跨realization成本与冷启动分开测量，不能使用
+  接收线FFT的历史加速倍数。结果不建立新海面物理真实性、3-D或BER结论。
+- 验证补强要求异常标识符精确匹配，141条依赖/拒绝/验证器控制；FastIn
+  不绑定Rx，复合核不绑定无关rank，海面及法向可更新。只修正plan契约和
+  错误标识符，计算公式不变；原Rx0压力逐值对补强前保存证据核对。
+- **仅原Rx(0,3)研究fixture可冻结**。已有强正弦控制的低压位置诊断发现
+  FastIn rank3相对复误差约.00225/.00575/.01736，均不满足原1e-3；复合核
+  通过但新Rx不再普遍是舍入级误差。未提高基线rank或放宽门槛；相消点
+  不纳入主域PASS。raw比例、幅度、相位、有限性和零点undefined均明确。
+- 补强前MAT/CSV在本case`pre_hardening/`；新plan_controls/cancellation CSV、
+  `freeze_manifest.json`与执行代码哈希保存完整冻结边界；
+  [冻结审核与所有未关闭问题](reports/fk_single_receiver_baseline_freeze_report.md)。
+- 入口`validate_fk_single_receiver_methods`，支持`full/render`；数据在
+  `results/validation/fk_single_receiver_methods/`；
+  [中文评价](reports/fk_single_receiver_methods_report.md)、
+  [公式与试验协议](reports/fk_single_receiver_methods_protocol.md)。
+
 ### Deep-sea Fig12(b) native Bellhop reproduction attempt（2026-10-10）
 
 - Final stop:the user capped further work at three strategies.All three completed
