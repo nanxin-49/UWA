@@ -1,5 +1,26 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### 三维TFE去混叠与失效诊断（2026-10-13；最新）
+
+验证分支对L1二因子、L2三因子乘积采用2n填充、一次投影及显式Nyquist空间，DtN乘积同样去混叠。
+同一冻结PM support12不变；独立3n/4n真实连续几何评价保留完整与投影PDE残差。
+dual/quarter控制通过，但原幅度N32去混叠体PDE .4753/DtN .3265，均未过原1e-4门。
+末阶系数减小2.363倍不等于物理收敛；99.60%残差能量在保留空间，几何算子差仅1.15e-5。
+停在N32/既有网格，不做support24/FullFK–PM；PM INCONCLUSIVE、G1 OPEN/WP2=false。
+建议下一轮直接求解t=1展平Helmholtz、矩阵自由且受预算约束，而非继续堆Taylor阶数。
+生产PE、通信公式与冻结求解器均不变。[报告](reports/deepsea3d_tfe_dealiasing_report.md)。
+
+### 三维TFE独立参考最小原型（2026-10-13；最新）
+
+验证专用展平z=s+t(1-s/b)eta、a=1-t eta/b，粗糙修正的算子满足a²(Delta+k²)=L0+tL1+t²L2。
+精确物理DtN为v_z=T v，T=i sqrt(k²-kx²-ky²)、Im sqrt≥0；展平上边界Vs−TV=−t eta/b TV。
+点源在薄层外，Rx由固定平面传播，背景仍是精确无限平面镜像；横向周期修正须独立扩域。
+平面与制造解通过，认证dual完整数值检查通过，最细增量对冻结Dirichlet参考差6.308e-7。
+同一冻结PM seed261013/support12在N40仍无收敛；h.125体PDE约.120/DtN约.173。
+quarter幅度仅诊断局部门通过，不是Hm0=.5目标认证；未做support24或FullFK–PM。
+PM参考INCONCLUSIVE，全G1 OPEN/WP2=false；没有改动生产PE、通信公式、冻结解算器或历史数据。
+[报告](reports/deepsea3d_tfe_prototype_report.md)、[协议](reports/deepsea3d_tfe_prototype_protocol.md)。
+
 ### 三维PM固定realization最小可行性（2026-10-13；最新）
 
 各向同性有限带PM，P(kx,ky)=alpha/(4pi*kappa^4)*exp[-1.25*(kp/kappa)^2]，

@@ -4,6 +4,24 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_tfe_dealiasing.m`：同空间Fourier-Galerkin去混叠诊断，冻结PM不重生成。
+  有效job为dual_fg、quarter_fg、pm_fg、pm_collocation_fixed；pm_collocation仅保存初始无效对照。
+  support下`deepsea3d_fg_*`为插值/乘积/plan，`solve_deepsea3d_tfe_galerkin`为新验证分支，
+  `observe_deepsea3d_fg_residual`独立真几何评价，`probe_deepsea3d_fg_geometry`只读保存场诊断，
+  `audit_deepsea3d_fg_artifacts`核对空间/数据/失败分类，测试`test_deepsea3d_fg_products`。
+  [报告](../reports/deepsea3d_tfe_dealiasing_report.md)、[协议](../reports/deepsea3d_tfe_dealiasing_protocol.md)，
+  数据`results/validation/deepsea3d_tfe_dealiasing/`。原PM仍失败，停止扩阶；建议直接mapped Helmholtz。
+  G1 OPEN/WP2=false，无support24/FullFK–PM或生产修改。
+
+- `validation/validate_deepsea3d_tfe_prototype.m`：独立mapped Helmholtz TFE参考原型，冻结PM系数只读加载。
+  setup后init，再run带job名：dual_base/dual_order/dual_order20/dual_horizontal/dual_vertical/dual_top/dual_domain；
+  pm16/pm24/pm32/pm40/pm_scaled/pm_vertical/pm_top/pm_domain/pm_horizontal；status只读。
+  最后`support/audit_deepsea3d_tfe_artifacts`重建数值门和成本，测试`test_deepsea3d_tfe`。
+  support中的`solve_deepsea3d_tfe`及tfe_chebyshev/modal_plan/modal_solve/geometry/operators/forcing仅供验证。
+  数据`results/validation/deepsea3d_tfe_prototype/`，[报告](../reports/deepsea3d_tfe_prototype_report.md)、
+  [协议](../reports/deepsea3d_tfe_prototype_protocol.md)。已认证dual复现通过，原PM仍INCONCLUSIVE；
+  不做support24/FullFK–PM，全G1 OPEN/WP2=false，生产/冻结/历史结果不变。
+
 - `validation/validate_deepsea3d_pm_feasibility.m`：一个固定PM realization的有界独立参考可行性预检。
   setup后init、九次next、observe、trace、audit；status只读。support内的
   `build_deepsea3d_pm_target`冻结父面与系数，`observe_deepsea3d_pm_trace`直接指数边界诊断，

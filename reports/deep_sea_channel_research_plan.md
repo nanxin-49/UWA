@@ -6,6 +6,26 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 
 ### Current execution update — 2026-10-12
 
+2026-10-13 bounded TFE dealiasing diagnosis completed:
+[report](deepsea3d_tfe_dealiasing_report.md), [protocol](deepsea3d_tfe_dealiasing_protocol.md).
+Cubic-exact2n padding and matched symmetric Fourier space, independent3n/4n true geometry;
+dual/quarter local controls pass. Original PM N32 last coefficient norm improves2.363x,
+but true PDE/DtN worsen .410575→.475266/.287852→.326480.99.60% of residual energy is retained.
+Dealiasing does not rescue the current Taylor sum; do not stack further orders. Next preferred
+bounded reference is a direct matrix-free t=1 mapped Helmholtz solve, with matched3D BIE fallback.
+PM INCONCLUSIVE, G1 OPEN, WP2=false; no support24/FullFK–PM. Frozen284 files unchanged.
+Kernel wall486.343s includes initial invalid comparator and saved-field independent probe.
+
+2026-10-13 independent 3D TFE minimum prototype completed:
+[report](deepsea3d_tfe_prototype_report.md), [protocol](deepsea3d_tfe_prototype_protocol.md).
+Mapped Helmholtz with exact outgoing Fourier DtN, independently checked against manufactured modes
+and the certified dual case: all dual numerical gates pass, fine increment differs6.308e-7 from frozen FE.
+The same frozen PM seed261013/support12 fails at N40; h.125 still has physical PDE/DtN residuals .120/.173.
+Quarter-amplitude local diagnostics pass but are not the target or a formally converged reference.
+No support24 or FullFK–PM comparison; reference INCONCLUSIVE, full G1 OPEN, WP2=false.
+Next bounded reference work may address dealiasing/TFE truncation or a matched3D BIE prototype.
+Sixteen rough solves plus one plane control, saved kernel wall278.451s; frozen263 files unchanged.
+
 2026-10-13 fixed-realization 3D PM feasibility completed:
 [report](deepsea3d_pm_feasibility_report.md), [protocol](deepsea3d_pm_feasibility_protocol.md).
 One isotropic finite-band Hm0=.5m parent (128m, kmin2pi/128, kmax1rad/m), seed261013,

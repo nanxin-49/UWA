@@ -9,7 +9,36 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
-### Deep-sea 3D PM fixed-realization feasibility（2026-10-13；最新）
+### Deep-sea TFE dealiasing failure diagnosis（2026-10-13；最新）
+
+- L2为三因子乘积；新验证分支2n填充且最后一次投影，DtN乘积一并处理，5项制造测试通过。
+  对称Fourier空间显式去Nyquist；同空间对照纠正并保留初始无效数据及成本，不改旧求解器。
+- dual与quarter PM局部控制通过；原PM共享同系数/support12/6kHz/q.10，N16/24/32原网格。
+  去混叠N32末阶体场系数降2.363倍，但PDE .410575→.475266、DtN .287852→.326480，未获参考收益。
+  独立3n/4n算子评价一致，99.60%物理残差能量仍在保留空间；真几何算子差1.1521e-5。
+- 当前t=1有限Taylor和仍明显失效，不能只归因混叠或真残差评价网格；不证明连续TFE必然发散。
+  停止扩阶/扩网格；建议下一项矩阵自由直接求解t=1 mapped Helmholtz，失败再考虑匹配3D BIE。
+- PM INCONCLUSIVE、G1 OPEN/WP2=false。无support24/FullFK–PM/Monte Carlo。
+  新核wall486.343s含初始错误及probe，命名数组估计384.75MiB、非峰值；冻结284文件不变。
+  入口`validate_deepsea3d_tfe_dealiasing`，数据`results/validation/deepsea3d_tfe_dealiasing/`，
+  [中文报告](reports/deepsea3d_tfe_dealiasing_report.md)、[协议](reports/deepsea3d_tfe_dealiasing_protocol.md)。
+
+### Deep-sea 3D TFE independent reference prototype（2026-10-13）
+
+- 新验证专用TFE：z=s+t(1-s/b)eta，独立mapped Helmholtz与精确Fourier DtN；
+  Chebyshev M32/40、传播/倏逝/掠射模态及近内部极点保护，不调用FullFK/普通FE求解。
+  冻结PM cfg/系数只读加载，没有重生成海面、重跑FE失败或修改生产。
+- 平面与实现测试通过；认证dual的阶数/横向/纵向/域/透明平面/真实边界与PDE门均通过，
+  最细TFE与冻结独立参考增量差6.308e-7，成功复现该离散案例。
+- 原振幅PM support12仍INCONCLUSIVE：N32→40变化1.923，细h.125体PDE≈.120/DtN≈.173，
+  纵向M40不能修复；N40体场尾部增长。quarter幅度仅局部残差通过，不是原目标或正式参考PASS。
+  不做support24/FullFK–PM；全G1 OPEN/WP2=false，建议有界dealiasing/TFE改进或匹配3D BIE原型。
+- 16粗糙解+1平面，保存核wall278.451s；体场74.25MiB、工作数组估计891MiB、快照非峰值。
+  新测试3/3和数据审计通过，冻结263文件不变；入口`validate_deepsea3d_tfe_prototype`，
+  数据`results/validation/deepsea3d_tfe_prototype/`；
+  [中文报告](reports/deepsea3d_tfe_prototype_report.md)、[协议](reports/deepsea3d_tfe_prototype_protocol.md)。
+
+### Deep-sea 3D PM fixed-realization feasibility（2026-10-13）
 
 - 新目标：各向同性有限带PM、Hm0=.5m、seed261013、6kHz、Tx(0,150.5,1500)/Rx5、q=.10。
   父域128m、kmin2pi/128、kmax1rad/m，固定alpha解离散谱质量，Tp3.638671s；
