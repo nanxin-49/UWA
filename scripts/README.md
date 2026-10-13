@@ -4,6 +4,26 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_alpha25_preflight.m`：仅alpha2.5低成本FE稳定性预检。
+  setup后`'init'`、重复`'next'`（本次3次）、`'cancellation'`、`'audit'`。
+  观测helper为`observe_deepsea3d_fe_cancellation`，不修改冻结模型。
+  输出`results/validation/deepsea3d_alpha25_preflight/`；
+  [报告](../reports/deepsea3d_alpha25_preflight_report.md)、[协议](../reports/deepsea3d_alpha25_preflight_protocol.md)。
+  预检支持进入受控正式检查；alpha2.5物理G1仍INCONCLUSIVE，全目标域OPEN/WP2=false。
+
+- `validation/validate_deepsea3d_g1_amplitude.m`：冻结有限振幅三维基准的统一alpha扩展。
+  setup后`'init'`，重复`'next'`至complete，再`'audit'`；分类测试保存要求见
+  [报告](../reports/deepsea3d_g1_amplitude_report.md)与[协议](../reports/deepsea3d_g1_amplitude_protocol.md)。
+  输出`results/validation/deepsea3d_g1_amplitude/`。alpha1复用；.5/1.5/2独立护栏通过，
+  全目标域仍OPEN/WP2=false；冻结求解器与源/海面约定不变。
+
+- `validation/validate_deepsea3d_g1_preflight.m`和`validate_deepsea3d_g1_finite.m`：
+  一个Tx1500/Rx5、6 kHz、振幅(.02,.01) m紧支撑双方向面，独立高阶Dirichlet FE。
+  先preflight，再`'init'`、十次`'next'`、`'offgrid'`、`'compare'`、`'cancellation'`、`'audit'`。
+  新测试`test_deepsea3d_finite_reference`，保存规则见[协议](../reports/deepsea3d_g1_finite_protocol.md)。
+  输出`results/validation/deepsea3d_g1_finite/`；[中文报告](../reports/deepsea3d_g1_finite_report.md)。
+  单案例条件性G1 PASS，不批准WP2或全目标域；原FullFK及二维/生产实现不变。
+
 - `validation/validate_deepsea3d_wp0_wp1.m`：Tx1500/Rx5、q=0/.10 独立三维WP0及
   紧支撑海面单Rx FullFK。setup后依次`'wp0'`、`'pilot'`、`'extend'`、`'reference'`、
   `'spectral'`、`'cancellation'`、`'audit'`；测试`runtests('test_deepsea3d_controls')`。

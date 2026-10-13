@@ -1,5 +1,32 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### alpha2.5低成本参考预检（2026-10-13；最新）
+
+同一单链/dual/C2，alpha2.5的粗配置N12不足；追加N20后阶数变化2.36e-6、
+半网格真实边界残差2.87e-6。普通FE在该配置未见失稳，但高阶消项已明显。
+只建议受控细网格正式参考检查；没有新FK物理对照、域扩展或alpha2.5 G1 PASS。
+alpha2.5物理状态INCONCLUSIVE，全目标域OPEN/WP2=false；冻结公式和求解器未改。
+[报告](reports/deepsea3d_alpha25_preflight_report.md)。
+
+### 三维G1统一振幅扩展（2026-10-13；最新）
+
+冻结Tx1500/Rx5、q0、6 kHz、dual波矢/phase/C2支撑，仅缩放(.02,.01) m。
+alpha1复用；.5/1.5/2新增点各自参考阶数/网格/域/真实边界检查通过，并均条件性G1 PASS。
+最大反射/增量复误差2.57e-4/1.27e-4，最大半网格残差2.44e-7；未见可信物理失败。
+原1%物理和参考1e-4门不变；参考不稳定须INCONCLUSIVE，不判FullFK失败。
+这只覆盖四个离散点，全目标域G1仍OPEN/WP2=false；冻结模型和相位约定均未改。
+[报告](reports/deepsea3d_g1_amplitude_report.md)、[协议](reports/deepsea3d_g1_amplitude_protocol.md)。
+
+### 三维有限振幅单案例物理接续（2026-10-12；最新）
+
+独立高阶Dirichlet FE对Tx1500/Rx5、q0、6 kHz、振幅(.02,.01) m双方向C2海面
+提供有限振幅参考。自身阶数/网格/域/真实边界残差护栏通过，原FullFK反射及粗糙增量
+误差分别1.36e-4/1.06e-4；同一海面局部相消总场误差.364%。
+本单案例条件性G1 PASS，新增单频反射/增量1%筛查不等于原二维物理1e-3或宽带G1。
+没有严格余项界、全目标域/PM总体认证，WP2仍不批准。下节WP1的OPEN为此前阶段状态。
+原生场/源/海面/相位约定和生产代码未改变。
+[报告](reports/deepsea3d_g1_finite_report.md)、[协议](reports/deepsea3d_g1_finite_protocol.md)。
+
 ### 三维深海研究原型边界（2026-10-12）
 
 `validate_deepsea3d_wp0_wp1`独立验证Tx1500/Rx5、q=0/.10、均匀压力释放半空间。

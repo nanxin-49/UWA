@@ -6,6 +6,28 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 
 ### Current execution update — 2026-10-12
 
+2026-10-13 alpha2.5 bounded precheck completed: [report](deepsea3d_alpha25_preflight_report.md).
+N12 is insufficient; N16-to20 change and true half-cell boundary residual pass the existing
+coarse precheck. Ordinary FE has no observed catastrophic instability on this configuration.
+Next only a controlled finer-grid reference check, then domain/FK work if stable.
+No formal alpha2.5 G1 pass or WP2 authorization follows; no full validation was started.
+
+2026-10-13 amplitude-only continuation: [report](deepsea3d_g1_amplitude_report.md).
+Frozen alpha1 reused; new .5/1.5/2 each passed independent order/mesh/domain/true-boundary
+controls and conditional pointwise G1 at unchanged geometry/spectrum/phase/support.
+No credible physical failure or FE instability was found. This certifies four sampled points,
+not a continuous interval or the complete G1 domain; WP2 remains blocked by coverage gaps.
+If pursuing larger amplitude, first probe alpha2.5 order stability at bounded cost.
+
+Latest continuation: [finite-roughness single-case report](deepsea3d_g1_finite_report.md)
+and [protocol](deepsea3d_g1_finite_protocol.md). An independent order16 Dirichlet FE reference
+with grid/domain/order and true-boundary residual controls conditionally passes one
+Tx1500/Rx5, q0, 6 kHz compact dual-direction surface, amplitudes (.02,.01) m.
+FullFK reflected/increment errors are 1.36e-4/1.06e-4; finite-amplitude effects are substantial.
+This closes the first-order-only gap for this case, not the full target domain G1.
+WP2 remains unauthorized. Next use one controlled physical-domain extension; do not require
+a dense BIE or repeat this completed single case as a blanket prerequisite.
+
 [Chinese stage report](deepsea3d_wp0_wp1_report.md) and [frozen protocol](deepsea3d_wp0_wp1_protocol.md) supersede the initial execution order where specified here.
 
 - The 2D PM physical-domain audit is complete (15 controlled inputs, four guarded cases). Do not repeat it as a blanket prerequisite. Its conditional boundary is not a universal cutoff or 3D acceptance criterion.
@@ -13,7 +35,7 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 - WP0/G0 is PASS for Tx1500/Rx5, q=0/.10, unit Green point source, image fields, shifted planes, rotations and native/DSP algebra.
 - Minimum WP1 now has the full two-term single-Rx 3D Kirchhoff integral with analytic gradients and exact infinite-flat background subtraction for compact C2 perturbations. Numerical gates pass at 6 kHz, then 4/8 kHz. Millimetric weak/dual-direction controls do not represent the future Hm0=.5/1 m PM pilot.
 - One independent first-order Dirichlet shape-reference formulation is implemented: 12 amplitude/geometry comparisons, Gauss grid/support guards and Fourier cross-check. This is a weak-limit check, not finite-roughness BIE certification. Full G1 remains OPEN; these results do not authorize WP2/PM ensembles.
-- Next: a matched finite-amplitude 3D reference with explicit infinite-boundary treatment, or a higher-order expansion with quantified remainder. Probe one case and its refinement before a batch. An open BEM patch or a 1% FK–first-order discrepancy is not full G1.
+- The earlier next-step finite-amplitude reference is now completed conditionally for the case above. For harder cases test FE stability anew, or use TFE/matched half-space BIE. An open BEM patch or a 1% FK–first-order discrepancy still does not establish full G1.
 - Section 9 numerical 1e-3 and physical screening 1% proposals remain distinct from the historical 2D physical 1e-3 gate. No tolerance was relaxed to pass this campaign.
 
 ## 1. Recommended direction and intended contribution

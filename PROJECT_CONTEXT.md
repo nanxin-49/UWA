@@ -9,6 +9,44 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Deep-sea alpha2.5 reference preflight（2026-10-13；仅预检）
+
+- 固定原单链与dual谱/phase/C2，只将振幅统一放大2.5；L24/h.125，N12/16必要补N20。
+  N12边界残差4.07e-4失败；16→20增量变化2.36e-6，N20半网格残差2.87e-6通过预检门。
+  系数尾部衰减，内部消项指标最高3314、接收求和指标15.62；诊断回放逐阶匹配冻结FE。
+- 值得继续低成本细网格正式参考检查，普通FE粗配置未见灾难性失稳；未跑FK或域扩展。
+  alpha2.5物理G1仍INCONCLUSIVE，全目标域OPEN，WP2=false；不默认开启完整验证。
+- 保存计算wall5.944秒，进程内存前后快照约3.12 GiB（非峰值），谱载荷最大45 MiB。
+  入口`validate_deepsea3d_alpha25_preflight`；数据`results/validation/deepsea3d_alpha25_preflight/`；
+  [中文报告](reports/deepsea3d_alpha25_preflight_report.md)。冻结求解器及历史数据不变。
+
+### Deep-sea 3D G1 amplitude-only extension（2026-10-13）
+
+- 固定Tx1500/Rx5、q0、6 kHz、dual谱/phase、C2支撑及原生约定，只乘统一alpha。
+  1.0冻结基准复用，.5/1.5/2.0新增点均获得条件性G1 PASS，无可信物理失败或FE失稳。
+- 每新增点独立N12/16、网格/域和原网格/半网格真实边界检查；N16实际足够，非默认。
+  最大最终细阶数/网格变化1.83e-6/1.51e-6，半网格残差2.44e-7；alpha2粗阶数差4.62e-5。
+  四点反射误差6.19e-5/1.36e-4/2.07e-4/2.57e-4，增量最大1.27e-4；误差主要在相位。
+- 仅四个离散点，不是连续振幅区间或PM总体认证；全G1目标域OPEN，WP2=false。
+  如继续，仅建议2.5低成本阶数稳定性预检；尚未找到物理失败边界。
+- 入口`validate_deepsea3d_g1_amplitude`；结果`results/validation/deepsea3d_g1_amplitude/`；
+  [中文报告](reports/deepsea3d_g1_amplitude_report.md)。新增保存计算wall137.35秒，1.0零新增求解。
+  未修改冻结三维、生产或二维模型；分类回归4项通过，不重复原WP0/WP1/G1。
+
+### Deep-sea 3D finite-roughness G1 single-case（2026-10-12；接续WP1）
+
+- 一个Tx1500/Rx5、q0、6 kHz、C2双方向面，振幅(.02,.01) m、support12 m。
+  独立16阶Dirichlet FE保留倏逝模态，完成自身阶数、网格、域和真实边界残差检查。
+  最大网格增量变化1.07e-6，N16原网格/半网格边界残差9.37e-12/2.02e-7，三个高阶测试通过。
+- FullFK原生反射/粗糙增量误差1.36e-4/1.06e-4；高阶与一阶增量差70.8%。
+  6033.0075 Hz局部相消总场误差.364%，独立参考自身总场变化3.74e-5。
+- **该有限振幅案例条件性G1 PASS**；不是严格余项定理、band-relative或PM总体认证。
+  全目标域G1仍OPEN，WP2不批准。此条接续下条的一阶参考缺口，不重新做二维研究。
+- 入口`validate_deepsea3d_g1_preflight`、`validate_deepsea3d_g1_finite`；数据
+  `results/validation/deepsea3d_g1_finite/`；[中文报告](reports/deepsea3d_g1_finite_report.md)。
+  保存计算wall137.45 s（含探针/参考/比较，不含IO与开发）；无密集BIE、新依赖或生产变更。
+  原三维FK、源/海面/相位helper及二维/生产基准保持哈希。下一步仅受控物理域扩展。
+
 ### Deep-sea WP0 / minimum 3D WP1（2026-10-12；validation only）
 
 - Tx1500/Rx5、q=0/.10、c1500、单位3D Green点源、均匀无损压力释放半空间。
