@@ -9,7 +9,21 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
-### Deep-sea TFE dealiasing failure diagnosis（2026-10-13；最新）
+### Deep-sea matrix-free t=1 mapped Helmholtz pilot（2026-10-13；最新）
+
+- 新验证专用直接法：精确图面点源Dirichlet、原去混叠L0+L1+L2/DtN、L0模态预条件GMRES，
+  无Taylor求和/源项展开。连续map Jacobian下界.3221已用解析梯度和采样间隙界认证。
+- 平面/dual/quarter控制通过；dual对冻结参考增量差1.0935e-5。四项制造/预算测试通过。
+  原PM restart8/12各96内迭代仍未线性收敛：B残差1.822e-3/1.359e-3，离散体1.155e-3/9.212e-4。
+  restart12真PDE1.329e-3、DtN1.273e-3、边界1.04033e-4未过门；接收差虽3.65e-5不能认证。
+- 对旧Taylor N32体/DtN残差改善357.6/256.4倍，但不是物理解误差或速度认证。
+  停止扩算；优先有界改进预条件以关闭离散线性门，之后才评估分辨率/正式收敛；失败再匹配3D BIE。
+- PM INCONCLUSIVE、G1 OPEN/WP2=false，无FullFK–PM/support24/MC/FastFK。新核wall464.135s，
+  工作数组估计663.19MiB、快照非峰值；冻结312文件不变，生产/历史结果未改。
+  入口`validate_deepsea3d_mapped_direct`，数据`results/validation/deepsea3d_mapped_direct/`；
+  [中文报告](reports/deepsea3d_mapped_direct_report.md)、[协议](reports/deepsea3d_mapped_direct_protocol.md)。
+
+### Deep-sea TFE dealiasing failure diagnosis（2026-10-13）
 
 - L2为三因子乘积；新验证分支2n填充且最后一次投影，DtN乘积一并处理，5项制造测试通过。
   对称Fourier空间显式去Nyquist；同空间对照纠正并保留初始无效数据及成本，不改旧求解器。

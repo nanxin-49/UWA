@@ -4,6 +4,15 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_mapped_direct.m`：无Taylor的t=1矩阵自由mapped Helmholtz原型。
+  setup后flat→dual→quarter→pm→pm_restart12；拒绝覆盖，PM要求controls已过门。
+  `support/deepsea3d_mapped_action`、`deepsea3d_mapped_l0_solve`、`deepsea3d_mapped_discrete_residual`、
+  `solve_deepsea3d_mapped_direct`复用冻结去混叠/模态helper；`certify_deepsea3d_mapped_geometry`给连续map界，
+  `audit_deepsea3d_mapped_direct`重建三层门，测试`test_deepsea3d_mapped_direct`。
+  [报告](../reports/deepsea3d_mapped_direct_report.md)、[协议](../reports/deepsea3d_mapped_direct_protocol.md)，
+  数据`results/validation/deepsea3d_mapped_direct/`。controls通过，原PM短restart96内步仍未收敛；
+  停止扩算，建议有界预条件改进。PM INCONCLUSIVE/G1 OPEN/WP2=false，无生产或旧基准改动。
+
 - `validation/validate_deepsea3d_tfe_dealiasing.m`：同空间Fourier-Galerkin去混叠诊断，冻结PM不重生成。
   有效job为dual_fg、quarter_fg、pm_fg、pm_collocation_fixed；pm_collocation仅保存初始无效对照。
   support下`deepsea3d_fg_*`为插值/乘积/plan，`solve_deepsea3d_tfe_galerkin`为新验证分支，

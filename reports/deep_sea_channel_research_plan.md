@@ -6,6 +6,16 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 
 ### Current execution update — 2026-10-12
 
+2026-10-13 matrix-free t=1 mapped Helmholtz minimum pilot completed:
+[report](deepsea3d_mapped_direct_report.md), [protocol](deepsea3d_mapped_direct_protocol.md).
+Exact source-on-graph Dirichlet, unchanged dealiased operators and outgoing DtN, L0-preconditioned GMRES;
+no Taylor expansion. Plane/dual/quarter controls pass, dual increment error1.0935e-5 to frozen reference.
+Original PM restart8/12 each capped96 inner steps remain linearly unresolved; best true PDE/DtN
+1.329e-3/1.273e-3 and true boundary1.04033e-4 fail original gates. Pressure stability is insufficient.
+This improves Taylor32 residuals substantially but does not certify physical error. Stop iteration/grid expansion;
+next bounded work should address preconditioning before formal convergence checks, with matched3D BIE fallback.
+PM INCONCLUSIVE, G1 OPEN/WP2=false, no support24/FullFK–PM. Kernel wall464.135s, frozen312 files unchanged.
+
 2026-10-13 bounded TFE dealiasing diagnosis completed:
 [report](deepsea3d_tfe_dealiasing_report.md), [protocol](deepsea3d_tfe_dealiasing_protocol.md).
 Cubic-exact2n padding and matched symmetric Fourier space, independent3n/4n true geometry;

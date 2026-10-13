@@ -1,5 +1,16 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### 三维t=1矩阵自由直接法（2026-10-13；最新）
+
+对粗糙修正直接解(L0+L1+L2)V=0，底边g=-u_flat(eta)用精确点源函数；
+上边Vs−TV=-eta TV/b不变。以平面Robin模态逆S0预条件，GMRES有限restart，不用Taylor截断。
+连续map Jacobian下界.3221，物理方程等价；有限Fourier/周期/Chebyshev近似仍需验证。
+平面/dual/quarter通过；原PM96内迭代的restart8/12均未达线性门。
+restart12独立真PDE1.329e-3、DtN1.273e-3、边界1.04033e-4，仍不可信；接收压力稳定不替代验收。
+比Taylor有限和显著改善，但需先有界改进预条件关闭离散求解，再评估分辨率；不扩当前迭代预算。
+PM INCONCLUSIVE、G1 OPEN/WP2=false，无生产/通信公式变化或FullFK–PM。
+[报告](reports/deepsea3d_mapped_direct_report.md)、[协议](reports/deepsea3d_mapped_direct_protocol.md)。
+
 ### 三维TFE去混叠与失效诊断（2026-10-13；最新）
 
 验证分支对L1二因子、L2三因子乘积采用2n填充、一次投影及显式Nyquist空间，DtN乘积同样去混叠。
