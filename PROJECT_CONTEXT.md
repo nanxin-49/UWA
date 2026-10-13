@@ -9,6 +9,38 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Deep-sea G1 q=.10 x/y azimuth check（2026-10-13；最新）
+
+- 只将Tx从(150.5,0,1500)变为(0,150.5,1500)，Rx仍(0,0,5)，海面中心/波矢/phase/C2不变。
+  两方位平面直接/反射/total背景完全一致；新y方位按需N20、h=.0625、L32通过独立门，
+  网格/域变化8.564e-7/3.037e-7，半网格真实边界残差3.211e-7，无需L48，消项回放匹配。
+- 原FullFK网格/Gauss/孔径通过；**y方位单案例CONDITIONAL_G1_PASS**，
+  反射/增量复误差2.843e-4/1.375e-4，相比x误差下降1.920%/1.762%。
+  含N16/N18压力敏感性的经验范围仍不重叠；不外推通用方位规律。
+- 独立参考y−x反射/增量复变化5.111%/2.467%，差幅2.504e-6m^-1；
+  含阶数的参考配对最大位移2.051e-10m^-1。区分方向性场差、模型误差与已观察参考数值变化。
+  新保存核wall48.866s、最大谱载荷320MiB，快照非峰值；169冻结文件未变，分类4/4通过。
+- 全G1目标域OPEN，WP2=false；不修改生产/二维/旧数据，不做PM/FastFK/SSP/动态或其他频率。
+  入口`validate_deepsea3d_g1_azimuth`，结果`results/validation/deepsea3d_g1_azimuth/`；
+  [中文报告](reports/deepsea3d_g1_azimuth_report.md)、[协议](reports/deepsea3d_g1_azimuth_protocol.md)。
+  下条x方位保持冻结；本轮只认证两个离散方位对照。
+
+### Deep-sea 3D G1 q=.10 geometry-only check（2026-10-13；最新）
+
+- 唯一物理改动Tx=(150.5,0,1500)，Rx=(0,0,5)，q=.10；沿用alpha2.5/6kHz/dual/C2，
+  海面中心保持(0,0)，不移向(.5,0)镜面点。只读复用WP0平面解析控制，相位闭合8.53e-13。
+- 低成本N12/N16不足，按原门追加N20；新几何独立网格/域变化1.400e-6/4.161e-7，
+  最终半网格真实边界残差3.013e-7，尾部递减，内部消项回放逐阶匹配；无需L48。
+  随后FullFK网格/Gauss变化5.991e-9/6.923e-8，A12/16/24孔径门通过。
+- **q=.10离散案例 CONDITIONAL_G1_PASS**：原生反射/增量复误差2.899e-4/1.399e-4。
+  对冻结q0分别下降2.03%/2.94%，已检验数值变体范围不重叠；仅离散经验可辨识。
+  粗糙total相消指标1.278，total误差略增至1.781e-4，不能由反射误差推断total误差。
+- 新增核wall53.887秒，最大谱载荷320MiB、内存快照非峰值；分类4/4通过，Code Analyzer零问题。
+  冻结140文件未变；不改生产/二维/旧数据，不做PM/FastFK/SSP/动态/更大振幅/WP2。
+  全G1目标域仍OPEN，WP2=false。入口`validate_deepsea3d_g1_q10`；
+  数据`results/validation/deepsea3d_g1_q10/`；[中文报告](reports/deepsea3d_g1_q10_report.md)、
+  [预设协议](reports/deepsea3d_g1_q10_protocol.md)。下条q0仍是冻结基准。
+
 ### Deep-sea alpha2.5 domain and conditional physical G1（2026-10-13；最新，接续下条）
 
 - 同一冻结Tx1500/Rx5、q0、6 kHz、dual振幅(.05,.025) m及C2 plateau8/support12。

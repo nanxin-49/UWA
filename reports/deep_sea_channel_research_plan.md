@@ -6,6 +6,26 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 
 ### Current execution update — 2026-10-12
 
+2026-10-13 fixed-sea q=.10 azimuth comparison completed:
+[report](deepsea3d_g1_azimuth_report.md), [protocol](deepsea3d_g1_azimuth_protocol.md).
+Tx changed from(150.5,0,1500) to(0,150.5,1500), Rx unchanged; no sea rotation/translation.
+Flat backgrounds match; y-direction independent FE and FK numerical guards passed.
+CONDITIONAL_G1_PASS for y: reflected/increment errors2.843e-4/1.375e-4.
+Independent reference directional complex changes5.111%/2.467% are distinguished from
+model-error reductions1.920%/1.762% and observed numerical/reference variations.
+Empirical model-error ranges remain disjoint after saved lower-order pressure sensitivity.
+No universal azimuth trend follows. Full target G1 OPEN, WP2=false; frozen data/solvers unchanged.
+
+2026-10-13 q=.10 geometry-only continuation completed:
+[report](deepsea3d_g1_q10_report.md), [protocol](deepsea3d_g1_q10_protocol.md).
+Tx=(150.5,0,1500), Rx=(0,0,5), fixed alpha2.5/6kHz/dual/C2 and surface center(0,0).
+WP0 plane controls were reused without reusing old moved-surface rough cases.
+New N12/N16 precheck required N20; independent mesh/domain/true-boundary gates passed.
+FullFK numerical guards passed, reflected/increment native errors2.899e-4/1.399e-4:
+CONDITIONAL_G1_PASS only at this discrete geometry. Errors decreased2.03%/2.94% versus
+frozen q0, with disjoint empirical numerical-variant ranges; total relative error slightly increased.
+The complete G1 target domain stays OPEN, WP2=false; no amplitude scan/PM/FastFK/SSP/dynamics.
+
 2026-10-13 alpha2.5 domain and physical check completed:
 [report](deepsea3d_alpha25_domain_report.md), [protocol](deepsea3d_alpha25_domain_protocol.md).
 Frozen L24-to32/h=.0625/N20 domain change3.242e-7 and true half-cell residual2.977e-7

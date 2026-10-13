@@ -4,6 +4,24 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_g1_azimuth.m`：q=.10/alpha2.5固定海面的x→y方位对照。
+  setup后init，重复next至observe/done，observe通过才五次fk，最后audit；status只读。
+  与x方位相同预检/网格/域/真实边界规则；helpers
+  `support/summarize_deepsea3d_azimuth_comparison.m`、`support/audit_deepsea3d_g1_azimuth_artifacts.m`
+  分离方向性复场差、模型误差范围与截断阶数敏感性。
+  输出`results/validation/deepsea3d_g1_azimuth/`，
+  [报告](../reports/deepsea3d_g1_azimuth_report.md)、[协议](../reports/deepsea3d_g1_azimuth_protocol.md)。
+  y方位单案例条件性G1 PASS；全G1 OPEN/WP2=false，海面/冻结求解器/旧验收数据不变。
+
+- `validation/validate_deepsea3d_g1_q10.m`：alpha2.5的固定海面q=.10几何验证。
+  setup后`'init'`，重复`'next'`至phase为observe/done，`'observe'`通过才五次`'fk'`，最后`'audit'`；
+  `'status'`只读，init拒绝覆盖，低成本预检按需N20、细网格及域检查按需L48。
+  `support/summarize_deepsea3d_q10_comparison.m`生成原生误差、相消诊断与数值变体范围；
+  `support/audit_deepsea3d_g1_q10_artifacts.m`核对固定海面、唯一几何改动及CSV/相位/分类。
+  输出`results/validation/deepsea3d_g1_q10/`；[报告](../reports/deepsea3d_g1_q10_report.md)、
+  [协议](../reports/deepsea3d_g1_q10_protocol.md)。q=.10单案例条件性G1 PASS，
+  全G1 OPEN/WP2=false；无海面平移、振幅扫描、PM/FastFK/SSP/动态或生产变更。
+
 - `validation/validate_deepsea3d_alpha25_domain.m`：冻结alpha2.5的计算域检查与门控FullFK。
   setup后`'init'`→`'next'`→`'observe'`→`'reference'`；仅域门未通过时追加L48并重复三步；
   参考通过才执行五次`'fk'`，最后`'audit'`。`'status'`只读，init拒绝覆盖。
