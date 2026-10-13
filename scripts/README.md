@@ -4,6 +4,22 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_pm_feasibility.m`：一个固定PM realization的有界独立参考可行性预检。
+  setup后init、九次next、observe、trace、audit；status只读。support内的
+  `build_deepsea3d_pm_target`冻结父面与系数，`observe_deepsea3d_pm_trace`直接指数边界诊断，
+  `audit_deepsea3d_pm_feasibility_artifacts`核对数据/相位/失败分类；新测试`test_deepsea3d_pm_target`。
+  输出`results/validation/deepsea3d_pm_feasibility/`，[报告](../reports/deepsea3d_pm_feasibility_report.md)、
+  [协议](../reports/deepsea3d_pm_feasibility_protocol.md)。普通FE未过门，无FullFK执行，
+  谱截止与非紧支撑影响未可信量化；单案例INCONCLUSIVE，全G1 OPEN/WP2=false。
+
+- `validation/validate_deepsea3d_g1_frequency.m`：固定y方位q=.10/alpha2.5的4/8kHz独立验证，6kHz冻结复用。
+  init后每频next至evaluation，evaluate检查M32/M40，observe通过才五次fk；
+  若初始独立Gauss失败，只允许一次quadrature h.025，然后audit。各stage可传第二参数4000/8000。
+  `support/audit_deepsea3d_g1_frequency_artifacts.m`生成原生三频摘要、数值变体范围、相消与分量趋势。
+  数据`results/validation/deepsea3d_g1_frequency/`，[报告](../reports/deepsea3d_g1_frequency_report.md)、
+  [协议](../reports/deepsea3d_g1_frequency_protocol.md)。4/6/8各点条件性PASS，
+  6→8复误差趋势因阶数敏感性未分辨；全G1 OPEN/WP2=false，无生产或旧数据变更。
+
 - `validation/validate_deepsea3d_g1_azimuth.m`：q=.10/alpha2.5固定海面的x→y方位对照。
   setup后init，重复next至observe/done，observe通过才五次fk，最后audit；status只读。
   与x方位相同预检/网格/域/真实边界规则；helpers

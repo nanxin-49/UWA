@@ -9,6 +9,39 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Deep-sea 3D PM fixed-realization feasibility（2026-10-13；最新）
+
+- 新目标：各向同性有限带PM、Hm0=.5m、seed261013、6kHz、Tx(0,150.5,1500)/Rx5、q=.10。
+  父域128m、kmin2pi/128、kmax1rad/m，固定alpha解离散谱质量，Tp3.638671s；
+  实际Hm0=.504033，无抽样后RMS缩放。完整母系数保存，长短截止变体共享系数。
+- 9个有界FE探针：N20仍不过阶数/真实边界/源项门；粗/细真实边界残差62.26/919.56。
+  小接收网格/域变化不能替代参考认证；精确有限模态指数15点见证残差281.9/3637.9。
+  加宽C2改变物理面并恶化参考；支撑与谱截止原始压力差均未获物理解释资格。
+- 无FullFK运行或新条件性G1；单案例INCONCLUSIVE，全G1 OPEN、WP2=false。
+  下一步需匹配TFE/3D BIE参考及非紧支撑处理，不能直接扩大FE规模或因dual通过放行。
+- 新入口`validate_deepsea3d_pm_feasibility`、数据`results/validation/deepsea3d_pm_feasibility/`；
+  [中文报告](reports/deepsea3d_pm_feasibility_report.md)、[协议](reports/deepsea3d_pm_feasibility_protocol.md)。
+  新测试3/3、数据审计通过，冻结246文件不变；保存核约91.223s、谱载荷180MiB非峰值。
+  不改生产/冻结求解器/旧数据，不做Monte Carlo、FastFK、宽带统计或通信仿真。
+
+### Deep-sea G1 fixed-y 4/6/8kHz conditional checks（2026-10-13）
+
+- 固定Tx=(0,150.5,1500)、Rx=(0,0,5)、q=.10/alpha2.5/dual/C2，唯一改动频率4/8kHz。
+  6kHz只读复用。4kHz N16足够，8kHz按需N20，N16→20变化8.931e-5接近原1e-4门。
+  两频独立网格/域/真实边界/消项通过，L32/h=.0625，无需L48；M32/M40逐频评价及尾界通过。
+- 8kHz初始Gauss4 h.05增量变化1.200e-3失败，先标FK数值INCONCLUSIVE，未判物理FAIL；
+  有界补一次Gauss4 h.025后变化1.683e-9，失败原始解及成本保留。
+  **4/6/8kHz各离散案例条件性G1 PASS**：反射复误差4.034e-4/2.843e-4/2.146e-4，
+  增量2.235e-4/1.375e-4/1.217e-4；各过原1%门，无拟合。
+- 含截断阶数敏感性的范围支持4→6复误差下降，6→8复误差范围重叠、趋势未分辨。
+  两项相位绝对误差三点下降可分辨；增量幅度误差6→8上升，不能概括越高频整体越准。
+  8kHz参考total敏感性8.122e-5不忽略；非宽带或连续频率规律认证。
+- 新FE含M32共11解，FK11解（含初始失败及精化），核wall102.477s，尾界诊断另.345s，
+  最大谱载荷320MiB，快照非峰值；201冻结文件未变，分类4/4通过。
+  全G1 OPEN，WP2=false；不改生产/二维/旧数据，不做PM MC/FastFK/SSP/动态/WP2。
+  入口`validate_deepsea3d_g1_frequency`；数据`results/validation/deepsea3d_g1_frequency/`；
+  [中文报告](reports/deepsea3d_g1_frequency_report.md)、[协议](reports/deepsea3d_g1_frequency_protocol.md)。
+
 ### Deep-sea G1 q=.10 x/y azimuth check（2026-10-13；最新）
 
 - 只将Tx从(150.5,0,1500)变为(0,150.5,1500)，Rx仍(0,0,5)，海面中心/波矢/phase/C2不变。

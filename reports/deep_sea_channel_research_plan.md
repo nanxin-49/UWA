@@ -6,6 +6,28 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 
 ### Current execution update — 2026-10-12
 
+2026-10-13 fixed-realization 3D PM feasibility completed:
+[report](deepsea3d_pm_feasibility_report.md), [protocol](deepsea3d_pm_feasibility_protocol.md).
+One isotropic finite-band Hm0=.5m parent (128m, kmin2pi/128, kmax1rad/m), seed261013,
+6kHz, Tx1500/Rx5, q=.10; fixed alpha determines finite-band Tp3.638671s. No realized-RMS rescaling.
+Nine bounded ordinary-FE probes fail order/source/true-boundary gates at N20; receiver mesh/domain
+stability does not make the reference credible. Exact finite-mode exponential trace confirms failure.
+Changing C2 support changes the physical sea; cutoff/support pressure differences remain unqualified.
+No FullFK comparison or new conditional G1. Single-case INCONCLUSIVE, full G1 OPEN, WP2=false.
+Next need matched TFE/3D BIE and justified noncompact support, then original physical/numerical gates;
+no automatic WP2 release from the dual/frequency results below. Frozen solvers/production/data unchanged.
+
+2026-10-13 fixed-y 4/8kHz conditional physics checks completed:
+[report](deepsea3d_g1_frequency_report.md), [protocol](deepsea3d_g1_frequency_protocol.md).
+Geometry/alpha2.5/dual/C2 frozen, 6kHz reused. Independent references require N16 at4kHz,
+N20 at8kHz; mesh/domain/true-boundary/M32-to40 and cancellation controls pass.
+Initial8kHz Gauss h.05 failed1e-3; one documented h.025 refinement passed without enlarging FE.
+All three discrete points CONDITIONAL_G1_PASS. Reflected/increment complex errors decrease
+at the primary settings, but order-sensitivity ranges overlap6-to8kHz: full complex-error
+monotonicity is unresolved. Phase-error decrease and increment magnitude-error increase6-to8
+are separable in observed variants. This does not certify a continuous band or generic trend.
+Full G1 target OPEN, WP2=false; frozen solvers, production and historical data unchanged.
+
 2026-10-13 fixed-sea q=.10 azimuth comparison completed:
 [report](deepsea3d_g1_azimuth_report.md), [protocol](deepsea3d_g1_azimuth_protocol.md).
 Tx changed from(150.5,0,1500) to(0,150.5,1500), Rx unchanged; no sea rotation/translation.

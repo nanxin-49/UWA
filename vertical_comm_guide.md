@@ -1,5 +1,28 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### 三维PM固定realization最小可行性（2026-10-13；最新）
+
+各向同性有限带PM，P(kx,ky)=alpha/(4pi*kappa^4)*exp[-1.25*(kp/kappa)^2]，
+alpha=.0081，父域128m、kmin2pi/128、kmax1rad/m，解离散谱质量Hm0=.5得到Tp3.638671s。
+mt19937ar seed261013、固定复高斯Fourier系数、共轭实面；实际Hm0=.504033，不作样本RMS拟合。
+6kHz、Tx(0,150.5,1500)/Rx(0,0,5)、q=.10。C2支撑12/24m仅物理嵌入诊断，不能冒充无限PM。
+普通FE最高N20未过阶数/源项/真实边界门，直接有限模态指数评价也给出失败见证；
+接收压力在网格/域下变化小不足以认证参考。谱截止、远区和支撑影响仍缺可信压力证据。
+无FullFK物理比较或新G1，单案例INCONCLUSIVE、全G1 OPEN/WP2=false；建议先评估匹配TFE/3D BIE。
+生产PE、通信接口、既有G1及相位公式不变，无通信运行。
+[报告](reports/deepsea3d_pm_feasibility_report.md)、[协议](reports/deepsea3d_pm_feasibility_protocol.md)。
+
+### 三维G1固定y方位4/6/8kHz检查（2026-10-13；最新）
+
+固定q=.10/alpha2.5/dual/C2/Tx(0,150.5,1500)/Rx(0,0,5)，只改频率4/8kHz，6kHz冻结复用。
+4kHz选N16，8kHz预检补N20，阶数变化8.931e-5接近原1e-4门；网格/域/真实边界及消项通过。
+各新频点M32/M40真实边界对照与有限Fourier指数尾界通过，不默认M40或旧网格充分。
+8kHz Gauss4 h.05曾失败（1.200e-3）；保留失败并精化一次h.025，变化1.683e-9通过原1e-3门。
+4/6/8各点条件性G1 PASS，反射复误差4.034e-4/2.843e-4/2.146e-4，增量2.235e-4/1.375e-4/1.217e-4。
+含阶数敏感性仅支持4→6复误差可分辨下降，6→8范围重叠；相位误差下降、增量幅误差6→8上升。
+三离散点不认证整个4–8kHz带宽。原FE/FullFK、原生相位、生产公共接口和通信公式不变。
+全G1 OPEN/WP2=false。[报告](reports/deepsea3d_g1_frequency_report.md)、[协议](reports/deepsea3d_g1_frequency_protocol.md)。
+
 ### 三维G1 q=.10水平方位角对照（2026-10-13；最新）
 
 固定alpha2.5/6kHz/dual/C2海面，只改Tx方位x→y：(150.5,0,1500)→(0,150.5,1500)，

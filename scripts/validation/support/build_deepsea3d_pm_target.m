@@ -1,0 +1,66 @@
+function sea=build_deepsea3d_pm_target()
+%BUILD_DEEPSEA3D_PM_TARGET One frozen isotropic finite-band PM parent sea.
+% P(kx,ky) dkx dky is height variance; no post-draw RMS adjustment.
+g=9.81; alpha=.0081; H=.5; L=128; dk=2*pi/L;
+seed=261013; master_max=1.5; base_max=1; base_min=dk;
+v=-ceil(master_max/dk):ceil(master_max/dk);
+[ix,iy]=meshgrid(v,v); k=hypot(ix,iy)*dk;
+positive=(iy>0 | (iy==0 & ix>0)) & k<=master_max;
+ix=ix(positive); iy=iy(positive); k=k(positive);
+base=k>=base_min & k<=base_max;
+% S_omega=alpha*g^2/omega^5 exp[-5/4*(omega_p/omega)^4].
+% Deep water omega^2=g*k => S_k=alpha/(2*k^3) exp[-5/4*(kp/k)^2].
+% Isotropic density on the k-plane: P=S_k/(2*pi*k).
+density=@(kp) alpha./(4*pi*k.^4).*exp(-1.25*(kp./k).^2);
+kp=fzero(@(p)2*sum(density(p).*base)*dk^2-(H/4)^2,[.05 1]);
+P=density(kp); rs=RandStream('mt19937ar','Seed',seed);
+ab=randn(rs,numel(k),2); c=sqrt(P*dk^2/2).*(ab(:,1)+1i*ab(:,2));
+sea=struct('g_mps2',g,'alpha',alpha,'Hm0_spectral_m',H, ...
+    'parent_side_m',L,'delta_k_radpm',dk,'seed',seed,'rng','mt19937ar', ...
+    'direction','isotropic D(theta)=1/(2*pi)', ...
+    'k_min_radpm',base_min,'k_max_radpm',base_max,'master_k_max_radpm',master_max, ...
+    'kp_radpm',kp,'omega_peak_radps',sqrt(g*kp),'Tp_s',2*pi/sqrt(g*kp), ...
+    'Hm0_untruncated_family_m',4*sqrt(alpha/(5*kp^2)), ...
+    'kx_radpm',ix*dk,'ky_radpm',iy*dk,'k_radpm',k, ...
+    'density_m4',P,'standard_normals',ab,'coefficient_real',real(c), ...
+    'coefficient_imag',imag(c),'baseline_mask',base, ...
+    'coordinate','z=eta positive downward; sea level z=0', ...
+    'normalization','eta=2*real(sum(c_j*exp(i*k_j dot x))); c(-k)=conj(c(k)); E|c|^2=P*dk^2', ...
+    'finite_band_adjustment','solve kp with fixed alpha for discrete finite-band ensemble Hm0=.5; no coefficient rescale');
+sea.profile=local_profile(sea,base);
+sea.low_removed_mask=base & k>=.15;
+sea.short_removed_mask=base & k<=.7;
+sea.short_extended_mask=k>=base_min & k<=master_max;
+sea.parent_diagnostics=local_moments(sea,base);
+sea.low_removed_diagnostics=local_moments(sea,sea.low_removed_mask);
+sea.short_removed_diagnostics=local_moments(sea,sea.short_removed_mask);
+sea.short_extended_diagnostics=local_moments(sea,sea.short_extended_mask);
+end
+function p=local_profile(s,mask)
+c=complex(s.coefficient_real(mask),s.coefficient_imag(mask));
+p=struct('height_m',0,'plateau_m',8,'support_m',12, ...
+    'amplitudes_m',2*abs(c).','wavevectors_radpm',[s.kx_radpm(mask) s.ky_radpm(mask)], ...
+    'phases_rad',angle(c).');
+end
+function d=local_moments(s,mask)
+% Full parent FFT only samples the already frozen continuous Fourier series.
+n=512; F=complex(zeros(n)); ix=round(s.kx_radpm(mask)/s.delta_k_radpm);
+iy=round(s.ky_radpm(mask)/s.delta_k_radpm);
+c=complex(s.coefficient_real(mask),s.coefficient_imag(mask));
+pos=sub2ind([n n],mod(iy,n)+1,mod(ix,n)+1);
+neg=sub2ind([n n],mod(-iy,n)+1,mod(-ix,n)+1);
+F(pos)=n^2*c; F(neg)=n^2*conj(c);
+kv=s.delta_k_radpm*[0:n/2-1 -n/2:-1];
+eta=real(ifft2(F)); ex=real(ifft2(1i*kv.*F)); ey=real(ifft2(1i*kv.'.*F));
+curv=real(ifft2(-(kv.^2+kv.'.^2).*F));
+spectral_m0=2*sum(s.density_m4(mask))*s.delta_k_radpm^2;
+realized_m0=2*sum(abs(c).^2);
+d=struct('modes_positive',nnz(mask),'ensemble_m0_m2',spectral_m0, ...
+    'ensemble_Hm0_m',4*sqrt(spectral_m0),'realized_m0_m2',realized_m0, ...
+    'realized_Hm0_m',4*sqrt(realized_m0),'max_abs_height_sampled_m',max(abs(eta(:))), ...
+    'height_global_bound_m',2*sum(abs(c)), ...
+    'rms_slope',sqrt(mean(ex(:).^2+ey(:).^2)), ...
+    'rms_laplacian_per_m',sqrt(mean(curv(:).^2)), ...
+    'parseval_relative',abs(mean(eta(:).^2)-realized_m0)/realized_m0, ...
+    'parent_sample_spacing_m',s.parent_side_m/n);
+end
