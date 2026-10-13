@@ -4,6 +4,21 @@
 
 ## 目录
 
+- `validation/validate_deepsea3d_alpha25_domain.m`：冻结alpha2.5的计算域检查与门控FullFK。
+  setup后`'init'`→`'next'`→`'observe'`→`'reference'`；仅域门未通过时追加L48并重复三步；
+  参考通过才执行五次`'fk'`，最后`'audit'`。`'status'`只读，init拒绝覆盖。
+  `support/audit_deepsea3d_alpha25_domain_artifacts.m`核对CSV复数、原生相位恒等式及同一物理面。
+  输出`results/validation/deepsea3d_alpha25_domain/`；
+  [报告](../reports/deepsea3d_alpha25_domain_report.md)、[协议](../reports/deepsea3d_alpha25_domain_protocol.md)。
+  本轮L24→32已通过，无需L48；反射/增量复误差2.959e-4/1.442e-4，
+  alpha2.5条件性G1 PASS，仅此离散案例；全G1 OPEN/WP2=false，冻结代码与旧数据未改。
+
+- `validation/validate_deepsea3d_alpha25_fine.m`：冻结alpha2.5的L24/h=.0625 N16/N20参考验证。
+  setup后`'init'`、两次`'next'`、两次`'observe'`、`'audit'`；
+  输出`results/validation/deepsea3d_alpha25_fine/`。
+  [报告](../reports/deepsea3d_alpha25_fine_report.md)、[协议](../reports/deepsea3d_alpha25_fine_protocol.md)。
+  细网格参考检查PASS，未扩域或调用FK；alpha2.5物理G1仍INCONCLUSIVE/全域OPEN/WP2=false。
+
 - `validation/validate_deepsea3d_alpha25_preflight.m`：仅alpha2.5低成本FE稳定性预检。
   setup后`'init'`、重复`'next'`（本次3次）、`'cancellation'`、`'audit'`。
   观测helper为`observe_deepsea3d_fe_cancellation`，不修改冻结模型。

@@ -9,6 +9,32 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Deep-sea alpha2.5 domain and conditional physical G1（2026-10-13；最新，接续下条）
+
+- 同一冻结Tx1500/Rx5、q0、6 kHz、dual振幅(.05,.025) m及C2 plateau8/support12。
+  复用L24/h=.0625/N20，新增L32：域增量变化3.242e-7、N16→20变化2.363e-6、
+  半网格真实边界残差2.977e-7，均过原1e-4门；尾部递减，内部消项指标3314。
+  按预设规则无需L48，未单独重复N16求解；不声称无限域严格误差界。
+- 参考通过后五次原FullFK：网格/Gauss变化1.021e-8/1.905e-7；
+  独立A12→16→24孔径变化0/2.561e-15。原生反射/增量复误差2.959e-4/1.442e-4。
+  **alpha2.5离散案例 CONDITIONAL_G1_PASS**；全G1目标域仍OPEN，WP2=false。
+- 新增保存核wall31.053秒，谱载荷320 MiB，内存快照非峰值；分类回归4/4通过，
+  Code Analyzer零问题，CSV/复数/相位护栏与冻结哈希通过。冻结求解器、生产、二维、旧数据未改。
+  入口`validate_deepsea3d_alpha25_domain`；数据`results/validation/deepsea3d_alpha25_domain/`；
+  [中文报告](reports/deepsea3d_alpha25_domain_report.md)、[预设协议](reports/deepsea3d_alpha25_domain_protocol.md)。
+  本条更新下条的物理INCONCLUSIVE，不放行更大振幅/PM/FastFK/WP2。
+
+### Deep-sea alpha2.5 fine-reference check（2026-10-13；最新）
+
+- 同一冻结alpha2.5 cfg，L24/h=.0625、N16/N20、M40完成参考验证，不重算粗网格。
+  细阶数差2.36e-6、粗→细增量变化1.77e-6、N20半网格残差3.06e-7，各过原1e-4门。
+  h归一化系数尾部与粗网格一致，尾部均衰减；内部消项指标N16/N20为655/3314。
+- **细网格参考检查PASS**，未见当前配置普通FE失稳；没有域扩展或FK物理对照。
+  alpha2.5物理G1仍INCONCLUSIVE，全目标域OPEN/WP2=false。仅建议受控扩域后物理比较。
+- 保存计算26.138秒（FE+回放，未计IO/分析），谱载荷最大180 MiB；内存快照非峰值。
+  入口`validate_deepsea3d_alpha25_fine`；数据`results/validation/deepsea3d_alpha25_fine/`；
+  [中文报告](reports/deepsea3d_alpha25_fine_report.md)。冻结求解器、生产、二维与旧数据不变。
+
 ### Deep-sea alpha2.5 reference preflight（2026-10-13；仅预检）
 
 - 固定原单链与dual谱/phase/C2，只将振幅统一放大2.5；L24/h.125，N12/16必要补N20。

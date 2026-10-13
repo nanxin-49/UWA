@@ -1,5 +1,25 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### alpha2.5计算域与条件性物理G1（2026-10-13；最新，接续下述阶段记录）
+
+冻结Tx1500/Rx5、q0、6 kHz、dual振幅(.05,.025) m与C2 plateau8/support12。
+L仅扩展Fourier计算域，不缩放海面；L24→32/h=.0625/N20增量变化3.242e-7，
+N16→20变化2.363e-6，真实半网格残差2.977e-7，过原1e-4门且高阶尾部递减。
+无需追加L48。参考通过后，FullFK独立A12/16/24紧支撑密度差孔径检查通过，
+网格/Gauss变化1.021e-8/1.905e-7；反射/增量原生复误差2.959e-4/1.442e-4，
+均过原1%物理门，无幅相拟合。**该alpha2.5离散案例条件性PASS**，全G1仍OPEN/WP2=false。
+沿用原FE递推与完整两项FullFK/解析无限平面背景，无新物理公式、公共接口或通信方法。
+经验域稳定不等于严格PDE余项界；不覆盖连续振幅、PM总体或宽带。
+[报告](reports/deepsea3d_alpha25_domain_report.md)、[协议](reports/deepsea3d_alpha25_domain_protocol.md)。
+
+### alpha2.5细网格参考检查（2026-10-13；最新）
+
+L24/h=.0625 N16/N20检查PASS：阶数差2.36e-6，粗→细增量变化1.77e-6，
+N20半网格残差3.06e-7；系数尾部与h归一化粗网格范数一致，内部消项未灾难性放大。
+此处PASS仅是普通FE当前配置参考稳定性，不是alpha2.5物理G1或域收敛认证。
+未调用FullFK或扩域；alpha2.5物理G1 INCONCLUSIVE，全域OPEN/WP2=false。
+[报告](reports/deepsea3d_alpha25_fine_report.md)、[协议](reports/deepsea3d_alpha25_fine_protocol.md)。
+
 ### alpha2.5低成本参考预检（2026-10-13；最新）
 
 同一单链/dual/C2，alpha2.5的粗配置N12不足；追加N20后阶数变化2.36e-6、

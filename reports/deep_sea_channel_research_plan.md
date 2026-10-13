@@ -6,6 +6,22 @@ Status: recommended research plan with limited WP0/WP1 progress below; not an ap
 
 ### Current execution update — 2026-10-12
 
+2026-10-13 alpha2.5 domain and physical check completed:
+[report](deepsea3d_alpha25_domain_report.md), [protocol](deepsea3d_alpha25_domain_protocol.md).
+Frozen L24-to32/h=.0625/N20 domain change3.242e-7 and true half-cell residual2.977e-7
+pass the original1e-4 gates; L48 was not needed. Only after this, matched FullFK
+mesh/Gauss/aperture controls passed; reflected/increment native complex errors
+2.959e-4/1.442e-4 give CONDITIONAL_G1_PASS at alpha2.5 for this discrete case.
+This supersedes the alpha2.5 physical INCONCLUSIVE status in the earlier stage records below.
+The complete G1 target domain remains OPEN, WP2=false; no larger-amplitude/PM/FastFK/WP2 work.
+Frozen solvers, production and historical acceptance data remain unchanged.
+
+2026-10-13 alpha2.5 fine-reference check completed: [report](deepsea3d_alpha25_fine_report.md).
+L24/h=.0625 N16/N20 passed order/grid/true-boundary controls; no observed FE instability.
+Next a bounded domain check, then matched FullFK comparison if the reference remains stable.
+No domain extension or FK solve was run in this stage; alpha2.5 physical G1 is INCONCLUSIVE,
+the complete domain remains OPEN and WP2 is not authorized.
+
 2026-10-13 alpha2.5 bounded precheck completed: [report](deepsea3d_alpha25_preflight_report.md).
 N12 is insufficient; N16-to20 change and true half-cell boundary residual pass the existing
 coarse precheck. Ordinary FE has no observed catastrophic instability on this configuration.
