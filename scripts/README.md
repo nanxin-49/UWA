@@ -4,6 +4,23 @@
 
 ## 目录
 
+- `validation/validate_deepsea_bie_minimum.m`：三维辅助半空间层核、奇异/近奇异、独立Fourier制造逆问题；固定预算、不构建全局稠密阵、不求原PM。
+  `support/deepsea_bie_*`为Gauss/Duffy、分块层核、平面trace/独立径向参考和真实图面已知Cauchy制造；`diagnose_deepsea_bie_windows`检查固定h窗口与图面PV。
+- `validation/validate_deepsea_frequency_reconstruction.m`：保留旧257/513线性失败，对已知解析路径作时延分离，独立频点/深衰落/CIR对照；`deepsea_delay_separated_reconstruct`拒绝dual/PM认证用途。
+  `audit_deepsea_bie_reconstruction`复核正负门和独立PDE/出射诊断；新unit为`test_deepsea_bie_reconstruction`。
+  [BIE报告](../reports/deepsea3d_bie_minimum_report.md)、[重建报告](../reports/deepsea_frequency_reconstruction_report.md)、[协议](../reports/deepsea_bie_reconstruction_protocol_2026-10-14.md)。
+  数据`results/validation/deepsea_bie_reconstruction_20261014/`。BIE未过参考门停止，B仅已知路径解析重建通过；G1 OPEN/WP2=false。
+
+
+- `validation/validate_deepsea3d_preconditioner_decision.m`：右Neumann P=2I−B的小规模线性/显式矩阵诊断与70%可用RAM预检。
+  `validation/validate_deepsea3d_preconditioner_checkpoint.m`：同一冻结B下flat→dual→quarter→pm的唯一干预，96内步/640 B调用/600s单案/3600s总核，拒绝覆盖。
+  `support/solve_deepsea3d_right_neumann`与`deepsea3d_right_neumann_action`只属于验证；旧求解器不改。
+- `validation/validate_deepsea_singlelink_readiness.m`：解析平面native/DSP/CIR与QPSK/AWGN/离散dual基础控制；`support/deepsea_readiness_guard`拒绝本轮数据进入统计/训练/PM BER。
+  `support/audit_deepsea_two_track`重算新场原始离散残差并核对物理配置，`estimate_deepsea3d_bie_cost`仅非对角算术微基准与成本外推。
+  [A报告](../reports/deepsea3d_preconditioner_decision_report.md)、[B报告](../reports/deepsea_singlelink_readiness_report.md)、[协议](../reports/deepsea_two_track_protocol_2026-10-14.md)。
+  数据`results/validation/deepsea_two_track_20261014/`；A原PM失败并按规则停止，B确定性控制通过；G1 OPEN/WP2=false。无生产或旧基准更改。
+
+
 - `validation/validate_deepsea3d_mapped_direct.m`：无Taylor的t=1矩阵自由mapped Helmholtz原型。
   setup后flat→dual→quarter→pm→pm_restart12；拒绝覆盖，PM要求controls已过门。
   `support/deepsea3d_mapped_action`、`deepsea3d_mapped_l0_solve`、`deepsea3d_mapped_discrete_residual`、

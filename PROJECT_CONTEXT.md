@@ -9,6 +9,23 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### BIE最小验证与已知路径重建（2026-10-14；当前决策）
+
+- 当前多项式预条件器保持FAILED_CLOSED，不重复调参。BIE六个制造逆问题线性约1e-10通过，但独立边界/场全失败；6kHz最细1600未知半单元边界3.385%、离面.422%，实际C2图面制造PV3.616e-4仍不过1e-4门。停止扩大，不运行dual散射或原PM BIE。
+- 辅助半空间Green、法向跳跃、Duffy自项/近奇异减项及几何FD有局部支持；未知粗糙密度外区闭合未验证。下一单项先测试同6kHz平面制造问题的高阶密度/近场规则，不用大PM赌算力。
+- 同257/513频点，已知几何/分量时延分离的独立频点复误差≤6.22e-12、深衰落≤1.73e-9；通用total-only插值与dual中间频率仍未认证，无PM通信结论。
+- A含局部检查与诊断约166.528s，B .991s；采样空闲RAM最低1838.63MiB，生命周期working-set峰1313.44MiB只作任务峰保守上界。G1 OPEN/WP2=false。
+  [BIE报告](reports/deepsea3d_bie_minimum_report.md)、[重建报告](reports/deepsea_frequency_reconstruction_report.md)、[协议](reports/deepsea_bie_reconstruction_protocol_2026-10-14.md)；数据results/validation/deepsea_bie_reconstruction_20261014/。
+
+### 双轨检查点与正式计划合并（2026-10-14；当前决策）
+
+- 唯一正式依据：[deep_sea_channel_research_plan.md](reports/deep_sea_channel_research_plan.md)，已核对合并v3。原9公式、WP0–WP6、验收表及完整历史块保留；backup/v3仅版本记录。
+- A唯一干预为右P=2I−B，冻结原物理B不改。平面/dual/quarter通过；原PM96内步后B8.3065e-3、真PDE3.3601e-3/DtN3.2457e-3、真边界1.040333e-4仍失败且比旧restart12更差。停止本轮调参/扩网格，转匹配三维BIE窗口/奇异积分可行性评估，不实现大型求解器。
+- A新物理核410.957s，原PM241 B调用/288.323s，未超3600s/640调用/600s；内存只具事前70%物理空闲门和估计/快照，任务峰值未知。
+- B解析native/absolute-DSP/relative-DSP、4–8kHz端点/DFT、flat与离散dual、AWGN/QPSK已知信道基础控制通过，wall2.049s。513点线性插值仍约1.3%误差，未认证通用插值/完整RRC-FSE-pilot接收机或dual宽带；无PM通信结论。
+- 冻结算子回归4/4通过；新数据审计通过。保持G1 OPEN/WP2=false，无生产/冻结求解器/旧数据更改，不提交推送。
+  [A报告](reports/deepsea3d_preconditioner_decision_report.md)、[B报告](reports/deepsea_singlelink_readiness_report.md)、[协议](reports/deepsea_two_track_protocol_2026-10-14.md)；新入口validate_deepsea3d_preconditioner_decision、validate_deepsea3d_preconditioner_checkpoint、validate_deepsea_singlelink_readiness；数据results/validation/deepsea_two_track_20261014/。
+
 ### Deep-sea matrix-free t=1 mapped Helmholtz pilot（2026-10-13；最新）
 
 - 新验证专用直接法：精确图面点源Dirichlet、原去混叠L0+L1+L2/DtN、L0模态预条件GMRES，

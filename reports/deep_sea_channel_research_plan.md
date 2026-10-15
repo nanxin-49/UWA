@@ -1,10 +1,61 @@
 # Research Plan for a Deep-to-Near-Surface Acoustic Communication Channel
 
-Date: 2026-10-09 (Asia/Shanghai).
+> **Canonical plan / 唯一正式计划：**本文件 `reports/deep_sea_channel_research_plan.md` 是后续研究唯一正式依据。v3 内容于 2026-10-14 核对后合并；[原计划完整备份](deep_sea_channel_research_plan_backup_2026-10-14.md)和[原始 v3 版本记录](deep_sea_channel_research_plan_v3_2026-10-14.md)均只读留存，不作为第二份正式计划。配套[双轨执行记录](codex_goal_two_track_2026-10-14.md)受本计划及用户指令约束。见[合并核对报告](deep_sea_channel_plan_merge_audit_2026-10-14.md)。本轮始终保持 `G1 OPEN`、`WP2=false`；冻结求解器和历史结果不改。
 
-Status: recommended research plan with limited WP0/WP1 progress below; not an approved engineering operating envelope. Unperformed experiments and acceptance levels remain proposals. Production physics is unchanged.
+Original plan: 2026-10-09 (Asia/Shanghai). Execution-policy revision: 2026-10-14 (Asia/Shanghai). Evidence-ladder and Goal-mode execution revision (v3): 2026-10-14.
 
-### Current execution update — 2026-10-12
+Status: **two-track, evidence-gated research plan**, not an approved engineering operating envelope. G0/WP0 analytic controls are complete; finite compact dual-surface cases have **conditional, case-specific G1 passes**. The original-amplitude finite-band PM target remains **INCONCLUSIVE / G1 OPEN**, and **formal WP2=false**. Production physics and frozen baselines remain unchanged. Unperformed experiments and acceptance levels remain proposals.
+
+
+> **Executed checkpoint — 2026-10-14:** The single fixed right-Neumann intervention P=2I−B passed controls but worsened the original-PM linear/true PDE/DtN residuals at the unchanged 96-inner-step cap. This intervention is closed; do not read Section 10 as authorization to repeat it. Next Stream A work requires a separately budgeted matched 3D BIE/BEM window/near-singular minimum feasibility checkpoint. Stream B deterministic controls passed, but simple broadband linear interpolation and a complete practical receiver remain unaccepted. [A report](deepsea3d_preconditioner_decision_report.md), [B report](deepsea_singlelink_readiness_report.md). `G1_target_PM=OPEN`, `WP2_formal=false` remain unchanged.
+
+> **Active follow-up — 2026-10-14:** The user authorized a bounded BIE/BEM minimum feasibility validation and delay-separated reconstruction of the analytic two-path channel. The tested polynomial preconditioner is closed as FAILED; deterministic communication controls passed, while generic linear interpolation remains unaccepted. Follow the [new protocol](deepsea_bie_reconstruction_protocol_2026-10-14.md); do not repeat the old intervention or run large original-PM BIE. `G1_target_PM=OPEN`, `WP2_formal=false`.
+
+> **Follow-up outcome — 2026-10-14 (latest decision):** The minimum BIE experiment is closed with reference rejection: six manufactured inversions pass linear checks but fail independent boundary/field gates; at 6kHz the finest P0 trace error is 3.385%, and actual-graph manufactured PV error is 3.616e-4. Do not invest in a large original-PM solve yet. Known-path analytic two-path delay separation passes independent off-grid reconstruction (complex error ≤6.22e-12); generic total-only interpolation and dual intermediate frequencies remain unaccepted. Next single research checkpoint should test higher-order density/near quadrature on the same 6kHz flat manufactured boundary before rough scattering. [BIE report](deepsea3d_bie_minimum_report.md), [reconstruction report](deepsea_frequency_reconstruction_report.md). Earlier next-task text is historical and does not authorize rerunning either closed intervention. `G1_target_PM=OPEN`, `WP2_formal=false`.
+
+## 执行摘要（中文；v3，供项目决策和 Codex Goal 模式使用）
+
+**最终目标不变：**针对深海 Tx（初始 1500 m）到近水面单 Rx（初始 5 m），在 4–8 kHz 频带内建立物理可信、计算成本可核算的**宽带复信道**，最后以单链路通信性能验证。静态、均匀声速、压力释放海面是第一阶段理想化问题；动态海面、多普勒和实际海洋传播在后续阶段处理。
+
+**为什么不重做二维：**二维 FullFK–BIE 的受控物理对照已经开展，既有通过案例也有高波数失败边界；它们应保留为回归证据。二维通常对应线源与一维粗糙剖面，三维对应点源与二维粗糙表面，Green 函数和出平面散射机制不同，二维通过**不能自动认证三维**。可做一次低优先级、条件触发的**匹配线源 + y 不变表面**二维—三维极限检查，核对归一化、法向量和符号；这只是公式/实现一致性诊断，**不是新的强制 G1 门**，也不能取代三维独立参考。
+
+**当前证据分层：**`G0=PASS`；已验证紧支撑 dual 海面的**特定**振幅、方位、几何和 4/6/8 kHz 单点为 `G1_compact_dual=CONDITIONAL_PASS`；原振幅有限带 PM（固定 seed261013、C2 support12）的独立 FE/TFE/直接参考仍不足以认证，`G1_target_PM=OPEN`、`WP2_formal=false`。**不得把同一近似方法的网格收敛当作独立物理认证。**
+
+**双轨推进：**
+
+| 轨道 | 当前允许做什么 | 绝不能推导出什么 |
+|---|---|---|
+| **A：三维目标 PM 物理认证** | 复用已建矩阵自由 `t=1` 展平 Helmholtz 直接求解器；只做**一次预声明且有资源上限**的预条件器改进，随后检查真实 PDE/DtN/Dirichlet 残差；失败则转为**匹配三维 BIE/BEM 最小原型的技术和成本评估** | 未完成独立参考、网格/纵向/计算域及支撑解释之前，不得宣称 FullFK–PM 物理准确，不能放行正式 WP2 |
+| **B：通信基础设施准备** | 用解析平面与已通过的 dual 案例验证 native/DSP 复相位、频率网格、时延/CIR、AWGN、已知信道与解析两路径通信，以及数据证据标签 | 不得据此拟合 PM 统计模型、宣称 PM BER/PER 或训练 PM 路径/高斯发生器 |
+
+**执行顺序：**A 的一次预条件器检查点与 B 的确定性通信准备可独立验收。A 线性求解若改善，仍需真实物理残差和独立离散收敛；A 若超预算/失败，**停止反复调参**并给出 BIE 方案与成本边界。两个轨道都不能自动改变 `G1_target_PM` 和 `WP2_formal`。
+
+**海面解释不可省略：**128 m 父海面、PM 谱截止、固定随机系数、C2 support12、声学孔径、求解器盒长及求积网格是不同层次。support12→support24 **改变物理海面**，不等于数值网格加密。有限支撑样本的条件性通过，也不等于无限随机 PM 海况通过。
+
+**下一次 Codex 长任务**以本计划第 10 节的 A/B 决策为准，使用配套 `codex_goal_two_track_2026-10-14.md`。它是可连续执行的研究任务，不是授权无限加大 Krylov、海面样本或计算域。
+
+---
+
+## Decision update — 2026-10-14: parallel progress without unvalidated PM inference
+
+**Research destination is unchanged:** a credible, efficient complex broadband model of a *single* deep-to-near-surface acoustic communication link, with communication-relevant validation and total-cost accounting. The two work streams may proceed in parallel, but their evidence and authorization must not be mixed.
+
+| Stream | Authorized near-term work | Gate / prohibited inference |
+|---|---|---|
+| **A — target-PM physical certification (WP1/G1)** | **One budget-capped preconditioner improvement** for the already-built matrix-free, non-Taylor, `t=1` mapped Helmholtz direct solver; if it fails, evaluate a small *matched* 3D BIE/BEM feasibility alternative | PM physical validity remains OPEN. No PM FullFK accuracy claim, new PM ensemble, or WP2 release without independent-reference and surface-support evidence |
+| **B — non-inferential single-link readiness** | Validate native→DSP and phase/delay/CIR metadata, deterministic flat and *certified compact dual* single-link controls, frequency/discretization guards, reproducible interfaces, and AWGN/known-channel/two-path communication sanity checks. A dimensionally matched 2D→3D limit check is an **optional, low-priority diagnostic**, not a prerequisite. | This is **WP2-preparation, not WP2**. Do not fit PM Gaussian/path statistics, publish PM performance claims, expand PM seeds, or optimize FastFK on unvalidated PM responses |
+
+**Recorded evidence (not a new acceptance):** the `t=1` direct-solve pilot already exists. Plane/dual/quarter-amplitude controls passed; original-PM restart 8/12 runs at their recorded 96-inner-step cap were unresolved, and the best saved true PDE/DtN and true-boundary residuals did not meet the original checks. Do **not** re-run that pilot as a new prototype task. One *bounded* preconditioner intervention is a decision checkpoint, not a commitment to an indefinite solver program.
+
+**Stream A decision rule:** predeclare solver/test configuration and runtime, iteration, memory and residual ceilings from recorded costs. If a preconditioner improves linear solves, require true physical PDE, transparent-boundary (DtN), real-surface Dirichlet, independent horizontal/vertical resolution, and computational-domain convergence **before** any matched FullFK–PM comparison. GMRES residual or receiver pressure stability alone is insufficient. If the capped intervention fails, stop iterative/grid escalation and issue a costed decision for a *matched* 3D BIE/BEM minimum pilot rather than silently cycling through Taylor order, padding, or new preconditioners.
+
+**Surface-definition constraint:** the frozen candidate is a **finite-band PM parent realization**, not a certified unbounded PM ocean. Preserve the parent spectrum/coefficient law and seed, and keep spectral cutoff, C2 support embedding, acoustic integration aperture, solver-box extent, and quadrature resolution as **distinct factors**. Enlarging support12 to support24 alters the modeled physical sea; it is not ordinary numerical convergence. A reliable reference plus a justified support/noncompact treatment is a separate necessary part of PM G1 evidence.
+
+**Authorization ledger:** `G0=PASS`; `G1_compact_dual=CONDITIONAL_PASS` only for tested cases; `G1_target_PM=OPEN`; `WP2_formal=false`; `WP3_PM_training=false`; `WP4_baseline_controls=allowed` with analytic/accepted-fixture labels only. Allow a future **explicitly narrowed** physical pilot only after its domain and reference are independently accepted; an infrastructure test or one diagnostic PM calculation never counts as WP2. Keep physical-model error, numerical/reference uncertainty, algorithm fidelity and statistical/communication adequacy in separate records.
+
+### Archived execution evidence — 2026-10-12 to 2026-10-13
+
+Stage-specific suggestions below are retained as an audit trail; when they conflict with the 2026-10-14 decision and the newest completed results, **this decision record supersedes the old proposed next tasks**. Older `INCONCLUSIVE` notes remain accurate for their then-unfinished stage, not for subsequently completed discrete cases.
 
 2026-10-13 matrix-free t=1 mapped Helmholtz minimum pilot completed:
 [report](deepsea3d_mapped_direct_report.md), [protocol](deepsea3d_mapped_direct_protocol.md).
@@ -128,11 +179,11 @@ a dense BIE or repeat this completed single case as a blanket prerequisite.
 
 ## 1. Recommended direction and intended contribution
 
-**Develop a receiver-focused, physically informed statistical model of the complex broadband response of one deep-to-near-surface link. Use a small, independently checked 3D physical reference to identify the random structure that must be preserved, then build the simplest generator that meets communication tolerances at a defensible total cost.**
+**Develop a receiver-focused, physically informed model of the complex broadband response of one deep-to-near-surface link. Maintain independent physical certification for the claimed sea-state domain while progressing deterministic single-link and communication infrastructure on already accepted controls; compare statistical and direct-sampling routes only when trustworthy target-domain data are available.**
 
-My recommended initial physical candidate is an analytic homogeneous-medium incident field combined with a direct, single-receiver 3D rough-surface Kirchhoff integral. This is a candidate data-generation engine, not an already validated truth model. Its first task is to pass analytic and independent physical checks. It avoids requiring production PE integration before the homogeneous problem is understood and avoids computing a dense receiver field for a single-link output.
+The existing physical candidate is an analytic homogeneous-medium incident field plus a direct single-receiver 3D rough-surface Kirchhoff integral. Analytic controls and several compact dual-surface comparisons have passed, but this does **not** validate the finite-band, original-amplitude PM target. It remains a conditional physical evaluator, not an unqualified truth source or a production-PE replacement.
 
-My preferred statistical hypothesis to test is a small number of random reflected-path parameters plus a jointly frequency-dependent residual. A conditional complex Gaussian model of the entire response is the mandatory simpler comparator. Neither wins in advance. If direct physical evaluation is sufficiently inexpensive, retaining it as the channel generator is also a successful result; a learned model is not required merely to claim acceleration.
+After an appropriate physical evidence gate, compare direct physical sampling (P0), a conditional joint-frequency Gaussian process (S1), and a random-path-plus-residual model (S2). S2 is a mechanism-oriented **hypothesis, not a preselected winner**; neither it nor S1 is authorized for PM fitting today. Direct evaluation is a valid final choice when its end-to-end cost and accuracy suffice.
 
 The scientific contribution should be a **validated domain of applicability, a justified stochastic representation, and its communication-relevant accuracy/cost tradeoff**. A useful negative finding, such as a physically meaningful regime where few-path or Gaussian models fail, is part of that contribution. Publication novelty must be established against primary literature before claiming a new model; hybrid physical/statistical channel modeling already has precedents. [E4]
 
@@ -177,6 +228,8 @@ Hull scattering, wakes, bubbles, and motion are not declared negligible. Initial
 | Single-receiver timing reversal | Match computation to the requested output | Suspend dense-field FastFK optimization as the main research activity |
 | 2026-10-12 single-Rx conditional freeze | Reuse algorithm contracts and cancellation diagnostics | Not additional BIE physics or a 3D speed forecast |
 | Finite-band CIR agreement | Reuse native-to-DSP conversion tests | Re-establish delay support and frequency-grid convergence |
+| 3D WP0 and compact dual-surface finite-amplitude controls, 4/6/8 kHz and two q=.10 azimuths | Reuse frozen image/phase checks and matched high-order Dirichlet physical-reference cases | Conditional G1 **only for named compact surfaces, geometries, and frequencies**, not PM or a continuous band |
+| Fixed Hm0=.5 m PM feasibility / FE–TFE–dealiasing / mapped t=1 direct pilot | Preserve failures, residual budgets, and exact surface/solver definitions | Original PM remains INCONCLUSIVE: Taylor/TFE residuals failed; direct-pilot linear and true-residual checks also failed; one bounded preconditioner decision, then matched BIE feasibility if needed |
 | External AI suggestions | Retain useful questions and candidate methods | Recompute geometry, roughness moments, and budgets; do not inherit unsupported thresholds |
 
 The measured fixed 4 kHz, 2D Tx100/Rx3 case gave 0.98571 ms for FullFK single-point evaluation versus 36.0479 ms for FastFK whole-line evaluation followed by extraction. Including preparation gave 111.55524 versus 214.69579 ms. FullFK was therefore approximately 36.57 and 1.925 times faster, respectively; pointwise complex difference was about 0.0177%. These are workload-specific measurements, not projected 3D timings. [L2]
@@ -184,6 +237,19 @@ The measured fixed 4 kHz, 2D Tx100/Rx3 case gave 0.98571 ms for FullFK single-po
 In that implementation, most FullFK cost was incident-field reconstruction on the actual surface. An analytic 3D point-source field changes this preparation problem substantially, but it also changes the source model from the old 2D Gaussian fixture. Any resulting cost reduction must be reported as a new formulation/workload comparison, not an equivalent acceleration of the old fixture.
 
 Continue to preserve the production WAPE model and all historical references. Research alternatives should be introduced through validation workflows and only integrated into public interfaces after their domain and semantics are established.
+
+### 3.1 Evidence ladder: why completed 2D validation precedes, but cannot replace, 3D G1
+
+The historical 2D FullFK–BIE campaign is a **completed, bounded reference study**. It checked the complete two-term Kirchhoff representation against an independent Dirichlet BIE over declared deterministic and finite-band PM cases, including a documented high-wavenumber limit where the approximation missed its 2D acceptance gate. That evidence justifies keeping the 2D formula, code and known failures as frozen regression assets. It does **not** certify the 3D point-source problem, the two-coordinate surface geometry, azimuthal scattering, or the original-amplitude target PM population. Conversely, lack of a 3D PM reference does **not** invalidate the completed 2D conclusions.
+
+The evidence ladder is therefore:
+
+1. **2D physical mechanism:** matched 2D FullFK–BIE successes **and** observed failures; independently evaluated, no blanket correctness claim.
+2. **3D analytic/controlled reference:** flat Green/image checks, compact dual-surface FE references and numerical guards; conditional, named-case G1 passes.
+3. **3D target PM independent reference:** **OPEN** until a non-Kirchhoff solver satisfies true PDE, pressure-release boundary, outgoing condition, resolution/box convergence, and a defensible finite-support/cutoff treatment. Only then run a matched FullFK–PM physical error comparison.
+4. **Single-link statistical/communication inference:** formal PM mechanism tests, P0/S1/S2 comparisons and communication claims require their own physical-domain and evidence gates; independent deterministic DSP readiness may proceed before that.
+
+**Optional cross-dimensional regression (not a new WP1 stop gate).** If it can be implemented cheaply from existing validation code, verify a truly *matched* 2D limit: a y-translation-invariant surface and matching **line-source** excitation, phase convention, normals, boundary model, radiation condition, and response normalization. The y-integrated outgoing 3D Green kernel must reproduce the 2D Hankel kernel (with justified oscillatory/infinite-aperture treatment). A 3D **point source** placed above an eta(x)-only sea is **not** automatically the old 2D Gaussian-source experiment; comparing those directly would create a false failure. First audit the analytic reduction and matched fixtures; implement only if the comparison can be made without a new large numerical solver. Report agreement or a documented deferral as a formula/implementation diagnostic, never as a target-PM physics pass. Do not let this optional check displace the capped preconditioner decision or deterministic single-link readiness.
 
 ## 4. Proposed physical and statistical architecture
 
@@ -216,7 +282,7 @@ Use a hierarchy of references:
 | C | Independently formulated 3D boundary solution on manageable matched cases, plus weak-roughness limiting checks | Physical approximation error under those matched conditions |
 | D | Eventually, measured channel responses with known geometry/environment | Transfer to actual deployment |
 
-A converged 3D Kirchhoff implementation is not Level C evidence for itself. Agreement of two Kirchhoff implementations is algorithm fidelity. Existing 2D BIE results remain useful regressions but cannot replace a three-dimensional physical check. If a matched 3D reference is infeasible, report the remaining physical uncertainty and limit the claim; do not label the reference gap as a pass.
+A converged 3D Kirchhoff implementation is not Level C evidence for itself. Agreement of two Kirchhoff implementations is algorithm fidelity. Existing 2D BIE results remain useful regressions but cannot replace a three-dimensional physical check. The accepted compact dual cases provide **case-specific** Level C evidence from independently checked high-order Dirichlet references; they do not transfer to the original-amplitude PM sea. If a matched 3D PM reference is infeasible, report the remaining physical uncertainty and limit the claim; do not label the reference gap as a pass. Deterministic DSP/communication infrastructure may still be tested with separately labeled Level A/C controls.
 
 ### 4.2 Statistical output and candidate generators
 
@@ -228,7 +294,7 @@ All stochastic and communication quantities should use one documented DSP freque
 
 where xi contains the random sea state realization and, in later stages, motion. The direct reference must be prescribed by geometry; no realization-specific fitted alignment is permitted in physical-solver comparisons.
 
-Compare three mandatory routes:
+**Only after the relevant physical-domain gate and dataset are established**, compare the following candidate routes. Listing them is a research design, **not approval to fit statistical models to uncertified PM data**, and no route is guaranteed to win:
 
 | Route | Representation | Reason to retain it |
 |---|---|---|
@@ -260,7 +326,7 @@ The following are research settings, not user-approved installation limits or pu
 |---|---|---|
 | First analytic control | Tx1500 m, Rx5 m, c1500 m/s, flat surface, q=0 and 0.10 | Establish deep geometry and absolute conventions |
 | First numerical roughness controls | Same geometry; compact weak sinusoid and dual-direction perturbations | Executed WP1; amplitudes .001 and (.002,.001) m, not PM |
-| Subsequent roughness mechanism pilot | Hm0=0.5 and 1 m crossed with q=0 and 0.10 | Deferred until finite-roughness G1 and surface definition are established |
+| Target PM mechanism pilot (not yet authorized) | Hm0=0.5 and 1 m crossed with q=0 and 0.10 | **Formal WP2=false** pending matched PM physical-reference, spectrum/support and numerical-domain acceptance; not an instruction to generate 32 cases now |
 | Nearby validation | Tx3000 m; Rx3 and 10 m; q up to 0.25; Hm0 up to 2 m | Test transfer one controlled extension at a time, then selected interactions |
 | Later stress cases | Tx6000 m, q=0.50, Hm0=3 m | Extend only after the core domain and cost are understood |
 
@@ -283,6 +349,8 @@ Separate three lengths:
 3. The quadrature spacing, determined by both acoustic oscillation and resolved surface geometry.
 
 Long-wave modes larger than the integration patch can affect its local height and tilt. Do not remove them merely by generating a small periodic patch. Conversely, a large illumination footprint is not automatically the required integration aperture. Use a common parent realization when changing the integration window or numerical mesh.
+
+The frozen target-PM feasibility specimen uses seed261013, an isotropic finite-band 128 m parent surface with kmin=2pi/128 and kmax=1 rad/m, Hm0=0.5 m (finite-band model specification), 6 kHz, Tx1500/Rx5 and q=.10. Its C2 support12 embedding is a *separate modeled physical boundary* and has not passed an independent finite-amplitude PM reference. A support24 case is **a changed surface**, not a finer solve of support12. Track parent spectral cutoff, realization, C2 envelope/support, acoustic integration support, FE/TFE/solver box and horizontal/vertical/quadrature grids separately; do not classify physical support or cutoff changes as pure discretization convergence.
 
 The PM gravity-wave tail does not provide finite slope/curvature moments without a short-wave limit. Choose and document the physical high-wavenumber treatment before statistical production. Run nested spectral-band checks with common low-frequency coefficients. If omitted bands materially change receiver observables, extend the spectrum or narrow the model's claimed domain. Numerical mesh refinement must not silently add physical roughness.
 
@@ -307,32 +375,41 @@ Include a uniformly shifted flat reflector to show how random phase/delay can su
 
 **Deliverable D0:** a versioned problem specification, independent analytic test cases, and a phase/CIR metadata contract.
 
-**Gate G0:** analytic algebra and numerical representations agree within the proposed numerical tolerances; no convention fitting is used. Failure stops rough-surface interpretation.
+**Gate G0:** analytic algebra and numerical representations agree within the proposed numerical tolerances; no convention fitting is used. Failure stops rough-surface interpretation. **Current status: PASS on the documented flat, shifted-plane, rotation and native/DSP controls**; repeat only when conventions or source geometry change materially.
 
 ### WP1 — Build a small receiver-focused 3D physical reference campaign
 
 **Question:** Can the selected rough-surface approximation produce a defensible response at an acceptable cost?
 
-Reuse the completed minimal candidate and controls recorded above rather than restarting WP1. Compact perturbations use exact infinite-flat background plus rough/flat full-density differences, with raw finite-aperture flat errors retained separately. Future noncompact random surfaces require justified boundary/support treatment. Enlarging a C2 embedding changes the physical surface; it is sensitivity, not proof of infinite-ocean convergence.
+Reuse the completed receiver-focused 3D candidate and its controls rather than restarting WP1. Preserve the completed 2D BIE physical audits as regressions, and treat the matched line-source 2D→3D limit of Section 3.1 as optional, **not** as a prerequisite to continue the 3D PM reference. Compact perturbations use exact infinite-flat background plus rough/flat full-density differences, with raw finite-aperture flat errors separately recorded. The validated compact dual family includes controlled finite amplitudes, q=0 and q=.10 x/y orientations, and 4/6/8 kHz **discrete** comparisons to independent high-order references. These passes do not establish population, continuous-band or PM reliability.
 
-Apply 4 and 8 kHz only after the first control passes. Organize at most 12 initial independent-reference evaluations across easy, representative, and deliberately difficult cases after a one-case runtime/memory probe. This is a scope ceiling for an exploratory pilot, not a claim that 12 cases establish population validity. Repeat a selected reference with tighter resolution and support to quantify its uncertainty.
+**Current gap:** the fixed original-amplitude PM realization has *no credible independent finite-amplitude reference*. Ordinary FE and Taylor/TFE checks failed; Fourier dealiasing did not restore the TFE physical residual. The mapped non-Taylor `t=1` Helmholtz pilot passed control cases but its capped PM GMRES/true PDE, DtN and real-boundary checks remained unresolved. No matched FullFK–PM comparison was accepted. Do not reproduce completed dual or failed PM experiments as new progress.
 
-Prefer a matched 3D BIE/BEM reference where computationally feasible. Independently derived weak-roughness limits can support small-amplitude checks. Exact flat tests alone do not validate finite roughness. If the independent 3D method is itself uncertain, resolve that uncertainty before using it to rank approximations.
+One **budgeted preconditioner improvement** on the existing mapped direct solver is now the first Stream A decision. Freeze the specimen and reference operator; diagnose operator/preconditioner/GMRES consistency and record true residuals independently of Krylov stopping. A linear solve passing is necessary but not sufficient: then check real-surface boundary handling, horizontal and vertical mesh refinement, transparent boundary, box/support sensitivity and the original physical-reference conditions. If it cannot pass within the predeclared cap, stop this solver route and evaluate a minimum *matched* 3D BIE/BEM pilot with feasibility and memory budgeting before implementation. Never use a free-space closed-body BEM result as an unexamined reference for an infinite rough half-space.
+
+The original reference-campaign size (up to 12 cases) is **not presently authorized for target PM**. A later bounded multi-case campaign requires an accepted reference and separately justified spectral cutoff, finite embedding/noncompact support and integration aperture. Numerical mesh refinement must hold the *same* physical sea fixed.
 
 **Deliverable D1:** convergence report, measured cost breakdown, and a case-by-case applicability table including failures and reference limitations.
 
-**Gate G1 and branches:**
+**Gate G1 — explicitly scoped, not a single project-wide binary claim:**
 
-- Numerical failure: fix integration/support/conventions before changing physical models.
-- Converged Kirchhoff disagreement with an independent reference: try a justified SSA or two-scale alternative for the failing mechanism, or restrict the accepted surface domain. Do not increase FastFK rank to repair physical error.
-- Adequate Kirchhoff agreement: provisionally adopt it for the tested domain and begin the stochastic pilot.
-- Unaffordable or unavailable independent reference: retain a clearly conditional computational study; do not claim the target physical model is validated. Replan the reference scope before a large dataset.
+- **Already accepted:** `G1_compact_dual=CONDITIONAL_PASS` only for the archived, independently referenced compact examples. These may support deterministic control and method studies, not PM population claims.
+- **Still open:** `G1_target_PM=OPEN` and `WP2_formal=false`. A valid direct mapped Helmholtz or matched BIE result first needs independent true PDE/Dirichlet/DtN checks, mesh/vertical/box convergence and an explicit support/cutoff interpretation; **then** compare FullFK versus reference on exactly matched PM surfaces. A single conditional success would not automatically certify the original four-condition PM pilot.
+- **Numerical/reference failure:** diagnose the reference within a fixed budget; keep `INCONCLUSIVE` if it cannot be made reliable. Do not label failed numerical checks as FullFK physical failure.
+- **Converged physical disagreement:** use a justified alternative (e.g. SSA/two-scale) or explicitly restrict the accepted sea-state domain; increasing FastFK rank cannot repair physical approximation error.
+- **Adequate physical agreement:** authorize only a *declared and independently supported* physical subdomain. Expand to the formal WP2 pilot only when coverage of its planned frequency, geometry and surface family has been justified and recorded in a new approval decision.
 
-### WP2 — Run a small paired mechanism experiment
+### Cross-track readiness — allowed while target-PM G1 is open (not WP2)
+
+Allowed independent deliverables: native/DSP conversion and shared frequency/delay/CIR metadata; deterministic flat-image and independently accepted dual-surface regression signals; numerically checked phase/CIR windows and frequency grids; validation infrastructure, dataset schema/provenance/flags; AWGN, known-channel and flat two-path QPSK receiver controls; and resource accounting for those **named workloads**. An analytically matched 2D-line-source to y-invariant 3D regression may be added **only if low-cost and non-blocking**, with `cross_dim_formula_diagnostic` provenance; a point-source-versus-old-Gaussian comparison is invalid. This check is not a new G1 acceptance gate. Clearly label whether a result is `analytic_control`, `compact_dual_conditional`, or `PM_unvalidated_diagnostic` and never mix these tiers in physical/statistical acceptance.
+
+Do **not** collect an enlarged original-amplitude PM ensemble, fit PM S1/S2 distributions, calibrate residuals from PM numerical artifacts, tune FastFK on unvalidated PM, infer PM outages/BER, or treat a deterministic signal-processing test as PM communication validation. A diagnostic PM output may be retained with a non-acceptance label but must not enter training, model-selection, held-out testing or reported physical statistics. Stream B deliverables have their own readiness checklist and do not change G1, G2, G3, G4 or `WP2_formal`.
+
+### WP2 — Run a small paired mechanism experiment (formal; currently blocked)
 
 **Question:** Does roughness primarily randomize a small number of path variables, or does it require a richer frequency process?
 
-Use the four pilot conditions in Section 5: Hm0=0.5/1 m crossed with q=0/0.10 at Tx1500/Rx5. Start with eight independent base coefficient seeds. Within each seed, pair the candidate methods and conditions using common standardized coefficients where the spectral construction permits. Save the actual spectra so that coupling is not confused with an identical physical surface.
+**Do not execute this package while `WP2_formal=false`.** The four conditions and counts below remain a contingent experiment design, not permission to generate target-PM training/validation data. When a later G1 decision explicitly releases a defined sea-state domain, use the four pilot conditions in Section 5 only if *each* is supported, or formally narrow the pilot and its claims. The originally proposed crossed conditions are Hm0=0.5/1 m and q=0/0.10 at Tx1500/Rx5. Start with eight independent base coefficient seeds only after release; pair compatible conditions with common standardized coefficients, preserving actual spectra so that coupling is not confused with identical physical seas.
 
 This gives 32 condition-realization responses. At the initial 4/6/8 kHz screening stage it represents 96 scalar-frequency evaluations per physical candidate, excluding controls, refinements, and independent-reference checks. These counts are budgeting definitions, not a statistically powered final sample. Use the same realizations across frequency; never redraw a surface independently at each frequency.
 
@@ -342,15 +419,15 @@ Use geometric path-delay estimates and observed tail energy to enlarge the windo
 
 Extract reflected power, direct/reflected ratio, reflected-only coherent fraction, phase and delay variation, frequency covariance and pseudo-covariance, band-limited delay structure, and fades. Interpret peak count with the finite bandwidth in mind.
 
-**Deliverable D2:** paired effect plots and an explicit decision on S1 versus S2 feasibility, with uncertainty and counterexamples.
+**Deliverable D2 (deferred):** paired effect plots and a comparison of P0/S1/S2 feasibility with uncertainty and counterexamples, limited to the newly authorized physical domain. Readiness controls from Stream B are not D2 physical statistics.
 
-**Gate G2:** proceed only when the chosen observables and frequency representation are numerically stable. If path extraction is unstable or residual structure remains strong, favor S1 or a richer joint model instead of forcing a few-path interpretation.
+**Gate G2 (not evaluated):** proceed only when the chosen observables and frequency representation are numerically stable *and the physical inputs are accepted for their claimed domain*. If path extraction is unstable or residual structure remains strong, favor direct sampling, S1, or a richer joint model instead of forcing a few-path interpretation.
 
 ### WP3 — Fit and validate the conditional static generator
 
 **Question:** Which representation generalizes to unseen surfaces and nearby conditions at the lowest useful cost?
 
-Use the pilot for design and tuning only. A provisional first development batch is 32 new independent base seeds, followed by 32 disjoint validation seeds across the selected core conditions. These are batch sizes for cost and precision assessment, not a guarantee of adequate covariance or tail estimation. Reserve a separate final test set after selecting the model and tolerances.
+**WP3 is not authorized while formal WP2 and G2 remain blocked.** Do not fit statistical PM generators to unvalidated physical outputs. Once an authorized physical pilot passes G2, use it for design and tuning only. A provisional first development batch is 32 new independent base seeds, followed by 32 disjoint validation seeds across the selected core conditions. These are batch sizes for cost and precision assessment, not a guarantee of adequate covariance or tail estimation. Reserve a separate final test set after selecting the model and tolerances.
 
 At hundreds of frequencies, small ensembles cannot identify an unrestricted full covariance. Use shrinkage, a reduced basis, or a structured kernel selected on development data. Verify positive semidefiniteness, pseudo-covariance compatibility, and sensitivity to basis dimension. Do not let low sample rank masquerade as physical low dimensionality.
 
@@ -368,14 +445,16 @@ Test interpolation in operating conditions separately from independent-seed gene
 
 Use single-carrier QPSK as the primary static benchmark because the repository already has MPSK infrastructure. Propose fc=6 kHz, symbol rate 2000 symbols/s, root-raised-cosine roll-off 0.25, and uncoded raw rate 4000 bit/s. The nominal occupied band is about 4.75–7.25 kHz, within the preferred band. These are research choices, not specifications for the unknown transducer. Add a wider-band waveform sensitivity test only after the first benchmark is trustworthy.
 
-Establish two receiver modes: a perfect-CSI/timing control and a practical pilot-based channel estimator with a documented equalizer and synchronization procedure. Derive sample-rate, pulse-filter, noise-variance, Es/N0 and Eb/N0 mappings explicitly. Validate AWGN, flat two-path, and noiseless known-channel cases before evaluating new channel models. The old processing-related BER floor must be resolved or the benchmark rebuilt independently; it must not serve as the channel acceptance tolerance.
+Establish two receiver modes: a perfect-CSI/timing control and a practical pilot-based channel estimator with a documented equalizer and synchronization procedure. Derive sample-rate, pulse-filter, noise-variance, Es/N0 and Eb/N0 mappings explicitly. **The AWGN, analytic flat two-path, and noiseless known-channel tests may proceed now as Stream B controls**, without any target-PM simulated dataset or PM performance interpretation. The old processing-related BER floor must be resolved or the benchmark rebuilt independently; it must not serve as the channel acceptance tolerance.
 
 For a concrete starting configuration, propose 1024 payload QPSK symbols per packet, a 128-symbol known pilot, two complex samples per symbol, and a 10-symbol pulse-filter span. Start with a fractionally spaced linear MMSE equalizer; determine and freeze its length from the accepted channel-memory and pulse-support study, then check a longer filter. Use a regularized pilot-based impulse-response estimate in the practical receiver. Set guard duration from the converged channel support rather than a historical CIR window. If linear equalization is an inadequate benchmark under relevant spectral nulls, evaluate a documented DFE extension and keep its settings identical across generator comparisons. Report net rate including pilot and guard overhead. These packet choices belong to the explicitly static first study; the later dynamic study must test variation within a packet rather than assume it remains frozen.
 
-Use two distinct experiments:
+**Deferred WP4 acceptance experiments (not Stream B controls):**
 
-1. **Generator fidelity:** with the same receiver algorithm and noise policy, compare performance distributions under physical and generated channel ensembles.
-2. **Receiver-model mismatch:** evaluate receiver designs or priors on the same held-out physical channels, transmitted data, and pilot/noise realizations. Keep a perfect-CSI control to separate estimation losses.
+1. **Generator fidelity:** only with an accepted physical ensemble, and using the same receiver algorithm and noise policy, compare performance distributions under physical and generated channel ensembles.
+2. **Receiver-model mismatch:** only on held-out *accepted* physical channels, transmitted data, and pilot/noise realizations, evaluate receiver designs or priors; keep a perfect-CSI control to separate estimation losses.
+
+No PM BER/PER, fading, outages, or generator-equivalence claim is authorized by an AWGN, image, or compact-dual sanity check. Stream B may verify software interfaces, phase reference and waveform algebra but must label such results **pipeline readiness**, not physical or communication acceptance for the PM target.
 
 For fade and outage tests, retain channel gain under a fixed transmitted-energy/noise convention. A per-realization normalization experiment may isolate frequency-selective distortion, but must be labeled secondary because it removes part of the fading effect.
 
@@ -422,6 +501,8 @@ Begin with independent continuous records spanning many dominant wave periods; e
 
 The independent static unit is the parent surface realization at a specified environmental condition. Frequency bins, receiver samples, repeated timing calls, and repeated packets on one surface are not additional independent sea realizations. For time-varying work, independent records/seeds are the primary units; snapshots within a record are correlated.
 
+Tag every artifact with a **physics-evidence tier**, solver/reference identity and version, surface-definition and parent-coefficient hash, cutoff, C2 embedding/support, numerical aperture, source/receiver/frequency convention, and gates. `analytic_control`, `compact_dual_conditional`, `cross_dim_formula_diagnostic`, and `PM_unvalidated_diagnostic` must remain distinguishable; only data carrying accepted physical-domain scope may be used for later statistical fitting or PM communication conclusions.
+
 Use common random inputs for paired algorithm comparisons and compatible factor changes. Randomize method order within a timing block and block by machine/session. Keep numerical refinement on exactly the same physical surface. Separate seeds for surface coefficients, communication data/noise, and run ordering; record all streams in a manifest. No schedule or new experiment is generated by this planning document.
 
 Pilot batches are exploratory. Estimate uncertainty at the parent-realization level using an appropriate clustered analysis; paired differences are preferable where pairing is real. Repeated packets improve conditional BER estimation, not environmental coverage. Regularized covariance comparisons must acknowledge finite-sample bias.
@@ -453,9 +534,11 @@ Report total time, amortized time, memory peak, batch size, hardware, precision,
 
 The original 2D timing cannot budget 3D BIE. Before any expensive batch, run one candidate and one independent-reference case, forecast memory and total cost, and choose a bounded checkpointed campaign. Stop scaling when the reference is unaffordable, accuracy is inadequate, or the intended generation volume falls below break-even. Then reduce the experimental scope or change the formulation explicitly rather than silently relaxing convergence.
 
+**Immediate Stream A budget decision:** use the saved `t=1` mapped-solver pilot as baseline, state one preconditioner change, define maximum Krylov work/peak-memory/wall-time and independent physical-residual limits *before running*, and compare like-for-like true residual histories. If the single bounded intervention fails, close that intervention and produce a small matched BIE feasibility estimate instead of authorizing additional unchecked solver trials. Stream B cost accounting applies only to deterministic validated controls and infrastructure; it cannot be extrapolated to target-PM generator throughput.
+
 ## 9. Proposed acceptance criteria
 
-These are initial design tolerances proposed by this plan, not validated universal thresholds or previously confirmed user requirements. Freeze or revise them after the pilot and communication sensitivity study, before final testing. Report all failures as well as passes.
+These are initial design tolerances proposed by this plan, not validated universal thresholds or previously confirmed user requirements. Freeze or revise them after an *authorized* pilot and communication sensitivity study, before final testing. Report all failures as well as passes. **Do not reinterpret a single-frequency, compact-dual conditional pass as the target-PM band or population meeting the provisional 1% criterion.** WP0 algebraic, numerical, independent-physics, PM-support and communications gates are distinct; no error tolerance is relaxed by the dual-track policy.
 
 | Layer | Proposed initial criterion | Interpretation and safeguard |
 |---|---|---|
@@ -478,27 +561,29 @@ The estimates below are effort bands for planning, not measured runtimes or a de
 
 | Work package | Indicative focused effort | Prerequisite |
 |---|---|---|
-| WP0 | 3–5 working days | Current information is sufficient for idealized controls |
-| WP1 | 2–4 weeks, potentially longer for an independent 3D reference | G0 |
-| WP2 | 1–2 weeks after measured cost is known | G1 and a frozen surface definition |
-| WP3 | 2–3 weeks plus reference-data cost | G2 |
-| WP4 | 1–2 weeks; basic communication sanity checks can begin during WP1 | Reliable physical/statistical inputs and corrected benchmark |
-| WP5 | 2–3 weeks for a selected extension set | G3/G4 |
-| WP6 | Separate 3–6+ week study after the static result | Static model accepted and dynamics specification available |
+| WP0 | Completed (G0 PASS) | Retain controls; no new work unless contracts change |
+| WP1/G1 — target-PM reference | **Active, one bounded decision checkpoint**; duration/cost to be measured, not promised | Existing failed mapped-Helmholtz direct pilot; frozen PM/spec/support; predeclared solver-budget and stop rule |
+| Stream B — deterministic readiness | **Can start now**; separate work log/budget | Analytic flat + accepted compact-dual controls; no PM statistical inputs |
+| Optional 2D→3D matched-limit audit | Low-priority, bounded regression only; may be deferred without changing any gate | Analytically matched infinite line source, y-invariant sea, same radiation/normalization; no added PM/3D physics claim |
+| WP2 — formal PM mechanism pilot | Deferred; original 1–2-week estimate is not authorization | **New scope-specific G1 approval**, frozen spectrum/support and accepted independent reference; `WP2_formal=false` now |
+| WP3 — statistical generator | Deferred; original development estimates remain provisional | G2 and accepted physical-data provenance |
+| WP4 — receiver controls | AWGN/flat/two-path baseline work allowed; PM generator/communication validation deferred | Stream B contract for controls; WP4 acceptance additionally requires accepted physical/statistical inputs |
+| WP5 | Deferred | Accepted WP3/WP4 and defined applicability domain |
+| WP6 | Deferred separate work | Accepted static model and dynamics specification |
 
-The first executable task should implement **WP0 and the minimal WP1 candidate**, not the entire plan:
+**Next executable work is two bounded, non-overlapping tasks rather than redoing WP0/WP1:**
 
-1. Create the problem/metadata specification and analytic 3D flat controls.
-2. Implement the single-receiver 3D integral under a documented boundary approximation, with analytic incident field and derivatives.
-3. Validate flat and weak deterministic two-coordinate surfaces, and separate numerical convergence from physical-reference checks.
-4. Record one realistic cost/memory breakdown and identify a feasible independent-reference case.
-5. Produce a go/no-go report for the 32-response pilot; do not launch that pilot until its physical domain and cost are defensible.
+1. **A / reference decision (first priority for target-PM certification):** review the recorded mapped `t=1` PM failure; make and test *one* predeclared preconditioner change with caps on solver steps, memory, and wall time. Check true PDE/DtN/Dirichlet residuals independently of the linear solver. If it still fails, stop escalation and prepare a costed, mathematically matched 3D BIE/BEM minimum-pilot decision. If it passes, proceed in gated order to real boundary, horizontal/vertical mesh, domain and surface-support evidence **before** matched FullFK–PM physics. Do not run PM ensembles, support24 extrapolation, or WP2 during this task.
+2. **B / parallel readiness (does not wait for target-PM G1):** freeze native/DSP, phase/delay/CIR and frequency contracts; build reproducible outputs and physics-tier labels using image and accepted dual controls; pass AWGN, noiseless known-channel and flat two-path modem sanity tests; record end-to-end costs for these exact deterministic workloads. **Only if it is genuinely cheap after the mandatory controls**, optionally add the matched 2D line-source/y-invariant-3D formula regression from Section 3.1; otherwise document deferral. No PM parameter fitting, PM BER/outage result, FastFK optimization, or formal WP2.
+3. **Decision review:** report each stream separately. Stream A yields `reference_ready` / `INCONCLUSIVE`, residual and support evidence and a next-method stop/go choice. Stream B yields only deterministic **infrastructure readiness**. Neither authorizes formal WP2 unless a later, explicit, target-domain G1 approval is documented.
 
-This task should produce a reference-quality research prototype, not a production replacement or a claim of fast statistical channel generation.
+The next Codex Goal-mode execution shall use the accompanying `codex_goal_two_track_2026-10-14.md`: continue through preflight, the **single** capped preconditioner decision, independent residual/audit work, B-stream deterministic tests, and the final separated reports without requiring step-by-step approvals. It must stop expensive Stream A exploration at its declared cap and must not interpret autonomy as permission to expand the PM physics domain.
+
+The original 32-response and broadband statistical experiments remain **future gated designs**, not the current task. The ultimate objective is still a defensible *single-link communication channel*; once physical data exist, select P0, S1 or S2 by accuracy, cost and communication evidence, not by prior preference for FastFK or any one statistical family.
 
 ## 11. Deliverables and repository organization
 
-The static research is complete only when D0–D5 provide a reproducible physical domain, a selected generator or direct-sampling solution, held-out statistical and communication evidence, and full cost accounting. D6 is a distinct later deliverable.
+The static research is complete only when D0–D5 provide a reproducible physical domain, a selected generator or direct-sampling solution, held-out statistical and communication evidence, and full cost accounting. D6 is a distinct later deliverable. **Stream B readiness is an interim engineering/research artifact, not D2–D5 acceptance**; a frozen compact-dual numerical/communication control must never be presented as validation of the target finite-band PM population.
 
 For future implementation, follow existing repository responsibility boundaries:
 
@@ -510,7 +595,7 @@ For future implementation, follow existing repository responsibility boundaries:
 - Validated reusable components, when promoted: appropriate `src/surface/`, `src/receiver/`, `src/statistics/`, or `src/channel/` modules.
 - Case-specific data: `results/validation/`, `results/comparisons/`, or `results/experiments/`; conclusions in `reports/`.
 
-Persist raw native complex fields, DSP responses, frequency axes, phase metadata, realized surface coefficients, source definition, reference settings, numerical guards, seed manifests, timing scopes, fitted parameters, and train/test membership. The three essential status labels are algorithm fidelity, physical validity, and statistical/communication adequacy.
+Persist raw native complex fields, DSP responses, frequency axes, phase metadata, realized surface coefficients, source definition, reference settings, numerical guards, seed manifests, timing scopes, fitted parameters (only once fitting is authorized), and train/test membership (only for authorized datasets). Preserve one explicit `cross_dim_formula_diagnostic` label whenever an optional dimensional-limit test is run; its output is not a 3D PM reference. Track analytic/convention checks, algorithm fidelity, physical validity, reference credibility, surface-support status, and statistical/communication adequacy **separately**. Emit `G1_target_PM`, `WP2_formal`, physics-tier provenance and exact support/cutoff metadata on every relevant research artifact.
 
 Preserve the public `vertical_channel_model` interface and `H_f = H_direct_f + H_reflect_f`. New production integration is a separate stage requiring the repository's scalar-frequency and wideband regressions. Use the shared MATLAB MCP session for execution. Do not recover obsolete evidence from `cash/`.
 
@@ -521,7 +606,9 @@ Preserve the public `vertical_channel_model` interface and `H_f = H_direct_f + H
 | Source model, calibration, directivity | Ideal normalized point-source controls; explicit sensitivity later | Device-specific received power and range claims |
 | Hull clearance and platform geometry | Idealized hull-free domain, with no transfer claim | Shipboard validation |
 | Maximum depth and offsets | Proposed nested research settings, not engineering limits | Final applicability envelope |
-| Sea-state distribution and short-wave model | Explicit PM candidate, cutoff/direction sensitivity | Population weighting or ocean-wide claims |
+| Sea-state distribution and short-wave model | Explicit finite-band PM candidate, cutoff/direction sensitivity; no unbounded-ocean certificate | Population weighting or ocean-wide claims |
+| Target-PM independent reference and linear convergence | Ordinary FE/Taylor-TFE and bounded mapped `t=1` pilot did not pass original full-amplitude PM checks; one capped preconditioner step, then matched BIE feasibility if necessary | FullFK–PM physical acceptance, formal WP2 and PM-based statistical inference |
+| Finite support versus numerical convergence | Parent PM seed/cutoff and C2 support12 are frozen; support24 changes the modeled physical sea | Noncompact PM claims, support-independent physical accuracy and WP2 domain approval |
 | Water depth and source bottom clearance | No bottom in first half-space study | Claims about a bottom-mounted installation |
 | Computing and update budgets | Measured cost curves and break-even workloads | Optimization target and deployment choice |
 | Measured channel data | Independent numerical reference plus explicit measurement gap | Field-validated model claim |
@@ -539,6 +626,8 @@ This uncertainty register does not require another clarification round before an
 - **L4.** [External-reply reassessment](deep_sea_channel_external_reply_reassessment.md): corrected geometry, PM arithmetic, statistical interpretation, published deployment examples, and scenario provenance.
 - **L5.** [Technical guide](../vertical_comm_guide.md), [2D FullFK reference](../scripts/validation/support/solve_full_kirchhoff_2d.m), and [WAPE implementation](../src/propagation/vertical_wape_propagator.m): existing model definitions, numerical conventions, and boundaries.
 - **L6.** [FullFK PM validity boundary](full_kirchhoff_pm_validity_boundary_report.md): conditional physical approximation limits; not a universal cutoff or 3D certification.
+- **L7.** [3D compact dual/frequency certification](deepsea3d_g1_frequency_report.md), [azimuth](deepsea3d_g1_azimuth_report.md), and [finite-amplitude domain](deepsea3d_alpha25_domain_report.md): conditional per-case G1 evidence, not a PM certificate.
+- **L8.** [3D PM feasibility](deepsea3d_pm_feasibility_report.md), [Taylor/TFE dealiasing](deepsea3d_tfe_dealiasing_report.md), and [mapped `t=1` direct-solve pilot](deepsea3d_mapped_direct_report.md): target-PM reference still fails numerical acceptance; current decision starts from this recorded endpoint, not from a blank implementation.
 
 ### Primary and institutional sources
 

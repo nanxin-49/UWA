@@ -1,5 +1,15 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### BIE验证与时延分离重建（2026-10-14；当前）
+
+候选验证核采用辅助Dirichlet半空间Green及水侧+1/2双层trace，不修改生产传播。六个制造逆问题虽线性通过，半单元真实边界全失败，停止原PM扩算；[BIE报告](reports/deepsea3d_bie_minimum_report.md)。
+解析平面已知路径可先移除几何exp(-i2πfΔτ)，插值慢系数后恢复相位；同257/513源点的独立频点复误差≤6.22e-12。它需要已知路径分量和几何，不能当通用total-only重建或dual/PM认证。普通复线性失败原样保留，带噪平面两路径仅是下一轮可行基础实验，非本轮已完成WP4。[重建报告](reports/deepsea_frequency_reconstruction_report.md)、[协议](reports/deepsea_bie_reconstruction_protocol_2026-10-14.md)。G1 OPEN/WP2=false。
+
+### 深海双轨准备边界（2026-10-14；当前）
+
+研究依据统一为[正式计划](reports/deep_sea_channel_research_plan.md)。右P=2I−B只改变验证求解器，不改变展平PDE；单次原PM试验较冻结restart12更差，停止继续调参，G1 OPEN/WP2=false。[A报告](reports/deepsea3d_preconditioner_decision_report.md)。
+基础通信采用absolute-DSP=conj(native)，relative-DSP再乘exp(i2πfτd)；257/513含端点时，DFT使用256/512独立bin，64/128ms时窗及.25ms采样间隔。解析单载波2sps/完美CSI/CP、AWGN及离散dual增益控制通过；简单线性插值仍约1.3%误差，dual宽带、完整RRC/FSE/pilot与PM统计/BER未认证。[B报告](reports/deepsea_singlelink_readiness_report.md)、[协议](reports/deepsea_two_track_protocol_2026-10-14.md)。生产H_f接口和既有物理方法保持不变。
+
 ### 三维t=1矩阵自由直接法（2026-10-13；最新）
 
 对粗糙修正直接解(L0+L1+L2)V=0，底边g=-u_flat(eta)用精确点源函数；

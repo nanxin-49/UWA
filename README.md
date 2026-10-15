@@ -78,7 +78,7 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 | `reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md` | FK扩频研究人员 | 固定海面、统一rank、BIE锚点、绝对相位与诊断CIR |
 | [Deep-sea research handoff](reports/deep_sea_channel_research_background_for_new_ai.md) | 新的研究评估者 | 英文自包含需求、历史证据、单点计时转向和待论证计划 |
 | [External-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md) | 研究路线讨论者 | 英文外部建议核查、公开深海部署案例与建议测试范围；未改变生产模型 |
-| [Recommended deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 英文完整计划：三维单点参考、统计候选、配对实验、通信验收、全成本和时变扩展；属于计划而非验证结果 |
+| [Official deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 唯一正式研究计划（2026-10-14 已核对合并 v3）：BIE最小参考未过独立边界、已知解析路径时延分离重建通过；G1 OPEN/WP2=false；备份和 v3 仅作版本记录 |
 | `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 
 历史文件原文保存在 `docs/history/`，不得作为当前 API、默认值或验证状态的唯一依据。
