@@ -4,6 +4,43 @@
 
 ## 目录
 
+- 两套PE/Bellhop/BIE图册的[展示汇总](../reports/pe_bellhop_bie_visualization_summary.md)与
+  [数据字段及只读/重绘说明](../reports/pe_bellhop_bie_visualization_data_guide.md)。
+  汇总11张已有图，不新增计算；仓库内Obsidian阅读副本位于
+  `results/visualization/pe_bellhop_bie_summary/20261019_presentation/`，不含数值数据副本。
+
+- `validation/prepare_pe_bellhop_bie_xz_data.m`：固定强海面A=.20 m、4 kHz的真实二维
+  411×45原始反射场。`'init'`保存原始数据和BIE密度；`'stage'`只写一个10001波束
+  Bellhop网格输入；`'pebie'`从保存PE起始场传播并评价保存BIE密度，不重解边界方程；
+  `'finish'`仅导入已有完成回执的Bellhop作业并核对3 m截线。
+  `reporting/generate_pe_bellhop_bie_xz_visuals(run_dir)`独立重绘幅值、相位、幅相合成和
+  原始剖面4张PNG/PDF；`support/audit_pe_bellhop_bie_xz`检查CSV、表示、颜色公式及独立重绘。
+  输出`results/visualization/pe_bellhop_bie_xz/<run_id>/`。保留各方法原始源标度，
+  不用比值冒充原场、不做幅相拟合；[范围与说明](../reports/pe_bellhop_bie_xz_visualization_report.md)。
+
+- `validation/prepare_pe_bellhop_bie_visualization_data.m`：固定4 kHz、Tx100/Rx3、
+  Gaussian sigma=.3、K=.10、A=.01/.05/.20 m的Bellhop–BIE/PE三方图册数据准备。
+  `'init'`保存活动PE/BIE副本和输入哈希；`'next'`每次运行或接收一个独立Bellhop作业，
+  flat/三个rough各5001/10001波束；`'stage'`只生成未开始作业的输入，允许独立Bellhop
+  进程并行；`'finalize'`保存自包含复数MAT/CSV和配对指标。不得重跑PE/BIE或读取cash。
+  `reporting/generate_pe_bellhop_bie_comparison_visuals(run_dir)`仅从数据包重绘7张PNG/PDF，
+  可指定第二参数为新图目录。输出在`results/visualization/pe_bellhop_bie_comparison/<run_id>/`。
+  `support/audit_pe_bellhop_bie_visualization(run_dir,rebuild_dir)`检查输入哈希、复数CSV、
+  native表示映射、八作业诊断和7张重绘PNG像素；[图册报告](../reports/pe_bellhop_bie_comparison_visualization_report.md)。
+
+- `validation/run_black_channel_basics.m`：仅 BLACK 数据下载、校验、官方解包/8 阵元短段 BPSK 回放及基础分析。
+  `setup_vertical_project; r = run_black_channel_basics();`；`'prepare'` 仅下载检查，不加载 MAT；
+  `run_black_channel_basics('render', r.run_dir)` 从保存结果重建三张图、CSV 与短报告。
+  `support/black_*` 提供 HDF5 类型检查、时延矩、相位斜率、匹配滤波到达检查与解析合成控制；
+  `support/prepare_black_channel_assets` 固定 Zenodo 21287414 和官方 MATLAB 提交。
+  `reporting/generate_black_channel_basics_visuals` 与 `write_black_channel_basics_report` 仅负责展示。
+  原始数据、源码快照、校验和和独立运行目录在 `results/validation/black_channel_basics/`；
+  [报告](../reports/black_channel_basics_report.md)。仅通过 MATLAB MCP 现有会话运行，不改变当前目录、生产 API 或物理模型。
+
+- `reporting/analyze_deepsea_dual_broadband_decision.m`：只读冻结三频MAT/CSV，分离平面—粗糙物理效应、参考敏感性、FK数值/模型差，输出成本情景及几何相位候选的探索性筛选；不调用散射求解器。
+  `validation/preflight_deepsea_dual_broadband.m`锁定5/7kHz候选及30%物理RAM门；`validation/support/audit_deepsea_dual_broadband_decision.m`核对保存复数、成本与停止分类。入口拒绝覆盖当前证据，不能当作后续物理扫描授权。
+  [物理决策](../reports/deepsea_dual_broadband_decision_2026-10-15.md)、[成本](../reports/deepsea_dual_broadband_cost_2026-10-15.md)、[协议](../reports/deepsea_dual_broadband_protocol_2026-10-15.md)；数据`results/validation/deepsea_dual_broadband_decision_20261015/`。本轮资源门拒绝，新增物理点0，决策B，仅已有4/6/8kHz可信；G1 OPEN/WP2=false。旧高阶BIE/预条件后续建议停止，不自动执行。
+
 - `validation/validate_deepsea_bie_minimum.m`：三维辅助半空间层核、奇异/近奇异、独立Fourier制造逆问题；固定预算、不构建全局稠密阵、不求原PM。
   `support/deepsea_bie_*`为Gauss/Duffy、分块层核、平面trace/独立径向参考和真实图面已知Cauchy制造；`diagnose_deepsea_bie_windows`检查固定h窗口与图面PV。
 - `validation/validate_deepsea_frequency_reconstruction.m`：保留旧257/513线性失败，对已知解析路径作时延分离，独立频点/深衰落/CIR对照；`deepsea_delay_separated_reconstruct`拒绝dual/PM认证用途。

@@ -9,6 +9,23 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### BLACK 实测信道基础分析（2026-10-16；独立数据工作流）
+
+- 仅下载 BLACK/black_noise，Zenodo 21287414 v1.0，官方 MD5 和本地 SHA-256 通过；固定官方 MATLAB 提交 af1d3814af9199f1e420a248ab27edaced5339cf，未安装全局 add-on。
+- MATLAB MCP 既有 R2025b Update 6 + Signal Toolbox 实跑：h_hat 为 176×8×4569，fs_delay=25 kHz、fs_time=125 Hz、fc=18 kHz，实际记录 36.552 s。官方解包、8 阵元短段 BPSK 回放和配套噪声通过。
+- 固定 seed1994、8192符号、6.25 ksym/s、100 kHz、首尾20 ms、四分之一记录处起始；重复回放相对误差0，整体SNR20 dB，最大主到达误差0.103957个时延样点（约4.16 us）<2样点。已知双径/负频移/有符号Welch控制通过。
+- -25 dB门限下 RMS 时延扩展0.0737–0.0826 ms、90%区间宽0.160–0.280 ms；0.1 s相位拟合的公共频移范围−5.7801至+5.4651 Hz。保存主抽头的残余谱集中在零频，不代表完整多普勒扩展；不从归一化数据估计绝对传播损失。
+- 三张PNG/PDF、一张CSV、保存MAT与中文报告完成；从保存数据重建三张PNG像素完全相同，CSV校验和相同。工作流Code Analyzer 0消息，MATLAB当前目录保持不变。未运行其他信道、BER或生产物理仿真，未改生产接口。
+- 入口 `run_black_channel_basics`，结果 `results/validation/black_channel_basics/runs/20261016_175145_949/`；重绘验证在其 `render_20261016_175421_919/rebuild_verification.json`；[中文报告](reports/black_channel_basics_report.md)。这项数据分析不更改下方既有物理模型的验证状态。
+
+### 固定三维dual宽带决策（2026-10-15；最新，覆盖下方旧下一步建议）
+
+- 最终B：只交付已验证4/6/8kHz离散物理结果。反射幅度约降6.43%，总场相对平面−4.99/+2.38/+12.82dB；物理增量至少约为保存参考经验敏感性的1.1万倍。参考敏感性、FK求积误差、FK模型差分别记录，不作连续频带或PM推论。
+- 已知几何高度相位分离后的稀疏候选仅探索性支持：4/8预测6kHz复误差2.1544e−4；6kHz参与候选筛选，不能充当独立认证。5/7kHz已预声明但因内存门拒绝而未计算。当前可用639.199MiB，保留30%后447.439MiB，小于估计增量1520MiB；新物理点0、核0s。不是新频点物理失败或计算机永久不可行。
+- 历史完整频点约44.6–57.9s。257/513源点加逐区间中点验证的新增核外推6.31–8.21/12.65–16.44小时；9/17源点的对应情景10.4–13.5/22.3–29.0分钟，均非采样充分性证明。时间未触发否决，未知点数/当前资源/独立重建证据仍限制交付。
+- 停止FE/TFE/BIE连续修补，不再自动执行旧“高阶BIE优先”；冻结控制和失败数据保留。G1_target_PM=OPEN、WP2_formal=false。本Goal结束，不自动新建研究Goal。
+  [物理决策](reports/deepsea_dual_broadband_decision_2026-10-15.md)、[成本](reports/deepsea_dual_broadband_cost_2026-10-15.md)、[协议](reports/deepsea_dual_broadband_protocol_2026-10-15.md)；数据results/validation/deepsea_dual_broadband_decision_20261015/。无生产/求解器/接口更改。
+
 ### BIE最小验证与已知路径重建（2026-10-14；当前决策）
 
 - 当前多项式预条件器保持FAILED_CLOSED，不重复调参。BIE六个制造逆问题线性约1e-10通过，但独立边界/场全失败；6kHz最细1600未知半单元边界3.385%、离面.422%，实际C2图面制造PV3.616e-4仍不过1e-4门。停止扩大，不运行dual散射或原PM BIE。
@@ -4743,3 +4760,82 @@ conditions but was not run.
   equation changed; `vertical_comm_guide.md` needs no method revision.
   Report: `reports/fast_fk_single_receiver_timing_report.md`; raw9-round
   CSV/MAT: `results/validation/fast_fk_single_receiver_timing/`.
+
+## 2026-10-18 — Bellhop–BIE / PE–Bellhop–BIE comparison atlas
+
+- Added validation-only `prepare_pe_bellhop_bie_visualization_data`, pure renderer
+  `generate_pe_bellhop_bie_comparison_visuals`, and saved-artifact audit helper.
+  Fixed 2-D 4 kHz/c1500, Tx100/Rx3, Gaussian sigma .3, matched X line source;
+  A .01/.05/.20 m, K .10 rad/m, C2 plateau42/support50. No PM/3-D/Tx99 mixing.
+- PE Model-0/BIE reused from active derivative MAT. Missing active R3-R5 originals
+  were not recreated; numeric-only crosscheck against results/archive snapshot
+  is pointwise identical. Recovered exact internal-wall executable hash matches
+  active build manifest and overlay hashes; no compiler installation or cash access.
+- Eight new Bellhop jobs (flat plus three rough, 5001/10001 beams), all checkpointed
+  and diagnostics passed. Main10001 flat reproduces saved Stage-0 field exactly.
+  Main Bellhop–BIE complex L2: 8.091975e-6 /3.889551e-5 /9.976008e-5;
+  PE–BIE: .0031575715 /.016089960 /.080908108. Fixed Stage-0 M99 weights,411points.
+  Beam-ratio sensitivity:3.51134e-6 /4.89397e-6 /1.11217e-5, not strict error bounds.
+- Outside M99,375 zero-flat Bellhop samples give undefined ratios, explicitly NaN
+  plus valid masks; raw SHD retained. No interpolation, fitted phase or scaling.
+  All411 comparison points valid. G denotes reflected rough/flat ratio, not TL.
+- Seven2400x1350 PNG/vector PDF pairs and Chinese per-figure report completed.
+  Portable MAT plus packaged renderer rebuild reproduces all7 PNG pixels exactly;
+  metric closure0, CSV roundtrip4.8937e-15, native mapping0, all source/binary hashes pass.
+  PNG and Poppler-rendered PDF visual QA passed; three new MATLAB files analyzer-clean.
+- Result: `results/visualization/pe_bellhop_bie_comparison/20261018_194331_523/`;
+  report: `reports/pe_bellhop_bie_comparison_visualization_report.md`.
+  README/scripts navigation updated. No production API, frozen solver or physical
+  method change; no PE/BIE rerun or communication regression needed. Historical BIE
+  refinement checks remain historical; this atlas does not alter PM/3-D validity status.
+
+## 2026-10-19 — Raw PE/Bellhop/BIE x-z field visualization
+
+- User explicitly requested true x-z raw fields, then approved the minimal strong
+  A=.20/K=.10/4kHz fixture: existing M99 x411 points, z=.5:.125:6 m (45 levels),
+  18495 actual samples per method. No image-row replication or spatial interpolation.
+- Added prepare_pe_bellhop_bie_xz_data, evaluate_saved_halfplane_bie_field,
+  generate_pe_bellhop_bie_xz_visuals and audit_pe_bellhop_bie_xz (validation/reporting).
+  PE evaluates saved surface starting field at new depths; BIE reuses saved4480-node
+  density and the frozen off-surface Green formula. New BIE boundary solves0.
+- Exactly one new matched internal-wall Bellhop10001-beam grid job completed,
+  wall686.2287s, geometry diagnostics passed and coordinate error0. New z3 line
+  matches old Bellhop exactly; PE/BIE saved-line closures1.4786e-14/5.2563e-15.
+  Saved BIE12/14ppw density probe change1.4232e-8 on44 points, not full-domain certification.
+- Four raw-field PNG/PDF pairs: amplitude, phase, phase-hue/amplitude-brightness,
+  and raw1/3/6m magnitude profiles. All2400x1350 PNGs, single-page1152x648pt PDFs.
+  PDFs embed reviewed PNGs to avoid R2025b tiled/vector export clipping; not vector PDFs.
+- Preserve PE envelope plus analytic exp(+ik0(100+z)) carrier restoration, raw BH SHD
+  plus its established conjugated-native field, and BIE native field. No fitted
+  scaling/phase. PE-restored/BIE flat closure3.855e-13; native flat BH/BIE center
+  scale5.77379 and phase .777896rad are diagnostics only, never applied as corrections.
+  PE/BIE share amplitude limits; BH has explicit independent native-source limits.
+  Old G conjugation does not define a complete absolute-field phase conversion;
+  raw phase colors do not constitute a new cross-model phase-error ranking.
+- Portable MAT plus packaged script rebuild reproduces4/4 PNG pixels. CSV closure
+  7.1089e-16, RGB and carrier formulas0. Four new files analyzer-clean; visual PNG/PDF QA
+  passed. Existing three-case atlas preserved. Production APIs/frozen solvers unchanged;
+  no communication regression or vertical_comm_guide method update applicable.
+- Result: results/visualization/pe_bellhop_bie_xz/20261019_115214_348/;
+  report: reports/pe_bellhop_bie_xz_visualization_report.md. README/scripts/current
+  comparison report navigation updated. No PM/3-D/absolute pressure or TL claims.
+
+## 2026-10-19 — Presentation summary of the two reflection-field atlases
+
+- Added reports/pe_bellhop_bie_visualization_summary.md and the companion
+  pe_bellhop_bie_visualization_data_guide.md. All eleven existing figures are
+  explained in plain Chinese, with a suggested presentation sequence, source
+  settings, quantitative tables, phase explanation, and an optional spoken summary.
+- Keep the z=3m normalized G metrics separate from raw x-z fields. Strong-case
+  PE-BIE and BH-BIE weighted complex differences are 8.0908% and 0.0099760%;
+  neither is claimed as a full-domain raw-field error. Native source scales and
+  phase conventions remain explicit. MAT fields, CSV semantics, masks/weights,
+  and non-overwriting saved-data redraw commands are documented.
+- Added a repository-local Obsidian reading package at
+  results/visualization/pe_bellhop_bie_summary/20261019_presentation/ containing
+  the summary, data guide and eleven unchanged PNG copies. No numerical inputs,
+  MAT/CSV, executable or source-job outputs are duplicated; original packages
+  remain authoritative. No external vault write, solver run or image re-render.
+- README and script navigation updated. Production code, physics, APIs, frozen
+  solvers and the two original reports/data packages are unchanged; no production
+  regression or vertical_comm_guide method update is applicable to this prose task.

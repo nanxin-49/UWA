@@ -1,5 +1,7 @@
 # Research Plan for a Deep-to-Near-Surface Acoustic Communication Channel
 
+> **Latest authoritative decision — 2026-10-15 / 当前优先级：B，固定dual仅离散频点交付。** FE/TFE/BIE连续修补任务链停止；以下旧条目中的“next”“active”“高阶BIE优先”均为历史建议，不再授权执行。固定Tx(0,150.5,1500)/Rx(0,0,5)、dual α2.5/C2 support12的4/6/8kHz冻结参考显示反射幅度约降6.43%，总场相对平面分别−4.99/+2.38/+12.82dB；效应明显大于已观察数值敏感性。以固定镜面点海面高度分离相位的稀疏候选有探索性支持，但没有新的独立频点认证。已锁定5/7kHz测试在执行前被内存门拒绝：物理可用639.199MiB，30%余量后447.439MiB，小于保守增量估计1520MiB；新增物理点0、核0s。时间外推没有证明宽带不可负担；当前完整宽带点数及资格未知，不生成认证CIR/带内衰落位置。G1_target_PM=OPEN、WP2_formal=false。见[中文物理决策](deepsea_dual_broadband_decision_2026-10-15.md)、[完整成本评估](deepsea_dual_broadband_cost_2026-10-15.md)、[协议](deepsea_dual_broadband_protocol_2026-10-15.md)。本Goal完成即停止；未来工作需新授权，不自动修补参考或扫描频率。下文原公式、WP0–WP6、门槛及历史结果完整保留。
+
 > **Canonical plan / 唯一正式计划：**本文件 `reports/deep_sea_channel_research_plan.md` 是后续研究唯一正式依据。v3 内容于 2026-10-14 核对后合并；[原计划完整备份](deep_sea_channel_research_plan_backup_2026-10-14.md)和[原始 v3 版本记录](deep_sea_channel_research_plan_v3_2026-10-14.md)均只读留存，不作为第二份正式计划。配套[双轨执行记录](codex_goal_two_track_2026-10-14.md)受本计划及用户指令约束。见[合并核对报告](deep_sea_channel_plan_merge_audit_2026-10-14.md)。本轮始终保持 `G1 OPEN`、`WP2=false`；冻结求解器和历史结果不改。
 
 Original plan: 2026-10-09 (Asia/Shanghai). Execution-policy revision: 2026-10-14 (Asia/Shanghai). Evidence-ladder and Goal-mode execution revision (v3): 2026-10-14.

@@ -29,7 +29,24 @@ comm_main_vertical_psk     % MPSK 通信演示
 
 这些名称保持不变；实际演示脚本位于 `examples/`，核心实现位于 `src/`。
 
+BLACK 实测信道的独立基础分析入口：`setup_vertical_project; r = run_black_channel_basics();`。
+仅下载 BLACK 及其配套噪声，调用固定版本官方代码解包/短段回放，输出多径与基本多普勒图表；
+`run_black_channel_basics('render', r.run_dir)` 从保存结果重绘。
+见 [BLACK 报告](reports/black_channel_basics_report.md)和[脚本索引](scripts/README.md)。
+数据、源码快照和每次运行结果位于 `results/validation/black_channel_basics/`。
+
 ## 公共入口与目录
+
+两套图册的[通俗展示汇总](reports/pe_bellhop_bie_visualization_summary.md)与
+[配套数据说明](reports/pe_bellhop_bie_visualization_data_guide.md)：
+按“声场外形—幅相差异—定量结论”解读全部11张图，区分原始二维场与接收线粗糙/平面比。
+
+Bellhop–BIE 与 PE–Bellhop–BIE 固定二维对比图册：
+[图册、数据和复现命令](reports/pe_bellhop_bie_comparison_visualization_report.md)。
+入口 `prepare_pe_bellhop_bie_visualization_data` 复用PE/BIE并补算Bellhop，
+`generate_pe_bellhop_bie_comparison_visuals(run_dir)` 从完整复数数据独立重绘7张PNG/PDF。
+另见[原始x–z声场扩展](reports/pe_bellhop_bie_xz_visualization_report.md)：
+强海面411×45真实网格的幅值、相位、幅相合成与原始剖面；保留原生源标度，不用比值替代原场。
 
 FK 优化汇报图集（仅重绘已有验证数据）：
 [图集与展示顺序](reports/fk_optimization_ppt_visualization_report.md)。执行
@@ -78,7 +95,8 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 | `reports/spectral_fast_kirchhoff_multifrequency_consistency_report.md` | FK扩频研究人员 | 固定海面、统一rank、BIE锚点、绝对相位与诊断CIR |
 | [Deep-sea research handoff](reports/deep_sea_channel_research_background_for_new_ai.md) | 新的研究评估者 | 英文自包含需求、历史证据、单点计时转向和待论证计划 |
 | [External-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md) | 研究路线讨论者 | 英文外部建议核查、公开深海部署案例与建议测试范围；未改变生产模型 |
-| [Official deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 唯一正式研究计划（2026-10-14 已核对合并 v3）：BIE最小参考未过独立边界、已知解析路径时延分离重建通过；G1 OPEN/WP2=false；备份和 v3 仅作版本记录 |
+| [Official deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 唯一正式研究计划；2026-10-15决策B：固定dual仅4/6/8kHz离散交付，停止参考连续修补，G1 OPEN/WP2=false；备份和v3仅版本记录 |
+| [固定dual物理决策](reports/deepsea_dual_broadband_decision_2026-10-15.md) / [宽带成本](reports/deepsea_dual_broadband_cost_2026-10-15.md) | 研究评估者 | 反射幅度约降6.43%，总场干涉变化清楚；稀疏候选未获新独立频点认证，5/7kHz被资源门拒绝，未进行宽带扫描 |
 | `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 
 历史文件原文保存在 `docs/history/`，不得作为当前 API、默认值或验证状态的唯一依据。

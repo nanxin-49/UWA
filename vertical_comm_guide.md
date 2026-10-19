@@ -1,5 +1,28 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### BLACK 实测信道的独立基础分析（2026-10-16）
+
+`setup_vertical_project; r = run_black_channel_basics();` 仅处理 BLACK 及其配套噪声，
+使用固定提交的官方 `unpack/replay/noisegen`。它是实测估计信道的独立读取与回放工作流；
+不通过生产 `H_f` 接口，不修改传播模型或原通信链。见[BLACK报告](reports/black_channel_basics_report.md)。
+
+保存抽头 `h_hat` 的均值功率时延谱为 `P(k)=mean_t(abs(h_hat(k,m,t)).^2)`；
+仅在峰下25 dB内归一化求均值/RMS时延，90%区间为5%至95%分位点，弱尾部受门限影响。
+相位字段独立保存，公共频移按 `f_D=(d phi/dt)/(2*pi)`、0.1 s分段拟合，
+`f_resamp` 若存在贡献 `(1/f_resamp-1)*fc`。保存主抽头的4 s Hann/50%重叠Welch谱
+只表示残余时变；不能拿该窄谱替代相位恢复后的完整多普勒谱。解包绘图扣除左补零时延。
+
+实跑BLACK记录36.552 s、25 kHz时延采样、125 Hz快照；门限下RMS时延0.0737–0.0826 ms，
+公共频移−5.7801至+5.4651 Hz。固定BPSK短段回放重复误差0、SNR20 dB、最大主到达误差
+0.103957个时延样点；三张图和CSV可从保存数据完全重建。带限主峰相邻抽头不直接计为独立路径；
+归一化幅度不能恢复绝对传播损失，短时记录不能给出长期环境统计。这里不开展BER或物理模型对比。
+
+### 固定dual离散物理效应与宽带资格（2026-10-15；最新）
+
+本轮仅再分析冻结三频数据：D为相同直达，R0/R为平面/粗糙反射，Δ=R−R0，总场H0=D+R0、H=D+R。4/6/8kHz反射幅度约降6.43%，总场dB差20log10(abs(H/H0))为−4.99/+2.38/+12.82；相位改变与相干干涉必须和反射幅度衰减分开。经验参考敏感性不是严格误差界，三个点不能给出带内衰落位置或CIR。
+候选Q(f)=R_FE(f)/B*(f)使用固定原海面镜面点高度的解析水平面反射作已知因子，不替换实际边界或假设Q常数；当前仅探索性筛选，未获独立新点认证。5/7kHz在计算前被保留30%物理RAM的资源门拒绝，新增物理核0s，最终B：离散点交付。保持G1_target_PM OPEN/WP2=false，无通信性能结论。下方旧“下一步”文字只作历史；停止参考连续修补与解析通信重复演示。
+[物理决策](reports/deepsea_dual_broadband_decision_2026-10-15.md)、[成本与频率需求](reports/deepsea_dual_broadband_cost_2026-10-15.md)、[预声明协议](reports/deepsea_dual_broadband_protocol_2026-10-15.md)。
+
 ### BIE验证与时延分离重建（2026-10-14；当前）
 
 候选验证核采用辅助Dirichlet半空间Green及水侧+1/2双层trace，不修改生产传播。六个制造逆问题虽线性通过，半单元真实边界全失败，停止原PM扩算；[BIE报告](reports/deepsea3d_bie_minimum_report.md)。
