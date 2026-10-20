@@ -155,12 +155,19 @@ try
     source_names = {mfilename('fullpath'),'black_delay_metrics','black_phase_doppler', ...
         'black_check_replay_arrival','black_inventory_mat','black_synthetic_control', ...
         'prepare_black_channel_assets','black_file_hash', ...
-        'generate_black_channel_basics_visuals','write_black_channel_basics_report'};
+        'generate_black_channel_basics_visuals','write_black_channel_basics_report', ...
+        fullfile(project_root,'scripts','reporting','templates','black_channel_basics_report_zh.md')};
     workflow_dir = fullfile(run_dir,'workflow_source');
     mkdir(workflow_dir);
     results.workflow_code = repmat(struct('name','','sha256',''),1,numel(source_names));
     for ii=1:numel(source_names)
-        if ii==1, source=[source_names{ii} '.m']; else, source=which(source_names{ii}); end
+        if ii==1
+            source=[source_names{ii} '.m'];
+        elseif isfile(source_names{ii})
+            source=source_names{ii};
+        else
+            source=which(source_names{ii});
+        end
         [~,name,ext] = fileparts(source);
         copyfile(source,fullfile(workflow_dir,[name ext]));
         results.workflow_code(ii) = struct('name',[name ext],'sha256',black_file_hash(source));

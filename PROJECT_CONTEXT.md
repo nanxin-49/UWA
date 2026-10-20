@@ -9,6 +9,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### BLACK 汇报版报告整理（2026-10-19；仅表述与解释）
+
+- [BLACK 报告](reports/black_channel_basics_report.md)已按海试场景、数据含义、三张图的读法与主要特征重写；补充非专业读者可直接使用的口头汇报段落，逐阵元数值与复现参数移至附录。
+- 数值仍来自 `results/validation/black_channel_basics/runs/20261016_175145_949/`，保留三张原图、MAT、CSV及运行状态；没有新下载、回放或物理求解。修订前报告与生成器副本位于 `results/validation/black_channel_basics/report_revision_20261019/`。
+- 明确区分归一化幅度/绝对传播损失、窗口相对时延/绝对传播时间、人工20 dB测试SNR/海试实测SNR，以及公共频移/残余谱。-25 dB保留能量比例仅针对保存窗口。
+- 补充理想垂直、平面边界、c=1500 m/s的几何推断：Rx6 m对应海面反射超额时延约8 ms，超出主峰后约6.2 ms的现有覆盖；Tx离底2 m对应底反射约2.67 ms，仅作候选，不识别实测反射路径。现有BLACK数据不能认证直达＋一次海面反射二径结构。
+- 报告生成器与中文模板同步更新，新运行的源快照包括模板；公共接口、数值分析、生产模型未改。只做报告生成、代码静态检查、数值/链接/输入哈希一致性核验，不重跑通信仿真。
+
 ### BLACK 实测信道基础分析（2026-10-16；独立数据工作流）
 
 - 仅下载 BLACK/black_noise，Zenodo 21287414 v1.0，官方 MD5 和本地 SHA-256 通过；固定官方 MATLAB 提交 af1d3814af9199f1e420a248ab27edaced5339cf，未安装全局 add-on。

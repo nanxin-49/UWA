@@ -32,8 +32,9 @@ comm_main_vertical_psk     % MPSK 通信演示
 BLACK 实测信道的独立基础分析入口：`setup_vertical_project; r = run_black_channel_basics();`。
 仅下载 BLACK 及其配套噪声，调用固定版本官方代码解包/短段回放，输出多径与基本多普勒图表；
 `run_black_channel_basics('render', r.run_dir)` 从保存结果重绘。
-见 [BLACK 报告](reports/black_channel_basics_report.md)和[脚本索引](scripts/README.md)。
+见 [BLACK 场景与特征通俗汇报报告](reports/black_channel_basics_report.md)和[脚本索引](scripts/README.md)。
 数据、源码快照和每次运行结果位于 `results/validation/black_channel_basics/`。
+可直接复制进笔记库的 [BLACK Obsidian 阅读包](results/visualization/black_channel_basics/20261019_obsidian/BLACK深海垂直信道汇报.md)包含报告与三张原图；图片使用相对 wiki 引用，不含数值数据副本。
 
 ## 公共入口与目录
 

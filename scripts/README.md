@@ -34,8 +34,11 @@
   `support/black_*` 提供 HDF5 类型检查、时延矩、相位斜率、匹配滤波到达检查与解析合成控制；
   `support/prepare_black_channel_assets` 固定 Zenodo 21287414 和官方 MATLAB 提交。
   `reporting/generate_black_channel_basics_visuals` 与 `write_black_channel_basics_report` 仅负责展示。
+  报告正文模板为 `reporting/templates/black_channel_basics_report_zh.md`，按“海试场景—数据含义—三图解读—建模边界”组织，
+  完整参数/逐阵元指标保留于附录；生成器从保存结果替换数值，新增运行的工作流快照同时保存该模板。
   原始数据、源码快照、校验和和独立运行目录在 `results/validation/black_channel_basics/`；
   [报告](../reports/black_channel_basics_report.md)。仅通过 MATLAB MCP 现有会话运行，不改变当前目录、生产 API 或物理模型。
+  Obsidian 独立阅读副本在 `results/visualization/black_channel_basics/20261019_obsidian/`，仅含一份 Markdown 与 `图片/` 下三张原图；不重新计算。
 
 - `reporting/analyze_deepsea_dual_broadband_decision.m`：只读冻结三频MAT/CSV，分离平面—粗糙物理效应、参考敏感性、FK数值/模型差，输出成本情景及几何相位候选的探索性筛选；不调用散射求解器。
   `validation/preflight_deepsea_dual_broadband.m`锁定5/7kHz候选及30%物理RAM门；`validation/support/audit_deepsea_dual_broadband_decision.m`核对保存复数、成本与停止分类。入口拒绝覆盖当前证据，不能当作后续物理扫描授权。
