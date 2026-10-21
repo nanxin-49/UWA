@@ -9,6 +9,20 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 固定三方可视化高度符号重置（2026-10-21；仅验证/报告工作流）
+
+- 新入口 `prepare_pe_bellhop_bie_corrected_data` 读取旧三案例和强海面二维包保存的复数数值，按物理边界 `z=eta`、深度向下、`exp(-iωt)`，用 `exp(-2iketa)` 重新评价 PE 近海面反射场。BIE、Bellhop沿用原生复数；旧图册不覆盖。新数据、图册与精确幅相平方分解见 [修正报告](reports/pe_bellhop_bie_corrected_visualization_report.md)。
+- 强海面固定M99下PE–BIE复L2由旧0.080908变为0.062911，幅值相对L2由约0.010016变为0.0010485，相位RMS为0.062936 rad；Bellhop–BIE复L2不变。平面分母和二维z=3 m截线均闭合。仅保存起始场FFT评价，无新声源传播、BIE求解或Bellhop作业。
+- 新数据包包含三份源MAT数值副本、哈希、绘图代码快照、接收线/二维复数CSV和12张PNG/PDF。独立重绘12张PNG像素差为0；MAT/CSV、指标平方分解与源哈希复核通过，见 `metrics/corrected_audit.json`。
+- 该重置只涉及固定验证图册，不改变生产高度参数、公共API、旧历史文件或S0–S1保存数据的历史数值。剩余6.29%复差不得单因归因；单频图册仍不支持PM、三维或通信信道结论。生产修复须另审全部调用方及回归。
+
+### 固定三方比较的高度符号审计（2026-10-21；覆盖旧PE误差物理解读）
+
+- [审计](reports/pe_bie_height_phase_sign_audit.md)确认同一η同时进入BIE物理边界z=η（深度向下）和PE的+2kη相位屏，旧图册仅共轭BIE/Bellhop比值以匹配主要相位。平移平面解析路径要求exp(−2ikh)；旧单边共轭不能替代一致的高度/场表示转换。
+- 同一保存入射场、同一3m FFT核、同一411点M99下，正号重现旧PE最大差6.22e-14；负号诊断的强海面幅值L2由1.00156%降至0.104850%，幅值相关由−0.977756转为+0.979251。短距离幅值输运解释其近似镜像。负号原生复差6.291125%，仍有模型残差，不能称为完成生产修复或新版验收。
+- 旧8.0908%公式可重现，但其纯物理模型误差解读被本更正限制；Bellhop/BIE彼此的共同共轭不改变二者复差。S0–S1的保存数据重建结果仍为历史算术证据，不等价于已验证PE高度符号。未执行S2–S6、PM或通信；G1/WP2状态不变。
+- 新增审计入口及独立MAT/CSV，六个保存起始场FFT诊断评价；无新上行传播、BIE求解/场评价或Bellhop作业。源报告/数据与冻结求解器保留；展示汇总、数据说明与导航增加更正链接。生产接口与方法未变，因此不运行生产回归或修改技术指南公式。
+
 ### 二维收尾 S0–S1 保存数据审查（2026-10-20；最新阶段状态）
 
 - 已完成 [S0–S1 审查报告](reports/two_dimensional_channel_closeout_report.md)与 `results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/`；状态 `S0_S1_COMPLETE_WITH_DECLARED_GAPS`。S2–S6 未执行，新增物理场计算零；未评价保存 BIE 密度的新接收点。

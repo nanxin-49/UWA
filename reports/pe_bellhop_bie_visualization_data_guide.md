@@ -1,5 +1,7 @@
 # 两套可视化图册的数据说明
 
+> **2026-10-21：** [高度相位符号审计](pe_bie_height_phase_sign_audit.md)发现旧 PE 高度符号与 BIE 几何约定的衔接问题。下文数据字段和历史重绘说明仍有效，但旧单边共轭的 G 比较不能直接当作已统一物理表示的误差。原数据保留；当前修正包的字段、数值和重绘入口见[新图册报告](pe_bellhop_bie_corrected_visualization_report.md)。
+
 更新日期：2026-10-19。配套[展示汇总报告](pe_bellhop_bie_visualization_summary.md)。本说明依据保存 MAT 的实际字段、CSV 表头、绘图代码和审计文件整理；不新增声学计算。
 
 ## 1. 先选对数据包

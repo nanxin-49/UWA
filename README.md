@@ -38,6 +38,11 @@ BLACK 实测信道的独立基础分析入口：`setup_vertical_project; r = run
 
 ## 公共入口与目录
 
+2026-10-21 [PE/BIE 高度相位符号审计](reports/pe_bie_height_phase_sign_audit.md)
+解释了 TR01 幅值近似镜像：旧固定比较的高度符号与单边共轭未一致衔接；旧图册指标需连同此更正阅读。
+[修正后的三方接收线与二维场图册](reports/pe_bellhop_bie_corrected_visualization_report.md)
+使用同一保存入射场重算负号PE相位屏并与BIE/Bellhop原生复场比较，旧图册保留作历史参照。
+
 两套图册的[通俗展示汇总](reports/pe_bellhop_bie_visualization_summary.md)与
 [配套数据说明](reports/pe_bellhop_bie_visualization_data_guide.md)：
 按“声场外形—幅相差异—定量结论”解读全部11张图，区分原始二维场与接收线粗糙/平面比。

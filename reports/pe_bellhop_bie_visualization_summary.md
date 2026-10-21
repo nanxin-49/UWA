@@ -1,5 +1,7 @@
 # PE、Bellhop 与 BIE：反射声场可视化汇总
 
+> **2026-10-21 符号核对更正：** [高度相位审计](pe_bie_height_phase_sign_audit.md)确认固定比较中 PE 的 +2kη 与 BIE 的向下边界 z=η 未一致衔接；仅对 BIE 比值取共轭使主要相位接近，但留下反向幅值调制。下文保留原图和历史指标，8.09% 不再无条件解释为同一物理边界下的纯 PE 近似误差。[修正后的新图册](pe_bellhop_bie_corrected_visualization_report.md)另存，优先用于当前展示。
+
 更新日期：2026-10-19。本文整理已完成的两套图册，不新增声学计算。适合按图讲解，也可配合[数据说明](pe_bellhop_bie_visualization_data_guide.md)查找数值与复现入口。
 
 ## 先说这次看到了什么

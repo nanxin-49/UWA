@@ -4,6 +4,21 @@
 
 ## 目录
 
+- `validation/prepare_pe_bellhop_bie_corrected_data.m`：从固定三案例复数图册及强海面
+  411×45 原始场包读取保存入射场，在物理海面 `z=eta`、深度向下、`exp(-iωt)`
+  约定下以 `exp(-2iketa)` 重算 PE 保存起始场到接收线和 45 个深度；BIE/Bellhop
+  保留原生复场。生成新 `pe_bellhop_bie_corrected/<run_id>/` 数据包、逐案例复数
+  CSV、二维复数 CSV、本轮/旧值指标及精确幅相平方分解。无新声源传播、BIE 求解或
+  Bellhop 作业，不修改生产算子。`reporting/generate_pe_bellhop_bie_corrected_visuals.m`
+  只读该包重绘 12 张 PNG/PDF 与中文报告，包内 `source_data/workflow_code/` 保存
+  绘图代码快照。`validation/audit_pe_bellhop_bie_corrected.m` 独立复核 MAT/CSV、
+  指标分解、源哈希和 12 张像素一致重绘。见[修正图册报告](../reports/pe_bellhop_bie_corrected_visualization_report.md)。
+
+- `validation/audit_pe_bie_height_phase_sign.m`：读取保存入射场，以同一3 m FFT核诊断正负高度相位。
+  原正号重现旧PE，负号与BIE原生比值比较；正入射平移平面给出解析符号控制。
+  六个保存起始场评价，不启动BIE/Bellhop或上行传播，不修改生产代码。
+  输出 `results/validation/pe_bie_height_sign_audit/<run_id>/`；见[镜像原因与旧指标更正](../reports/pe_bie_height_phase_sign_audit.md)。
+
 - `comparisons/run_two_dimensional_closeout_s0_s1.m`：只读 E01/E02/E03 活动保存复数，冻结 3×3 坐标及来源，复核三档接收线并提取可比单点/点阵与原始场；不运行任何新物理场计算。
   `validation/support/two_dimensional_closeout_metrics.m` 实现逐点与幅相分解；`validation/test_two_dimensional_closeout_metrics.m` 用人工复数控制公式；`validation/support/audit_two_dimensional_closeout_s0_s1.m` 独立复核来源 CSV、汇总和逐像素重绘。
   `reporting/render_two_dimensional_closeout_s0_s1.m` 只读 `plot_data.mat` 生成七张 PNG/PDF。入口 `setup_vertical_project; r=run_two_dimensional_closeout_s0_s1('unique_run_id'); audit_two_dimensional_closeout_s0_s1(r.run_dir);`；报告见[二维 S0–S1 审查](../reports/two_dimensional_channel_closeout_report.md)，结果位于 `results/comparisons/two_dimensional_channel_closeout/<run_id>/`。S2–S6 未执行。
