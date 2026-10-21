@@ -9,6 +9,13 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维收尾 S0–S1 保存数据审查（2026-10-20；最新阶段状态）
+
+- 已完成 [S0–S1 审查报告](reports/two_dimensional_channel_closeout_report.md)与 `results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/`；状态 `S0_S1_COMPLETE_WITH_DECLARED_GAPS`。S2–S6 未执行，新增物理场计算零；未评价保存 BIE 密度的新接收点。
+- 三档正弦三方旧接收线 G 指标 9/9 从完整保存复数和原 411 点 M99 权重重建；强正弦 PE–BIE 整线复 L2 为 0.08090810774，其中相位平方项占 98.4676%。旧公式正确，但整线 G 不能代表中心或完整 3×3 阵列、原始压力或通信性能。
+- 强正弦中心 P22 的 G 逐点相对复差 0.0779531；同深度三点 `E_subset=0.0780765`，完整九点 G 因平面分母缺失保持未定义。强正弦九点原生 PE/BIE 幅度可比，逐点相对差均值/中位数/最大为 0.000215237/0.000254523/0.000375290；原生复相位约定未统一，未作九点复误差排名。
+- 来源/缺失逐点表、图组和保存 MAT、公式控制 9/9、独立 CSV 审计与七张 PNG 像素一致重绘已保存。S2 最小值下界是共享平面复分母 18 值及弱中正弦粗糙复场 36 值，另需匹配点的数值参考不确定性；不把点值数当求解作业数。`G1_target_PM=OPEN`、`WP2_formal=false`。仅增只读工作流与报告/导航，生产方法及接口未改。
+
 ### 二维收尾计划审查（2026-10-20；文档修订，阶段未执行）
 
 - [审查记录与首轮Goal提示词](reports/two_dimensional_channel_closeout_plan_review.md)建议首轮只执行S0–S1；已在原计划0.3节补充执行契约，保存密度的新接收场评价也属于禁止的新增物理场计算。
@@ -4861,3 +4868,27 @@ conditions but was not run.
 - README and script navigation updated. Production code, physics, APIs, frozen
   solvers and the two original reports/data packages are unchanged; no production
   regression or vertical_comm_guide method update is applicable to this prose task.
+
+## 2026-10-20 — Two-dimensional closeout S0–S1 saved-data audit
+
+- Created and executed a Goal limited to S0–S1 under the plan's section 0.3 and
+  the review prompt. The active MATLAB MCP R2025b session ran saved-data-only
+  extraction, metrics, artificial-array formula tests, rendering and independent
+  redraw; new physical-field computations were zero, including receiver
+  evaluation from saved BIE densities. No S2–S6 or production solver work ran.
+- Rebuilt all nine historical three-sine/three-pair 411-point M99 G metrics to
+  full precision and independently checked source CSV against MAT. The old
+  formula is correct for its z=3 m weighted receiver-line G target, but does
+  not measure a center point, a complete 3x3 G array or native raw fields.
+- Extracted all available center, same-depth three-point G and strong-case
+  3x3 native raw samples. Kept missing off-depth flat denominators and
+  phase-convention limitations explicit. Seven reviewed figures were rebuilt
+  pixel-identically; nine synthetic formula controls passed. The exact source
+  hashes, usable-point counts, CSV/MAT, audit, figures and S2 minimal-value
+  lower bound are under results/comparisons/two_dimensional_channel_closeout/
+  20261020_2330_s0s1/ and explained in
+  reports/two_dimensional_channel_closeout_report.md.
+- Status S0_S1_COMPLETE_WITH_DECLARED_GAPS. S2–S6 are unexecuted;
+  G1_target_PM=OPEN and WP2_formal=false. No public API or physics change,
+  commit or push. README, scripts/README and the canonical plan status were
+  updated; vertical_comm_guide is unchanged because its methods did not change.

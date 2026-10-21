@@ -4,6 +4,10 @@
 
 ## 目录
 
+- `comparisons/run_two_dimensional_closeout_s0_s1.m`：只读 E01/E02/E03 活动保存复数，冻结 3×3 坐标及来源，复核三档接收线并提取可比单点/点阵与原始场；不运行任何新物理场计算。
+  `validation/support/two_dimensional_closeout_metrics.m` 实现逐点与幅相分解；`validation/test_two_dimensional_closeout_metrics.m` 用人工复数控制公式；`validation/support/audit_two_dimensional_closeout_s0_s1.m` 独立复核来源 CSV、汇总和逐像素重绘。
+  `reporting/render_two_dimensional_closeout_s0_s1.m` 只读 `plot_data.mat` 生成七张 PNG/PDF。入口 `setup_vertical_project; r=run_two_dimensional_closeout_s0_s1('unique_run_id'); audit_two_dimensional_closeout_s0_s1(r.run_dir);`；报告见[二维 S0–S1 审查](../reports/two_dimensional_channel_closeout_report.md)，结果位于 `results/comparisons/two_dimensional_channel_closeout/<run_id>/`。S2–S6 未执行。
+
 - 两套PE/Bellhop/BIE图册的[展示汇总](../reports/pe_bellhop_bie_visualization_summary.md)与
   [数据字段及只读/重绘说明](../reports/pe_bellhop_bie_visualization_data_guide.md)。
   汇总11张已有图，不新增计算；仓库内Obsidian阅读副本位于
