@@ -1,5 +1,7 @@
 # Current Matplotlib, Seaborn, and Plotly Patterns
 
+Optional Python reference. Generic exports default to PNG; PDF examples and PDF-specific inspection apply only when PDF is an explicitly requested deliverable.
+
 Verified 2026-07-23 against Matplotlib 3.11.1, Seaborn 0.13.2, Plotly 6.9.0, Kaleido 1.3.0, Pillow 12.3.0, and pypdf 6.14.2. Source IDs resolve in `sources.md`.
 
 Run examples from the skill directory with pinned direct dependencies:
@@ -193,7 +195,7 @@ from figure_export import export_figure
 report = export_figure(
     fig,
     "outputs/figure1",
-    formats=["pdf", "png"],
+    formats=["png"],
     dpi=600,  # controls PNG and rasterized artists embedded in PDF
     provenance={
         "raw_data": "data/observations.csv",

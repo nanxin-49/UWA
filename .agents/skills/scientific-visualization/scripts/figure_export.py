@@ -150,7 +150,7 @@ def export_figure(
     fig: Any,
     filename: str | os.PathLike[str],
     *,
-    formats: Iterable[str] = ("pdf", "png"),
+    formats: Iterable[str] = ("png",),
     dpi: float = 300,
     transparent: bool = False,
     bbox_inches: str | None = None,
@@ -165,7 +165,7 @@ def export_figure(
     write_manifest: bool = False,
     savefig_kwargs: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Export a Matplotlib figure atomically with explicit format settings.
+    """Export a Matplotlib figure atomically; default to PNG, with PDF opt-in.
 
     ``dpi`` is passed to vector backends too because it controls rasterized
     artists and embedded raster images. ``bbox_inches=None`` preserves the
@@ -323,7 +323,7 @@ def export_figure(
 def save_publication_figure(
     fig: Any,
     filename: str | os.PathLike[str],
-    formats: Iterable[str] = ("pdf", "png"),
+    formats: Iterable[str] = ("png",),
     dpi: float = 300,
     transparent: bool = False,
     bbox_inches: str | None = None,
@@ -573,8 +573,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--formats",
-        default="pdf,png",
-        help="comma-separated formats (default: pdf,png)",
+        default="png",
+        help="comma-separated formats (default: png; PDF must be requested explicitly)",
     )
     parser.add_argument("--dpi", type=positive_float, default=300.0)
     parser.add_argument(

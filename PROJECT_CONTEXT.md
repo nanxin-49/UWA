@@ -9,6 +9,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维收尾计划按高度符号审计修订（2026-10-21；仅文档）
+
+- [主计划](two_dimensional_channel_closeout_plan.md)保留S0_S1_COMPLETE_WITH_DECLARED_GAPS，将当前下一步改为S2a实际入口约定控制与修正基线资格核验，再做S2b九点补齐、S3有限PM、S4收尾。旧8.0908%等保持历史复现地位，不再无条件当作纯PE物理误差。
+- 修正图册v2已有三条新版接收线、强正弦411×45场及12张图，保存数据/像素重绘审计通过，优先复用。S2a仍须实际反射/传播/比值入口通过eta_z=0及h=±0.01 m正入射平面波控制；已有符号审计的plane_control直接计算解析exp，尚未覆盖该入口。
+- PE复用保存入射场，在验证适配层统一向下几何/屏相位/native表示；旧正号粗糙起始场不直接复用。BIE/Bellhop原生证据按原适用范围保留；PM各分支和辅助mode需独立核验约定。
+- 若v2通过S2a资格核验，S2b名义剩余为18个平面分母、24个BIE/Bellhop弱中粗糙点值、12个修正PE弱中离深度点值。强正弦修正场不重复算，按其他合格现值继续去重；点值数不等于作业数。
+- 本次仅静态核对报告、代码、CSV/JSON并修订计划、旧报告解释提示、历史首轮提示词及README；未执行MATLAB/新场/Goal，未修改生产代码或修正版脚本。物理参数、点阵、G1_target_PM=OPEN及WP2_formal=false不变；无需生产回归或技术指南方法修订。
+
 ### 固定三方可视化高度符号重置（2026-10-21；仅验证/报告工作流）
 
 - 新入口 `prepare_pe_bellhop_bie_corrected_data` 读取旧三案例和强海面二维包保存的复数数值，按物理边界 `z=eta`、深度向下、`exp(-iωt)`，用 `exp(-2iketa)` 重新评价 PE 近海面反射场。BIE、Bellhop沿用原生复数；旧图册不覆盖。新数据、图册与精确幅相平方分解见 [修正报告](reports/pe_bellhop_bie_corrected_visualization_report.md)。

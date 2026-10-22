@@ -1,12 +1,13 @@
 ---
 name: scientific-visualization
-description: Create and audit truthful, accessible, publication-ready scientific figures with Matplotlib, Seaborn, or Plotly. Use for figure design, multi-panel layouts, uncertainty and missing-data displays, color/contrast review, image metadata validation, and journal export planning.
+description: Create and audit truthful, accessible scientific figures, using MATLAB by default in this repository and Python when requested. Preserve editable MATLAB .fig files alongside PNG previews; export PDF only when explicitly required. Use for figure design, multi-panel layouts, uncertainty, missing data, color review, and requested publication exports.
 license: MIT
-compatibility: Requires Python 3.11+ and uv for pinned examples. Bundled CLIs are network-free and load Matplotlib, Pillow, or pypdf only when needed. Plotly static export with Kaleido v1 requires a compatible Chrome/Chromium installation.
 allowed-tools: Read Write Edit Bash Glob Grep
 metadata:
-  version: "1.2"
+  version: "1.3"
   skill-author: K-Dense Inc.
+  local-adaptation: MATLAB-first plotting and optional PDF exports
+  compatibility: MATLAB uses base graphics in the confirmed connected release. Optional Python helpers require Python 3.11+ and their task-specific dependencies.
 ---
 
 # Scientific Visualization
@@ -66,211 +67,40 @@ Prefer position on a common scale. Before coding, check:
 
 See `references/color_palettes.md`. A grayscale screen is useful but is not a complete color-vision or accessibility test.
 
-### 4. Implement with scoped styles
+### 4. Implement in the project's plotting runtime
 
-Use Matplotlib's object-oriented API and temporary style contexts:
+- In this MATLAB repository, use MATLAB for scientific plots unless the user requests another runtime or an existing integration requires it.
+- Use the existing shared MATLAB session through MATLAB MCP. Confirm the connected release when needed; do not launch a new MATLAB process or change the working directory to solve path problems.
+- Use explicit figure/axes handles and `tiledlayout`/`nexttile` where suitable. Set units, limits, color scales, fonts, and figure dimensions on the owned objects rather than changing global graphics defaults.
+- Read [MATLAB plotting and native figure preservation](references/matlab_plotting.md) for MATLAB output and a guarded save example.
+- For Python tasks, read [optional Python workflow](references/python_workflow.md) and [Matplotlib/Seaborn/Plotly examples](references/matplotlib_examples.md). Python dependencies and helpers are optional for MATLAB work.
 
-```python
-import matplotlib.pyplot as plt
+### 5. Save editable figures and requested exports
 
-from style_presets import style_context
+- For MATLAB figures that are retained or delivered, default to a same-stem `.fig` plus `.png`, unless the user specifies different deliverables. Save the complete figure with `savefig`; use `exportgraphics` for the PNG preview.
+- PDF is optional. Generate it only when the user explicitly requests it or the current task has an explicit PDF delivery requirement. Do not add PDF merely for vector quality, archiving, or automated inspection.
+- Preserve existing `.fig` files. Save revisions to new paths unless overwriting has already been authorized. Check every destination before saving either member of the pair.
+- Finalize layout and annotations, call `drawnow`, save/export, then close only figures owned by the workflow when appropriate. A failed save/export must not be reported as a complete delivery.
+- A `.fig` preserves MATLAB graphics objects for later editing; it does not replace raw data or the plotting `.m` source. Record data sources and transformations in the task's existing results/report structure.
+- Resolve an explicit project root/output directory and use case-specific `results/` locations. Do not save beside skill code or at the repository root.
+- Generic Python exports default to PNG; add other formats explicitly when needed. Retain PDF support without including it in default output lists.
 
-with style_context("default", palette_name="okabe_ito_on_white"):
-    fig, ax = plt.subplots(
-        figsize=(89 / 25.4, 60 / 25.4),
-        layout="constrained",
-    )
-    ax.plot(x, y, marker="o", label="Observed")
-    ax.set(xlabel="Time (hours)", ylabel="Response (unit)")
-    ax.legend()
-```
+### 6. Inspect the delivered formats
 
-`layout="constrained"` supports colorbars, nested GridSpec, subfigures, and `subplot_mosaic`. Do not call `tight_layout()` afterward; it disables constrained layout.
+Inspect the actual PNG at its intended display size for clipping, readable labels/units, legend placement, color limits, and truthful missing-data display. When checking MATLAB editability, reopen a trusted generated `.fig` and compare representative data and labels.
 
-For exact physical dimensions, do not use `bbox_inches="tight"` unless the changed page size is intentional.
+Check dimensions, resolution, transparency, and other properties relevant to the formats actually delivered. PDF/font inspection applies only when PDF is a requested output; do not create another format just to inspect it.
 
-#### Color normalization
-
-```python
-import matplotlib as mpl
-
-norm = mpl.colors.TwoSlopeNorm(vmin=-2, vcenter=0, vmax=5)
-cmap = mpl.colormaps["RdBu_r"].with_extremes(bad="#777777")
-image = ax.imshow(values, norm=norm, cmap=cmap, interpolation="nearest")
-fig.colorbar(image, ax=ax, label="Change (unit)")
-```
-
-Use `LogNorm`, `CenteredNorm`, `SymLogNorm`, `BoundaryNorm`, or `TwoSlopeNorm` only when its mapping matches the scientific meaning.
-
-#### Seaborn
-
-Seaborn 0.13.2 uses the current `errorbar` API:
-
-```python
-sns.lineplot(
-    data=frame,
-    x="time",
-    y="response",
-    hue="treatment",
-    style="treatment",
-    markers=True,
-    errorbar=("ci", 95),
-    n_boot=5000,
-    seed=20260723,
-    ax=ax,
-)
-```
-
-Axes-level functions fit custom Matplotlib layouts; figure-level functions create their own figures/facets. Do not customize Seaborn's internal artist lists as if they were stable API.
-
-#### Plotly
-
-- Use `write_html()` for interaction and `write_image()`/`plotly.io.write_images()` for static output.
-- Kaleido 1.3.0 requires Chrome/Chromium; it no longer bundles Chrome.
-- Current static formats: PNG, JPEG, WebP, SVG, PDF. EPS is Kaleido v0-only.
-- Do not pass deprecated `engine=` or use Orca/`plotly.io.kaleido.scope`.
-- `width`, `height`, and `scale` control pixels; `scale=3` is not inherently “300 DPI.”
-- WebGL traces embed raster content in PDF/SVG.
-- Fully offline exports need local external assets when a figure references MathJax/topojson/tiles.
-
-### 5. Export explicitly and record provenance
-
-```python
-from figure_export import export_figure
-
-report = export_figure(
-    fig,
-    "outputs/figure1",
-    formats=["pdf", "png"],
-    dpi=600,
-    bbox_inches=None,  # preserve figure page dimensions
-    provenance={
-        "raw_data": "data/source.csv",
-        "transformations": ["predeclared QC filter", "group mean"],
-        "uncertainty": "95% bootstrap CI; seed 20260723",
-        "missing_data": "retained as gaps",
-    },
-    write_manifest=True,
-)
-```
-
-The exporter refuses implicit overwrite, writes atomically, keeps vector DPI for embedded rasters, uses TIFF LZW, and can use PDF/PS Type 42 fonts. It does not validate scientific content or publisher acceptance.
-
-For editable fonts:
-
-- PDF/PS Type 42 embeds TrueType fonts.
-- `svg.fonttype="none"` keeps text editable/searchable but does not embed fonts; appearance depends on installed fonts.
-- `svg.fonttype="path"` preserves glyph appearance as paths but loses editable/searchable text.
-
-Use an opaque explicit background unless transparency is required; blending against another background changes apparent contrast.
-
-### 6. Inspect, compare, and review
-
-1. Inspect file metadata.
-2. Audit palette contrast/grayscale separation.
-3. Compare against a dated publisher snapshot.
-4. View at final size in the manuscript/web context.
-5. Manually review fonts, embedded rasters, clipping, legends, scale bars, image integrity, caption, alt text, and source data.
-6. Re-check the live target-journal page immediately before upload.
-
-## Pinned snapshot
-
-The examples and smoke tests use direct package pins current on 2026-07-23:
-
-```bash
-uv run --isolated --no-project --python 3.13 \
-  --with "matplotlib==3.11.1" \
-  --with "seaborn==0.13.2" \
-  --with "plotly==6.9.0" \
-  --with "kaleido==1.3.0" \
-  --with "pillow==12.3.0" \
-  --with "pypdf==6.14.2" \
-  python your_figure.py
-```
-
-This is a dated direct-dependency snapshot, not a transitive lock. Use the project's uv lock for exact replay; this skill intentionally ships no dependency lock.
-
-## Bundled CLIs
-
-All helpers are deterministic, network-free, bounded, reject symlink inputs/destinations where relevant, and refuse overwrite unless `--force` is explicit.
-
-### Inspect raster/vector metadata
-
-```bash
-uv run --isolated --no-project --python 3.13 \
-  --with "pillow==12.3.0" \
-  python scripts/image_metadata.py figure.tiff \
-  --format tiff --mode RGB --min-dpi 300 --target-width-mm 85 \
-  --alpha-policy forbid
-```
-
-Supports raster images (Pillow), SVG, PDF (pypdf), and EPS/PS. Reports dimensions, DPI/effective DPI, mode, alpha, ICC presence, compression, page size, and conservative first-page PDF font resources. It does not inspect every embedded raster in a vector container.
-
-### Audit palette contrast and grayscale
-
-```bash
-uv run --isolated --no-project --python 3.13 \
-  python scripts/palette_audit.py \
-  --palette okabe_ito_on_white \
-  --background FFFFFF \
-  --role graphical
-```
-
-Reports exact WCAG sRGB contrast plus pairwise CIE L* grayscale screening. The grayscale threshold is a heuristic, not a standard.
-
-### Plan/screen publisher export
-
-```bash
-uv run --isolated --no-project --python 3.13 \
-  python scripts/export_plan.py \
-  --publisher nature \
-  --figure-type combination \
-  --width single \
-  --phase final
-```
-
-Add `--input figure.pdf` to screen machine-readable properties. Profiles are official-source snapshots accessed 2026-07-23, not automatic compliance rules.
-
-### Preview styles
-
-```bash
-uv run --isolated --no-project --python 3.13 \
-  --with "matplotlib==3.11.1" \
-  python scripts/style_preview.py \
-  --output outputs/style-preview \
-  --style default \
-  --palette okabe_ito_on_white \
-  --formats png,svg
-```
-
-### Inspect/write styles and smoke-test export
-
-```bash
-uv run --isolated --no-project --python 3.13 \
-  python scripts/style_presets.py --list
-uv run --isolated --no-project --python 3.13 \
-  python scripts/style_presets.py --show nature
-uv run --isolated --no-project --python 3.13 \
-  --with "matplotlib==3.11.1" \
-  python scripts/figure_export.py --demo outputs/export-smoke --manifest
-```
-
-## Assets
-
-- `assets/publication.mplstyle`: general print starting point.
-- `assets/nature.mplstyle`: dated flagship Nature visual starting point, not a compliance preset.
-- `assets/presentation.mplstyle`: larger projected-display style.
-- `assets/color_palettes.py`: importable Okabe-Ito and Paul Tol values with metadata.
-- `assets/publisher_profiles.json`: dated, machine-readable planning snapshots.
-
-Matplotlib style files omit `#` in hex colors because `#` begins comments in `.mplstyle` parsing.
+For a journal submission, verify the exact journal and submission phase before choosing additional formats and re-check official guidance before upload. Ordinary project plots do not require journal-specific tooling or package installation.
 
 ## References
 
 - `references/publication_guidelines.md`: integrity, deceptive encodings, accessibility, static/interactive output.
 - `references/color_palettes.md`: palette semantics, exact values, WCAG contrast, grayscale caveats, color management.
 - `references/journal_requirements.md`: phase-specific official publisher snapshots.
-- `references/matplotlib_examples.md`: current, runnable Matplotlib/Seaborn/Plotly patterns.
+- [MATLAB plotting](references/matlab_plotting.md): native `.fig` preservation, PNG previews, and existing-file protection.
+- [Optional Python workflow](references/python_workflow.md): Python-only styles, dependencies, CLI usage, and optional exports.
+- `references/matplotlib_examples.md`: Python plotting patterns; read only for Python tasks.
 - `references/sources.md`: official URLs, dates, versions, and research basis.
 
 ## Final review checklist
@@ -280,8 +110,10 @@ Matplotlib style files omit `#` in hex colors because `#` begins comments in `.m
 - [ ] Baselines, scales, limits, and area/volume encodings are honest.
 - [ ] Color is redundant and rendered contrast was reviewed.
 - [ ] Figure has an accessible description/data alternative where applicable.
-- [ ] Physical dimensions, DPI, format, fonts, transparency, and file size were inspected after export.
-- [ ] Publisher rules were verified for the exact journal and phase.
+- [ ] Retained MATLAB figures have matching `.fig` and `.png` files, unless the user requested otherwise; existing originals are preserved.
+- [ ] Only requested formats were produced; PDF was not added by default.
+- [ ] Dimensions, resolution, fonts, transparency, and file size were checked as relevant to the delivered formats.
+- [ ] For a journal submission, publisher rules were verified for the exact journal and phase.
 - [ ] No automated report is presented as a scientific, accessibility, or compliance certification.
 
 ## Citing Scientific Agent Skills
