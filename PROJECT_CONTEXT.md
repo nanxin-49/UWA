@@ -9,6 +9,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维收尾 S2c-A：保存正弦空间诊断与试验冻结完成（2026-10-23；当前阶段状态）
+
+- `S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`。唯一新run为`results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/`，[中文图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md)按M00→M01→三档M02a/b→三档M03提供11组FIG/PNG。只分析本地正式S2b保存复场与解析含C2几何，新增声学计算为0；S2b合格状态及完整FullFK版本、全部旧场/指标不变。
+- 4932线场/108九点MAT与CSV一致；3336模型诊断、1668 BIE物理响应和40分支持指标分别保存。强档PE全线/中心±1 m的11点/原九点复L2为0.0629112453/0.000209815156/0.0000805108583。仅P21/P22/P23在z=3线；六离深度点不投影、不插值。中心η=0但η′非零，且BIE粗糙相对平面相位−0.0389860 rad；不能据过零唯一归因。平台η″=−K²η，高度与曲率相关完全混杂。
+- 独立CSV复算最大指标差1.89e-14、幅相平方恒等式余量1.62e-18；11图保存MAT重绘像素差0、11 FIG重开、22相对图件链接有效，逐张实图查看及三文件Code Analyzer通过。247旧S2b归档SHA、24代码SHA及22上游输入SHA核验通过。保存强档411×45只核验z=3截线，其他深度未升级参考资格；无FullFK伪连续场。
+- 冻结BASE_M与K_HIGH/PHI_PLUS90及条件对照的解析几何、原离散源、接收支持、配置SHA和待授权作业。固定A改变K会同时改变坡度/曲率/周期；固定C2改变φ也改变中心多个描述量，不等于只变局部高度。建议S2c-B≤1800 s共享子额度，先K_HIGH代表，两个候选完整参考可能超额；规划预留S3A至少3000 s但不保证可行。历史BIE169–290 s仅量级，下一物理作业仍须新采Windows真实物理可用RAM、30%保留、单作业900 s和数值门。
+- 共享7200 s仍扣记1408.660105 s、余5791.339895 s。S2c-A结束，不自动开S2c-B、S3–S6/Bellhop/宽带通信；`G1_target_PM=OPEN`、`WP2_formal=false`。仅工作流/图表/解释与协议变更，无生产API或求解器改动，无范围外通信回归或提交推送。
+
 ### 二维收尾 S2b：参考闭合完成（2026-10-23；当前阶段状态，覆盖下方早期受限快照）
 
 - `S2B_COMPLETE_REFERENCE_QUALIFIED`，限固定4 kHz离散Gaussian源、平面及三档C2正弦、M99的411点线/原P11–P33及所报告经验数值分辨率；不是模型物理PASS。正式包在同一run_id的`results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/`，[唯一主报告](reports/two_dimensional_channel_closeout_report.md)新增参考闭合附录；早期`S2B_DATA_COMPLETE_REFERENCE_LIMITED`及其文件保留为历史。

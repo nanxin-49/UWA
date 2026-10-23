@@ -2,6 +2,8 @@
 
 本仓库用于研究海底发射机到近海面接收机的垂直水声传播。公共模型以 PE/WAPE 计算直达与海面反射频响，并提供粗糙海面、joint-kstat、接收端精确离散伴随、二阶统计和 MPSK 通信验证工具。
 
+二维收尾当前完成 **S2c-A保存正弦空间诊断与协议冻结**：见[中文机制图册（M00–M03预览及FIG）](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md)与[唯一主报告最新附录](reports/two_dimensional_channel_closeout_report.md)。本阶段新增声学计算0，S2b正式复场与参考资格保持；两个新K/φ候选只有几何/协议，S2c-B或S3须另行授权。
+
 ## 快速开始
 
 在 MATLAB 中先初始化一次路径：
