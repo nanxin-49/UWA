@@ -9,6 +9,17 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### S2c-B K_HIGH：五层参考与单案例实验完成（2026-10-23；最新状态）
+
+- `S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`，仅覆盖冻结417点和五层经验数值参考，非模型物理PASS。用户只对K_HIGH将子额度从1800 s提高至2400 s，原7200 s总额、S3A≥3000 s预留、单作业≤900 s、每次真实物理RAM保留30%均保持。五次新BIE边界解、PE模式0、完整FullFK双项积分全部完成；七作业实计1277.0539592 s，累计核心2685.7140642/7200 s，S3A规划余额4514.2859358 s。
+- [唯一主报告最新首节](reports/two_dimensional_channel_closeout_report.md)与[中文M04图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)给出真实图片、411线/中心11/九点/五点/边缘104的原始场和经验数值分辨率分类。原生CSV独立复算、四PNG像素重绘及四FIG重开通过；完整审计见`20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json`。FullFK五点十字的两案变化未过5倍门，保留未分辨。PHI_PLUS90、S3–S6、Bellhop、通信未执行；`G1_target_PM=OPEN`、`WP2_formal=false`。
+
+### S2c-B K_HIGH：单层BIE代表已审计，P1成本门停止（2026-10-23；扩额前历史快照）
+
+- 用户只授权K_HIGH一个新物理海面。独立Goal已创建；[主报告S2c-B附录](reports/two_dimensional_channel_closeout_report.md)与`results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/`保存冻结配置、新run授权、BASE_M正式417点原生复场、解析C2几何、M04a预实验图、五层BIE成本/RAM门和P0独立审计。S2c-A仍为`S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`，S2b仍为`S2B_COMPLETE_REFERENCE_QUALIFIED`。
+- S2b正式输出247/247与代码24/24、S2c-A正式输出203/203与代码5/5及22/22上游输入SHA再次一致；K_HIGH配置/源/411线/九点哈希与事前冻结协议一致。P0独立审计的BASE_M CSV/MAT最大复差5.02e-16，解析几何差5.03e-17，|x|≥50 m严格平面；M04a保存MAT重绘像素一致、FIG重开。
+- 五层BIE事前保守总估计1749.8 s（含其他物理及失败预留），起初RAM低于2.027 GB门，自动审批据此拒绝；后续代表作业前新实测2,101,432,320物理字节，通过完整五层30%保留门。仅执行L60/12 ppw/qa96 BIE代表，3840节点、417同点原生复场，实耗311.2095523 s；MAT/JSON与SHA/同坐标独立审计通过，另从保存MAT独立重建全部3840节点高度/法向及984项源谱，最大差0。用代表实耗重新保守估计五层加必要预留2157.6201 s，超1800 s子额度357.6201 s，故P1停止，余四层及PE/FullFK均未运行。K_HIGH单层复场及与BASE_M配对CSV只作**参考未合格**的候选响应，不用于5倍经验数值可分辨判定或模型误差；M04b–d正式图未生成。状态`S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED`，Goal不标完整完成；PHI_PLUS90、S3–S6未执行。
+
 ### 二维收尾 S2c-A：保存正弦空间诊断与试验冻结完成（2026-10-23；当前阶段状态）
 
 - `S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`。唯一新run为`results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/`，[中文图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md)按M00→M01→三档M02a/b→三档M03提供11组FIG/PNG。只分析本地正式S2b保存复场与解析含C2几何，新增声学计算为0；S2b合格状态及完整FullFK版本、全部旧场/指标不变。
@@ -4980,3 +4991,57 @@ conditions but was not run.
   README, scripts/README and the unique plan's status were updated. No method
   change requires a vertical_comm_guide update or production communication
   regression; S2b–S6 remain unexecuted, G1_target_PM=OPEN, WP2_formal=false.
+
+## 2026-10-23 — S2c-B K_HIGH P0 and resource-gated stop
+
+- Created an independent Goal for only K_HIGH. Revalidated 247 formal S2b
+  output hashes, 24 code hashes, 203 S2c-A outputs, five S2c-A code hashes,
+  22 upstream inputs and the frozen K_HIGH configuration/source/receiver hashes.
+  Existing R2025b MATLAB MCP session and repository cwd were confirmed.
+- A first zero-physics P0 attempt stopped on MATLAB table column names. The
+  preserved final P0 in 20261023_s2c_b_khigh_02 independently reconstructed
+  BASE_M and K_HIGH C2 height/slope/curvature, copied no old density, and
+  checked BASE_M native 417x3 fields against the formal data. M04a is labeled
+  pre-experiment geometry only; saved-MAT redraw is pixel identical and FIG
+  reopens. K_HIGH has no acoustic field observation.
+- Five required BIE solves were projected conservatively at 1449.8 s; with
+  150 s for other physics and 150 s contingency, 1749.8 s fits the 1800 s
+  subbudget and leaves about 4041.6 s planning balance. This is an estimate,
+  not charged acoustic runtime. A 4480-node job requires at least about
+  2.027 GB currently available physical RAM under the 30% reserve rule.
+  Initial 1.975 GB and later 1.210 GB readings failed. Auto-review rejected
+  a potentially high-cost BIE entry call while the gate failed. No K_HIGH
+  PE propagation, BIE density evaluation/solve, FullFK integral, M04b-d or
+  other candidate ran. The Goal remains unfinished pending a valid resource
+  gate; no accuracy threshold or reference layer was removed.
+- Main report, canonical plan and navigation are updated. This validation-only
+  P0/preflight work changes no production solver/API, communication method,
+  source conventions, S2b/S2c-A artifacts or vertical_comm_guide. No commit,
+  push or cash access; S3-S6 remain unexecuted, G1_target_PM=OPEN,
+  WP2_formal=false.
+
+## 2026-10-23 — S2c-B K_HIGH representative BIE and cost stop (current)
+
+- This entry supersedes the earlier P0-only RAM state above. A fresh Windows
+  physical RAM reading of 2,101,432,320 bytes passed the 30% reserve gate for
+  all five planned BIE levels. The existing MATLAB MCP session ran exactly one
+  K_HIGH L60/12 ppw/qa96 boundary solve and all 417 frozen receiver positions.
+  The saved MAT/JSON receipt records 311.2095523 s, 3840 nodes, linear
+  residual 3.40e-15 and off-grid boundary residual 4.13e-9. A tool reply timed
+  out near 300 s while MATLAB finished and saved the result; it was not rerun.
+- The preregistered five-level cost was recomputed from this actual timing:
+  BIE 1857.6201 s plus 150 s other physics and 150 s contingency totals
+  2157.6201 s, exceeding the 1800 s S2c-B cap by 357.6201 s. The remaining
+  four BIE solves and all K_HIGH PE/FullFK jobs were stopped. No reference
+  check or fivefold empirical resolution rule was removed. Shared core charge
+  is now 1719.8696573/7200 s; the estimated S3A balance after a hypothetical
+  complete K_HIGH remains above 3000 s but does not relax the local cap.
+- Independent P1 audit reread saved MAT/JSON, checked all 417 finite complex
+  values against exact BASE_M coordinates, solver/config hashes, receipt
+  timing and stop arithmetic. Provisional BIE response CSV/support statistics
+  are explicitly UNQUALIFIED: new K_HIGH spatial/window/self quadrature
+  resolution is absent, so no model-error, mechanism or 5x qualification is
+  claimed. M04a is the only figure; M04b-d have no formal input. Status is
+  S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED, Goal not marked complete. No
+  PHI_PLUS90, S3-S6, Bellhop, communication work, production API edit,
+  commit, push or cash access.

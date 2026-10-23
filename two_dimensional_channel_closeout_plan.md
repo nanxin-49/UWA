@@ -1,10 +1,12 @@
 # 二维声学对比收尾计划：同源反射复场、完整 Kirchhoff 与接收点阵
 
-日期：2026-10-20；**最新修订：2026-10-23（S2b完成、S2c计划及图优先可视化验收补强；仅文档与Goal契约；Asia/Shanghai）**
+日期：2026-10-20；**最新执行状态修订：2026-10-23（S2c-B K_HIGH单案例完成；Asia/Shanghai）**。下文原“仅文档与Goal契约”及1800 s停止描述保留为当时历史状态。
+
+**当前最高优先状态：`S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`。** 用户随后仅对K_HIGH授权2400 s子额度，按共享7200 s、S3A规划预留≥3000 s、单作业≤900 s和逐作业物理RAM保留30%完成五层新BIE、PE及完整FullFK、M04a–d和独立CSV/像素重绘审计。七次新声学实耗1277.0539592 s，累计核心扣记2685.7140642/7200 s，S3A规划余额4514.2859358 s。具体数值、限定资格和下一步见[唯一主报告首节](reports/two_dimensional_channel_closeout_report.md)及[新图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)。此状态只覆盖K_HIGH冻结417点和经验参考，**不是模型物理PASS**；PHI_PLUS90、PM/S3、三维和通信未执行。`G1_target_PM=OPEN`、`WP2_formal=false`。
 
 **当前权威执行状态（覆盖下文旧版“下一Goal/S2b未执行”等历史时间表述）：** `S0_S1_COMPLETE_WITH_DECLARED_GAPS`、`S2A_CONVENTION_SOURCE_BASELINE_COMPLETE`、**`S2B_COMPLETE_REFERENCE_QUALIFIED`**。S2b已完成空间权重补正、108/108九点真复场、BIE当前代码整密度再资格与经验数值分辨率审查、FullFK解析平面外场补全及独立审计。仅在固定4 kHz、同一离散Gaussian源、原C2正弦、411点M99线和原P11–P33九点上成立，**不是物理模型通用精度PASS或严格数学误差上界**。正式版为[正式S2b包说明](results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md)，[唯一主报告最新附录](reports/two_dimensional_channel_closeout_report.md)；旧`REFERENCE_LIMITED`只作历史快照，不覆盖最终状态。Bellhop的物理Gaussian源映射仍未闭合。
 
-**本次仅提出S2c，未执行它。** 后续顺序为**S2c-A保存数据机理诊断/实验冻结 →（用户另行授权且资源门通过时）S2c-B极少量单因素新海面 → S3有限PM → S4收尾**；S5/S6仍为用户明确授权的条件扩展。S3–S6及S2c均未执行；`G1_target_PM=OPEN`、`WP2_formal=false`不变。正式S2b既有MAT/CSV/FIG/PNG及审计结果不覆盖、不改写。
+**2026-10-23扩额前历史执行补记（不再是当前状态）：** S2c-A已以`S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`完成。K_HIGH的P0及一层L60/12 ppw/qa96 BIE代表（311.2095523 s、417点）完成后，原1800 s下的实耗保守计划2157.6201 s触发P1停止，状态曾为`S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED`。上方最新状态基于用户仅对K_HIGH的2400 s授权及后续真实作业，覆盖该历史停止结论；原回执与审计保留，不重写当时判断。PHI_PLUS90、S3–S6未执行，正式S2b/S2c-A数据只读。
 工作目录：`E:\MISC\CARPE3D_matlab\Explain`  
 主要执行者：Codex，通过 MATLAB MCP 使用现有 MATLAB 会话。
 
@@ -14,7 +16,7 @@
 
 本文件按用户要求放在仓库根目录，是**二维专项执行计划**；不替代或复制[深海总研究计划](reports/deep_sea_channel_research_plan.md)。本计划中的二维 PM 样本比较，不等于总计划的三维目标 PM 认证、正式 WP2、统计生成器训练或通信性能认证。始终保留 `G1_target_PM=OPEN`、`WP2_formal=false`，除非未来有单独证据与明确决策。
 
-S0–S1、S2a、S2b的实际阶段结论见[唯一主报告](reports/two_dimensional_channel_closeout_report.md)，以其**S2b“参考闭合补证”最新附录**及`formal_reference_v2`作为当前字段和数值版本。2026-10-21[高度相位符号审计](reports/pe_bie_height_phase_sign_audit.md)限制旧PE误差的物理解读；3.2a–c的源/相位契约和4.3a的空间权重继续有效。下文0.6、S2a/S2b和第9节的旧S2b提示词仍留作历史执行契约，不得再次执行；**真正下一Goal见第9节“S2c-A”**。历史报告中的“三方”仍指PE/BIE/Bellhop，不改标签冒充新的PE/BIE/FullFK结果。
+S0–S1、S2a、S2b与S2c-A的实际阶段结论见[唯一主报告](reports/two_dimensional_channel_closeout_report.md)，以其**S2b“参考闭合补证”最新附录**及`formal_reference_v2`作为S2b字段和数值版本。2026-10-21[高度相位符号审计](reports/pe_bie_height_phase_sign_audit.md)限制旧PE误差的物理解读；3.2a–c的源/相位契约和4.3a的空间权重继续有效。下文0.6、S2a/S2b及第9节的旧Goal提示词均保留历史执行契约含义，不得再次执行。历史报告中的“三方”仍指PE/BIE/Bellhop，不改标签冒充新的PE/BIE/FullFK结果。
 
 ### 0.1 本轮与未来执行的边界
 
@@ -493,11 +495,11 @@ F03优先强正弦已有真实场；FullFK缺场时先列成本与覆盖，再�
 
 ### S2c：受控参数敏感性与空间误差机理（**S2c-A已完成；S2c-B未执行**）
 
-**2026-10-23执行注：**零新声学场的S2c-A已在`20261023_s2c_a_1642`完成，状态`S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`，交付[中文机制图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md)、11组M00–M03 FIG/PNG、独立审计与已哈希协议。下述S2c-A步骤保留执行契约含义；S2c-B两个候选仍未计算、未授权。共享余额5791.339895 s不变，建议先一个K_HIGH代表以避免两案完整参考超出1800 s子额度；不自动转S3。详细结果见唯一主报告S2c-A附录。
+**2026-10-23 S2c-A完成时的执行注：**零新声学场的S2c-A已在`20261023_s2c_a_1642`完成，状态`S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`，交付[中文机制图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md)、11组M00–M03 FIG/PNG、独立审计与已哈希协议。下述S2c-A步骤保留执行契约含义；当时S2c-B两个候选均未计算、未授权。共享余额5791.339895 s不变，建议先一个K_HIGH代表以避免两案完整参考超出1800 s子额度；不自动转S3。此后K_HIGH单独获授权并停于本文件顶部所述资源门，PHI_PLUS90仍未授权。详细结果见唯一主报告。
 
 **阶段目标：**先理解S2b既有数据中“幅度曲线相似但复数差随A增长”及“中心九点远小于整条线”的机制，再以尽量少的新海面试验检查这种行为是否依赖`K`及`φ`。本阶段定位为**S2b与S3之间的有界机理诊断**，不是建立一般波浪参数的响应面或海况统计规律。
 
-**S2c-A｜当前下一Goal：保存数据空间诊断＋实验协议/资源冻结，新增声学场计算=0。**
+**S2c-A｜历史已完成Goal契约：保存数据空间诊断＋实验协议/资源冻结，新增声学场计算=0。**
 
 1. **来源门：**核对本地`formal_reference_v2`（`fields_line/fields_core`、`reference/resolutions`、`plot_data.mat`、图/审计），S2b final status、三方法源/相位/单位、正式FullFK数值版本、S2b扣记`1408.660105/7200 s`和现有RAM口径。若GitHub仅有文本/代码而缺CSV/MAT/PNG，优先寻找真实本地包；没找到则标来源受限，**不**凭报告舍入表伪造411点场。
 2. **冻结几何并绘图：**对已存在的平面+3档`A=.01/.05/.20,K=.1,φ=0`，仅计算几何`η,η',η''`与描述量，绘制M01。读保存同源u并用CSV/MAT独立核验11或12位数复场一致性、同点场量和411空间权重；制作M02、M03及必要局部放大，幅相、原生复差、平面—粗糙增量并列。最后**仅从同一批保存绘图数据组成M00四联首页总览**，所有关键图按第5节规定共享真实x轴，并优先展示中/强档的差异。中档作为候选机制对照，强档作为显著误差实例；三种振幅均有完整场输入时不得只挑利于论点的一档。
@@ -746,6 +748,9 @@ audit/        一致性与独立重绘结果
 > 在二维核心报告的明确边界内评估并执行S5；只有源/相位/参考与资源条件通过才生成固定点阵宽带频响和CIR。条件不满足时给出缺口与有界结果，不用离散三频或未验证插值替代宽带认证。S6需另有执行范围指令。
 
 ## 10. 本计划编制记录
+
+- **2026-10-23（S2c-B K_HIGH执行补记）：**用户仅授权K_HIGH单案。S2b/S2c-A正式输入及哈希核验，P0解析几何、BASE_M保存复场、M04a预实验图与独立审计完成；五层BIE保守成本估计1749.8 s满足子额度，但当前物理RAM不足以保障30%保留，自动审批拒绝可能启动高成本BIE的入口。K_HIGH新声学场0，M04b–d未生成，Goal未完成；未降低参考层级或5倍经验判据。结果与阻塞证据见[唯一主报告](reports/two_dimensional_channel_closeout_report.md)及`20261023_s2c_b_khigh_02/`。不涉及PHI_PLUS90、S3–S6、生产API或旧正式包覆盖。
+- **2026-10-23（同一S2c-B K_HIGH后续实测，覆盖上一条当时RAM状态）：**物理RAM恢复并在代表调用前实测2,101,432,320 bytes，完整五层最大内存估计的30%保留门通过。仅启动L60/12 ppw/qa96 BIE代表，实耗311.2095523 s；保存417点真复场、密度、残差和回执。按实耗重新保守估计五层加必要预留2157.6201 s，超过1800 s子预算357.6201 s，因此不运行余四层、PE/FullFK，也不生成M04b–d正式声场图。单层K_HIGH参考未取得空间/窗口/自求积及5倍经验分辨率资格；P1独立审计、单层CSV与成本停止记录见同run及[唯一主报告](reports/two_dimensional_channel_closeout_report.md)。状态`S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED`；Goal不标完整完成，不执行PHI_PLUS90或后续阶段。
 
 - **2026-10-23（可视化小幅补强，仅文档）：**不改S0–S2b既有结果、S2c/S3阶段顺序、K/φ实验、声源/数值参考/预算及Goal授权边界；第5节为S2c补充从保存数据拼接的M00四联总览、M01–M04固定布局、中心局部/九点真点位、中文可预览`mechanism_atlas.md`和图优先验收；S2c-A/B及S3/F08和第9节Codex Goal同步图像交付口径。原计划SHA-256为`e0d7615019819edd306370b7b689366d2344c371149f900c213aea0e1a3842c3`。未执行Goal、声场新算、MATLAB或仓库修改，不覆盖正式数据。
 

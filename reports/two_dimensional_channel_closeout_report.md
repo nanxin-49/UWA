@@ -1,4 +1,40 @@
-# 二维收尾主报告：S0–S1、S2a 与 S2b 点阵及参考限制
+# 二维收尾唯一主报告：S0–S2c-B K_HIGH
+
+## S2c-B K_HIGH：单案例计算及限定参考完成（2026-10-23；最新状态）
+
+状态：**`S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`**，只指本次K_HIGH输入、冻结417点、五层经验数值参考、规定控制、图表与独立审计完成；**不表示PE、FullFK或BIE物理精度PASS**。S2a=`S2A_CONVENTION_SOURCE_BASELINE_COMPLETE`、S2b=`S2B_COMPLETE_REFERENCE_QUALIFIED`、S2c-A=`S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`保持。下方“1800 s成本门停止”的S2c-B记录是用户扩额前的历史快照，不能作为当前结论。唯一新run为[20261023_s2c_b_khigh_02](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/)，[中文M04图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)先展示原始图片和逐图解释。
+
+**物理图像先读：**[M04b BIE物理响应](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final_v2/M04b_BIE_physical_response.png)显示K变后幅度总体相近，但相位/复数显著改变：BIE整线配对复L2为1.014765，最大逐点复增量0.146457684在x=18.9453125 m；最大同点幅度变化0.132020037 dB。**这是参考物理场变化，不是模型误差。** [M04a几何](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final_v2/M04a_geometry_only.png)、[M04c模型残差](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final_v2/M04c_model_error_pair.png)、[M04d中心与真九点](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final_v2/M04d_line_center_nine.png)均含可编辑同名FIG。四图只用保存的MAT/CSV，不生成伪连续二维场。
+
+### 输入、求解与资格
+
+仅主动修改波数：BASE_M `A=.05 m,K=.1 rad/m,φ=0`，K_HIGH `A=.05 m,K=.2 rad/m,φ=0`，海面 `η=A sin(Kx+φ)χ(x)` 为原C2窗口。4 kHz、1500 m/s、Tx=(0,100) m、原N=984/σ=.3 m离散Gaussian复谱、原411点z=3 m线、真实P11–P33、`exp(−iωt)`及出射`exp(+ikR)`不变。中心坡度0.005→0.010；平台周期62.832→31.416 m；含过渡区最大曲率0.0050572→0.0045973 m⁻¹，不能以平台 `AK²` 代替。|x|≥50 m严格平坦。当前代码和冻结输入SHA、S2b/S2c-A只读复用核验见[P0/P1审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/)。
+
+五次**新边界求解**给出K_HIGH当前BIE参考：L60/12ppw/qa96主层，同网格qa64，L60/14ppw/qa96，L60/10ppw/qa96，L70/10ppw/qa96。每层417同点真实复场、密度/配置/求解回执保存；空间、窗口和自求积差组成逐点经验分辨率，411线 `2.5851e−7`、九点 `1.5040e−7`，并非严格界。PE-mode0使用已验证物理高度适配、同一冻结源，保存417主场、417半步长与13冻结探针倍网格；倍网格对原复谱零填充，平面控制相对差3.8653e−13。FullFK使用 `FullFK_complete_analytic_flat_exterior_GL8_v1`、真实法向和弧长、`local_radius_m=Inf`、严格rough-minus-flat双项及解析平面外场；400/800面板相对差9.7649e−14、L60/90对照7.3729e−16、两项闭合最大1.96e−17。旧有限L60积分、FastFK均未替代正式值。
+
+### 同点、同源空间比较
+
+空间主量为原生单位源反射复场 `u_rough`，同源 `u_flat`、G和δu保存在[2502行原始场CSV](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/raw_fields.csv)；无中心定源强或平面拟合。模型残差分别为 `e_PE=u_PE−u_BIE`、`e_FK=u_FullFK−u_BIE`，配对BIE物理响应为 `Δ_Ku_BIE`。每个支持集采用其真实点数的等空间权重、相同坐标及本案BIE分母；九点不是九个独立海面。
+
+| 真实支持 | BIE物理变化L2（BASE分母） | PE–BIE：BASE→K | FullFK–BIE：BASE→K |
+|---|---:|---:|---:|
+| 411点整线 | 1.014765 | 0.0155868→0.0178365 | 1.07328e−5→4.34208e−5 |
+| 中心11点，\|x\|≤1 m | 0.099829 | 3.0294e−5→6.4999e−5 | 9.0137e−7→7.1490e−6 |
+| 原九点 | 0.026930 | 1.27999e−5→3.01212e−5 | 2.66685e−7→1.98012e−6 |
+| 原五点十字 | 0.021366 | 1.18918e−5→2.83076e−5 | 2.22411e−7→1.59234e−6 |
+| 边缘104点，\|x\|≥30 m | 1.074617 | 0.0294387→0.0502521 | 5.38928e−6→3.64622e−5 |
+
+逐点原生复数、幅度差dB、wrapped相位、绝对复残差、均值/中位数/最大值、幅相平方项、分母及近零数在[逐点诊断](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/model_point_diagnostics.csv)、[20行支持集](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/support_metrics.csv)和[10行配对变化](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/paired_changes.csv)。BIE物理变化和PE各支持误差均过5倍经验门。BASE_M FullFK九点/五点的绝对误差未过门；K_HIGH FullFK五支持绝对误差均过门。**FullFK五点十字的两案误差变化未过5倍门**：标量变化1.36993e−6、成对残差变化1.40732e−6；后者小于5倍经验门约1.52166e−6。其他成对模型变化均可分辨。此分类只反映保存层级和13探针检查，不等于严格证明物理精度。
+
+### 机制、成本、独立审计与退出
+
+K改变同时改变周期、坡度、曲率、峰谷排列以及受照射区在传播积分中的干涉。BIE参考响应远大于局部中心残差，边缘PE误差增幅明显；这些事实支持**空间传播/干涉与几何共同作用的候选解释**，无法仅凭两案例空间相关将局部高度、坡度或曲率唯一识别为原因。没有为降低模型误差调参。
+
+代表BIE实耗311.2095523 s后，原1800 s子额度无法容纳五层保守计划而停止。用户随后**仅对K_HIGH明确授权2400 s子额度**，原7200 s总额、S3A至少3000 s规划预留、每作业900 s及实时物理RAM保留30%不变，授权见[单独修订](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/protocol/P1_budget_amendment_2400.json)。五次BIE、一次PE、一次FullFK七次声学实耗 `1277.0539592 s`，共享累计扣记 `2685.7140642/7200 s`，S3A规划余额 `4514.2859358 s`；单作业最长352.726 s。每次作业前均实测可用**物理**RAM并通过30%门，最小当时可用1,800,798,208 bytes对应较小作业；回执逐作业保存，未用虚拟内存冒充。
+
+[最终独立审计v4](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json)从保存CSV复算2502原始场、1668逐点、20支持集和10配对行，且逐组核验共同坐标、来源SHA和分母；最大逐点复算差8.00e−14、幅相平方恒等式余量2.58e−20。四张FIG重新打开，四张PNG由保存MAT[独立重绘v4](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/independent_redraw_v4/)像素一致；M04b/c/d及几何图均实际检查。公式控制包括 `|u−b|²=(|u|−|b|)²+4|u||b|sin²(Δφ/2)`，相位断点和色标已检查。运行入口、版本与SHA清单保存在本run；旧S2b/S2c-A结果未覆盖。
+
+**建议：**PHI_PLUS90值得另行审议为单案例试点，以补充K试验混合几何因素的解释，但须重新做成本、RAM及五层参考门；本轮不启动。Bellhop源映射、PM、三维、宽带、通信结论仍开放；`G1_target_PM=OPEN`、`WP2_formal=false`。本轮仅比较/验证/绘图脚本和报告变动，生产求解器、公共API和技术指南的实现物理未改，故未运行无关的通信回归；未提交、推送或读取`cash/`。
 
 日期：2026-10-20；S2a/S2b 更新：2026-10-23（Asia/Shanghai）。当前 S2b 状态：**`S2B_COMPLETE_REFERENCE_QUALIFIED`**，限固定离散源、海面、411点接收线/原九点及已声明的经验数值分辨率，不等于模型物理PASS。P0、108/108真实点值、当前版本BIE再资格、FullFK完整外场/求积控制、图表与独立CSV/重绘审计均已完成。最新证据在同一run_id下的[formal_reference_v2](../results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md)，详见文末“参考闭合补证”附录；前一“参考受限”阶段作为历史快照保留。历史 `S0_S1_COMPLETE_WITH_DECLARED_GAPS`、`S2A_CONVENTION_SOURCE_BASELINE_COMPLETE` 保留；S3–S6未执行。`G1_target_PM=OPEN`、`WP2_formal=false`。
 
@@ -310,3 +346,27 @@ BIE物理海面增量`u_BIE,rough-u_BIE,flat`与模型误差`u_PE/FullFK-u_BIE`�
 [独立审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json)从CSV而非主指标函数复算：4932线场、108九点、3336模型逐点、1668参考物理响应、40分支持指标；MAT/CSV最大复差5.02e-16，独立逐点最大差7.53e-14、汇总1.89e-14，幅相平方恒等式余量1.62e-18。独立因式分解C2几何与原解析式最大差2.57e-16，有限差分坡度交叉检查误差4.67e-8；七候选配置SHA与数值核验通过。11 PNG保存MAT独立重绘像素差0、11 FIG重开、相位断点和图册22相对图件链接通过，全部11实图已查看坐标/单位/图例/截断/九点及未分辨标记。初版图例/对数轴改善及审计CSV分隔符/文本舍入修正过程保存在同run的execution_attempts，不是新物理作业或可挑选的参考结果。
 
 三个新增MATLAB文件仅为比较、绘图、独立审计工作流，Code Analyzer零消息，git diff --check通过；保存源码/输入/文档/产物SHA，原247个S2b归档保持。未改生产API/求解器或技术指南实现公式，故无范围外的标量/宽带通信回归。本Goal结束，等待用户看图并另行授权S2c-B或S3；G1_target_PM=OPEN、WP2_formal=false及S0–S2b历史状态/数值不变，无提交推送。
+
+## 附录 S2c-B / K_HIGH：P0 完成，P1 单层 BIE 代表后成本门停止（2026-10-23）
+
+本附录仅针对用户新授权的`K_HIGH(A=.05 m,K=.20 rad/m,φ=0)`；`BASE_M(A=.05,K=.10,φ=0)`从正式S2b只读提取。**截至本轮结束，K_HIGH只完成一次新BIE边界解及417点原生反射复场；另外四层参考、PE传播和FullFK积分均未运行，M04b–M04d没有可正式展示的数据，S2c-B物理实验未完成。**[唯一新run的中文图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)先展示M04a并明确“预实验几何”；[PNG](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_v2/M04a_geometry_only.png)与同名可编辑FIG来自保存MAT，未插值声场。
+
+正式S2b输出247/247、代码24/24，S2c-A输出203/203、上游22/22及代码5/5哈希再次一致；冻结K_HIGH配置SHA为`0faa30d06ebd698ed6755c38325956750d218ebdf23f077db592cd1ad59d6c28`，源/411线/九点SHA均与配置一致。现有R2025b Update 6 MATLAB MCP会话可用。BASE_M的417×3原生复场与S2c-A诊断逐项相同；新包[P0保存字段](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/P0/BASE_M_fields.csv)的CSV/MAT最大复差5.02e-16。新海面完整C2解析`η,η′,η″`与事前冻结几何最大差5.03e-17，在`|x|≥50 m`三者严格为零。平台周期62.832→31.416 m、中心坡度.005→.010；实际全域最大曲率因过渡区作用为.0050572→.0045973 1/m，不能以理想平台`AK²`代替，更不能单因归因坡度/曲率。
+
+[P1初始成本/RAM门](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/protocol/P1_initial_gate.json)对五次新BIE解（L60/12ppw/qa96与qa64、L60/14ppw/qa96、L60及L70/10ppw/qa96）逐层使用历史耗时、节点缩放和20%保守增量；五层约1449.8 s，另留PE/FullFK/评价150 s、失败余量150 s，合计**1749.8 s**。这低于1800 s子预算，按原已扣1408.660105 s计，规划余额约4041.6 s，超过S3A预留3000 s；均为**估计，未计为已运行声学成本**。最大4480节点作业预计新增物理RAM 1,418,723,328 bytes；按30%保留需当前可用至少约2,026,747,612 bytes。正式P0采样仅1,974,632,448 bytes，失败；后续采样有波动，物理作业入口前再次只有1,209,720,832 bytes。不能以一次瞬时较高读数或历史回执替代作业前可持续可用资源。
+
+[P0独立审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/P0_independent_audit.json)通过几何/BASE_M复场CSV–MAT、配置哈希、成本公式、M04a保存MAT逐像素重绘及FIG重开。首次P0诊断目录`20261023_s2c_b_khigh_01`因表列名不一致在零物理阶段停止，保留失败痕迹；正式P0为`_02`。较早一次自动审批审查因当时RAM低于门而拒绝代表入口，没有执行求解；后续实际物理RAM恢复并重新实测通过完整五层的30%保留门，才启动一次代表作业。这两段时间状态分别保留，不以当时被拒调用冒充求解成本。
+
+### P1 实际代表、再估价与停止门
+
+代表作业前Windows真实可用物理RAM实测`2,101,432,320 bytes`，大于最大五层保守增量`1,418,723,328 / 0.7 ≈ 2,026,747,612 bytes`；[前置门](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/jobs/bie_main96_preflight.json)同时记录当时五层成本、配置SHA与求解器SHA。实际运行的是冻结同源`L60/12 ppw/qa96`、3840节点的**一个**新K_HIGH边界解，不是BASE_M保存密度重评价。[MAT](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/jobs/bie_main96.mat)和[回执](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/jobs/bie_main96.json)保存417个原接收位置的复场、密度与残差；声学计算实耗`311.2095523 s`，单作业低于900 s，线性残差`3.40e-15`、离节点边界残差`4.13e-9`。MCP同步调用约300 s超时，但MATLAB会话完成求解并写入回执，未重复启动。首次调用因路径字符串错误在求解前退出，物理成本0；详情保留于同run执行记录。
+
+用代表实耗重新估计完整五层：本层311.21 s、qa64 425.26 s、14 ppw 508.31 s、L60/10 ppw 259.34 s、L70/10 ppw 353.50 s。后四项分别用历史qa64/qa96比例或节点数平方缩放，乘20%保守因子，且不低于事前上界。五层BIE合计`1857.6201 s`，**仅BIE参考就已超过1800 s子预算**；加其他物理工作150 s和失败余量150 s，**总计2157.6201 s**，超过本轮上限`357.6201 s`。[独立再估价](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/protocol/P1_after_representative.json)复算后停止其余四层、PE及FullFK，没有删减参考层级或放宽5倍经验判据。共享7200 s已扣记增至`1719.8696573 s`（原1408.660105 + 本次311.2095523）；若按当前完整再估价，S3A规划余额`3633.7198 s`仍高于3000 s，但这不授权突破本轮子预算。
+
+[独立P1审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/P1_independent_audit.json)从保存MAT/JSON另读：417复场均有限、坐标与BASE_M逐点一致、冻结配置及求解器SHA吻合、MAT/JSON耗时相同、成本停止式成立。保留[单层417点复场与配对物理变化CSV](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/P1/representative_BIE_physical_response_UNQUALIFIED.csv)和[五支持统计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/P1/representative_BIE_supports_UNQUALIFIED.csv)；[另一个CSV独立审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/P1_csv_independent_audit.json)复算逐点复差、五支持分母及指标，最大指标差`4.44e-15`，幅相平方恒等式余量`1.39e-17`。但其K_HIGH参考**未经过空间/窗口/自求积数值敏感性**，因此这些变化不能判为超过5倍经验分辨率。单层相对BASE_M的候选物理变化L2为全线`1.01476`、中心11点`0.09983`、九点`0.02693`、五点十字`0.02137`、边缘104点`1.07462`；各自使用BASE_M BIE同支持能量作分母，不是PE/FullFK模型误差，更不是九个独立海面样本。全线最大绝对复变化`0.14646`位于`x=18.9453125,z=3 m`；数值参考未闭合之前不作更强的物理结论。没有新PE/FullFK场，故中心与边缘**模型误差变化**、幅相残差分解和机制识别均未回答，也不绘制M04b–d正式声场图。
+
+本轮状态为**`S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED`**，不是K_HIGH完整完成或“数据完成但参考受限”。下一步如仍要完整K_HIGH，须另行明确调整本轮成本额度并重新确认全部五层参考、PE、FullFK及每作业RAM；当前不建议启动PHI_PLUS90，因为K_HIGH本身尚未得到可分辨参考。正式S2b/S2c-A包保持只读，生产求解器/公共API未修改，无Bellhop、S3–S6、通信仿真、提交或推送。
+
+执行当时的BIE工作流源码SHA为`84e9f089d2159556dc868be589506561c2fbd2ef9b64f1e17ec92c5f4fa4b03b`，其[逐字节快照](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/provenance/bie_runner_executed_source.txt)与P0来源清单一致；代表作业后只修订了未来qa64成本上调公式，没有改物理求解器或保存场。[P1产物SHA清单](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/provenance/P1_artifact_hashes.csv)用于回查。MATLAB Code Analyzer对本轮BIE/PE/FullFK已准备入口及两个P1审计脚本均零消息；PE/FullFK入口仅静态检查，**不是运行验证**。本阶段无生产物理或公共接口修改，故未运行与K_HIGH阻塞结论无关的标量/宽带通信回归，`vertical_comm_guide.md`无方法变更。
+
+[独立边界审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/P1_boundary_independent_audit.json)还从保存BIE MAT与冻结解析式分别重建：3840个实际边界节点高度及真实法向的最大差均为0，640个`|x|≥50 m`节点严格平坦，984项源谱与冻结源逐项相同，密度全有限。这验证了代表作业确实使用K_HIGH边界和指定源；它不代替未运行的空间、窗口、自求积四层参考。该审计脚本Code Analyzer零消息，新增声学计算为0。
