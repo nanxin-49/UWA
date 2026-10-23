@@ -1,0 +1,29 @@
+# P1 extension before new BIE work
+
+No production/reference solver edits. Call the unchanged frozen solve_helmholtz_bie_halfplane_vertical with known SHA and the exact frozen source spectrum/C2 physical geometry. No source/point changes. All old data and main metrics retained.
+
+Start with medium case cost-only ppw2 (640 nodes) then ppw4 (1280 nodes), qa96, L60. These coarse physical solves are cost representatives, NOT trusted reference values, NOT new formal core points, and count against the existing7200s budget. Initial per-pilot estimate180s, 900s ceiling, physical incremental bound4*16*n^2+128MiB <=70% actual Available Bytes. Sample real physical RAM immediately before each call. Save both costs and density outputs.
+
+Only if BOTH pilots finish and extrapolated time <900s may a full reference job start: twice the larger whole-pilot N^2 extrapolation (scaled conservatively by (qa/96)^3) plus a separately measured deterministic complex LU N^3 bound. No fictitious solve estimate. Sample RAM anew for each full job. Reference candidates medium qa96/128 at ppw12, then strong/weak qa128 at ppw12 if all gates hold. Compare saved/current densities and same-point fields; do not retroactively assign a current hash to old execution. Fresh same-version calculations may requalify a saved value only through explicit numerical comparisons. Missing ppw14 current version remains declared if not computed.
+
+New solve memory estimate for3840nodes is1,077,936,128bytes, separately checked against currentRAM. A full job is NOT started if its time/RAM/budget gate fails. If infeasible, retain actual failure and continue independent saved-data tail audit only. All measurements and analytic-exterior work stay in the original unique run directory/reference_followup_01.
+
+## Measured pilot decision, before any full job
+
+Pilot640/qa96=9.6831s;1280/qa96=30.2089s. Deterministic1280 complex LU=0.0951s (non-acoustic microbenchmark). For3840 nodes, the frozen conservative estimate atqa96 or LOWER is approximately2*(max(9.6831*36,30.2089*9)+0.0951*27) ~=702.3s, below900s. Forqa128, cubic quadrature scaling makes the estimate >1600s, soqa128 is rejected WITHOUT starting it.
+
+One cost-based revision is frozen now: use64/96 as the self-quadrature pair, matching the already-used weak reference sensitivity design. This is a numerical sensitivity layer, never a source/point/physical-model change, and no threshold is loosened. Run current-version medium96 first to check whole density reproduction, then medium64, strong64, weak64 only if gates continue to pass. The old qa96 primary and saved spatial/window levels stay intact. New64 reference must be reported as a separate layer with its exact SHA and compared with old96/finest fields. A disagreement is not normalized away. Higher128 is not required merely to obtain a better-looking result. Full jobs include nine fixed points plus the already frozen saved-line worst/minimum-reference probes. Full job memory1,077,936,128bytes must remain <=70% actual physical Available Bytes at each start.
+
+## Strong native14ppw gate refinement (before strong solve)
+
+The actual medium3840/qa96 representative completed242.9794s, with its entire saved density reproduced EXACTLY. Use this full-size representative for strong4480 timing:2*(242.9794*(4480/3840)^2 + .0951*(4480/1280)^3) ~=669.4s <900. This replaces the deliberately coarse640-only upper extrapolation only after observing the full representative. Strong96 and strong64 now use native14ppw/4480nodes, matching the saved strong primary grid. Memory bound remains4*16*4480^2+128MiB=1,418,723,328bytes; the fresh measured2,032,869,376bytes gives70%=1,423,008,563bytes, so the gate passes narrowly. Repeat physical RAM reading for every subsequent job; never carry forward this reading to another job.
+
+## Independent full-integral closure job freeze
+
+All seven BIE solves completed below900s, total charged core before closure approximately1387.2s. Weak64, medium96 and strong native14ppw96 whole densities are checked against corresponding historical saved density levels; no historical SHA is invented. Next job evaluates both current/saved64/96 densities on the complete union of411 M99 points and six off-depth receiver points (417 unique points per case). Existing spatial/window saved fields are used on precisely matching support.
+
+FullFK uses an independently implemented two-term analytic-exterior integral: Gauss8 on400 and800 panels over the exact compact rough-minus-flat integrand, plus the infinite flat double-term analytic result. Source/physical normals/analytic arc Jacobian are unchanged; local_radius_m=Inf. This is the same full Kirchhoff physical approximation, with the entire exactly flat exterior evaluated analytically, not discarded. Compare both Gauss levels with saved two-finite-integral subtraction; keep initial finite-L60 fields unchanged as baseline. No per-point fitting, ratios or coefficient calibration.
+
+Pre-job conservative peak192MiB must fit70% newly measured physical Available Bytes; time estimate120s <900 and cumulative7200. Any physical reference evaluation/integral is charged. Field and metric assembly/I-O inside the timed block is conservatively charged too.
+
+Numerical resolution convention: the pre-frozen empirical BIE sum of final spatial change + max neighboring window changes +64/96 self-quadrature change, at every actual support point. Model differences are compared to5x that estimate. PE also includes max measured half-step change plus max measured doubled-grid change from its frozen probe set (not claimed as a rigorous unsampled global bound); FullFK includes its GL400/800 difference. A fixed256eps source-scale roundoff allowance avoids declaring flat roundoff a physical separation. These are numerical-resolution estimates, not rigorous bounds or a universal physical tolerance. Unresolved method differences remain unresolved; no model PASS is required.

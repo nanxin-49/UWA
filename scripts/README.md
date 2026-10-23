@@ -4,6 +4,10 @@
 
 ## 目录
 
+- **S2b参考闭合正式入口与数据：**同一run_id `20261023_s2b_1305/formal_reference_v2`当前为`S2B_COMPLETE_REFERENCE_QUALIFIED`（声明的经验数值分辨率，不是物理PASS）。`comparisons/run_two_dimensional_closeout_s2b_bie_reference.m`在重新采样的真实物理RAM/同一累计7200s预算门下运行成本代表与当前代码BIE64/96再资格；禁止跳过其代表/预算门。`comparisons/complete_two_dimensional_closeout_s2b_reference.m`作完整支持的参考评价及解析平面外场+真实双项Gauss积分，原求解器/公共API不改，source/height/normal不变。`validation/support/closeout_s2b_fullfk_analytic_exterior.m`不是FastFK或局部截断，外部平面场解析精确计入，local_radius_m=Inf；`audit_two_dimensional_closeout_s2b_tail.m`为保存数组恒等式审查。`audit_two_dimensional_closeout_s2b_reference.m`与`audit_two_dimensional_closeout_s2b_resolution.m`为纯保存MAT/CSV/重绘/分辨率独立审计，禁止覆盖已有审计目录。所有数值作业仅MCP现有会话、显式输出路径、无cd。正式图/原始场/指标/成本/资格证据见[唯一主报告最新附录](../reports/two_dimensional_channel_closeout_report.md)，不自动开S3–S6/通信/Bellhop。下条早期受限流程、文件和“未完成”状态保留历史时间含义。
+
+- S2b实际工作流：`comparisons/run_two_dimensional_closeout_s2b_p0.m`仅保存数据重算411点双权重及公式控制；`comparisons/prepare_two_dimensional_closeout_s2b.m`核验源哈希/保存密度/历史预算并冻结P1；`comparisons/execute_two_dimensional_closeout_s2b_job.m`串行执行单批（首批必须`bie3`），调用前从Windows Memory Available Bytes读取真实物理RAM并作为第三参数传入。禁止重复已有检查点、无BIE边界重解、无Bellhop/通信/PM。`reporting/finalize_two_dimensional_closeout_s2b.m`、`export_two_dimensional_closeout_s2b_sensitivity.m`只汇总保存复场；`render_two_dimensional_closeout_s2b.m`从保存MAT生成F01–F07 FIG/PNG；`validation/support/audit_two_dimensional_closeout_s2b.m(out,figure_folder,audit_folder)`从CSV独立复算并保存MAT重绘。所有输出目录须未使用；入口在setup后不改变cwd。实际包`20261023_s2b_1305`覆盖108/108、P0通过，最终图在`figures_v2`、审计在`audit_v2`；状态`S2B_DATA_COMPLETE_REFERENCE_LIMITED`，Goal未标完成，FullFK窗口和BIE证据限制见[唯一主报告附录](../reports/two_dimensional_channel_closeout_report.md)。不把调用纯绘图入口视为新场计算授权。
+
 - `validation/prepare_pe_bellhop_bie_corrected_data.m`：从固定三案例复数图册及强海面
   411×45 原始场包读取保存入射场，在物理海面 `z=eta`、深度向下、`exp(-iωt)`
   约定下以 `exp(-2iketa)` 重算 PE 保存起始场到接收线和 45 个深度；BIE/Bellhop

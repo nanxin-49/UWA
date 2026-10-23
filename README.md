@@ -102,9 +102,9 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 | [Deep-sea research handoff](reports/deep_sea_channel_research_background_for_new_ai.md) | 新的研究评估者 | 英文自包含需求、历史证据、单点计时转向和待论证计划 |
 | [External-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md) | 研究路线讨论者 | 英文外部建议核查、公开深海部署案例与建议测试范围；未改变生产模型 |
 | [Official deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 唯一正式研究计划；2026-10-15决策B：固定dual仅4/6/8kHz离散交付，停止参考连续修补，G1 OPEN/WP2=false；备份和v3仅版本记录 |
-| [二维点阵对比收尾计划](two_dimensional_channel_closeout_plan.md) | Codex与二维研究执行者 | PE/BIE/完整Kirchhoff为核心，Bellhop条件扩展；S0–S1与限定支持的S2a已执行，下一阶段S2b九点、S3有限PM、S4收尾均未执行 |
+| [二维点阵对比收尾计划](two_dimensional_channel_closeout_plan.md) | Codex与二维研究执行者 | S2b已完成P0、108/108及参考闭合，S2B_COMPLETE_REFERENCE_QUALIFIED仅限声明的数值分辨率；S3–S6未执行 |
 | [二维计划审查与首轮Goal提示词](reports/two_dimensional_channel_closeout_plan_review.md) | 历史首轮追溯 | S0–S1的完成契约与提示词；该轮已完成，当前状态见唯一主报告 |
-| [二维收尾唯一主报告：S0–S1及S2a](reports/two_dimensional_channel_closeout_report.md) | 研究审阅者与下一阶段执行者 | 旧指标复现；S2a实际入口、源资格、平面及三档原生复场、三图独立重绘；含FullFK的S2b缺口与成本 |
+| [二维收尾唯一主报告：S0–S1、S2a与S2b](reports/two_dimensional_channel_closeout_report.md) | 研究审阅者与下一阶段执行者 | S2b双权重/真实点阵、BIE当前整密度再资格、FullFK完整外场、F01–F07和独立审计；旧受限基线保留，完成不等于模型物理PASS |
 | [固定dual物理决策](reports/deepsea_dual_broadband_decision_2026-10-15.md) / [宽带成本](reports/deepsea_dual_broadband_cost_2026-10-15.md) | 研究评估者 | 反射幅度约降6.43%，总场干涉变化清楚；稀疏候选未获新独立频点认证，5/7kHz被资源门拒绝，未进行宽带扫描 |
 | `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 

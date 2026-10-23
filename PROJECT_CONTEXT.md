@@ -9,6 +9,23 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维收尾 S2b：参考闭合完成（2026-10-23；当前阶段状态，覆盖下方早期受限快照）
+
+- `S2B_COMPLETE_REFERENCE_QUALIFIED`，限固定4 kHz离散Gaussian源、平面及三档C2正弦、M99的411点线/原P11–P33及所报告经验数值分辨率；不是模型物理PASS。正式包在同一run_id的`results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/`，[唯一主报告](reports/two_dimensional_channel_closeout_report.md)新增参考闭合附录；早期`S2B_DATA_COMPLETE_REFERENCE_LIMITED`及其文件保留为历史。
+- P0的S2a原生411点q/w各12行及旧口径原样保留。108/108原九点真场齐全；正式PE/BIE72格保持原数值，FullFK36格另存完整积分数值版本，原有限L60基线不覆盖。强档PE–BIE空间主复L2仍0.0629112453153，旧入射加权0.0439621797406、旧8.0908%/6.2911%的G口径不改写。
+- 在新RAM/成本门通过后作7次BIE边界解（2次成本代表，5次参考），未改原求解器SHA；弱64、中96、强原生14ppw96的整密度与对应历史保存密度逐点完全一致。中/强当前64/96同网格接收复场相对变化约3e-8；全417唯一支持的BIE空间/窗口/自求积经验分辨率约1.5e-7（九点）/2.6e-7（线），不冒充严格误差界。旧执行时SHA仍未知，但由当前已知代码及整密度复现完成数值再资格，未倒填历史哈希。
+- FullFK有限窗口误差通过解析平面外场恒等式与独立Gauss8双项差积分分离。物理几何在|x|>=50 m完全平，外部平面贡献解析计入，不是局部截断、拟合或FastFK；真实法向/弧长和local_radius_m=Inf保留。400→800面板复场相对变化不超过1.5e-12，与原有限双积分相减加解析尾项最大差8.22e-11。正式FullFK–BIE线弱/中/强复L2约2.17e-6/1.07e-5/4.29e-5；九点弱/中差异在预冻结5倍分辨率规则下未分辨，不能称更高物理精度认证。
+- 累计扣记1408.660105/7200 s，其中1258.660105 s实测、150 s保守旧成本/失败扣记；最大单作业289.742 s。所有新大解/评价前均有真实物理RAM门，无页文件替代。18个新MATLAB文件最终Code Analyzer零消息；正式7张FIG/PNG实际查看、FIG重开、MAT重绘像素差0，CSV/MAT/恒等式/24行分辨率独立审计通过。
+- S2b Goal按完成性核验结束，不自动进入S3–S6、Bellhop源映射或通信；`G1_target_PM=OPEN`、`WP2_formal=false`不变。生产求解器/公共API及技术指南实现公式未改，无提交推送。历史执行SHA、严格误差界、FullFK连续x-z图和跨场景推广作为明确限制保留，非本阶段伪造补齐项。
+
+### 二维收尾 S2b：点值齐全、参考受限（2026-10-23；早期快照，已由上方补证覆盖）
+
+- [唯一主报告附录S2b](reports/two_dimensional_channel_closeout_report.md)及`results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/`记录本次实际执行；状态`S2B_DATA_COMPLETE_REFERENCE_LIMITED`。P0空间主指标与历史入射权重各12行从不变的411点原生复场复算并通过CSV独立审计；强档PE–BIE空间复L2=0.0629112453153，旧入射加权0.0439621797406保留，历史S2a状态不变。
+- 核心PE/BIE/FullFK×平面/弱/中/强×P11–P33已108/108，原48值保留、新增60值（PE18/BIE18/FullFK24）。BIE平面6点为同源解析镜像，弱中12点为保存密度评价；无新BIE边界解。新成功批次实计13.9342315 s；三次S2a实计9.2915103 s，加历史120 s及失败尝试30 s保守扣记，总173.2257418 s/7200 s。每批使用Windows真实可用物理RAM门，估计增量96 MiB，单批最大2.4232 s。
+- 匹配九点及接收线最差/最小参考探针上复核BIE空间/窗口/弱档自求积层级、PE半步长与保持同一冻结复谱的984→1968网格、FullFK求积及L60→90固定细网距窗口。FullFK窗口相对变化约2.52e-4–2.69e-4，与主差异相当；中强BIE独立自求积和原执行源码SHA仍缺，不能认证物理精度。P1时新边界重解内存门失败，未强启高内存BIE。数据齐全不等于参考资格闭合，Goal未标完成。
+- 最终`figures_v2/`含F01–F07 FIG/PNG；F03只用已有强档PE/BIE真二维场，FullFK连续场缺失不插值。`audit_v2/independent_audit.json`从CSV复核数据、权重、恒等式及敏感性，7张PNG保存MAT重绘像素差0，7张FIG可重开；12个新MATLAB文件Code Analyzer零消息。
+- 下一单项建议先审FullFK平面有限窗口尾项与解析镜像参考，事前冻结源周期解释和成本；不自动执行S3–S6/Bellhop源映射/通信。`G1_target_PM=OPEN`、`WP2_formal=false`。生产API/求解器和技术指南实现公式未改，无通信回归、提交或推送；所有旧日志条目为历史，不覆盖本索引当前状态。
+
 ### 二维收尾 S2a 实际入口、声源资格与平面审查（2026-10-23；当前阶段状态）
 
 - [唯一主报告](reports/two_dimensional_channel_closeout_report.md)与`results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/`记录已执行的S2a；`S2A_CONVENTION_SOURCE_BASELINE_COMPLETE`只覆盖固定4 kHz、Gaussian源、z=3 m的PE-mode 0/BIE/FullFK输入资格、平面与三档正弦接收线。S0–S1历史状态不变；S2b–S6未执行，`G1_target_PM=OPEN`、`WP2_formal=false`。
