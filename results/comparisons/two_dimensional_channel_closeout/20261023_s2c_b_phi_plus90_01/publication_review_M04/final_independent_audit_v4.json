@@ -1,0 +1,65 @@
+{
+  "status": "S2C_B_K_HIGH_INDEPENDENT_AUDIT_PASS",
+  "raw_rows": 2502,
+  "point_rows": 1668,
+  "support_rows": 20,
+  "paired_rows": 10,
+  "BIE_version_rows": 2085,
+  "max_point_error": 8.0039207751262E-14,
+  "max_identity_error": 2.583450489125616E-20,
+  "max_support_error": 1.123121642345945E-15,
+  "max_paired_error": 4.4408920985006262E-15,
+  "max_resolution_error": 2.1601872783496949E-15,
+  "classification_checks": 50,
+  "K_PE_step_max_abs": 7.7795321041219671E-14,
+  "K_PE_frozen_probe_max_abs": 1.7091465130578373E-7,
+  "K_FullFK_quadrature_relative": 9.7649339247722738E-14,
+  "K_FullFK_extent_relative": 7.37291958335388E-16,
+  "job_seconds": [
+    311.2095523,
+    162.4494117,
+    352.7260126,
+    177.1375235,
+    263.8830647,
+    4.5829766,
+    5.0654178
+  ],
+  "new_acoustic_seconds": 1277.0539591999998,
+  "minimum_job_available_physical_bytes": 1.800798208E+9,
+  "charged_core_seconds": 2685.7140641999995,
+  "S3A_planning_balance_seconds": 4514.2859358000005,
+  "redraw_pixel_equal": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "fig_reopened": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "image_dimensions_px": [
+    [
+      2346,
+      3241
+    ],
+    [
+      2002,
+      2861
+    ],
+    [
+      2914,
+      3104
+    ],
+    [
+      2882,
+      3025
+    ]
+  ],
+  "source_sha256": "8d60d3d9d6aa3aa16110ac33d81e0d193a61526aef2c0c2e9edd531cae531f55",
+  "configuration_sha256": "0faa30d06ebd698ed6755c38325956750d218ebdf23f077db592cd1ad59d6c28",
+  "BIE_solver_sha256": "76f1a9d52c898d62507ad7d971813c79b1f09cd9ced4f6dbce556ed11c349fa9",
+  "qualification": "empirical five-level BIE; PE grid sensitivity only 13 frozen probes"
+}

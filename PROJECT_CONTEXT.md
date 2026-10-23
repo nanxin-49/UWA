@@ -9,7 +9,15 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
-### S2c-B K_HIGH：五层参考与单案例实验完成（2026-10-23；最新状态）
+### S2c-B PHI_PLUS90：预算已授权，RAM 门阻塞（2026-10-24；最新状态）
+
+- 用户将共享核心上限至少增加 306.601 s；按最小增量记录新上限 7506.601 s，PHI 子额度 1820.8869358 s，S3A 3000 s 储备不动。PHI 保守完整计划 1820.88667776 s 已通过成本门。Windows 可用物理内存最新实测 1,131,163,648 B，低于冻结最大 BIE 层级 30% 余量门 2,026,747,612 B；用户要求暂时保持资源阻塞。新 PHI 声学计算仍为 0，状态仍 `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`，下方成本门结论仅为授权前历史快照。详见[执行回执补记](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)。K_HIGH 已有结论及 S3A 保留不变。
+
+### S2c-B PHI_PLUS90：完整参考成本门阻塞（2026-10-23；最新状态）
+
+- `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`；唯一新 run `20261023_s2c_b_phi_plus90_01`。M05a 冻结 C2 几何 PNG/FIG、SHA/预算协议、K_HIGH M04 轻量发布包、既有复场独立复核和 S3A 三 seed 只读清单完成；新 PHI 声学场 0。计划 `1820.8866778 s`，本轮在保留 S3A 3000 s 后最多 `1514.2859358 s`，缺 `306.6007420 s`，停止新昂贵求解。共享余额仍 `4514.2859358 s`。PHI 中心过零机理、M05b–e 及三方法 417 点参考均未得出；详情见[主报告最新首节](reports/two_dimensional_channel_closeout_report.md)。K_HIGH 既有合格状态保留，S3A 未运行。
+
+### S2c-B K_HIGH：五层参考与单案例实验完成（2026-10-23；前次最新状态）
 
 - `S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`，仅覆盖冻结417点和五层经验数值参考，非模型物理PASS。用户只对K_HIGH将子额度从1800 s提高至2400 s，原7200 s总额、S3A≥3000 s预留、单作业≤900 s、每次真实物理RAM保留30%均保持。五次新BIE边界解、PE模式0、完整FullFK双项积分全部完成；七作业实计1277.0539592 s，累计核心2685.7140642/7200 s，S3A规划余额4514.2859358 s。
 - [唯一主报告最新首节](reports/two_dimensional_channel_closeout_report.md)与[中文M04图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)给出真实图片、411线/中心11/九点/五点/边缘104的原始场和经验数值分辨率分类。原生CSV独立复算、四PNG像素重绘及四FIG重开通过；完整审计见`20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json`。FullFK五点十字的两案变化未过5倍门，保留未分辨。PHI_PLUS90、S3–S6、Bellhop、通信未执行；`G1_target_PM=OPEN`、`WP2_formal=false`。

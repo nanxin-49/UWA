@@ -1,6 +1,10 @@
 # 二维声学对比收尾计划：同源反射复场、完整 Kirchhoff 与接收点阵
 
-日期：2026-10-20；**最新执行状态修订：2026-10-23（S2c-B K_HIGH单案例完成；Asia/Shanghai）**。下文原“仅文档与Goal契约”及1800 s停止描述保留为当时历史状态。
+**2026-10-24 最新执行修订：** 用户将共享上限按最小授权增量提高至 `7506.601 s`，保留 S3A `3000 s`；PHI 完整保守计划通过成本门。最新 Windows 可用物理内存 `1,131,163,648 B`，低于本案例 30% 余量 RAM 门 `2,026,747,612 B`，用户要求暂时保持资源阻塞。PHI 新声学计算仍为 0，状态仍 `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`。下方“成本门阻塞”是授权前历史快照；详细回执在[PHI 执行补记](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)。
+
+日期：2026-10-20；**最新执行状态修订：2026-10-23（PHI_PLUS90完整参考成本门阻塞；Asia/Shanghai）**。下文原“仅文档与Goal契约”及1800 s停止描述保留为当时历史状态。
+
+**PHI_PLUS90 当前状态：`S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`。** 单独 Goal 已执行 P0/P1/P2 与不依赖新场的 P5/P6/P7：M05a 解析几何、K_HIGH 轻量图像/CSV/审计发布包、既有场五支持机制复核、三个 PM seed 只读清单和独立审计。新 PHI 声学 0 s；五层 BIE+PE/FullFK+失败余量的保守计划 `1820.8866778 s`，比维持 S3A 3000 s 后本轮可用 `1514.2859358 s` 高 `306.6007420 s`，故未开新边界解。最新图与具体成本、来源见[主报告首节](reports/two_dimensional_channel_closeout_report.md)。K_HIGH 已完成状态不降格；PHI 尚无中心/九点/整线/边缘声学结论，不自动挪用 S3A 储备或进入 S3A。
 
 **当前最高优先状态：`S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`。** 用户随后仅对K_HIGH授权2400 s子额度，按共享7200 s、S3A规划预留≥3000 s、单作业≤900 s和逐作业物理RAM保留30%完成五层新BIE、PE及完整FullFK、M04a–d和独立CSV/像素重绘审计。七次新声学实耗1277.0539592 s，累计核心扣记2685.7140642/7200 s，S3A规划余额4514.2859358 s。具体数值、限定资格和下一步见[唯一主报告首节](reports/two_dimensional_channel_closeout_report.md)及[新图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)。此状态只覆盖K_HIGH冻结417点和经验参考，**不是模型物理PASS**；PHI_PLUS90、PM/S3、三维和通信未执行。`G1_target_PM=OPEN`、`WP2_formal=false`。
 

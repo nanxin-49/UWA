@@ -61,6 +61,16 @@
 # The matching archival manifest is tracked separately under reports/.
 !/reports/cl-verification-worktree-archive-20260930/MANIFEST.csv
 
+# Small, reviewed S2c-B visual/data publication package and analytic M05a.
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/*.png
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/*.csv
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/*.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final/M05a_geometry_only.png
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/cost_gate.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/final_audit.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_budget_amendment_7506_601.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_ram_gate_20261024.json
+
 # Track the generated project-level skill lock and the explicitly selected
 # Scientific Agent Skills packages, including their reference/script assets.
 !/skills-lock.json

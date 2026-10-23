@@ -1,0 +1,33 @@
+{
+  "status": "S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED",
+  "S2b_sha_matches": "247/247",
+  "S2cA_sha_matches": "203/203",
+  "K_HIGH_sha_matches": "132/132",
+  "M05a_code_analyzer_issues": 0,
+  "PHI_geometry_independent_max_abs": {
+    "curvature_per_m": 1.91E-17,
+    "slope": 2.52E-17,
+    "eta_m": 1.04E-16
+  },
+  "M05a_fig_axes": 3,
+  "M05a_png_visual_review": "pass",
+  "K_HIGH_raw_rows": 2502,
+  "K_HIGH_diagnostic_rows": 1668,
+  "K_HIGH_support_rows": 20,
+  "K_HIGH_amplitude_phase_identity_max_abs": 2.5E-20,
+  "K_HIGH_cross_corrected_max_L2_difference": 7.8E-16,
+  "PHI_acoustic_fields": 0,
+  "PHI_reference_qualified": false,
+  "M05b_to_e": "not generated: no PHI acoustic fields",
+  "new_PHI_acoustic_seconds": 0,
+  "M05a_saved_MAT_redraw_pixel_equal": true,
+  "M05a_saved_MAT_redraw_max_pixel_difference": 0,
+  "S2cA_PE_line_phase_square_share": [
+    0.999731727,
+    0.999731157,
+    0.999722233
+  ],
+  "K_HIGH_PE_line_phase_square_share": 0.999613327,
+  "S3A_seed_k_and_Sk_identical": true,
+  "S3A_pilot_receiver_count": 4097
+}

@@ -1,4 +1,20 @@
-# 二维收尾唯一主报告：S0–S2c-B K_HIGH
+# 二维收尾唯一主报告：S0–S2c-B
+
+## PHI_PLUS90 2026-10-24 资源门修订（最新状态）
+
+用户已将共享核心上限至少增加 306.601 s；本次按最小增量记录为 `7506.601 s`。原 PHI 完整保守计划 `1820.88667776 s` 现落在 `1820.8869358 s` 的 PHI 子额度内，S3A `3000 s` 规划储备不变。预算授权见[单独修订](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_budget_amendment_7506_601.json)。下节原“成本门阻塞”是授权前快照。
+
+现行停止原因是物理 RAM：最新可用 `1,131,163,648 B`，按最大冻结 BIE 层级及 30% 余量要求至少 `2,026,747,612 B`。用户要求暂时保持资源阻塞，故 BIE/PE/FullFK 均未启动，新 PHI 声学耗时 `0 s`、共享扣记仍 `2685.7140642 s`。真实 RAM 测量及五个未运行的 MATLAB 入口见[执行补记](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)。状态仍为 `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`；M05a 几何有效，M05b–e、中心误差机理与 PHI 参考资格均未得出。
+
+不依赖新场的[对称性输入审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P1_symmetry_input_audit.md)确认 417/417 接收点有同深度 ±x 对点，五层 PHI BIE 网格采样的高度偶对称、坡度奇对称误差仅为浮点级；PE 原 FFT 网格唯一不配对的是 −96.09375 m Nyquist 端点。这只限定将来 M05e 的配对方式，不推出复场对称或中心误差成因。五层 PHI 保存场参考审计入口已静态检查，但因 RAM 门阻塞尚未运行。
+
+## S2c-B / PHI_PLUS90：几何完成、完整参考成本门阻塞（2026-10-23；最新状态）
+
+状态 **`S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`**，新 PHI 声学计算 0 s。先看 [M05a 解析几何图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md)：BASE_M 中心过零，PHI_PLUS90 中心为 +0.05 m 波峰，同时中心坡度 `.005→0`、曲率 `0→−.0005 m⁻¹`；完整 C2 窗口的最大坡度 `.011404→.0063084`、最大曲率 `.0050572→.0023641 m⁻¹`。`|x|≥50 m` 三量严格为零。M05a PNG/FIG/CSV/MAT 是真实解析几何；没有 PHI 的 M05b–e 声场图。初相位同时改变全海面排列和多个局部几何量，尚不能判断 PE–BIE 中心低误差是否由过零造成。
+
+[冻结协议和成本表](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/protocol.md)依据 K_HIGH 五层实耗 `1267.4055648 s` 按 1.20 倍、另留 150 s 其他物理与 150 s 失败/加密，得到 PHI 完整保守计划 `1820.8866778 s`。共享累计仍 `2685.7140642/7200 s`、余额 `4514.2859358 s`；保留 S3A `3000 s` 后本次仅 `1514.2859358 s`，缺 `306.6007420 s`。五层 BIE 计划本身 `1520.8866778 s` 已超过上限。故在新昂贵边界解前停，未以单层结果冒充参考资格；未改变储备，也没有新作业的 RAM 门回执。即使放宽子额度而不增加共享预算，S3A 将只余 `2693.3992580 s`。
+
+继续完成的非声学成果包括 [K_HIGH M04 四 PNG/关键 CSV/独立审计轻量复核包](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/README.md)、[S3A 三个既有 PM 输入只读清单](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/S3A_readonly_feasibility.md)和[本轮独立审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/independent_audit.md)。当前本地 SHA 清单核对 S2b 247/247、S2c-A 203/203、K_HIGH 132/132；既有保存复场对五个真实支持的复 L2 与幅相平方独立复算一致。没有新 PHI 复场，中心、九点、整线和边缘的 PHI 声学指标均未定。下一步若优先 PHI，须明确补足至少上述保守子额度并处理 S3A 储备冲突；若保留 3000 s 储备，则另行授权并重新过门后进入 S3A，同时把 PHI 机理反事实列为未解。旧 K_HIGH 合格状态和扩额前 1800 s 历史阻塞均保留原义，`G1_target_PM=OPEN`、`WP2_formal=false`。本轮仅比较/绘图脚本与报告/发布清单变动，无生产 API 或传播物理变更，因此未运行无关的通信回归；未提交或推送。
 
 ## S2c-B K_HIGH：单案例计算及限定参考完成（2026-10-23；最新状态）
 

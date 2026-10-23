@@ -1,0 +1,19 @@
+{
+  "authorized_case": "PHI_PLUS90",
+  "scope": "S2c-B PHI_PLUS90 only",
+  "explicit_user_authorization": true,
+  "user_reply": "将共享 7200 s 上限增加至少 306.601 s，继续 PHI",
+  "new_shared_core_cap_s": 7506.601,
+  "increment_s": 306.601,
+  "charged_prior_s": 2685.7140642,
+  "S3A_reserve_s": 3000,
+  "PHI_subbudget_s": 1820.8869358,
+  "five_BIE_plan_s": 1520.88667776,
+  "other_physics_reserve_s": 150,
+  "failure_reference_reserve_s": 150,
+  "whole_plan_s": 1820.88667776,
+  "single_job_cap_s": 900,
+  "RAM_reserve_fraction": 0.3,
+  "original_budget_stop_preserved": true,
+  "other_candidates_authorized": false
+}

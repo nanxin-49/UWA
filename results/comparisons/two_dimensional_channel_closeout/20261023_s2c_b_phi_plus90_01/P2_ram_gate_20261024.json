@@ -1,0 +1,19 @@
+{
+  "case_id": "PHI_PLUS90",
+  "status": "RESOURCE_REFERENCE_BLOCKED_RAM",
+  "measurement_local_date": "2026-10-24",
+  "measurement_method": "Microsoft.VisualBasic.Devices.ComputerInfo.AvailablePhysicalMemory on Windows",
+  "available_physical_bytes_prior": 1641025536,
+  "available_physical_bytes_current": 1131163648,
+  "maximum_frozen_BIE_increment_bytes": 1418723328,
+  "required_available_physical_bytes_for_30_percent_reserve": 2026747612,
+  "RAM_gate_pass": false,
+  "budget_gate_pass": true,
+  "shared_core_cap_s": 7506.601,
+  "PHI_subbudget_s": 1820.8869358,
+  "S3A_reserve_s": 3000,
+  "charged_prior_s": 2685.7140642,
+  "new_PHI_acoustic_seconds": 0,
+  "user_direction": "暂时保持资源阻塞",
+  "next_action": "Recheck physical RAM only after user reports memory has been released; run no acoustic jobs before the gate passes"
+}
