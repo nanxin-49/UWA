@@ -26,6 +26,13 @@ kx = (2*pi/cfg.xw_m) * [0:(cfg.nx/2-1), -cfg.nx/2:-1];
 k0 = 2*pi*cfg.frequency_hz/cfg.c0_mps;
 kz = sqrt(complex(k0^2-kx.^2,0));
 source = exp(-0.5*(x/cfg.sigma_src_m).^2);
+if isfield(cfg,'source_field_override')
+    source = cfg.source_field_override(:).';
+    if numel(source) ~= cfg.nx || any(~isfinite(real(source))) || ...
+            any(~isfinite(imag(source)))
+        error('source_field_override must contain nx finite complex values.');
+    end
+end
 psi_surface_inc = local_march(source, cfg.z_tx_m, 0, kz, k0, cfg.step_m);
 if ~isfield(cfg,'reflection_model') || isempty(cfg.reflection_model)
     reflection_model = 'model0_normal';

@@ -21,7 +21,10 @@
 
 - `comparisons/run_two_dimensional_closeout_s0_s1.m`：只读 E01/E02/E03 活动保存复数，冻结 3×3 坐标及来源，复核三档接收线并提取可比单点/点阵与原始场；不运行任何新物理场计算。
   `validation/support/two_dimensional_closeout_metrics.m` 实现逐点与幅相分解；`validation/test_two_dimensional_closeout_metrics.m` 用人工复数控制公式；`validation/support/audit_two_dimensional_closeout_s0_s1.m` 独立复核来源 CSV、汇总和逐像素重绘。
-  `reporting/render_two_dimensional_closeout_s0_s1.m` 只读 `plot_data.mat` 生成七张 PNG/PDF。入口 `setup_vertical_project; r=run_two_dimensional_closeout_s0_s1('unique_run_id'); audit_two_dimensional_closeout_s0_s1(r.run_dir);`；报告见[二维 S0–S1 审查](../reports/two_dimensional_channel_closeout_report.md)，结果位于 `results/comparisons/two_dimensional_channel_closeout/<run_id>/`。S2–S6 未执行。
+  `reporting/render_two_dimensional_closeout_s0_s1.m` 只读 `plot_data.mat` 生成七张 PNG/PDF。入口 `setup_vertical_project; r=run_two_dimensional_closeout_s0_s1('unique_run_id'); audit_two_dimensional_closeout_s0_s1(r.run_dir);`；报告见[二维收尾唯一主报告](../reports/two_dimensional_channel_closeout_report.md)，结果位于 `results/comparisons/two_dimensional_channel_closeout/<run_id>/`。S2b–S6 未执行。
+
+- `comparisons/run_two_dimensional_closeout_s2a.m`：S2a 固定4 kHz、Gaussian源、z=3 m 的实际源/约定/平面控制；验证专用 `validation/support/run_pe_physical_surface_model0_validation.m` 将物理高度一次性适配到旧PE helper，再运行屏、传播与比值，包含`eta_z=0,±0.01 m`正入射独立路径控制。复用S0–S1、E10–E12和修正图册v2；预算内只作必要PE评价及完整双项FullFK平面、弱、中接收线积分，强档复用E12。`validation/support/solve_full_kirchhoff_2d.m`新增分项输出供闭合审计，方法本身不变。无BIE新求解/密度评价、Bellhop作业、整套x-z场或生产API修改。
+  入口 `setup_vertical_project; r=run_two_dimensional_closeout_s2a('new_unique_id',available_physical_bytes); a=audit_two_dimensional_closeout_s2a(r.run_dir);`；先从Windows物理内存计数器取得可用字节数，并仅在已有MATLAB MCP会话运行。`reporting/render_two_dimensional_closeout_s2a(plot_data_path,figure_dir)`只读保存绘图数据重绘F02/F04/F05的PNG和可编辑FIG。输出及审计见[主报告](../reports/two_dimensional_channel_closeout_report.md)与`results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/`；S2b–S6未执行。
 
 - 两套PE/Bellhop/BIE图册的[展示汇总](../reports/pe_bellhop_bie_visualization_summary.md)与
   [数据字段及只读/重绘说明](../reports/pe_bellhop_bie_visualization_data_guide.md)。

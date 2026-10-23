@@ -43,6 +43,8 @@ qw = [0.5*segment_length(1); ...
 xr = cfg.receiver_x_m(:); zr = cfg.receiver_z_m(:);
 assert(numel(zr)==numel(xr),'Receiver coordinate sizes differ.');
 ur = complex(zeros(size(xr)));
+ur_incident_dn = ur;
+ur_green_dn = ur;
 local_radius = Inf;
 if isfield(cfg,'local_radius_m'), local_radius=cfg.local_radius_m; end
 assert(isscalar(local_radius) && local_radius>0,'local_radius_m must be positive.');
@@ -55,11 +57,16 @@ for first=1:block:numel(xr)
     % Derivative with respect to the source point in the water normal.
     dGdn = 1i*k/4*besselh(1,1,k*rr).* ...
         (dxm.*nv(:,1).'+dzm.*nv(:,2).')./rr;
-    integrand = (G.*dni.' + dGdn.*ui.').*qw.';
+    integrand_incident_dn = (G.*dni.').*qw.';
+    integrand_green_dn = (dGdn.*ui.').*qw.';
     if isfinite(local_radius)
-        integrand(abs(dxm)>local_radius)=0;
+        outside = abs(dxm)>local_radius;
+        integrand_incident_dn(outside)=0;
+        integrand_green_dn(outside)=0;
     end
-    ur(rows) = -sum(integrand,2);
+    ur_incident_dn(rows) = -sum(integrand_incident_dn,2);
+    ur_green_dn(rows) = -sum(integrand_green_dn,2);
+    ur(rows) = ur_incident_dn(rows)+ur_green_dn(rows);
 end
 
 out = struct('schema_version','1.0.0','formulation', ...
@@ -71,5 +78,7 @@ out = struct('schema_version','1.0.0','formulation', ...
     'surface_incident',ui,'surface_incident_dn',dni, ...
     'quadrature_measure',measure,'local_radius_m',local_radius, ...
     'receiver_x_m',xr,'receiver_z_m',zr,'receiver_field',ur, ...
+    'receiver_term_incident_dn',ur_incident_dn, ...
+    'receiver_term_green_dn',ur_green_dn, ...
     'quadrature_weights_m',qw,'finite',all(isfinite([real(ur);imag(ur)])));
 end

@@ -9,6 +9,21 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维收尾 S2a 实际入口、声源资格与平面审查（2026-10-23；当前阶段状态）
+
+- [唯一主报告](reports/two_dimensional_channel_closeout_report.md)与`results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/`记录已执行的S2a；`S2A_CONVENTION_SOURCE_BASELINE_COMPLETE`只覆盖固定4 kHz、Gaussian源、z=3 m的PE-mode 0/BIE/FullFK输入资格、平面与三档正弦接收线。S0–S1历史状态不变；S2b–S6未执行，`G1_target_PM=OPEN`、`WP2_formal=false`。
+- 实际PE适配—屏—传播—比值入口的`eta_z=0,±0.01 m`正入射控制与独立路径公式最大复差`1.75e-13`。PE/BIE平面原生场相对差`4.70e-13`；FullFK/BIE平面411点M99加权复差`1.85546e-4`，不解释为严格误差界。源与表示合同在核心三方法间闭合；Bellhop物理源强/相位/单位映射未闭合，条件扩展不阻塞核心合格子集。
+- 保存/复核四条原生`u_flat/u_rough`线及辅助G、δu、分项与交叉项；三图实际检查并从保存绘图数据逐像素重绘，独立MAT/CSV、哈希和中档FullFK直接积分审计通过。核心S2b的108个方法×案例×九点复场格中48个有真实现值、60个缺失（PE18、BIE18、FullFK24）；旧54值下界和历史图册指标不是当前补算表。
+- 新声学工作仅有预算内PE评价与FullFK平面/弱/中接收线积分，强档复用经核验的E12；无新BIE求解/保存密度评价、Bellhop作业、完整x-z场、PM、宽带或FastFK。生产接口/物理未改，故未运行不相关的宽带通信回归或改`vertical_comm_guide.md`。先处理S2b参考与成本缺口，未授权自动开算。
+
+### 二维计划改为同源反射复场并纳入完整Kirchhoff（2026-10-23；仅文档）
+
+- [唯一二维主计划](two_dimensional_channel_closeout_plan.md)现以PE-mode 0、BIE、完整Kirchhoff（FullFK）为核心三方法；Bellhop保留为完成源映射资格后加入的条件扩展。覆盖以下旧条目中“FullFK仅诊断”和旧三方补算清单作为当前任务的解释，历史实绩不变。
+- 主量为共同二维源/表示下的u_rough，u_flat控制必须并列；G_m及δu辅助。物理源映射、原生场与固定平面复系数拟合分层保存；约0.27%旧拟合残差不是同源证明，本轮未重算。
+- FullFK对应`scripts/validation/support/solve_full_kirchhoff_2d.m`，保留双项Green积分、真实几何/入水法向及弧长，核心设置arc_length、local_radius_m=Inf。它仍是Kirchhoff边界近似，不称为精确解，不以FastFK或局部截断替代。
+- S0_S1_COMPLETE_WITH_DECLARED_GAPS保留。当前下一步S2a实际入口/声源资格/平面控制，可在预算内增加必要FullFK固定接收线积分；S2b补核心三方法平面与三档正弦九点，S3有限PM，S4有界收尾。旧54个缺值不含新增FullFK，须重盘点；核心总目标为108个点值覆盖格，非新增作业数。
+- 此次仅改写计划、历史报告提示及导航；未运行MATLAB/新场/Goal，未改变生产接口或物理实现，因此未运行生产回归，也无需修改vertical_comm_guide.md实现公式。S2a及后续验证尚未完成，G1_target_PM=OPEN、WP2_formal=false不变。
+
 ### 二维收尾计划按高度符号审计修订（2026-10-21；仅文档）
 
 - [主计划](two_dimensional_channel_closeout_plan.md)保留S0_S1_COMPLETE_WITH_DECLARED_GAPS，将当前下一步改为S2a实际入口约定控制与修正基线资格核验，再做S2b九点补齐、S3有限PM、S4收尾。旧8.0908%等保持历史复现地位，不再无条件当作纯PE物理误差。
@@ -4914,3 +4929,29 @@ conditions but was not run.
   G1_target_PM=OPEN and WP2_formal=false. No public API or physics change,
   commit or push. README, scripts/README and the canonical plan status were
   updated; vertical_comm_guide is unchanged because its methods did not change.
+
+## 2026-10-23 — Two-dimensional closeout S2a actual-entry and source audit
+
+- Executed the S2a-only Goal in the existing MATLAB MCP R2025b session after the
+  user restored it. The fixed PE-mode 0/BIE/FullFK source, complex angular
+  spectrum, carrier, geometry, normal and reflected-component contracts were
+  checked; Bellhop remains source-unresolved and conditional.
+- Ran the actual PE physical-height adapter, screen, propagation and ratio
+  path for eta_z=0,+0.01,-0.01 m. Independent plane-wave path control differs
+  by at most 1.75e-13; saved Gaussian PE/BIE plane fields differ by 4.70e-13.
+  Reused verified E12 strong FullFK and computed only bounded flat, weak and
+  medium complete two-term FullFK receiver lines with arc_length and infinite
+  local radius. No BIE solve/density evaluation, Bellhop job, whole x-z field,
+  PM, broadband, FastFK, production API edit, commit or push occurred.
+- Saved 4,932 raw line complex-field rows, 12 weighted metrics, G/delta-u,
+  increment cross terms, source/version manifest, three inspected PNG/FIG,
+  and the 108-cell S2b coverage/cost table. Independent audit checks saved
+  fields, 19 current hashes, three direct medium-FullFK reintegrations and
+  pixel-identical redraw. Core S2b has 48 available and 60 missing point
+  values; BIE reference uncertainty remains unknown. The result is an S2a
+  convention/source/baseline closure on declared support, not physics PASS.
+- Evidence and reproducible commands: reports/two_dimensional_channel_closeout_report.md
+  and results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/.
+  README, scripts/README and the unique plan's status were updated. No method
+  change requires a vertical_comm_guide update or production communication
+  regression; S2b–S6 remain unexecuted, G1_target_PM=OPEN, WP2_formal=false.

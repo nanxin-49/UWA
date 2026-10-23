@@ -5,6 +5,8 @@
 
 审查对象：[二维专项执行计划](../two_dimensional_channel_closeout_plan.md)。本文是审查记录和调用说明，唯一执行主计划仍为该文件。
 
+**2026-10-23更新：**主计划已按同源反射复场重写，并纳入PE/BIE/完整Kirchhoff核心三方法；Bellhop为条件扩展。当前S2a同时检查实际入口、声源资格与平面基线，新的可复制Goal提示词在主计划第9节。本页旧提示词仅追溯已完成的S0–S1，不含新增FullFK执行范围；本次没有启动Goal或实验。
+
 **2026-10-21更新：**S0–S1现已完成，见[实际报告](two_dimensional_channel_closeout_report.md)。随后[高度符号审计](pe_bie_height_phase_sign_audit.md)限制了旧PE物理误差解释；[修正图册v2](pe_bellhop_bie_corrected_visualization_report.md)已有新数据及保存数据审计。本文件中的首次执行建议不再是当前下一步。后续按主计划新增S2a先补实际入口约定控制及基线资格核验，再进入S2b点阵补齐；复用已有修正结果，不重做首轮，不将其零新增场边界误套到未来明确授权的S2a。本历史审查当时没有启动Goal。
 
 ## 1. 审查结论
