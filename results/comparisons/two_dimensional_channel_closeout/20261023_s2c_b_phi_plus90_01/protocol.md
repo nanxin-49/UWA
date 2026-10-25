@@ -1,5 +1,11 @@
 # PHI_PLUS90 冻结协议与资源门（2026-10-23）
 
+**2026-10-25 补充资格回执（当前）：**原密度的 Linux 离节点边界评价与 Windows 保存向量最大差 `1.04e-16/8.09e-17`；无重解。最新共享扣记 `3401.4241040/7506.601 s`、保留 S3A 后余 `1105.1768960 s`；冻结物理和五层判据均未调整。M05 FIG 数值对象独立一致，M05c 严格像素门仍未过，混合平台求解差没有直接上界，类别仍为 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`。[审计](independent_audit.md)。下条为本次复核前状态。
+
+**2026-10-25 SSH 续算状态：**冻结输入、五层设置和判据均未更改。`main96/self64` 保持 Windows R2025b 原件；远端 R2023b 完成剩余三层及 PE/完整 FullFK，本地生成 M05a–e。混合平台边界求解差未独立定界，M05c 严格像素审计未过，故当前 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`；[执行](execution.md)、[图册](mechanism_atlas.md)、[审计](independent_audit.md)为新回执。以下两段保留当时历史门况。
+
+**2026-10-25 恢复补记：** 用户确认释放内存后，`main96/self64` 两层 PHI 真边界解已完成并保存密度与 417 点原生复场；新声学实耗 357.1643042 s。第三层 `space14` 前物理 RAM 门及唯一一次复核均失败，故完整五层参考、PE、FullFK 和 M05b–e 尚未完成。[恢复回执与最新预算](P2_recovery_gate_20261025.json)覆盖下方旧“新声学为 0”的历史状态，不改变冻结物理输入。
+
 **2026-10-24 最新修订：** 用户将共享上限按最小授权增量提高至 7506.601 s，保留 S3A 3000 s；完整 PHI 计划通过成本门。当前实际 RAM 低于冻结 30% 余量门，用户要求暂时保持资源阻塞。下方 `7200 s` 成本门计算是原授权下的历史快照；见[预算授权](P2_budget_amendment_7506_601.json)、[RAM 回执](P2_ram_gate_20261024.json)和[执行补记](execution.md)。P1 的离散坐标与五层边界网格对称性另见[输入审计](P1_symmetry_input_audit.md)。
 
 状态：`S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`。本 run 新声学场计算为 0；未启动五层 BIE、PE 或 FullFK。已有 S2b、S2c-A、K_HIGH 正式包保持只读。

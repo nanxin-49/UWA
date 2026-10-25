@@ -1,0 +1,28 @@
+{
+  "job_id": "main96",
+  "status": "PREFLIGHT_PASS",
+  "new_case": "PHI_PLUS90",
+  "available_physical_bytes": 2.792235008E+9,
+  "measurement": "Windows Memory Available Bytes immediately before MCP job",
+  "estimated_increment_bytes": 1.077936128E+9,
+  "maximum_remaining_increment_bytes": 1.418723328E+9,
+  "reserve_fraction": 0.3,
+  "projected_all_PHI_PLUS90_core_s": 1820.8866777599999,
+  "authorized_subbudget_s": 1820.8869358,
+  "budget_amendment_sha256": "258f4050a005bdc049b862c972eeb9fb04d1b2a871f46d2bfe3c0a3798ba871f",
+  "five_level_upper_s": [
+    373.45146275999997,
+    194.93929404000002,
+    423.27121511999997,
+    212.56502819999997,
+    316.65967764
+  ],
+  "remaining_after_conservative_plan_s": 3000.0002580399996,
+  "prior_charged_core_s": 2685.7140642,
+  "solver_sha256": "76f1a9d52c898d62507ad7d971813c79b1f09cd9ced4f6dbce556ed11c349fa9",
+  "surface_sha256": "4d9f8be02f4f4114d6504677530ed07efec65e63f476a4438f4a3f5fa7e88f81",
+  "incident_sha256": "2df575aa1d2bffbdae930f59b9b2b1862d9f0596139ac2be432d75408e332b9d",
+  "source_sha256": "8d60d3d9d6aa3aa16110ac33d81e0d193a61526aef2c0c2e9edd531cae531f55",
+  "configuration_sha256": "3038983c6b78e37a2acb9e570f992f258e33e9064dcce8e72110b9977d21d317",
+  "timestamp": "2026-10-25 11:38:42"
+}

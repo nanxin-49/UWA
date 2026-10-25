@@ -1,6 +1,38 @@
 # 二维收尾唯一主报告：S0–S2c-B
 
-## PHI_PLUS90 2026-10-24 资源门修订（最新状态）
+## 2026-10-25 M05 严格独立审计修复（当前）
+
+M05c 旧 PNG 的 `22061/9045056` 个差异像素由右上角自动纵轴刻度在两次导出中选择不同间距引起；曲线、轴范围和数据本来一致。仅在报告绘图脚本中固定该面板刻度为 `(-2:2)×10^-5`，不改真场、几何、数值界或审计断言。保留旧图和失败回执，新正式图放在 [`figures_final_complete_v2`](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete_v2/)。[原严格审计 v2](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json)独立重绘五张 PNG 全部逐像素相等、FIG 全可重开，并完成 2502 行复场、1668 行逐点、20 行五支持、10 行成对比较及 50 项分类检查。图像门现已 PASS；下节所述失败是修复前快照。
+
+跨平台复核仍只证明保存密度在两平台的接收与离节点边界算子评价高度一致，没有同网格双平台**求解**误差上界。五层参考和模型差值据此保留混合平台经验限定，正式状态仍为 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`。没有新增声学作业；最新共享扣记仍是 `3401.4241040/7506.601 s`，保留 S3A 后余 `1105.1768960 s`。
+
+## 2026-10-25 跨平台边界复核与图形对象审计（当前）
+
+在已回传的真场上增加两项只读验证。[Linux 边界复核回执](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/remote_saved_density_boundary_20261025.json)用 Windows `main96/self64` 原密度，在 R2023b 独立重建 408 个离节点边界残差；相对入射场残差分别为 `3.80654739e-9/2.04401814e-9`，与 Windows 保存残差向量的最大绝对差 `1.04e-16/8.09e-17`。未重解任一 BIE 密度。两次评价实耗 `60.737829/39.485799 s`；将整个独立进程的 115 s 墙钟保守扣记后，共享累计 **`3401.4241040/7506.601 s`**、余额 `4105.1768960 s`，保留 S3A 3000 s 后余 `1105.1768960 s`。[最新成本账](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/remote_recovery/final_cost_and_status.json)。
+
+[独立 FIG 内容审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/visual_semantics_phi_v1.json)确认 M05a–e 所有 34 个轴、61 条曲线及真实九点的 4 个图像对象，其数据、范围、位置、标签和线型一致。M05c 的 PNG 仍有 22,061 像素不同，原严格逐像素门继续失败，不把 FIG 内容一致冒充该门 PASS。保存密度的接收场及边界残差均显示跨平台评价/算子一致到机器精度，但没有对同一大网格分别在两平台重解，故边界**求解**差仍无直接上界。状态保持 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`。下节账目是此次附加复核之前的快照。
+
+## 2026-10-25 PHI_PLUS90 SSH 续算：三方法真场齐全，参考资格受限（边界复核前快照）
+
+先看[中文 M05a–e 图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md)及[五张真图](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete/)。Windows R2025b 已完成的 `main96/self64` 未重算；按 50 文件 SHA 清单迁入 `/home/misc/cwx/UWA_phi_plus90`，Ubuntu R2023b 从 `space14` 完成 `window60/window70`、PE-mode0、完整双项 FullFK；69 文件回传逐项 SHA 核对，旧四份 MAT/JSON 原样保留。远端五项声学耗时依次 `96.959982/50.767938/67.880350/2.903151/2.352785 s`；含 Windows 两项的七作业总声学实耗 `578.0285102 s`，全低于单作业 900 s。每作业即时 Linux `/proc/meminfo MemAvailable` 通过 30% 留存门，均保存前后资源、日志、PID 与退出码。[完整执行记录](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)。
+
+**中心问题：** φ=+π/2 将中心从过零变成 +0.05 m 波峰后，PE–BIE 中心 11 点复 L2 从 BASE_M `3.0294e-5` 升到 PHI `5.09698e-4`（约 `16.83` 倍），而 PHI 整线为 `0.0203315`；中心仍只是整线的 `2.507%`，BASE 为 `0.1944%`。中心低于整线的现象持续存在，但相对差距缩小约 `12.9` 倍。该输入同时改变整段海面、中心坡度/曲率和干涉，不支持把变化唯一归因于中心高度。PHI 中心复差平方由幅度项占约 `98.997%`，整线由相位项占约 `99.939%`；同一公式的各支持分母分别计算。[逐点与五支持数据](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv)。
+
+五层 BIE 同一 417 点经验参考已审计，线/九点相对变化 `2.58965e-7/1.57834e-7`；Linux 用保存 Windows 密度重评价原 417 点场与原件差为 0，求解器源码 SHA 一致且新层边界/线性残差合格。此证据仍未独立界定跨版本**边界求解**差，故混合平台五层的五倍判断保持条件性。PE 平面同源差 `4.22385e-13`；FullFK GL8 400/800 与 L60/L90 相对差 `6.32348e-14/7.52565e-16`。独立数值 CSV 审计在图像门前通过，M05e ±x 配对最大差 `1.46e-15`；严格逐像素重绘因 M05c 局部像素差未过，FIG 曲线数据/轴范围/位置一致，未生成最终 PASS 回执。[审计限制及失败史](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/independent_audit.md)。正式类别 **`S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`**，不可称 `COMPLETE_REFERENCE_QUALIFIED`。
+
+按七作业 `578.0285102 s` 加首次兼容性包装失败及修复验证两进程保守 `22.6815296 s` 扣记，共享累计 **`3286.4241040/7506.601 s`**，共享余额 `4220.1768960 s`；保留 S3A 3000 s 后余 `1220.1768960 s`。此余额不是 S3A 执行许可：还需独立解决混合平台求解误差资格与 M05c 图像可复现性，并单独审议 S3A 的输入、预算及资源门。本轮无 S3A/S4–S6、Bellhop、三维、宽带或通信求解；生产求解器/API 未改，故 `vertical_comm_guide.md` 与通信回归无需改动。以下 2026-10-25 本地 RAM 阻塞及更早记录是当时快照，历史判断保留。
+
+## PHI_PLUS90 2026-10-25 内存释放后恢复（历史快照）
+
+![M05a：BASE_M 中心过零与 PHI_PLUS90 中心波峰的真实解析几何](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final/M05a_geometry_only.png)
+
+用户确认内存释放后，现有 MATLAB MCP R2025b 会话重新可用；最初实测可用物理内存 `3,163,262,976 B`，超过最大 BIE 层级保留 30% 所需 `2,026,747,612 B`。冻结配置、声源、接收点 SHA 与原协议一致，BIE 求解器 SHA 与 K_HIGH 五份回执一致。唯一 PHI run 内串行完成 `main96`（L60/12ppw/qa96，3840 节点）和 `self64`（同网格 qa64），两层均保存完整边界密度及 417 个原生单位源反射复场。耗时分别 `203.6039647/153.5603395 s`，两层线性残差约 `3.34e−15/3.30e−15`，离网格边界残差约 `3.81e−9/2.04e−9`；保存场自求积变化整线 `3.1105e−8`、中心 11 点 `3.1153e−8`。这些只检查同网格自求积，**不是完整五层经验分辨率**。[部分保存数据审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/P2_recovery_partial_two_level_audit_20261025.json)
+
+第三层 `space14` 启动前即时可用物理 RAM 为 `1,863,331,840 B`；检查现有工作负载后只复核一次，为 `1,879,687,168 B`，均低于门槛。故该层及 `window60/window70`、PE、完整 FullFK 均未启动；不减少节点/接收点或以两层替代五层。M05b–e 与 PHI 中心 PE–BIE 误差仍无合格证据。新 PHI 声学实耗 `357.1643042 s`，共享累计扣记 `3042.8783684/7506.601 s`、共享余额 `4463.7226316 s`；保持 S3A 3000 s 后可供 PHI `1463.7226316 s`，剩余完整保守计划 `1252.49592096 s`，成本门仍通过。当前类别 **`S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`**，阻塞点仅为即时物理 RAM。[逐作业回执与 SHA/资源记录](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_recovery_gate_20261025.json)；以下 2026-10-24 与 2026-10-23 节均为当时历史状态。
+
+只有外部内存状态变化后重测通过 `space14` 的 30% 门，才能续跑剩余三层，继而审计五层数值参考并运行 PE/FullFK、配对分析及 M05b–e。当前不能回答“中心过零是否造成中心低误差”，也不能由两层 BIE 场推断模型优劣；不据此进入 S3A。生产求解器、公共 API 和 `vertical_comm_guide.md` 的实现物理未变，故本次未运行无关的通信回归。
+
+## PHI_PLUS90 2026-10-24 资源门修订（历史快照）
 
 用户已将共享核心上限至少增加 306.601 s；本次按最小增量记录为 `7506.601 s`。原 PHI 完整保守计划 `1820.88667776 s` 现落在 `1820.8869358 s` 的 PHI 子额度内，S3A `3000 s` 规划储备不变。预算授权见[单独修订](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_budget_amendment_7506_601.json)。下节原“成本门阻塞”是授权前快照。
 
@@ -8,7 +40,7 @@
 
 不依赖新场的[对称性输入审计](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P1_symmetry_input_audit.md)确认 417/417 接收点有同深度 ±x 对点，五层 PHI BIE 网格采样的高度偶对称、坡度奇对称误差仅为浮点级；PE 原 FFT 网格唯一不配对的是 −96.09375 m Nyquist 端点。这只限定将来 M05e 的配对方式，不推出复场对称或中心误差成因。五层 PHI 保存场参考审计入口已静态检查，但因 RAM 门阻塞尚未运行。
 
-## S2c-B / PHI_PLUS90：几何完成、完整参考成本门阻塞（2026-10-23；最新状态）
+## S2c-B / PHI_PLUS90：几何完成、完整参考成本门阻塞（2026-10-23；历史快照）
 
 状态 **`S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`**，新 PHI 声学计算 0 s。先看 [M05a 解析几何图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md)：BASE_M 中心过零，PHI_PLUS90 中心为 +0.05 m 波峰，同时中心坡度 `.005→0`、曲率 `0→−.0005 m⁻¹`；完整 C2 窗口的最大坡度 `.011404→.0063084`、最大曲率 `.0050572→.0023641 m⁻¹`。`|x|≥50 m` 三量严格为零。M05a PNG/FIG/CSV/MAT 是真实解析几何；没有 PHI 的 M05b–e 声场图。初相位同时改变全海面排列和多个局部几何量，尚不能判断 PE–BIE 中心低误差是否由过零造成。
 

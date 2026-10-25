@@ -9,11 +9,27 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
-### S2c-B PHI_PLUS90：预算已授权，RAM 门阻塞（2026-10-24；最新状态）
+### S2c-B PHI_PLUS90：M05 严格审计完成（2026-10-25；当前）
+
+- M05c 的旧 PNG 像素差来自右上角自动纵轴刻度；绘图层固定刻度后，新正式 v2 图与独立重绘五张逐像素相等，[严格审计 v2](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json)通过数值、来源、真九点和图像门。声场及判据未更改。混合平台同网格边界求解差仍未独立定界，正式状态 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`；成本和 S3A 保留余额不变。下条为图像修复前快照。
+
+### S2c-B PHI_PLUS90：跨平台边界与图形对象补证（2026-10-25；当前）
+
+- R2023b 用未重解的 Windows `main96/self64` 密度独立复算 408 个离节点边界点，残差向量与 Windows 原值最大差 `1.04e-16/8.09e-17`；接收 417 点重评价差仍为 0。M05a–e 的 FIG 全 34 轴、61 曲线、4 个九点图像对象独立相同，M05c 严格 PNG 像素差仍存在。附加评价进程保守扣记 115 s 后共享累计 `3401.4241040/7506.601 s`，余额 `4105.1768960 s`，S3A 3000 s 保留后余 `1105.1768960 s`。没有同网格双平台重解的直接差界，故仍是 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`。[主报告](reports/two_dimensional_channel_closeout_report.md)和[独立审计](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/independent_audit.md)为当前证据。
+
+### S2c-B PHI_PLUS90：SSH 续算真场齐全、参考资格受限（2026-10-25；边界复核前快照）
+
+- 见[唯一主报告最新首节](reports/two_dimensional_channel_closeout_report.md)及[中文 M05a–e 图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md)。本地 R2025b 的 `main96/self64` 原检查点逐字节保留；远端 R2023b 在 `/home/misc/cwx/UWA_phi_plus90` 完成 `space14/window60/window70`、PE-mode0、完整 FullFK，并把 MAT/日志/SHA 增量回传。七作业 417 点声学实耗 `578.0285102 s`；加兼容包装保守扣记后共享累计 `3286.4241040/7506.601 s`、余额 `4220.1768960 s`，保留 S3A 3000 s 后余 `1220.1768960 s`。PHI 中心 PE–BIE 复 L2 `5.09698e-4`，整线 `0.0203315`，中心仍远小于整线，但中心较 BASE 增大约 16.83 倍。混合平台边界求解差没有独立上界，严格 M05c 像素复绘未过（FIG 数值数据相同）；状态 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`，不自动开 S3A 或其它阶段。
+
+### S2c-B PHI_PLUS90：两层真实 BIE 后 RAM 再阻塞（2026-10-25；历史快照）
+
+- 用户确认内存释放后，现有 MATLAB MCP R2025b 会话通过初始物理 RAM 门；在唯一 PHI run 内按序完成 `main96/self64` 两层新 BIE，保存各自完整密度和同 417 点原生复场，实耗 `203.6039647+153.5603395=357.1643042 s`。第三层 `space14` 前 RAM 为 `1,863,331,840 B`，一次有依据复核为 `1,879,687,168 B`，均低于保留 30% 所需 `2,026,747,612 B`，第三层未启动。共享累计 `3042.8783684/7506.601 s`，保留 S3A 3000 s 后 PHI 剩余额度 `1463.7226316 s`，保守剩余计划 `1252.49592096 s` 仍在预算内。两层自求积变化只能作部分数值诊断，五层经验参考与 PE/FullFK 尚无，M05b–e 和中心误差结论未得出。状态保持 `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`；[2026-10-25 执行回执](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)及[资源/哈希回执](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_recovery_gate_20261025.json)为最新，以下旧“声学 0 s”是历史快照。生产求解器与公共 API 未改。
+
+### S2c-B PHI_PLUS90：预算已授权，RAM 门阻塞（2026-10-24；历史快照）
 
 - 用户将共享核心上限至少增加 306.601 s；按最小增量记录新上限 7506.601 s，PHI 子额度 1820.8869358 s，S3A 3000 s 储备不动。PHI 保守完整计划 1820.88667776 s 已通过成本门。Windows 可用物理内存最新实测 1,131,163,648 B，低于冻结最大 BIE 层级 30% 余量门 2,026,747,612 B；用户要求暂时保持资源阻塞。新 PHI 声学计算仍为 0，状态仍 `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`，下方成本门结论仅为授权前历史快照。详见[执行回执补记](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)。K_HIGH 已有结论及 S3A 保留不变。
 
-### S2c-B PHI_PLUS90：完整参考成本门阻塞（2026-10-23；最新状态）
+### S2c-B PHI_PLUS90：完整参考成本门阻塞（2026-10-23；历史快照）
 
 - `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`；唯一新 run `20261023_s2c_b_phi_plus90_01`。M05a 冻结 C2 几何 PNG/FIG、SHA/预算协议、K_HIGH M04 轻量发布包、既有复场独立复核和 S3A 三 seed 只读清单完成；新 PHI 声学场 0。计划 `1820.8866778 s`，本轮在保留 S3A 3000 s 后最多 `1514.2859358 s`，缺 `306.6007420 s`，停止新昂贵求解。共享余额仍 `4514.2859358 s`。PHI 中心过零机理、M05b–e 及三方法 417 点参考均未得出；详情见[主报告最新首节](reports/two_dimensional_channel_closeout_report.md)。K_HIGH 既有合格状态保留，S3A 未运行。
 

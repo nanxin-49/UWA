@@ -70,6 +70,12 @@
 !/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/final_audit.json
 !/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_budget_amendment_7506_601.json
 !/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_ram_gate_20261024.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/P2_recovery_gate_20261025.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/P2_recovery_partial_two_level_audit_20261025.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/jobs/bie_main96_preflight.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/jobs/bie_main96.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/jobs/bie_self64_preflight.json
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/jobs/bie_self64.json
 
 # Track the generated project-level skill lock and the explicitly selected
 # Scientific Agent Skills packages, including their reference/script assets.

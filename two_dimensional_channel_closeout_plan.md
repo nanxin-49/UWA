@@ -1,5 +1,13 @@
 # 二维声学对比收尾计划：同源反射复场、完整 Kirchhoff 与接收点阵
 
+**2026-10-25 M05 审计修复（当前）：** M05c 右上角自动纵轴刻度导致旧 PNG 复绘差；仅固定图示刻度，新正式 v2 的 M05a–e 已通过原严格逐像素及数值独立审计。[审计 v2](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json)。混合平台同网格边界**求解**差仍未直接定界，PHI 状态 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`；共享扣记与 S3A 储备同下条。下条 PNG 失败属于修复前快照。
+
+**2026-10-25 附加资格复核（当前）：** 原 Windows 两层密度在 R2023b 的 408 个离节点边界点重评价，与 Windows 保存残差向量最大绝对差 `1.04e-16/8.09e-17`；没有重复求解。M05a–e 的全部 FIG 数值对象与独立重绘一致，M05c 严格 PNG 像素门仍失败。将额外 115 s 进程墙钟保守计入后，共享累计 `3401.4241040/7506.601 s`，S3A 3000 s 保留后余 `1105.1768960 s`。此证据增强跨平台算子一致性，但仍未独立定界同网格求解差；PHI 保持 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`，不自动进入 S3A。[审计](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/independent_audit.md)。下条为本次复核前快照。
+
+**2026-10-25 SSH 续算最新修订：** PHI `main96/self64` 两个 Windows R2025b 检查点不重算；选择性 SHA 迁移后，Ubuntu R2023b 已完成余三层 BIE、PE-mode0、完整 FullFK，五层 417 点经验参考和 M05a–e 真图齐全。七作业声学实耗 `578.0285102 s`，兼容性包装失败/成功保守额外扣记 `22.6815296 s`，共享累计 `3286.4241040/7506.601 s`，S3A 3000 s 保留后余 `1220.1768960 s`。跨版本边界求解差未被独立定界，严格图像逐像素审计有 M05c 局部差，故类别 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`，下一步先关闭参考/图像资格缺口，不自动启动 S3A。[主报告](reports/two_dimensional_channel_closeout_report.md)与[图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md)为当前入口。下方 RAM 阻塞段为当时快照。
+
+**2026-10-25 最新执行修订：** 用户确认释放内存后，PHI `main96/self64` 两层真 BIE 已按序完成并保存密度及 417 点原生场，实耗 `357.1643042 s`。第三层 `space14` 前及唯一一次复核的可用物理 RAM 均低于 `2,026,747,612 B` 门槛，故停止后续声学计算；五层参考、PE/FullFK、M05b–e 和中心假设仍未完成。共享扣记 `3042.8783684/7506.601 s`，维持 S3A 3000 s 后 PHI 剩余额度 `1463.7226316 s`，成本门仍通过。最新[执行/恢复门](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)覆盖下方各日期的资源快照，不改写其历史数值。
+
 **2026-10-24 最新执行修订：** 用户将共享上限按最小授权增量提高至 `7506.601 s`，保留 S3A `3000 s`；PHI 完整保守计划通过成本门。最新 Windows 可用物理内存 `1,131,163,648 B`，低于本案例 30% 余量 RAM 门 `2,026,747,612 B`，用户要求暂时保持资源阻塞。PHI 新声学计算仍为 0，状态仍 `S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED`。下方“成本门阻塞”是授权前历史快照；详细回执在[PHI 执行补记](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md)。
 
 日期：2026-10-20；**最新执行状态修订：2026-10-23（PHI_PLUS90完整参考成本门阻塞；Asia/Shanghai）**。下文原“仅文档与Goal契约”及1800 s停止描述保留为当时历史状态。

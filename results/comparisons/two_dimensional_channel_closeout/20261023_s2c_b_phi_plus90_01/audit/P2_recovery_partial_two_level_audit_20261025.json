@@ -1,0 +1,18 @@
+{
+  "status": "PARTIAL_TWO_LEVELS_ONLY_NOT_REFERENCE_QUALIFIED",
+  "case_id": "PHI_PLUS90",
+  "main_wall_s": 203.6039647,
+  "self64_wall_s": 153.5603395,
+  "two_job_wall_s": 357.1643042,
+  "node_count": 3840,
+  "receiver_count": 417,
+  "max_abs_self_quadrature_change": 4.3202151637623712E-9,
+  "line_relative_self_quadrature_change": 3.1105080341090618E-8,
+  "center_relative_self_quadrature_change": 3.11527807736372E-8,
+  "main_linear_residual": 3.3403788687880413E-15,
+  "self64_linear_residual": 3.3015656157731386E-15,
+  "main_offgrid_residual": 3.8065474168863962E-9,
+  "self64_offgrid_residual": 2.0440181387403463E-9,
+  "same_nodes_and_normals": true,
+  "reference_qualified": false
+}
