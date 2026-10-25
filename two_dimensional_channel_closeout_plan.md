@@ -1,5 +1,7 @@
 # 二维声学对比收尾计划：同源反射复场、完整 Kirchhoff 与接收点阵
 
+**2026-10-25 S3A 第一阶段执行状态（当前）：** 用户单独授权并完成固定 `seed260001` 的真实PM试点，状态 `S3A_SEED260001_PILOT_COMPLETE_REFERENCE_QUALIFIED`；S3A整体仅 `IN_PROGRESS_1_OF_3`，不把1/3写成全部完成。三份旧Fourier输入/同谱/源/C2/缺口已审计；本次在Ubuntu R2023b实际完成五层BIE、PE-mode0及同谱双网格、完整FullFK的417点原生复场，九点为主、411点线为辅，保存数据与FIG/PNG独立审计通过。单seed所有远端尝试保守扣记667秒，S3A 3000秒规划余2333秒，共享累计`4068.424104/7506.601 s`、余额`3438.176896 s`。下一seed只建议260002，经另一次子预算/资源门审议；260003、S3B、S4及其它阶段不自动执行。`G1_target_PM=OPEN`、`WP2_formal=false`。真图、详细物理/参考资格和预算见[唯一主报告最新首节](reports/two_dimensional_channel_closeout_report.md)，完整回执见[本轮检查点](results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260001_01/checkpoint.json)。下方PHI以及“尚未启动S3A”均为当时历史快照，不覆盖本条。
+
 **2026-10-25 M05 审计修复（当前）：** M05c 右上角自动纵轴刻度导致旧 PNG 复绘差；仅固定图示刻度，新正式 v2 的 M05a–e 已通过原严格逐像素及数值独立审计。[审计 v2](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json)。混合平台同网格边界**求解**差仍未直接定界，PHI 状态 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`；共享扣记与 S3A 储备同下条。下条 PNG 失败属于修复前快照。
 
 **2026-10-25 附加资格复核（当前）：** 原 Windows 两层密度在 R2023b 的 408 个离节点边界点重评价，与 Windows 保存残差向量最大绝对差 `1.04e-16/8.09e-17`；没有重复求解。M05a–e 的全部 FIG 数值对象与独立重绘一致，M05c 严格 PNG 像素门仍失败。将额外 115 s 进程墙钟保守计入后，共享累计 `3401.4241040/7506.601 s`，S3A 3000 s 保留后余 `1105.1768960 s`。此证据增强跨平台算子一致性，但仍未独立定界同网格求解差；PHI 保持 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`，不自动进入 S3A。[审计](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/independent_audit.md)。下条为本次复核前快照。

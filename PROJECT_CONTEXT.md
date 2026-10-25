@@ -9,6 +9,15 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### Codex 执行上下文与短回执（2026-10-25；仅流程）
+
+- 后续任务先读本索引顶部最新状态、实际授权阶段的契约与入口；旧日期段落按精确依赖定位，不整篇重复载入。短回执、日志留存、检查点、增量证据和可比较测量方法见 [执行协议](reports/codex_token_execution_protocol.md)。本条没有启动 MATLAB、重算、绘图或改变任何数值资格；当前 PHI 仍为 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`，混合平台同网格边界求解差未独立定界；`G1_target_PM=OPEN`、`WP2_formal=false`，阶段与资源门保持原规定。
+
+### S3A 第一阶段：seed260001 单种子 PM 三方法对照（2026-10-25；当前）
+
+- 唯一S3A新声学案例为保存`seed260001`；三个原PM输入的12模同谱/不同系数、C2高度/坡度/曲率、S2b冻结源和旧场缺口已逐值核验。远端Ubuntu R2023b在同一417接收支持完成五层BIE、PE-mode0/半步长/同谱1968网格、完整双项FullFK及解析平面外场。真实九点BIE PM对平面物理响应复L2 `1.7664`；PE–BIE `0.1099207929`，FullFK–BIE `0.0005607659`，各自经验数值分辨率 `1.13255e-5/1.20757e-7`，且均过5倍门。411线另列，不以线插值九点。[唯一主报告首节](reports/two_dimensional_channel_closeout_report.md)先展示中文真图并列明源、公式、分母、参考资格与物理限制；[单seed检查点](results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260001_01/checkpoint.json)和独立保存数据/FIG像素审计为执行证据。
+- 状态`S3A_SEED260001_PILOT_COMPLETE_REFERENCE_QUALIFIED`只覆盖本固定单样本，S3A总体`IN_PROGRESS_1_OF_3`。八个成功声学核`516.355606 s`，包括失败尝试/启动的所有远端进程保守扣记`667 s`；S3A规划余额`2333/3000 s`，共享累计`4068.424104/7506.601 s`、余`3438.176896 s`。260002/260003未开展，建议下一轮仅审议260002的≤1100秒子预算并保留260003≥1100秒和133秒故障余量。`G1_target_PM=OPEN`、`WP2_formal=false`，不自动开展S3B/S4/Bellhop/三维/通信。以下PHI状态仍是其自身有效结论，但其旧“尚未开始S3A”文字是本轮之前的快照。
+
 ### S2c-B PHI_PLUS90：M05 严格审计完成（2026-10-25；当前）
 
 - M05c 的旧 PNG 像素差来自右上角自动纵轴刻度；绘图层固定刻度后，新正式 v2 图与独立重绘五张逐像素相等，[严格审计 v2](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json)通过数值、来源、真九点和图像门。声场及判据未更改。混合平台同网格边界求解差仍未独立定界，正式状态 `S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`；成本和 S3A 保留余额不变。下条为图像修复前快照。
