@@ -8,7 +8,7 @@ end
 assert(isfolder(root) && isfolder(run_dir) && startsWith(run_dir,root));
 file=fullfile(run_dir,'jobs','pe_grid.mat'); assert(~isfile(file));
 budget=jsondecode(fileread(fullfile(run_dir,'protocol','budget.json')));
-assert(ismember(budget.seed,[260001 260002]) && ...
+assert(ismember(budget.seed,[260001 260002 260003]) && ...
     contains(run_dir,sprintf('s3a_seed%d',budget.seed)));
 ids={'main96','self64','space14','window60','window70','pe','fullfk'};
 spent=0;

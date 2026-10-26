@@ -9,7 +9,12 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
-### S3A 第二阶段：seed260002 三方法真实PM对照（2026-10-25；当前）
+### S3A 第三阶段：seed260003与三固定PM实现收尾（2026-10-26；当前）
+
+- 状态 `S3A_COMPLETE_3_OF_3_REFERENCE_QUALIFIED`：三个预先指定seed的固定二维4 kHz同源反射复场、五层BIE经验参考、PE半步长/同谱双网格、完整FullFK GL8/窗口、真417位置及独立保存MAT/CSV/FIG/PNG/SHA审计均完成。260003九点BIE PM/平面复L2 `1.676402`，PE/BIE `0.0605063`，FullFK/BIE `0.000900020`；411线分别 `1.364203/0.119206/0.000669488`，两支持分母不同。三seed F08及六行统一表、物理限制和S4已有数据清单见[唯一主报告首节](reports/two_dimensional_channel_closeout_report.md)；[新检查点](results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/checkpoint.json)及原作业日志、成本、SHA留证。三个固定实现的经验数值合格不证明通用模型物理精度、三维PM总体、宽带或通信资格；`G1_target_PM=OPEN`、`WP2_formal=false`。
+- 本轮远端八个声学核 `582.127969 s`，兼容性检查/启动一并保守扣记 `687/1100 s`；S3A累计 `2010/3000 s`、余 `990 s`，共享累计 `5411.424104/7506.601 s`、余 `2095.176896 s`。额外133秒故障余量和444秒规划弹性未动用。未重算260001/260002，未启动S3B/S4；下条为第二阶段历史快照。
+
+### S3A 第二阶段：seed260002 三方法真实PM对照（2026-10-25；历史快照）
 
 - 状态 S3A_SEED260002_PILOT_COMPLETE_REFERENCE_QUALIFIED，S3A整体 IN_PROGRESS_2_OF_3；260001原参考限定合格保持，260003未运行。冻结260002的12模同谱Fourier系数、C2窗口、4 kHz Gaussian源和417真接收点在Ubuntu R2023b完成五层BIE、PE-mode0/半步长/同谱双网格、完整双项FullFK/解析平面外场/GL8。九点BIE PM相对同源平面响应1.8201161101，PE–BIE复L2 0.002089934812，FullFK–BIE 0.000267327198；411线分别为1.4739405374/0.093966108956/0.000400121178，九点与线的分母独立。四项模型差均高于5倍经验数值分辨率；这是固定样本的数值资格，不是严格物理精度界或PM总体结论。[唯一主报告首节](reports/two_dimensional_channel_closeout_report.md)含三张真图、与260001配对、公式和限制；[检查点](results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260002_01/checkpoint.json)与独立MAT/CSV/FIG/PNG/SHA审计存原证据。
 - 八个声学核517.021011 s；全部远端成功/失败/启动进程保守扣记656/1100 s，加260001的667秒后S3A规划余1677/3000 s、共享累计4724.424104/7506.601 s，共享余2782.176896 s。260003原标准1100秒和额外133秒故障余量尚可保留，但必须另过输入、成本、RAM和参考门；未自动执行。G1_target_PM=OPEN、WP2_formal=false，PHI仍为 S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED。下条是第一阶段快照。
