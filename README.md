@@ -2,7 +2,7 @@
 
 本仓库用于研究海底发射机到近海面接收机的垂直水声传播。公共模型以 PE/WAPE 计算直达与海面反射频响，并提供粗糙海面、joint-kstat、接收端精确离散伴随、二阶统计和 MPSK 通信验证工具。
 
-二维收尾已完成S2c-A诊断和**仅K_HIGH的S2c-B受控实验**：用户将K_HIGH子额度单独授权至2400 s 后，五层新BIE、PE与完整FullFK、M04图册和独立审计完成，状态`S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`，限冻结417点及经验数值参考，不代表模型物理PASS。[中文M04图册](results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)与[唯一主报告](reports/two_dimensional_channel_closeout_report.md)记录结果；早期1800 s成本停止保留为历史。PHI_PLUS90及S3以后未执行。
+二维同源反射复场比较已正式S4收尾：`CORE_COMPLETE`仅限固定4 kHz源、平面/三档正弦、K_HIGH、参考受限的PHI_PLUS90及预定三个PM实现（S3A `3/3`）；S3B登记`S3B_NOT_RUN_BUDGET_LIMITED`，S5为`S5_NOT_READY`。本轮不新增声场计算；资格、数值结论、预算与未闭合项见[唯一正式报告](reports/two_dimensional_channel_closeout_report.md)及[S4结果索引](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)。历史阶段状态保留在各自结果包，不能替代报告顶部当前结论。
 
 ## 快速开始
 
@@ -104,9 +104,9 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 | [Deep-sea research handoff](reports/deep_sea_channel_research_background_for_new_ai.md) | 新的研究评估者 | 英文自包含需求、历史证据、单点计时转向和待论证计划 |
 | [External-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md) | 研究路线讨论者 | 英文外部建议核查、公开深海部署案例与建议测试范围；未改变生产模型 |
 | [Official deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 唯一正式研究计划；2026-10-15决策B：固定dual仅4/6/8kHz离散交付，停止参考连续修补，G1 OPEN/WP2=false；备份和v3仅版本记录 |
-| [二维点阵对比收尾计划](two_dimensional_channel_closeout_plan.md) | Codex与二维研究执行者 | S2b已完成P0、108/108及参考闭合，S2B_COMPLETE_REFERENCE_QUALIFIED仅限声明的数值分辨率；S3–S6未执行 |
+| [二维点阵对比收尾计划](two_dimensional_channel_closeout_plan.md) | Codex与二维研究执行者 | S4核心已完成；S3A 3/3、S3B预算限制未运行、S5未准入，均以顶部当前状态为准 |
 | [二维计划审查与首轮Goal提示词](reports/two_dimensional_channel_closeout_plan_review.md) | 历史首轮追溯 | S0–S1的完成契约与提示词；该轮已完成，当前状态见唯一主报告 |
-| [二维收尾唯一主报告：S0–S2c](reports/two_dimensional_channel_closeout_report.md) | 研究审阅者与下一阶段执行者 | S2b参考闭合、S2c-A冻结协议、K_HIGH五层BIE/PE/FullFK及M04图册；经验数值资格有限定 |
+| [二维同源反射复场唯一正式收尾报告：S0–S4](reports/two_dimensional_channel_closeout_report.md) | 研究审阅者与下一阶段执行者 | 统一设置、正弦/K_HIGH/PHI/三个PM的限定结论、方法证据、S3B预算与S5准入；原MAT/CSV/SHA/审计见S4结果索引 |
 | [固定dual物理决策](reports/deepsea_dual_broadband_decision_2026-10-15.md) / [宽带成本](reports/deepsea_dual_broadband_cost_2026-10-15.md) | 研究评估者 | 反射幅度约降6.43%，总场干涉变化清楚；稀疏候选未获新独立频点认证，5/7kHz被资源门拒绝，未进行宽带扫描 |
 | `reports/` | 验证审阅者 | 单次实验配置、结果和结论 |
 

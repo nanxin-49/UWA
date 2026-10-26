@@ -9,7 +9,13 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
-### S3A 第三阶段：seed260003与三固定PM实现收尾（2026-10-26；当前）
+### S4 二维核心正式收尾（2026-10-26；权威当前状态）
+
+- `CORE_COMPLETE`仅指固定4 kHz、同源离散Gaussian源、平面/三档C2正弦、K_HIGH、受混合平台参考限制的PHI_PLUS90及预定`seed260001–260003`三个固定二维PM实现。S2a源/表示闭合，S2b九点108/108及411线参考限定合格，S2c-A空间诊断、K_HIGH、PHI保存真场及S3A三seed已逐项验收；后续日期节中“当前阻塞”“S4未开始”均为历史快照。唯一[正式收尾报告顶部S4摘要](reports/two_dimensional_channel_closeout_report.md)给出各支持数值、方法范围、旧G口径区别和未闭合问题；[S4索引与检查点](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)连到原MAT/CSV/配置/SHA/审计/图件。S4新增声场计算0，既有数值包未覆盖。
+- S3A实际`3/3`、S3B`S3B_NOT_RUN_BUDGET_LIMITED`，不是8/8：共享余额`2095.176896/7506.601 s`，新增五个按1100 s/seed需5500 s，缺`3404.823104 s`。保守扣记不变：S3A`2010/3000 s`、共享`5411.424104/7506.601 s`。S4只读SHA重验S2b`247/247`、S2c-A`203/203`、K_HIGH`132/132`、三个seed冻结输入/结果`24/24`、`23/23`、`130/130`；PHI最终审计关键文件及正式图存在，旧seed260001八条演进中的活脚本不冒充历史SHA。PHI仍`S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`；BIE无严格误差界，弱/中正弦FullFK九点未分辨。
+- `S5_NOT_READY`：缺跨频同源直达/反射标度、共同时间原点、native→DSP约定、频点/Δf收敛与独立数值预算；单频S3A不等于CIR/通信资格。本轮不进入S3B/S5/S6、PHI补证、三维或通信求解。后续最值得另立研究的是三维单链路同源声场资格设计，需冻结三维源/海面/接收表示、独立参考、资源预算与验收门。`G1_target_PM=OPEN`、`WP2_formal=false`；生产求解器、公共API与`vertical_comm_guide.md`实现公式未改。
+
+### S3A 第三阶段：seed260003与三固定PM实现收尾（2026-10-26；当时快照）
 
 - 状态 `S3A_COMPLETE_3_OF_3_REFERENCE_QUALIFIED`：三个预先指定seed的固定二维4 kHz同源反射复场、五层BIE经验参考、PE半步长/同谱双网格、完整FullFK GL8/窗口、真417位置及独立保存MAT/CSV/FIG/PNG/SHA审计均完成。260003九点BIE PM/平面复L2 `1.676402`，PE/BIE `0.0605063`，FullFK/BIE `0.000900020`；411线分别 `1.364203/0.119206/0.000669488`，两支持分母不同。三seed F08及六行统一表、物理限制和S4已有数据清单见[唯一主报告首节](reports/two_dimensional_channel_closeout_report.md)；[新检查点](results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/checkpoint.json)及原作业日志、成本、SHA留证。三个固定实现的经验数值合格不证明通用模型物理精度、三维PM总体、宽带或通信资格；`G1_target_PM=OPEN`、`WP2_formal=false`。
 - 本轮远端八个声学核 `582.127969 s`，兼容性检查/启动一并保守扣记 `687/1100 s`；S3A累计 `2010/3000 s`、余 `990 s`，共享累计 `5411.424104/7506.601 s`、余 `2095.176896 s`。额外133秒故障余量和444秒规划弹性未动用。未重算260001/260002，未启动S3B/S4；下条为第二阶段历史快照。

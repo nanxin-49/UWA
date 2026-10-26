@@ -1,6 +1,69 @@
-# 二维收尾唯一主报告：S0–S3A三个固定PM实现
+# 二维同源反射复场比较唯一正式收尾报告：S0–S4
 
-## 2026-10-26 S3A 第三阶段：seed260003及三实现正式收尾（当前）
+## 2026-10-26 S4 最终执行摘要（权威当前结论）
+
+**最终状态：`CORE_COMPLETE`，限固定二维4 kHz离散Gaussian源、平面/三档C2正弦、K_HIGH、参考受限的PHI_PLUS90，以及预定的三个固定PM实现。** 核心S3A为`3/3`，扩展S3B为`S3B_NOT_RUN_BUDGET_LIMITED`、总计划不是`8/8`。条件扩展判定为`S5_NOT_READY`。`G1_target_PM=OPEN`、`WP2_formal=false`。本节覆盖下方按日期保留的所有“当前”“阻塞”“尚未开始S4”等历史措辞；旧失败记录及原数据不改。S4只对保存数据、哈希、审计和预算做只读核查，**新增PE/BIE/FullFK/Bellhop声场计算为0**。逐项审计与核心结果入口见[S4正式结果索引](../results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)及[本轮检查点](../results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/checkpoint.json)。
+
+### 研究问题、共同设置与指标
+
+问题是：同一源和复场表示下，PE-mode0、BIE与完整FullFK在有限二维海面及不同接收位置有何差异，差异能否由中心九点代表整线？统一的核心源为发射平面`z=100 m`、`σ=0.3 m`、984项离散Gaussian角谱，`f=4000 Hz`、`c=1500 m/s`、`exp(−iωt)`，海面`z=0`且正`z`向下。接收支持为原P11–P33九个真位置和M99的`z=3 m`、411个真位置；只有九点中的P21/P22/P23在线上。各方法比较原生**单位源反射复场**，不是绝对Pa/TL。正弦与PM实际C2海面在`|x|≥50 m`严格平坦；PM三实现为保存的12模同父有限谱、`Kmax=0.471238898 rad/m`，不逐seed重新归一化。S2a的同源/载波/物理高度映射资格是输入合同，BIE是五层经验数值参考，完整FullFK是含真实法向、弧长、双项积分与解析平面外场的**Kirchhoff近似**。
+
+主方法误差在每个支持`S`分别定义为`E_m(S)=||u_m,rough−u_BIE,rough||₂/||u_BIE,rough||₂`；BIE海面物理响应为`R_BIE(S)=||u_BIE,rough−u_BIE,flat||₂/||u_BIE,flat||₂`。九点和411线独立求分母，不能把一者当另一者的子样本估计。平面同源控制、`R_BIE`及模型残差`E_m`是三个不同的问题。幅度与相位平方项相加为复差平方的恒等分解，只是描述，不能识别因果机制。旧`G=u_rough/u_flat`及其8.0908%、6.2911%属于历史比值/权重口径；旧入射加权原生强档4.39622%也不等于新版411点等权6.29112%，不得串作精度改善曲线。
+
+### 阶段资格与主要数据
+
+| 阶段 | 正式完成与限定 |
+|---|---|
+| S0–S1 | `S0_S1_COMPLETE_WITH_DECLARED_GAPS`；历史复现和符号诊断保留，不能替代同源原生场。 |
+| S2a | `S2A_CONVENTION_SOURCE_BASELINE_COMPLETE`；PE/BIE/FullFK固定Gaussian源、载波和反射表示闭合；Bellhop Gaussian物理源映射未闭合。 |
+| S2b | `S2B_COMPLETE_REFERENCE_QUALIFIED`；平面/弱中强正弦，108/108九点格、四案411线、正式图件和经验参考审计齐全。 |
+| S2c-A / S2c-B | 保存场空间诊断`S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE`；K_HIGH为`S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED`；PHI_PLUS90为`S2C_B_PHI_PLUS90_DATA_COMPLETE_REFERENCE_LIMITED`，因Windows R2025b与Ubuntu R2023b混合平台BIE边界**求解**差没有同网格直接界定，虽M05最终数值与像素审计均通过。 |
+| S3A / S3B | 三个预定PM实现`S3A_COMPLETE_3_OF_3_REFERENCE_QUALIFIED`；S3B新增五个未运行，`S3B_NOT_RUN_BUDGET_LIMITED`。 |
+
+正式S2b原生反射复场的复L2（下表各行独立分母；完整数字见[正式S2b表](../results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/array_metrics.csv)与[line_metrics.csv](../results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/line_metrics.csv)）：
+
+| 海面 | 九点PE/BIE | 411线PE/BIE | 九点完整FullFK/BIE | 411线完整FullFK/BIE |
+|---|---:|---:|---:|---:|
+| 平面 | 1.52178e−13 | 3.85503e−13 | 4.68283e−17 | 3.28614e−16 |
+| 弱正弦 | 1.68586e−6 | 0.00311555 | 1.29144e−7（未分辨） | 2.16654e−6 |
+| 中正弦 | 1.27999e−5 | 0.0155868 | 2.66685e−7（未分辨） | 1.07328e−5 |
+| 强正弦 | 8.05109e−5 | 0.0629112 | 1.17048e−6 | 4.29152e−5 |
+
+平面PE/BIE和FullFK/BIE在同源控制下近数值零，说明这一固定输入/表示已闭合；不说明粗海面的模型精度。弱、中FullFK九点差未超过事前5倍经验分辨率，**不能**由数值小写成物理等价。弱/中/强BIE相对平面物理响应的411线复L2为`0.230056/1.05943/1.21751`，九点为`0.00518843/0.0260504/0.110703`，与模型残差及其分母分开。强档中心`x=0,z=3`虽海面高度为零，BIE相对平面相位仍变`−0.0389860 rad`；此点不支持“中心过零导致低误差”的唯一解释。
+
+K_HIGH与PHI两项配对诊断继续支持空间位置敏感性：BASE_M→K_HIGH的PE/BIE九点`1.27999e−5→3.01212e−5`、411线`0.0155868→0.0178365`；完整FullFK/BIE九点`2.66685e−7→1.98012e−6`、411线`1.07328e−5→4.34208e−5`。K_HIGH BIE相对BASE_M的物理变化411线为`1.014765`、九点为`0.026930`，这是改变K时的配对物理响应，不是模型残差；FullFK五点十字的两案误差变化未过5倍经验门。PHI的PE/BIE中心11点由BASE_M`3.0294e−5`变为`5.09698e−4`，但仍低于PHI整线`0.0203315`；PHI九点PE/BIE`5.06113e−4`、FullFK/BIE`1.49251e−5`，整线FullFK/BIE`1.10184e−5`。PHI数值对照保留混合平台参考限制；K和相位配对同时改变多个几何与干涉量，不能唯一归因高度、坡度或曲率。
+
+三个PM固定实现的正式对照（复L2；完整精度、BIE物理响应、各自经验分辨率见[六行CSV](../results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv)和下方F08）：
+
+| seed | 九点PE/BIE | 411线PE/BIE | 九点完整FullFK/BIE | 411线完整FullFK/BIE | BIE PM/平面九点 / 411线 |
+|---|---:|---:|---:|---:|---:|
+| 260001 | 0.109921 | 0.127452 | 0.000560766 | 0.000762687 | 1.766354 / 1.493767 |
+| 260002 | 0.00208993 | 0.0939661 | 0.000267327 | 0.000400121 | 1.820116 / 1.473941 |
+| 260003 | 0.0605063 | 0.119206 | 0.000900020 | 0.000669488 | 1.676402 / 1.364203 |
+
+三seed的九点PE误差变化约53倍、411线约1.36倍；三个固定实现的PE整线均大于九点。完整FullFK在三seed的两个支持都呈`2.67e−4–9.00e−4`量级，九点与整线大小次序并不一致。六组PE/FullFK差均高于各自5倍经验数值分辨率；这一规则既非严格BIE误差界，也非方法的通用精度门。三个seed不能估计PM总体分布、尾部或三维海况；幅相平方分解不用于因果解释。
+
+### 方法证据、图件与未闭合范围
+
+| 方法 | 已验证的可用范围 | 限制与进一步验证条件 |
+|---|---|---|
+| PE-mode0 | 固定源的初始场、载波恢复、物理海面高度映射和平面镜像控制合格；S2b四案、K_HIGH、PHI及S3A三实现有417真位置结果与半步长/冻结探针同谱双网格诊断。 | 正弦、PM的模型残差随空间及实现变化；双网格只在冻结探针测量，不能作为整线严格界，也不外推到另一源、频率、三维海面。 |
+| BIE | 五层空间/窗口/自求积与线性残差给出固定417点经验数值参考；同源平面与解析镜像闭合，可用作本报告条件参照。 | 无严格数学误差界、外部独立Helmholtz真值或跨平台PHI边界重解差界；五层边界求解耗时构成主要预算成本（S2b七次新解总约1213.96 s；S3A三个seed全部远端保守扣记667/656/687 s）。不能称精确物理解。 |
+| 完整FullFK | 平面外场解析计入、真实边界法向/弧长和双项积分；S2b/K_HIGH/S3A有求积与窗口控制，固定案例内与BIE的残差如上。 | 仍为Kirchhoff近似，依赖本例`|x|≥50 m`严格平坦外侧与冻结源；有限L60旧版及FastFK不能冒充此版本。弱/中正弦九点未分辨，不能推成全面准确或适用于任意粗糙度。 |
+| Bellhop | 仅作条件扩展；既有角度指向与SHD共轭路径可追踪。 | Gaussian谱到Bellhop二维源强、整体相位和单位的物理映射未闭合，不能加入核心同源原生误差表。 |
+| PE-mode1 | 仅保留历史辅助诊断。 | 未进入本轮核心源/参考资格、三方法417点比较，不作物理精度结论。 |
+
+关键图件沿用[S2b正式F01–F07](../results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/figures/)、[S2c-A M00–M03图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md)、[K_HIGH M04图册](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md)、[PHI M05图册与最终v2图](../results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md)及[S3A F08](../results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/F08_S3A_three_seed_summary.png)。S2b图显示同源平面及正弦原生场；M04把BIE物理变化与模型残差、中心/边缘分开；M05描述相位配对与受限参考；F08将三seed的九点和整线并列且各自定分母。图件均为既有正式保存产物，本轮没有重制图册。可独立重绘/审计入口与MAT/CSV、配置、SHA的逐项路径收录在S4结果索引；不以图像视觉重合替代复数指标。
+
+### S3B成本决策、S4验收与后续研究
+
+三seed的全部进程保守扣记`667+656+687=2010 s`，S3A原3000 s规划尚余`990 s`；共享成本累计`5411.424104/7506.601 s`，余额`2095.176896 s`。按S3A后两seed已采用的`≤1100 s/seed`保守子额度，新增五个至少需规划`5500 s`，缺`3404.823104 s`；即使仅把已观察最小扣记656秒机械乘五也是3280秒，高于余额，且不能代替未来上界。S3B成本门不通过，正式登记`S3B_NOT_RUN_BUDGET_LIMITED`，不增加预算、不抽取260004–260008。三样本已回答本固定源/频率/支撑下出现明显实现依赖及中心不能代表整线；未回答PM总体统计代表性。
+
+按原计划S4逐项验收：核心三方法源资格通过；S2b九点108/108及411线、S2c-A空间诊断、K_HIGH、PHI受限数据、S3A三seed真场/图件/审计均已交付；历史G和错误符号/有限L60结果与正式同源原生场区分；弱中FullFK九点未分辨、PHI混合平台参考受限、BIE非严格真值均显式保留；PM批次明示`3/3`且S3B未运行。因此满足原计划限定定义的`CORE_COMPLETE`，不代表8个PM全部完成或所有物理模型通过。S4只读重验S2b`247/247`、S2c-A`203/203`、K_HIGH`132/132`、三seed正式清单`24/24`（另8条后续变化的活脚本路径不作为历史哈希）、`23/23`、`130/130`，PHI最终审计/数据/成本关键文件SHA与文件存在性；原独立MAT/CSV/FIG/PNG审计状态逐一核对。新S4审计没有重跑历史数值求解或图像审计。
+
+`S5_NOT_READY`：现有核心只是4 kHz单频反射场。S5尚需明确宽带研究问题与带宽、跨频一致的Gaussian源标度及直达/反射场、共同载波相位与时间原点、native→DSP映射、由时延窗/相位收敛决定的频点和Δf、平面/正弦/PM参考与可承受的数值预算；现有4/6/8 kHz离散锚点也不能直接构成CIR。故不进入S5/S6或通信验证。向后续三维单链路研究可移交冻结离散源、坐标/相位/单位合同、同源平面控制、417真位置与独立分母、经验参考/审计方法和本报告的限定残差；**三维表面表示、源映射、独立参考、接收几何、资源预算与验收容差须在新研究中另行建立**。最值得开启的下一主研究是有独立参考和明确资源门的三维单链路同源声场资格设计；本二维研究在此归档，不形成继续扫描二维案例的待办。
+
+## 2026-10-26 S3A 第三阶段：seed260003及三实现正式收尾（当时快照）
 
 **状态：`S3A_COMPLETE_3_OF_3_REFERENCE_QUALIFIED`。** 第三个预定保存Fourier实现 seed260003 在 Ubuntu R2023b 上完成同源4 kHz、c=1500 m/s、Tx=(0,100 m)、原984项离散Gaussian复谱（σ=0.3 m）、12模同父谱及 `Kmax=0.471238898038469 rad/m` 的五层BIE、PE-mode0主/半步长/同谱1968网格、完整双项FullFK/真实法向与弧长/解析平面外场/GL8及窗口控制。实际C2边界 `|x|≤42 m` 保持原海面，`|x|≥50 m` 严格平坦；没有重新抽样、逐seed重归一化或改变源。417个真接收点中 P11–P33 九点为主、411点 `z=3 m` 线为辅助，均由各方法直接求值。seed260001、260002 的正式场未重算或重绘；其原参考限定合格结论保持。
 
@@ -37,7 +100,7 @@
 
 **结项边界与S4现有数据清单。** S3A完成仅指三个预先指定的有限带宽PM固定二维海面、固定源和417点同源数值对照及审计。S4可读用三份正式MAT/CSV、F01–F03、F08、几何表、参考敏感性/成本账及S2b/S2c既有诊断；尚缺严格BIE误差界或外部独立Helmholtz参考、三维PM及统计海况代表性，也无宽带H(f)、CIR、BER或通信资格。`G1_target_PM=OPEN`、`WP2_formal=false`；本轮不启动S3B/S4、PHI补证、新正弦/Bellhop或三维任务。仅增加验证专用seed参数兼容与保存数据汇总/审计入口，未改生产求解器、公共API或物理公式，因此`vertical_comm_guide.md`和宽带通信回归无需更新。
 
-## 2026-10-25 S3A 第二阶段：seed260002 真实 PM 三方法对照（当前）
+## 2026-10-25 S3A 第二阶段：seed260002 真实 PM 三方法对照（当时快照）
 
 **状态：`S3A_SEED260002_PILOT_COMPLETE_REFERENCE_QUALIFIED`；S3A `IN_PROGRESS_2_OF_3`。** 在预定第二个保存Fourier实现上完成固定4 kHz、同一冻结Gaussian源、PE-mode0/BIE/完整FullFK原生单位源反射复场。每法均在同一417个实际接收位置求值；P11–P33九点是主支持，原411点 `z=3 m` 接收线单列。源、12模同父谱、`Kmax=0.471238898038469 rad/m`、C2窗口（`|x|≤42 m`原样，`|x|≥50 m`严格平面）、接收坐标与旧pilot保存高度/坡度/曲率逐值一致；没有重新抽样、逐seed归一化或使用旧错误符号PE场。输入与真实输出SHA、远端日志及状态见[260002结果包](../results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260002_01/)和[检查点](../results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260002_01/checkpoint.json)。
 
