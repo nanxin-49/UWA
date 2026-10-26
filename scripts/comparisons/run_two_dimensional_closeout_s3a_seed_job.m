@@ -1,12 +1,12 @@
 function receipt = run_two_dimensional_closeout_s3a_seed_job(root,run_dir,job_id,available_physical_bytes)
-%RUN_TWO_DIMENSIONAL_CLOSEOUT_S3A_SEED_JOB Guarded seed260001 native-field job.
+%RUN_TWO_DIMENSIONAL_CLOSEOUT_S3A_SEED_JOB Guarded frozen-seed native-field job.
 arguments
     root (1,:) char
     run_dir (1,:) char
     job_id (1,:) char
     available_physical_bytes (1,1) double {mustBePositive}
 end
-assert(isfolder(root) && isfolder(run_dir) && contains(run_dir,'s3a_seed260001'));
+assert(isfolder(root) && isfolder(run_dir) && startsWith(run_dir,root));
 ids={'main96','self64','space14','window60','window70','pe','fullfk'};
 ix=find(strcmp(ids,job_id)); assert(isscalar(ix),'Unknown frozen S3A job');
 out=fullfile(run_dir,'jobs',[job_id '.mat']); assert(~isfile(out),'No job overwrite');
@@ -14,8 +14,10 @@ for j=1:ix-1
     assert(isfile(fullfile(run_dir,'jobs',[ids{j} '.mat'])),'Earlier job is missing');
 end
 budget=jsondecode(fileread(fullfile(run_dir,'protocol','budget.json')));
-assert(budget.seed==260001 && budget.subbudget_s==1700 && budget.shared_prior_s==3401.424104);
-assert(budget.shared_cap_s==7506.601 && budget.S3A_total_s==3000);
+assert(ismember(budget.seed,[260001 260002]) && ...
+    contains(run_dir,sprintf('s3a_seed%d',budget.seed)));
+assert(budget.subbudget_s>0 && budget.shared_prior_s>=0 && ...
+    budget.shared_cap_s==7506.601 && budget.S3A_total_s==3000);
 upper=budget.upper_job_s(:); actual=zeros(7,1);
 for j=1:ix-1
     a=load(fullfile(run_dir,'jobs',[ids{j} '.mat']),'receipt');
@@ -26,7 +28,7 @@ upper(1:ix-1)=actual(1:ix-1);
 assert(sum(upper)+budget.failure_reserve_s<=budget.subbudget_s,'S3A seed cost gate');
 assert(max(upper(ix:end))<900,'Single-job time gate');
 assert(budget.shared_prior_s+sum(upper)+budget.failure_reserve_s <= budget.shared_cap_s);
-coeff_file=fullfile(run_dir,'input','seed_260001_coefficients.csv');
+coeff_file=fullfile(run_dir,'input',sprintf('seed_%d_coefficients.csv',budget.seed));
 source_file=fullfile(run_dir,'input','frozen_source.mat');
 reference_file=fullfile(run_dir,'input','reference_data.mat');
 profile=readtable(coeff_file); s=load(source_file,'src'); src=s.src;

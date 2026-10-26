@@ -6,6 +6,7 @@ arguments
 end
 assert(isfolder(root) && startsWith(run_dir,root));
 dest=fullfile(run_dir,'audit'); assert(isfolder(dest));
+budget=jsondecode(fileread(fullfile(run_dir,'protocol','budget.json')));
 d=load(fullfile(run_dir,'input','reference_data.mat'),'x','z','ix9','U','flat_exact');
 ids={'pe','main96','fullfk'}; n=417; x=d.x(:); z=d.z(:); nine=d.ix9(:);
 raw=readtable(fullfile(run_dir,'analysis_v2','raw_fields.csv'),TextType='string');
@@ -94,7 +95,7 @@ for j=1:3
     pixel_differences(j)=nnz(original_pixels~=redraw_pixels);
     png_bytes(j)=dir(png).bytes; figure_ok(j)=true;
 end
-audit=struct('status','S3A_SEED260001_SAVED_DATA_AUDIT_PASS', ...
+audit=struct('status',sprintf('S3A_SEED%d_SAVED_DATA_AUDIT_PASS',budget.seed), ...
     'raw_rows',height(raw),'point_rows',height(point),'metric_rows',height(metric), ...
     'nine_point_count',numel(nine),'full_line_count',411, ...
     'max_raw_complex_difference',maxraw,'max_point_complex_difference',maxpoint, ...

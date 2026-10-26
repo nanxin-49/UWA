@@ -1,11 +1,12 @@
 function summary = analyze_two_dimensional_closeout_s3a_seed(root,run_dir)
-%ANALYZE_TWO_DIMENSIONAL_CLOSEOUT_S3A_SEED Saved seed260001 native fields only.
+%ANALYZE_TWO_DIMENSIONAL_CLOSEOUT_S3A_SEED Saved frozen-seed native fields only.
 arguments
     root (1,:) char
     run_dir (1,:) char
 end
 dest=fullfile(run_dir,'analysis_v2'); assert(~isfolder(dest));
 assert(isfolder(root) && startsWith(run_dir,root));
+budget=jsondecode(fileread(fullfile(run_dir,'protocol','budget.json')));
 t=load(fullfile(run_dir,'input','reference_data.mat'),'x','z','ix9','U','flat_exact');
 x=t.x(:); z=t.z(:); ix9=t.ix9(:); n=numel(x);
 assert(n==417 && numel(ix9)==9);
@@ -17,7 +18,7 @@ for j=1:7
     assert(isequal(J{j}.payload.x_m(:),x) && isequal(J{j}.payload.z_m(:),z));
     cost(j)=J{j}.receipt.wall_seconds;
 end
-assert(sum(cost)<1700);
+assert(sum(cost)<budget.subbudget_s);
 flat=squeeze(t.U(:,1,:));
 rough=[J{6}.payload.u_native(:),J{1}.payload.u_native(:),J{7}.payload.u_native(:)];
 assert(isequal(size(rough),[417 3]) && all(isfinite(rough),'all'));
@@ -113,13 +114,13 @@ writetable(flat_pair,fullfile(dest,'flat_controls.csv'));
 grid_wall=grid.receipt.wall_seconds;
 save(fullfile(dest,'analysis_data.mat'),'x','z','ix9','flat','rough','bres', ...
     'pe_res','fk_res','raw','points','metrics','physical','flat_pair','cost','grid_wall','-v7.3');
-summary=struct('status','S3A_SEED260001_ANALYZED_PENDING_INDEPENDENT_AUDIT', ...
-    'seed',260001,'new_acoustic_jobs',8,'acoustic_seconds',sum(cost)+grid_wall, ...
+summary=struct('status',sprintf('S3A_SEED%d_ANALYZED_PENDING_INDEPENDENT_AUDIT',budget.seed), ...
+    'seed',budget.seed,'new_acoustic_jobs',8,'acoustic_seconds',sum(cost)+grid_wall, ...
     'job_seconds',[cost;grid_wall],'nine_points',9,'line_points',411, ...
     'BIE_reference','five-level empirical sensitivity, same Ubuntu R2023b', ...
     'FullFK_version',J{7}.payload.version, ...
-    'shared_charged_after_acoustics_s',3401.424104+sum(cost)+grid_wall, ...
-    'S3A_subbudget_s',1700,'S3A_total_planning_s',3000);
+    'shared_charged_after_acoustics_s',budget.shared_prior_s+sum(cost)+grid_wall, ...
+    'S3A_subbudget_s',budget.subbudget_s,'S3A_total_planning_s',budget.S3A_total_s);
 fid=fopen(fullfile(dest,'summary_pending_audit.json'),'w');
 assert(fid>0); c=onCleanup(@()fclose(fid)); fprintf(fid,'%s',jsonencode(summary,PrettyPrint=true));
 disp(summary); disp(metrics); disp(physical);

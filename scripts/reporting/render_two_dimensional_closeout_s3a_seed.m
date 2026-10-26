@@ -6,8 +6,13 @@ arguments
 end
 assert(isfolder(root) && startsWith(run_dir,root));
 dest=fullfile(run_dir,'figures'); assert(isfolder(dest));
-q=load(fullfile(run_dir,'analysis','analysis_data.mat'),'x','z','ix9','flat','rough','bres');
-p=readtable(fullfile(run_dir,'input','seed_260001_coefficients.csv'));
+analysis_dir=fullfile(run_dir,'analysis_v2');
+if ~isfile(fullfile(analysis_dir,'analysis_data.mat'))
+    analysis_dir=fullfile(run_dir,'analysis');
+end
+q=load(fullfile(analysis_dir,'analysis_data.mat'),'x','z','ix9','flat','rough','bres');
+budget=jsondecode(fileread(fullfile(run_dir,'protocol','budget.json')));
+p=readtable(fullfile(run_dir,'input',sprintf('seed_%d_coefficients.csv',budget.seed)));
 xx=linspace(-60,60,2401)';
 [eta,slope,~,raw]=closeout_s3a_pm_surface(p,xx);
 names={'F01_PM_geometry_v2','F02_nine_point_errors_v2','F03_method_line_v2'};
@@ -24,7 +29,7 @@ plot(ax,xx,eta,'b','LineWidth',1.4,'DisplayName','C2嵌入PM');
 xline(ax,-50,':k','HandleVisibility','off');
 xline(ax,50,':k','HandleVisibility','off');
 xlim(ax,[-60 60]); ylabel(ax,'海面深度 η (m)'); grid(ax,'on'); legend(ax,'Location','best');
-title(ax,'seed260001：同一保存Fourier实现；|x|≥50 m严格平面');
+title(ax,sprintf('seed%d：同一保存Fourier实现；|x|≥50 m严格平面',budget.seed));
 ax=nexttile(t); plot(ax,xx,slope,'Color',[.2 .45 .2]);
 xlim(ax,[-60 60]); xlabel(ax,'水平位置 x (m)'); ylabel(ax,'坡度 dη/dx'); grid(ax,'on');
 local_save(fig,dest,names{1}); files(1,:)={fullfile(dest,[names{1} '.fig']),fullfile(dest,[names{1} '.png'])};

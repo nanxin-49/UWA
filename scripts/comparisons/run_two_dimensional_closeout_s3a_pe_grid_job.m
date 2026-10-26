@@ -5,22 +5,26 @@ arguments
     run_dir (1,:) char
     available_physical_bytes (1,1) double {mustBePositive}
 end
-assert(isfolder(root) && isfolder(run_dir) && contains(run_dir,'s3a_seed260001'));
+assert(isfolder(root) && isfolder(run_dir) && startsWith(run_dir,root));
 file=fullfile(run_dir,'jobs','pe_grid.mat'); assert(~isfile(file));
 budget=jsondecode(fileread(fullfile(run_dir,'protocol','budget.json')));
+assert(ismember(budget.seed,[260001 260002]) && ...
+    contains(run_dir,sprintf('s3a_seed%d',budget.seed)));
 ids={'main96','self64','space14','window60','window70','pe','fullfk'};
 spent=0;
 for j=1:7
     a=load(fullfile(run_dir,'jobs',[ids{j} '.mat']),'receipt');
     assert(strcmp(a.receipt.status,'COMPLETE')); spent=spent+a.receipt.wall_seconds;
 end
-assert(spent+30+budget.failure_reserve_s<budget.subbudget_s);
+if isfield(budget,'upper_pe_grid_s'), grid_upper=budget.upper_pe_grid_s;
+else, grid_upper=30; end
+assert(spent+grid_upper+budget.failure_reserve_s<budget.subbudget_s);
 estimated_increment=256*1024^2;
 assert(estimated_increment<.7*available_physical_bytes);
 q=load(fullfile(run_dir,'jobs','pe.mat'),'payload');
 t=load(fullfile(run_dir,'input','reference_data.mat'),'x','z');
 s=load(fullfile(run_dir,'input','frozen_source.mat'),'src'); src=s.src;
-p=readtable(fullfile(run_dir,'input','seed_260001_coefficients.csv'));
+p=readtable(fullfile(run_dir,'input',sprintf('seed_%d_coefficients.csv',budget.seed)));
 W=192.1875; n=1968; xf=(-W/2)+(0:n-1)'*(W/n);
 coeff=complex(zeros(n,1)); coeff(1:492)=2*src.coeff(1:492);
 coeff(end-491:end)=2*src.coeff(493:end);
