@@ -9,6 +9,16 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 三维固定dual四频点独立盲测（2026-10-26；最新compact-dual状态）
+
+- 在旧4/5/6/7/8 kHz条件性五点与固定`η*`原样保留的基础上，事前锁定A(4/6/8锚点)和B(4/5/6/7/8锚点)的`Q=R/B*`分段复线性预测；4500/5500/6500/7500 Hz四点均未参与构造。Ubuntu MATLAB R2023b逐点通过原FE/FullFK资格门，四点都是`CONDITIONAL_G1_PASS`；A最大反射相对复误差`5.193e−5`，B最大`3.050e−5`，八次比较均过冻结`1e−3`筛查。5500/6500 Hz两预测器的绝对偏差均大于五倍FE经验敏感性，4500/7500 Hz则同量级而不能判更细精度；7500 Hz FK粗Gauss数值差`9.892e−4`，仅以小裕量过原`1e−3`门。[正式报告](reports/deepsea3d_four_frequency_holdout_2026-10-26.md)、[九点表/原生MAT/图/SHA/审计/检查点](results/validation/deepsea3d_four_holdout_20261026/README.md)。
+- 四频点新进程墙钟29/33/34/34 s，总审计11 s，合计`141/400 s`；19项输入SHA和106项回传SHA通过。决策`COMPACT_DUAL_FREQUENCY_HOLDOUT_SCREENING_PASS`，仅**GO设计**固定dual宽带频率网格及独立参考预算，不启动更多频点。连续宽带、CIR、BER均未认证。Q1 BIE仍`STOP`，二维S4仍`CORE_COMPLETE`，`G1_target_PM=OPEN`、`WP2_formal=false`；生产求解器/API和历史失败证据不改。下方Q1及5/7条目保留各自历史结论，其“当前三维状态”以本节为准。
+
+### 三维目标 PM 高阶 BIE 最小可行性决策（2026-10-26；最新参考路线状态）
+
+- 在旧 6 kHz 平面 Gaussian 制造问题上，仅测试连续节点 Q1 密度及匹配局部 Duffy/Gauss 求积。最佳独立离节点边界/离面复场误差 `0.0250587454/0.0409758501`，均不过原 `1e−4`；新鲜线性残差 `1.36e−15`，基础 Gauss8→12 复边界/场变化约 `5e−9`。旧 P0 最细独立边界/场为 `0.033851/0.004222`，但旧 L3/h0.15 与新 L4/h0.333 不匹配，不能把差异全归因于基函数。未知密度无限外区未闭合；**STOP 当前 Q1 BIE 作为目标 PM 独立参考的路线**，本轮未运行 compact-dual 或 PM BIE。[技术报告](reports/deepsea3d_bie_q1_decision_2026-10-26.md)、[原 MAT/日志/SHA/独立审计/检查点](results/validation/deepsea_bie_q1_20261026/README.md)。
+- Ubuntu R2023b 独立目录三个正式远端 MATLAB 作业墙钟 11/13/15 s，版本探测另保守计 14 s，总计 `53/600 s`；49 项回传 SHA 及保存原生复数独立复算通过。原三维五频点 compact-dual 条件性状态与下节证据不变；二维 S4 `CORE_COMPLETE`。`G1_target_PM=OPEN`、`WP2_formal=false`；生产求解器/API 未改，不立即尝试第二参考路线。
+
 ### 固定三维 compact-dual 5/7 kHz 独立参考与冻结重建检验（2026-10-26；当前三维状态）
 
 - 在原三维点源、Tx(0,150.5,1500)m/Rx(0,0,5)m、dual C2 plateau8/support12及既有4/6/8kHz证据原样冻结的条件下，Ubuntu MATLAB R2023b 在 `/home/misc/cwx/deepsea3d_5k7k_20261026` 独立目录完成5/7kHz FE 参考和完整两项FullFK，两点均 `CONDITIONAL_G1_PASS`。先锁的 `Q=R/B*` 复线性预测对独立反射复场相对误差分别 `6.766229e-5/2.954437e-5`，过原 `1e-3` 筛查；其绝对差 `3.3310e-9/1.4545e-9m⁻¹` 与保存FE变体经验敏感性 `3.2886e-9/1.2975e-9m⁻¹` 同量级，不能声称更细精度或连续频率响应/CIR/带内衰落已认证。[唯一新三维报告](reports/deepsea_dual_5k7k_independent_validation_2026-10-26.md)与[原生MAT/五点CSV/FIG/PNG/日志/SHA/审计/检查点](results/validation/deepsea3d_5k7k_20261026/README.md)为证据。
