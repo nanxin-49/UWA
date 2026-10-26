@@ -9,6 +9,11 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 固定三维 compact-dual 5/7 kHz 独立参考与冻结重建检验（2026-10-26；当前三维状态）
+
+- 在原三维点源、Tx(0,150.5,1500)m/Rx(0,0,5)m、dual C2 plateau8/support12及既有4/6/8kHz证据原样冻结的条件下，Ubuntu MATLAB R2023b 在 `/home/misc/cwx/deepsea3d_5k7k_20261026` 独立目录完成5/7kHz FE 参考和完整两项FullFK，两点均 `CONDITIONAL_G1_PASS`。先锁的 `Q=R/B*` 复线性预测对独立反射复场相对误差分别 `6.766229e-5/2.954437e-5`，过原 `1e-3` 筛查；其绝对差 `3.3310e-9/1.4545e-9m⁻¹` 与保存FE变体经验敏感性 `3.2886e-9/1.2975e-9m⁻¹` 同量级，不能声称更细精度或连续频率响应/CIR/带内衰落已认证。[唯一新三维报告](reports/deepsea_dual_5k7k_independent_validation_2026-10-26.md)与[原生MAT/五点CSV/FIG/PNG/日志/SHA/审计/检查点](results/validation/deepsea3d_5k7k_20261026/README.md)为证据。
+- 固定6kHz跨平台同配置诊断原生反射复差 `8.37e-16`、增量 `4.05e-16`；远端17输入SHA及115回传文件SHA全通过，独立审计PASS。全部7个新远端MATLAB进程墙钟 `129/600s`，5/7kHz分别27/33s，物理RAM 30%余量门通过。下一独立研究优先提高参考分辨率把握并继续扩展可信频率证据，但本Goal到此停止、不借用旧二维余额、不自动扩频。二维S4保持下节 `CORE_COMPLETE` 且其Gaussian源不用于三维；原振幅目标PM独立参考仍未认证，`G1_target_PM=OPEN`、`WP2_formal=false`。生产求解器和公共API未改。
+
 ### S4 二维核心正式收尾（2026-10-26；权威当前状态）
 
 - `CORE_COMPLETE`仅指固定4 kHz、同源离散Gaussian源、平面/三档C2正弦、K_HIGH、受混合平台参考限制的PHI_PLUS90及预定`seed260001–260003`三个固定二维PM实现。S2a源/表示闭合，S2b九点108/108及411线参考限定合格，S2c-A空间诊断、K_HIGH、PHI保存真场及S3A三seed已逐项验收；后续日期节中“当前阻塞”“S4未开始”均为历史快照。唯一[正式收尾报告顶部S4摘要](reports/two_dimensional_channel_closeout_report.md)给出各支持数值、方法范围、旧G口径区别和未闭合问题；[S4索引与检查点](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)连到原MAT/CSV/配置/SHA/审计/图件。S4新增声场计算0，既有数值包未覆盖。

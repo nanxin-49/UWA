@@ -2,7 +2,9 @@
 
 本仓库用于研究海底发射机到近海面接收机的垂直水声传播。公共模型以 PE/WAPE 计算直达与海面反射频响，并提供粗糙海面、joint-kstat、接收端精确离散伴随、二阶统计和 MPSK 通信验证工具。
 
-二维同源反射复场比较已正式S4收尾：`CORE_COMPLETE`仅限固定4 kHz源、平面/三档正弦、K_HIGH、参考受限的PHI_PLUS90及预定三个PM实现（S3A `3/3`）；S3B登记`S3B_NOT_RUN_BUDGET_LIMITED`，S5为`S5_NOT_READY`。本轮不新增声场计算；资格、数值结论、预算与未闭合项见[唯一正式报告](reports/two_dimensional_channel_closeout_report.md)及[S4结果索引](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)。历史阶段状态保留在各自结果包，不能替代报告顶部当前结论。
+三维固定 compact-dual 单链路已在原4/6/8kHz基础上完成独立5/7kHz参考及事前锁定的两个局部跨频重建检验；五个离散点为条件性案例结论，连续频响、CIR和目标PM仍未认证。见[三维5/7kHz报告](reports/deepsea_dual_5k7k_independent_validation_2026-10-26.md)与[结果索引](results/validation/deepsea3d_5k7k_20261026/README.md)。
+
+二维同源反射复场比较已正式S4收尾：`CORE_COMPLETE`仅限固定4 kHz源、平面/三档正弦、K_HIGH、参考受限的PHI_PLUS90及预定三个PM实现（S3A `3/3`）；S3B登记`S3B_NOT_RUN_BUDGET_LIMITED`，S5为`S5_NOT_READY`。该S4收尾轮不新增声场计算；资格、数值结论、预算与未闭合项见[唯一正式报告](reports/two_dimensional_channel_closeout_report.md)及[S4结果索引](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)。历史阶段状态保留在各自结果包，不能替代报告顶部当前结论。
 
 ## 快速开始
 

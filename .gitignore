@@ -12,6 +12,8 @@
 !*.m
 !*.md
 !scripts/validation/postprocess_pe_bellhop_pm_model_discrepancy_statistics.py
+!/scripts/validation/support/audit_deepsea3d_5k7k_saved.py
+!/scripts/validation/support/finalize_deepsea3d_5k7k_receipts.py
 
 # Re-generable build, compiler, toolchain, and Python cache content must stay
 # ignored even though the repository-wide source/documentation rules above
