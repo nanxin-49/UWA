@@ -1,0 +1,73 @@
+{
+  "status": "S2C_B_PHI_PLUS90_INDEPENDENT_AUDIT_PASS",
+  "raw_rows": 2502,
+  "point_rows": 1668,
+  "support_rows": 20,
+  "paired_rows": 10,
+  "BIE_version_rows": 2085,
+  "max_point_error": 7.136021870018472E-14,
+  "max_identity_error": 2.583450489125616E-20,
+  "max_support_error": 1.234797854243741E-15,
+  "max_paired_error": 3.1086244689504383E-15,
+  "max_resolution_error": 2.935242542119877E-15,
+  "classification_checks": 50,
+  "PHI_PE_step_max_abs": 8.3500590725694079E-14,
+  "PHI_PE_frozen_probe_max_abs": 1.4083411605995188E-7,
+  "PHI_FullFK_quadrature_relative": 6.323480710725696E-14,
+  "PHI_FullFK_extent_relative": 7.5256492284027451E-16,
+  "job_seconds": [
+    203.6039647,
+    153.5603395,
+    96.959982,
+    50.767938,
+    67.88035,
+    2.903151,
+    2.352785
+  ],
+  "new_acoustic_seconds": 578.0285102,
+  "minimum_job_available_physical_bytes": 2.648829952E+9,
+  "charged_core_seconds": 3263.7425744,
+  "S3A_planning_balance_seconds": 4242.8584255999995,
+  "redraw_pixel_equal": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "fig_reopened": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "image_dimensions_px": [
+    [
+      1667,
+      1952
+    ],
+    [
+      2744,
+      3007
+    ],
+    [
+      2914,
+      3104
+    ],
+    [
+      2882,
+      3025
+    ],
+    [
+      2749,
+      2909
+    ]
+  ],
+  "mirror_pair_rows": 2502,
+  "mirror_csv_max_error": 1.457483917260859E-15,
+  "source_sha256": "8d60d3d9d6aa3aa16110ac33d81e0d193a61526aef2c0c2e9edd531cae531f55",
+  "configuration_sha256": "3038983c6b78e37a2acb9e570f992f258e33e9064dcce8e72110b9977d21d317",
+  "BIE_solver_sha256": "76f1a9d52c898d62507ad7d971813c79b1f09cd9ced4f6dbce556ed11c349fa9",
+  "qualification": "empirical five-level BIE; PE grid sensitivity only 13 frozen probes"
+}

@@ -77,6 +77,16 @@
 !/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/jobs/bie_self64_preflight.json
 !/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/jobs/bie_self64.json
 
+# Minimal 2D research review workbench and traceable result tables/audits.
+!/UWA_2D_research_review_workbench.html
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/array_metrics.csv
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/line_metrics.csv
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv
+!/results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json
+!/results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv
+!/results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/F08_S3A_three_seed_summary.png
+!/results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json
+
 # Track the generated project-level skill lock and the explicitly selected
 # Scientific Agent Skills packages, including their reference/script assets.
 !/skills-lock.json

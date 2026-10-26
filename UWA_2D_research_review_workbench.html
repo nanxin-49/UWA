@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>UWA 二维声学研究 · 看得懂的进度与 Codex 审阅工作台</title>
+<style>
+:root{--navy:#132b3a;--navy2:#213e4e;--ink:#1d3039;--body:#415665;--muted:#687984;--paper:#faf9f5;--white:#fff;--border:#e0e5e5;--teal:#117f75;--tealLight:#e5f3ef;--blue:#2a6297;--blueLight:#eaf1f8;--gold:#a46a1b;--goldLight:#fcf1db;--red:#a44944;--redLight:#f8eae7;--shadow:0 10px 30px rgba(23,47,59,.055)}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft Yahei",Arial,sans-serif;font-size:15px;line-height:1.77}a{color:#156a81;text-decoration:none}a:hover{text-decoration:underline}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #54a7a0;outline-offset:2px}h1,h2,h3,h4{line-height:1.35;letter-spacing:-.025em}h1{font-size:34px;margin:12px 0 16px}h2{font-size:26px;margin:0 0 14px}h3{font-size:18px;margin:0 0 8px}p{margin:8px 0 13px}strong{font-weight:700}small,.subtle{color:var(--muted)}.layout{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}.sidebar{background:var(--navy);color:#cfdae0;min-height:100vh;padding:30px 19px;position:sticky;top:0;height:100vh;overflow:auto}.logo{font-size:13px;font-weight:750;letter-spacing:.16em;color:#78d1c2}.sidebar-title{color:#fff;font-size:20px;line-height:1.45;margin:18px 6px 26px;font-weight:800}.navcap{font-size:11px;letter-spacing:.12em;color:#8ba7b6;margin:14px 10px 9px;text-transform:uppercase}.navlink{display:flex;align-items:center;gap:11px;padding:11px 12px;color:#cedbe0;border-radius:10px;font-size:13.5px;font-weight:600}.navlink:hover,.navlink.active{color:#fff;background:#2b5060;text-decoration:none}.navnum{font-family:ui-monospace,Consolas,monospace;color:#8fbcbd;font-size:12px}.sidebar-note{background:#213d4c;border:1px solid #3c5d69;border-radius:12px;padding:14px;margin-top:35px;font-size:12px;line-height:1.7}.sidebar-note b{color:#dcefed}.main{min-width:0}.hero{background:linear-gradient(118deg,#183748 0%,#102b39 72%,#1d5056 100%);color:#fff;padding:46px min(6vw,72px) 43px}.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:750;color:#b1e2d6}.hero p{max-width:800px;color:#cfdee0;font-size:16px;margin:0}.hero-foot{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:25px}.hero-tag{font-size:12px;padding:6px 12px;border:1px solid #52737c;border-radius:99px;color:#d6e8e9}.content{max-width:1280px;margin:0 auto;padding:25px min(5vw,60px) 72px}.section{margin:46px 0 62px;scroll-margin-top:28px}.section-lead{max-width:900px;color:var(--body);margin-top:0;margin-bottom:24px}.section-index{font-size:12px;color:var(--teal);letter-spacing:.12em;font-weight:800;text-transform:uppercase;margin:0 0 9px}.panel{background:var(--white);border:1px solid var(--border);border-radius:17px;box-shadow:var(--shadow);padding:24px}.panel+.panel{margin-top:17px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.stat{padding:18px 20px;border:1px solid var(--border);border-radius:14px;background:white}.stat .stat-n{font-size:31px;line-height:1.25;color:var(--navy);font-weight:850;letter-spacing:-.04em}.stat .stat-n small{font-size:14px;font-weight:500}.stat .stat-title{font-size:13px;color:var(--body);font-weight:650}.stat .stat-foot{font-size:11px;color:var(--muted);margin-top:6px}.important{border-left:4px solid #b98232;background:#fffdf7;padding:17px 21px;border-radius:0 13px 13px 0;margin:21px 0;color:#384950}.important h3{font-size:16px;margin:0 0 6px;color:#804d10}.main-focus{display:grid;grid-template-columns:1.25fr .95fr;gap:18px}.main-focus p{margin:0}.big-stamp{font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.12em;color:var(--teal)}.focus-steps{display:grid;gap:9px;margin-top:14px}.focus-step{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:9px;background:#f1f7f6;font-size:13px}.focus-step b{display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#d3e8e2;color:var(--teal);flex:none}.meter{height:11px;border-radius:10px;background:#eff2f1;overflow:hidden;display:flex;margin:18px 0 8px}.meter-used{background:#3c8a80;width:40.536%}.meter-reserve{background:#b6a47d;width:39.963%}.meter-free{background:#dfe7e5;flex:1}.minirow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-size:12px;color:var(--body)}.key{display:inline-block;border-radius:50%;width:9px;height:9px;margin-right:6px;background:#3c8a80}.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.story-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;min-width:0}.story-card p{font-size:13px;color:var(--body)}.story-card h3{font-size:17px}.story-card svg{width:100%;height:auto;display:block}.diagram-legend{font-size:11px;color:var(--muted);margin-top:6px}.model-row{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.method{padding:15px 14px;border:1px solid var(--border);background:#fff;border-radius:12px}.method b{font-size:15px}.method p{font-size:12.5px;margin:6px 0 0;color:var(--body)}.surface-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}.tab{background:#eef2f0;border:1px solid #d6e2de;color:#2f5e60;border-radius:99px;padding:5px 13px;font-size:12px;font-weight:650}.tab.active{color:white;border-color:#147d74;background:#147d74}.diagram-note{padding:9px 13px;font-size:13px;background:#eef6f2;border-radius:8px;color:#335354}.journey{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.milestone{border:1px solid var(--border);background:#fff;border-radius:13px;padding:17px 18px;position:relative;min-height:145px;transition:box-shadow .15s}.milestone:hover{box-shadow:0 10px 24px rgba(15,42,48,.08)}.m-head{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:7px}.m-name{font-weight:790;font-size:15px}.m-sub{font-size:13px;font-weight:650;color:#3b6170}.m-desc{font-size:12.5px;color:var(--body);margin:7px 0}.m-foot{font-size:11.5px;color:var(--muted);margin-top:9px}.chip{display:inline-flex;align-items:center;border-radius:99px;font-size:11px;padding:4px 9px;font-weight:750;white-space:nowrap;background:#eef1f0;color:#50646d}.chip.done{background:var(--tealLight);color:#187266}.chip.blocked{background:var(--goldLight);color:#8a581c}.chip.todo{background:var(--blueLight);color:#4a6a90}.chip.optional{background:#f0eef4;color:#6d6880}.chip.local{background:#f9ebdc;color:#955b17}.filterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:white;border:1px solid var(--border);padding:12px;border-radius:13px;margin:19px 0 15px}.filterbar input,.filterbar select,.field,input[type=date],textarea{border:1px solid #d1dcd9;border-radius:9px;background:#fff;padding:10px 12px;color:var(--ink)}.filterbar input{flex:1;min-width:170px}.filterbar select{min-width:145px}.count-caption{font-size:12px;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start}.deliverable{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;min-width:0}.delivery-summary{padding:19px 20px}.delivery-summary:hover{background:#fbfdfc}.d-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}.d-stage{font-size:11px;font-weight:750;color:var(--blue);letter-spacing:.04em}.delivery-summary h3{font-size:17px;margin:0 0 7px}.delivery-summary .d-lead{font-size:13.5px;font-weight:650;color:#37525c;margin:0 0 6px}.d-preview{font-size:12.5px;color:var(--body);line-height:1.65}.delivery-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.btn{padding:8px 12px;border-radius:9px;border:1px solid #cbdbd7;background:white;font-size:12.5px;font-weight:700;color:#315665;display:inline-flex;align-items:center;gap:5px;text-decoration:none;line-height:1.45}.btn:hover{background:#eff6f4;text-decoration:none}.btn.primary{background:var(--teal);border-color:var(--teal);color:white}.btn.primary:hover{background:#0e6d64}.btn.ghost{background:transparent}.btn.alert{color:#9b4944;border-color:#edc4c0}.btn:disabled{opacity:.45;cursor:not-allowed}.readmore{border-top:1px solid #edf0ef;padding:0 20px}.readmore summary{font-weight:750;font-size:12.5px;color:#24756f;padding:10px 0;cursor:pointer}.readmore-content{padding:0 0 20px}.explain-list{display:grid;gap:10px}.explain{border-left:3px solid #d2dedb;padding:3px 0 3px 12px}.explain h4{margin:0 0 2px;font-size:13px;color:#335465}.explain p{font-size:13px;color:#344b56;margin:0}.explain.special{border-color:#e0b780;background:#fffdf9;padding:9px 13px}.evidences{margin-top:16px;border-top:1px dashed var(--border);padding-top:13px;display:grid;gap:8px}.evi{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12px}.evi .evi-type{font-size:10px;background:#f1f3f2;border-radius:6px;padding:2px 6px;color:#576977}.evi a{overflow-wrap:anywhere}.evi-note{font-size:11px;color:#8b6f4e}.fig-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.fig-card{background:#fff;border:1px solid var(--border);border-radius:13px;overflow:hidden}.fig-preview{position:relative;height:250px;background:repeating-linear-gradient(45deg,#f1f4f2,#f1f4f2 14px,#eef2f0 14px,#eef2f0 28px);display:grid;place-items:center;overflow:hidden}.fig-preview img{width:100%;height:100%;object-fit:contain;opacity:0;position:absolute;inset:0;background:#fff}.fig-preview.img-loaded img{opacity:1}.fig-placeholder{padding:20px;text-align:center;color:#667b80;font-size:12px;max-width:310px}.fig-preview.img-loaded .fig-placeholder{display:none}.fig-body{padding:16px}.fig-body h3{font-size:15px}.fig-body p{font-size:12.5px;color:var(--body);margin:0 0 8px}.fig-badge{font-size:11px;color:#6f8985}.note-only{font-size:11px;color:#73848b}.review-intro{background:#eff7f3;border:1px solid #cfe5db;padding:15px 19px;border-radius:13px;font-size:13px;margin-bottom:18px}.review-cols{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.form-panel{background:#fff;border:1px solid var(--border);padding:21px;border-radius:15px;min-width:0}.form-panel h3{margin:0 0 14px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.fgrp{display:grid;gap:5px;margin:0 0 12px;min-width:0}.fgrp label{font-size:12px;color:#445d65;font-weight:750}.fgrp input,.fgrp select,.fgrp textarea{width:100%;font-size:13px}.fgrp textarea{resize:vertical;min-height:78px}.fgrp textarea.large{min-height:180px}.span2{grid-column:1/-1}.checkline{display:flex;gap:10px;font-size:12.5px;align-items:flex-start;margin:7px 0}.checkline input{margin-top:5px;accent-color:var(--teal)}.form-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.current-review{background:#f5f9f8;border:1px solid #d8e9e3;border-radius:10px;padding:13px;margin:7px 0 14px;font-size:12.5px}.review-record{padding:14px 0;border-bottom:1px solid #edf1ef}.review-record:last-child{border:0}.review-record .rec-head{display:flex;gap:10px;align-items:center;justify-content:space-between}.review-record strong{font-size:13px}.review-record p{font-size:12.5px;color:var(--body);margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.tool-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.tool-row input{display:none}.source-list{display:grid;gap:12px}.source-entry{border:1px solid var(--border);border-radius:12px;background:white;padding:16px 18px}.source-entry h3{margin:0 0 4px;font-size:15px}.source-entry p{font-size:12.5px;color:var(--body)}.source-entry ul{font-size:12px;overflow-wrap:anywhere}.source-entry li{padding:3px 0}.evidence-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tier{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;font-size:12px}.tier b{font-size:14px}.tier p{color:var(--body)}.glossary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.gloss{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px 17px}.gloss strong{font-size:14px;color:#214e5c}.gloss small{font-size:12px;color:#527079;display:block}.gloss p{font-size:12px;color:var(--body);margin:5px 0 0}.source-original details{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 17px;margin:9px 0}.source-original details summary{cursor:pointer;font-weight:680;font-size:14px}.source-original details .original-body{padding-top:15px;color:#2e4c57;font-size:13px;overflow-wrap:anywhere}.original-body code{background:#f1f3f4;padding:1px 4px;border-radius:4px;font-size:12px}.original-body pre{white-space:pre-wrap;background:#f4f6f5;border-radius:9px;padding:13px;max-height:380px;overflow:auto}.original-body table{border-collapse:collapse;display:block;max-width:100%;overflow-x:auto;font-size:11.5px}.original-body th,.original-body td{padding:7px 9px;border:1px solid #dfe5e5}.original-body h2{font-size:18px}.original-body h3{font-size:15px}.original-body h4{font-size:14px}.footer{border-top:1px solid var(--border);padding:25px 0;color:#6b7a82;font-size:11.5px}.toast{position:fixed;z-index:100;bottom:20px;right:22px;background:#1a4a4c;color:white;padding:13px 18px;border-radius:10px;box-shadow:0 14px 44px #112b3840;max-width:390px;font-size:13px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}.status-error{color:#9c4c34;font-size:12px;margin-top:4px}.nojs{background:#fff5e7;padding:14px;border:1px solid #e8d3ad}.divider{height:1px;background:var(--border);margin:18px 0}.smallprint{font-size:11.5px;color:var(--muted);line-height:1.7}.pillbox{background:#f4f6f4;border-radius:12px;padding:13px 15px;font-size:13px}.stats-link{color:#1b7d76;font-size:12px;font-weight:700}.hidden{display:none!important}@media(max-width:1180px){.layout{grid-template-columns:206px minmax(0,1fr)}.content{padding:20px 30px 50px}.hero{padding:33px 32px}.grid4{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}.main-focus{grid-template-columns:1fr}.review-cols{grid-template-columns:1fr}}@media(max-width:760px){.layout{display:block}.sidebar{height:auto;min-height:unset;position:static;padding:14px 17px}.sidebar-title{font-size:15px;margin:6px 0 12px}.navcap,.sidebar-note{display:none}.sidenav{display:flex;overflow:auto;gap:5px}.navlink{white-space:nowrap;padding:7px 10px;font-size:12px}.navnum{display:none}.content{padding:18px 14px 35px}.hero{padding:29px 18px}.hero h1{font-size:27px}.hero p{font-size:13.5px}.section{margin:35px 0 46px}.section h2{font-size:23px}.story-grid,.journey,.fig-grid,.glossary,.model-row,.evidence-tiers{grid-template-columns:1fr}.panel{padding:17px}.grid4{gap:8px}.stat{padding:14px}.stat .stat-n{font-size:26px}.fig-preview{height:230px}.formgrid{grid-template-columns:1fr}.span2{grid-column:auto}}@media print{.sidebar,.hero-foot,.filterbar,.btn,.form-panel,.toast,.fig-placeholder,.story-card button{display:none!important}.layout{display:block}.hero{padding:12px 0;background:white;color:black}.hero p{color:#555}.content{max-width:none;padding:0}.section{margin:22px 0}.delivery-summary{break-inside:avoid}.deliverable,.panel,.fig-card{box-shadow:none;border:1px solid #ddd}.readmore{display:block}.readmore-content{display:block!important}.fig-preview{height:auto;min-height:140px}.fig-preview img{position:relative;max-height:200px}.original-body{break-before:page}}
+code{overflow-wrap:anywhere;word-break:break-word}.fig-placeholder small{display:block;overflow-wrap:anywhere;word-break:break-word}.source-entry code{overflow-wrap:anywhere;word-break:break-word}
+</style>
+</head>
+<body>
+<noscript><div class="nojs">浏览器已关闭JavaScript：静态计划仍可阅读，但筛选、审阅记录及导出功能不可用。</div></noscript>
+<div class="layout">
+<aside class="sidebar" aria-label="页面导航">
+  <div class="logo">UWA · RESEARCH NOTEBOOK</div>
+  <div class="sidebar-title">二维声学研究<br>人类可读工作台</div>
+  <div class="navcap">阅读顺序</div>
+  <nav class="sidenav" id="nav">
+<a class="navlink" href="#now">01 研究目标与现状</a><a class="navlink" href="#understand">02 先看懂研究</a><a class="navlink" href="#journey">03 研究路线</a><a class="navlink" href="#deliveries">04 已交付成果</a><a class="navlink" href="#figures">05 科研真图</a><a class="navlink" href="#issues">06 未解决问题</a><a class="navlink" href="#next">07 下一步研究</a><a class="navlink" href="#evidence">08 本地证据</a><a class="navlink" href="#dictionary">09 术语</a><a class="navlink" href="#original">历史计划快照</a><a class="navlink" href="#review">10 Codex审阅记录</a>
+</nav>
+  <div class="sidebar-note"><b>读这份工作台的方法</b><div style="margin-top:6px">先读“意义”，再看“结果”，最后核对证据。研究阶段完成、你看懂了、结果独立验收通过，是三种不同状态。</div></div>
+</aside>
+<main class="main">
+<header class="hero">
+  <div class="eyebrow">二维海面反射 · 研究进度解释与交付审阅</div>
+  <h1>把 Codex 的科研报告<br>变成你真正看得懂的研究记录</h1>
+  <p>不是把几十页 MATLAB 术语搬到网页上，而是解释每一步为什么做、它真的发现了什么、有哪些结论还不能下，以及你怎样审阅下一次交付。</p>
+  <div class="hero-foot"><span class="hero-tag">依据：2026-10-26本地正式S4索引</span><span class="hero-tag">证据：本地正式结果与历史独立审计</span><span class="hero-tag">不运行声学计算</span><a class="btn" href="https://github.com/nanxin-49/UWA" target="_blank" rel="noopener noreferrer">打开UWA仓库 ↗</a></div>
+</header>
+<div class="content">
+<section class="section" id="now"><div class="section-index">01 / 研究目标与当前状态</div><h2>固定二维核心已经收尾，结论仍有边界</h2>
+<p class="section-lead">问题是：在同一4 kHz离散Gaussian声源、相同海面与真接收位置上，PE、BIE和完整FullFK预测的<strong>反射复场</strong>有何差异？截至2026-10-26，S4将固定二维核心记为 <strong>CORE_COMPLETE</strong>。这个结论覆盖平面/三档正弦、K_HIGH、参考受限的PHI_PLUS90及预定PM三样本；不代表三维、宽带或通信验证已经完成。</p>
+<div class="grid4"><div class="stat"><div class="stat-n">108/108</div><div class="stat-title">S2b真实九点</div><div class="stat-foot">四海面×三方法×九点；另有411点线</div></div><div class="stat"><div class="stat-n">3/3</div><div class="stat-title">S3A固定PM实现</div><div class="stat-foot">三seed真场、审计和F08均已交付</div></div><div class="stat"><div class="stat-n">5层</div><div class="stat-title">PHI BIE已计算</div><div class="stat-foot">数据齐全；混合平台求解参考受限</div></div><div class="stat"><div class="stat-n" id="reviewCount">0 <small>/ 32</small></div><div class="stat-title">你的人工认可</div><div class="stat-foot">默认全部待审阅，不由程序代替判断</div></div></div>
+<div class="important"><h3>三个状态分别看</h3><div><strong>执行：</strong>S4限定核心完成，S3B新增五样本因预算未运行，S5未准备好。 <strong>科学：</strong>固定案例中的同源比较有条件支持；PHI跨平台BIE求解差、弱中正弦FullFK九点分辨率和PM总体外推仍开放。 <strong>人工：</strong>本页的初始认可数为零，只有你核对后才变化。</div></div>
+<div class="panel"><h3>本轮只读核查的层级</h3><p>正式报告给出了结论；本地原始CSV、MAT入口、真图和历史独立审计文件已找到；本轮只读抽查关键CSV/JSON与S4索引，没有重新运行数值审计、图像重绘或任何声学求解。你可以在每项成果的证据入口继续人工验收。</p><p><strong>当前预算记录：</strong>S3A三seed保守扣记2010/3000 s；共享累计5411.424104/7506.601 s，余额2095.176896 s。S3B新增五样本需规划5500 s，尚缺3404.823104 s。这个预算判断不自动开启下一阶段。</p></div>
+</section>
+<section class="section" id="understand"><div class="section-index">02 / 用最少术语理解研究</div><h2>这项研究到底在比较什么？</h2><p class="section-lead">一个水下声源向海面传播声音，声音从海面反射到接收器。我们用三种不同的计算方法预测“反射回来的是怎样一条波”，再比较它们在同一接收位置的结果。</p>
+ <div class="important"><h3>先把三类差异分开</h3><div>海面物理响应：同一BIE方法比较粗糙海面与平面；模型残差：同一粗糙海面下PE/FullFK与BIE比较；数值分辨率：改变BIE网格、PE步长或FullFK求积后结果有多稳定。主指标分别是 R<sub>BIE</sub>=‖u<sub>BIE,rough</sub>−u<sub>BIE,flat</sub>‖₂/‖u<sub>BIE,flat</sub>‖₂ 与 E<sub>m</sub>=‖u<sub>m,rough</sub>−u<sub>BIE,rough</sub>‖₂/‖u<sub>BIE,rough</sub>‖₂；九点和411线各算自己的分母。</div></div><div class="story-grid">
+  <div class="story-card"><h3>① 一条真实的研究链路</h3><svg viewBox="0 0 520 245" aria-label="示意图，声源射向海面再反射到接收点；不是数值声线计算" role="img"><rect x="3" y="3" width="514" height="238" rx="13" fill="#f5faf8"/><path d="M30 67 Q75 40 120 67 T210 67 T300 67 T390 67 T480 67" fill="none" stroke="#3a9cb0" stroke-width="4"/><path d="M30 87H480" stroke="#d6e6e8" stroke-dasharray="5 7"/><g font-family="system-ui,sans-serif" fill="#254758"><text x="30" y="26" font-size="15" font-weight="700">海面（只是形状示意）</text><text x="32" y="232" font-size="11">x 向右 · z 向下</text><text x="46" y="148" font-size="13">声源</text><text x="354" y="148" font-size="13">接收点群</text></g><circle cx="92" cy="170" r="13" fill="#d89c4c"/><circle cx="369" cy="168" r="8" fill="#147f76"/><circle cx="389" cy="175" r="6" fill="#147f76"/><circle cx="375" cy="188" r="6" fill="#147f76"/><path d="M100 160 Q170 60 240 67 Q301 91 366 160" fill="none" stroke="#c87d34" stroke-width="2.4" stroke-dasharray="7 5"/><path d="M359 152l10 9-3-13" fill="none" stroke="#c87d34" stroke-width="2.4"/></svg><div class="diagram-legend">概念示意，不是Bellhop声线或模拟结果。本阶段固定4kHz、二维x-z、单次海面反射的研究设置。</div></div>
+  <div class="story-card"><h3>② 三种计算方法各扮演什么角色？</h3><div class="model-row"><div class="method"><b>PE</b><p>近似计算方法。重点看和数值参考相差多少。</p></div><div class="method"><b>FullFK</b><p>另一种完整积分形式的近似计算。</p></div><div class="method"><b>BIE</b><p>独立数值参考，但不是水池实测真值。</p></div></div><div class="diagram-note" style="margin-top:14px"><strong>比较原则：</strong>声源、海面、接收点、相位和量纲都匹配，才有资格比较模型差异。Bellhop的源映射仍待解决。</div><p>主比的是反射复场 <code>u_rough</code>，平坦海面 <code>u_flat</code> 要一起报告。旧指标 G 和粗糙增量 δu 用于解释，不代替主结果。</p></div>
+  <div class="story-card"><h3>③ 为什么“幅度很像”还可能有误差？</h3><svg viewBox="0 0 500 230" role="img" aria-label="教学示意：两个相近长度但方向不同的复向量，演示幅度与相位不相同"><rect x="2" y="2" width="496" height="226" rx="11" fill="#f7f8fb"/><path d="M80 192H430M90 208V25" stroke="#b6cbd0" stroke-width="1.5"/><path d="M90 192L378 102" stroke="#22867b" stroke-width="5" stroke-linecap="round"/><path d="M90 192L387 143" stroke="#e49b4c" stroke-width="5" stroke-linecap="round"/><path d="M368 99l13 2-8 11M376 133l13 11-17 3" fill="none" stroke-width="3" stroke="#405e65"/><path d="M155 192A65 65 0 0 0 154 173" fill="none" stroke="#aa6b29" stroke-width="2"/><g font-family="system-ui,sans-serif" font-size="14" fill="#234452"><text x="315" y="82">BIE参考</text><text x="339" y="166">PE预测</text><text x="131" y="216">相位方向不同</text></g></svg><div class="diagram-legend">图是教学示意，不是项目原始复场测量。向量长度≈幅度，方向≈相位。</div><p>两支箭头一样长，不意味着它们指向同一个方向。声学复数差异同时受到幅度和相位影响。</p></div>
+  <div class="story-card"><h3>④ K和φ改变的究竟是什么？</h3><div class="surface-tabs" id="surfaceTabs"><button class="tab active" data-surf="base">原基线</button><button class="tab" data-surf="khigh">K_HIGH</button><button class="tab" data-surf="phi">PHI_PLUS90</button></div><svg viewBox="0 0 500 220" role="img" aria-label="以实际正弦海面数学参数绘制的几何示意，不是声学场或实验结果" id="surfaceSvg"><rect x="1" y="1" width="498" height="218" rx="10" fill="#f8fbf9"/><path d="M22 110H481" stroke="#c4d8d6" stroke-dasharray="4 5"/><path d="M250 23V194" stroke="#b8d2d0" stroke-dasharray="4 5"/><path id="surfBaseline" stroke="#b2c2bc" stroke-width="2.2" fill="none"/><path id="surfChanged" stroke="#188a80" stroke-width="3.5" fill="none"/><circle id="surfZero" cx="250" cy="110" r="5" fill="#dc903b"/><text x="16" y="18" fill="#466c71" font-size="11">η(x)，向下为正</text><text x="434" y="207" fill="#466c71" font-size="11">x / m</text></svg><div class="diagram-note" id="surfaceNote">基线：A=0.05m，K=0.10rad/m，φ=0；中心海面高度为0，但斜率并非0。</div><div class="diagram-legend">由本地冻结解析公式画出的几何示意（含C2窗口），不是新计算的反射声场或数值验收图。</div></div>
+ </div>
+</section>
+<section class="section" id="journey"><div class="section-index">03 / 研究阶段</div><h2>从哪里开始，为什么走到现在？</h2><p class="section-lead">按研究逻辑排列，不把计划历史中的“下一步”当作今天的下一步。你可以点击某阶段，直接筛选它已交付的内容。</p><div class="journey" id="journeyList"></div></section>
+<section class="section" id="deliveries"><div class="section-index">04 / 核心：逐项交付解读</div><h2>Codex以前交付的每项成果，究竟是什么意思？</h2><p class="section-lead">这是工作台的主体。每张卡先用一句话讲研究意义，展开后依次阅读<strong>为什么做 → 做了什么 → 发现什么 → 有何意义 → 不能证明什么 → 我该审什么</strong>。此处数值已对照本地正式报告、关键CSV/审计和S4索引；本轮没有重新运行MATLAB。</p>
+ <div class="filterbar"><input type="search" id="deliverySearch" placeholder="搜索：中心、相位、S2b、M04、预算……" aria-label="搜索交付项目"><select id="stageFilter" aria-label="筛选研究阶段"><option value="all">所有已交付内容</option></select><span class="count-caption" id="deliveryCount"></span></div>
+ <div class="cards" id="deliveryCards"></div>
+</section>
+<section class="section" id="figures"><div class="section-index">05 / 科研图怎么读</div><h2>先看图在回答哪个问题，再看曲线</h2><p class="section-lead">以下优先使用仓库已存在的真实科研图片，<strong>不是AI新造的声学数值图</strong>。请把此HTML留在项目根目录，图片以本地相对路径读取。单独复制HTML而没有配套图片时，会明确显示缺失路径；页面不依赖联网。</p><div class="fig-grid" id="figGrid"></div><div class="important"><h3>关于读图的三个常见误区</h3><div>① 幅度看着接近，不代表相位和复数场接近；② 曲线在接收点x处有差，不代表只由海面同一个x位置造成；③ BIE物理变化、PE/FullFK模型误差、数值误差是三种不同的量。</div></div></section>
+<section class="section" id="issues"><div class="section-index">06 / 未解决问题</div><h2>哪些问题现在仍不能下结论？</h2><div class="cards"><div class="panel"><h3>PHI参考为什么保留限制？</h3><p>五层场与M05a–e都有正式文件，保存Windows密度在Ubuntu重评价的408个边界点残差也一致；但两个平台没有对同一网格独立重解边界密度，因此跨平台求解差还没有直接界限。</p></div><div class="panel"><h3>小误差等于物理正确吗？</h3><p>不等于。BIE是固定源与离散设置下的经验数值参考，不是严格真值；弱、中正弦的FullFK九点差低于五倍经验数值分辨率，甚至不能稳定地区分那里的微小差值。平面数值闭合也只说明源和表示已统一。</p></div><div class="panel"><h3>三种PM海面够代表总体吗？</h3><p>不够。三seed已说明九点PE残差随实现变化明显，但没有PM总体分布和尾部估计。S3B新增五个样本在当前预算下未运行。</p></div><div class="panel"><h3>二维单频能给通信CIR吗？</h3><p>不能。4 kHz空间复场没有跨频共同时间原点，也缺同源直达/反射标度、频率间隔收敛和native→DSP约定。三维与通信性能需要独立研究设计和证据。</p></div></div></section>
+<section class="section" id="next"><div class="section-index">07 / 下一步研究</div><h2>下一次应先设计怎样的研究？</h2><p class="section-lead">建议把三维单链路同源声场资格作为独立新目标：先冻结三维声源与海面表示、接收位置、独立参考、数值分辨率、资源预算和验收阈值。随后才考虑跨频H(f)、CIR与通信指标。本页只是审阅建议，不启动计算。</p><div class="important"><h3>审阅下一次Codex交付的七个问题</h3><div>①回答了哪个冻结问题？ ②复用了什么，真实新算了什么？ ③每个数值是哪类支持、哪个分母？ ④原始MAT/CSV、配置、SHA、作业退出状态在哪里？ ⑤独立审计是保存记录还是本次重跑？ ⑥科学结论是否超过数值与物理证据？ ⑦预算、未完成项与下一步授权门是否写清？</div></div></section>
+<section class="section" id="evidence"><div class="section-index">08 / 本地证据</div><h2>报告、原始文件、历史审计和本轮核查分别是什么？</h2><p class="section-lead">下方链接优先指向仓库本地相对路径。原始文件存在、历史独立审计报告通过、本轮只读抽查及你的人工认可，是四个独立层级。GitHub缺文件不能推断本地实验失败。</p><div class="source-list" id="sourceList"></div><div class="panel"><h3>可发布的最小证据包</h3><p>如需让GitHub读者复核，可选择S4索引、正式指标CSV、小型审计JSON、SHA清单与代表性PNG；大型MAT及FIG可留在本地或另定托管方式。先用 <code>git check-ignore -v</code> 核对每个文件的规则，再逐项放行。不要批量取消整个results的忽略，也不要上传退役档案。</p></div></section>
+<section class="section" id="dictionary"><div class="section-index">09 / 术语翻译</div><h2>遇到这些专业词，先这样理解</h2><div class="filterbar"><input id="glossSearch" type="search" placeholder="搜索：BIE、复数、相位、九点、RAM……" aria-label="搜索术语"><span class="count-caption" id="glossCount"></span></div><div class="glossary" id="glossary"></div></section>
+<section class="section source-original" id="original"><div class="section-index">附录 / 历史计划快照</div><h2>原来的技术计划仍然完整保留</h2><p class="section-lead">默认不展示大段专业内容。只有你想检查确切公式、资源规则、Goal约束或历史文本时再展开。本附录是旧工作台保存的2026-10-25计划快照，含“PHI 2/5”“S3A未开始”等已经过时的句子。当前状态以本页顶部和本地2026-10-26正式S4索引为准。</p><div id="originalChapters"><details><summary>文档首页与时间修订</summary><div class="original-body"><h1 id="二维声学对比收尾计划同源反射复场完整-kirchhoff-与接收点阵">二维声学对比收尾计划：同源反射复场、完整 Kirchhoff 与接收点阵</h1>
+<p><strong>2026-10-25 最新执行修订：</strong> 用户确认释放内存后，PHI <code>main96/self64</code> 两层真 BIE 已按序完成并保存密度及 417 点原生场，实耗 <code>357.1643042 s</code>。第三层 <code>space14</code> 前及唯一一次复核的可用物理 RAM 均低于 <code>2,026,747,612 B</code> 门槛，故停止后续声学计算；五层参考、PE/FullFK、M05b–e 和中心假设仍未完成。共享扣记 <code>3042.8783684/7506.601 s</code>，维持 S3A 3000 s 后 PHI 剩余额度 <code>1463.7226316 s</code>，成本门仍通过。最新<a href="results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md">执行/恢复门</a>覆盖下方各日期的资源快照，不改写其历史数值。</p>
+<p><strong>2026-10-24 最新执行修订：</strong> 用户将共享上限按最小授权增量提高至 <code>7506.601 s</code>，保留 S3A <code>3000 s</code>；PHI 完整保守计划通过成本门。最新 Windows 可用物理内存 <code>1,131,163,648 B</code>，低于本案例 30% 余量 RAM 门 <code>2,026,747,612 B</code>，用户要求暂时保持资源阻塞。PHI 新声学计算仍为 0，状态仍 <code>S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED</code>。下方“成本门阻塞”是授权前历史快照；详细回执在<a href="results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md">PHI 执行补记</a>。</p>
+<p>日期：2026-10-20；<strong>最新执行状态修订：2026-10-23（PHI_PLUS90完整参考成本门阻塞；Asia/Shanghai）</strong>。下文原“仅文档与Goal契约”及1800 s停止描述保留为当时历史状态。</p>
+<p><strong>PHI_PLUS90 当前状态：<code>S2C_B_PHI_PLUS90_RESOURCE_REFERENCE_BLOCKED</code>。</strong> 单独 Goal 已执行 P0/P1/P2 与不依赖新场的 P5/P6/P7：M05a 解析几何、K_HIGH 轻量图像/CSV/审计发布包、既有场五支持机制复核、三个 PM seed 只读清单和独立审计。新 PHI 声学 0 s；五层 BIE+PE/FullFK+失败余量的保守计划 <code>1820.8866778 s</code>，比维持 S3A 3000 s 后本轮可用 <code>1514.2859358 s</code> 高 <code>306.6007420 s</code>，故未开新边界解。最新图与具体成本、来源见<a href="reports/two_dimensional_channel_closeout_report.md">主报告首节</a>。K_HIGH 已完成状态不降格；PHI 尚无中心/九点/整线/边缘声学结论，不自动挪用 S3A 储备或进入 S3A。</p>
+<p><strong>当前最高优先状态：<code>S2C_B_K_HIGH_COMPLETE_REFERENCE_QUALIFIED</code>。</strong> 用户随后仅对K_HIGH授权2400 s子额度，按共享7200 s、S3A规划预留≥3000 s、单作业≤900 s和逐作业物理RAM保留30%完成五层新BIE、PE及完整FullFK、M04a–d和独立CSV/像素重绘审计。七次新声学实耗1277.0539592 s，累计核心扣记2685.7140642/7200 s，S3A规划余额4514.2859358 s。具体数值、限定资格和下一步见<a href="reports/two_dimensional_channel_closeout_report.md">唯一主报告首节</a>及<a href="results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md">新图册</a>。此状态只覆盖K_HIGH冻结417点和经验参考，<strong>不是模型物理PASS</strong>；PHI_PLUS90、PM/S3、三维和通信未执行。<code>G1_target_PM=OPEN</code>、<code>WP2_formal=false</code>。</p>
+<p><strong>当前权威执行状态（覆盖下文旧版“下一Goal/S2b未执行”等历史时间表述）：</strong> <code>S0_S1_COMPLETE_WITH_DECLARED_GAPS</code>、<code>S2A_CONVENTION_SOURCE_BASELINE_COMPLETE</code>、<strong><code>S2B_COMPLETE_REFERENCE_QUALIFIED</code></strong>。S2b已完成空间权重补正、108/108九点真复场、BIE当前代码整密度再资格与经验数值分辨率审查、FullFK解析平面外场补全及独立审计。仅在固定4 kHz、同一离散Gaussian源、原C2正弦、411点M99线和原P11–P33九点上成立，<strong>不是物理模型通用精度PASS或严格数学误差上界</strong>。正式版为<a href="results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md">正式S2b包说明</a>，<a href="reports/two_dimensional_channel_closeout_report.md">唯一主报告最新附录</a>；旧<code>REFERENCE_LIMITED</code>只作历史快照，不覆盖最终状态。Bellhop的物理Gaussian源映射仍未闭合。</p>
+<p><strong>2026-10-23扩额前历史执行补记（不再是当前状态）：</strong> S2c-A已以<code>S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE</code>完成。K_HIGH的P0及一层L60/12 ppw/qa96 BIE代表（311.2095523 s、417点）完成后，原1800 s下的实耗保守计划2157.6201 s触发P1停止，状态曾为<code>S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED</code>。上方最新状态基于用户仅对K_HIGH的2400 s授权及后续真实作业，覆盖该历史停止结论；原回执与审计保留，不重写当时判断。PHI_PLUS90、S3–S6未执行，正式S2b/S2c-A数据只读。 工作目录：<code>E:\MISC\CARPE3D_matlab\Explain</code><br>
+主要执行者：Codex，通过 MATLAB MCP 使用现有 MATLAB 会话。</p>
+</div></details>
+<details><summary>0. 文档定位与执行约定</summary><div class="original-body"><h2 id="0-文档定位与执行约定">0. 文档定位与执行约定</h2>
+<p>本计划依据用户关于单点、局部点阵、PM 海面、声源、绘图和通信验证的讨论制定。目标是完成一次范围明确的二维研究收尾，为后续三维单链路时变模型提供可复用的证据和评价方法。</p>
+<p>本文件按用户要求放在仓库根目录，是<strong>二维专项执行计划</strong>；不替代或复制<a href="reports/deep_sea_channel_research_plan.md">深海总研究计划</a>。本计划中的二维 PM 样本比较，不等于总计划的三维目标 PM 认证、正式 WP2、统计生成器训练或通信性能认证。始终保留 <code>G1_target_PM=OPEN</code>、<code>WP2_formal=false</code>，除非未来有单独证据与明确决策。</p>
+<p>S0–S1、S2a、S2b与S2c-A的实际阶段结论见<a href="reports/two_dimensional_channel_closeout_report.md">唯一主报告</a>，以其<strong>S2b“参考闭合补证”最新附录</strong>及<code>formal_reference_v2</code>作为S2b字段和数值版本。2026-10-21<a href="reports/pe_bie_height_phase_sign_audit.md">高度相位符号审计</a>限制旧PE误差的物理解读；3.2a–c的源/相位契约和4.3a的空间权重继续有效。下文0.6、S2a/S2b及第9节的旧Goal提示词均保留历史执行契约含义，不得再次执行。历史报告中的“三方”仍指PE/BIE/Bellhop，不改标签冒充新的PE/BIE/FullFK结果。</p>
+<h3 id="01-本轮与未来执行的边界">0.1 本轮与未来执行的边界</h3>
+<ul>
+<li>计划编制与本次计划审查均不启动声学求解、补算、通信测试或自动 Goal。</li>
+<li>用户后续要求“下一轮”时，<strong>仅创建并执行一个S2c-A Goal</strong>：复核正式S2b本地数据，从保存复场生成海面几何—幅相—残差的空间诊断图，冻结一张极小单因素试验表与资源门；<strong>S2c-A新增声学场计算为0</strong>。S2c-B需要下一次明确授权并重新过资源/参考门，不能由S2c-A自动开始。S3A仅在S2c的发现和成本边界明确后另行授权；S3B、S4–S6均不由上一Goal自动接力。已完成S0–S2b一律只读复用，本次修订不是计算授权。</li>
+<li><strong>S5 宽带/CIR、S6 最小通信验证是可选扩展</strong>。只执行核心阶段即可完成本次二维收尾；用户明确要求扩展时再执行对应阶段。过去的阶段授权不自动覆盖本次新设S2c-B的物理参数补算，也不构成S3/S5/S6的自动执行许可。</li>
+<li>用户指定“只读”“只执行 S1”等范围时，以该范围为准。</li>
+<li>方法不够准确是允许的研究结果，不以让 PE-mode 0、FullFK 或 Bellhop 通过为目标。不能调小点阵、挑选接收点、换seed、逐点/逐海面拟合幅相或放宽指标来获得通过。4.1节允许的固定平面校准仅作有条件诊断，不进入物理同源主结果。</li>
+<li>文档中所有未实现的入口都标为“拟新增”；执行者必须先实现并检查，不能假装它们已经存在。</li>
+</ul>
+<h3 id="02-一句话任务">0.2 一句话任务</h3>
+<blockquote>
+<p>在同一二维Gaussian源、物理海面、相位约定及固定接收位置上，比较PE-mode 0、BIE、FullFK预测的反射复场u_rough有多接近；平面场u_flat必须并列报告，G_m与粗糙增量仅辅助解释。保留已完成的正弦接收线/九点结果，先用S2c理解空间误差及少量受控K/初相位变化，再进入有限PM和二维收尾；Bellhop通过源映射资格检查后才加入同源主比较。</p>
+</blockquote>
+<h3 id="03-首轮-s0s1-执行契约2026-10-20审查补充">0.3 首轮 S0–S1 执行契约（2026-10-20审查补充）</h3>
+<p>本节记录已于2026-10-20完成的首轮 <strong>S0与S1</strong> 契约；历史审查与提示词见<a href="reports/two_dimensional_channel_closeout_plan_review.md">首轮审查及Goal提示词</a>。以下零新增场规则不追溯适用于另行开展的高度符号诊断，也不限制未来明确授权的S2a/S2b计算。</p>
+<ul>
+<li>**新增物理场计算为0。**可读取保存的复数样本、进行已有约定的表示转换、重算指标、执行人工构造数组的公式测试及绘图。禁止新增PE传播、角谱场求值、BIE边界求解或保存密度的接收场评价、FullFK积分、Bellhop作业；“不重解边界方程”不等于“没有新场计算”。</li>
+<li>E01三种正弦主要提供z=3 m的接收线G；E02主要提供强正弦的真实x-z原始场。首轮逐字段确认可用性，不预设三种正弦或三种方法均有完整9点G。原始场缺少同点平面分母时保留原始场，G记缺失。</li>
+<li>9点坐标固定；实际坐标匹配建议使用<code>1e-9 m</code>容差，并保存请求值、实际值与差值。容差仅处理数值表示，不能用于移动接收点或空间插值。</li>
+<li>资料缺失可以是首轮的完整审查结果。每个缺口须有来源检查、受影响的量/图、原因与S2最小补算项；不能据此宣布完整点阵物理验证通过，也不能自动补算。</li>
+<li>历史指标重建、全部可比且可用的数据处理、指标测试、实际图像检查、独立重绘、缺口清单与阶段报告均完成后，首轮状态可为<code>S0_S1_COMPLETE_WITH_DECLARED_GAPS</code>。有数据却未处理、重建差异未解释或必需检查未运行，不属于这种完成状态。</li>
+<li>完成状态只对应本轮工作；不设置“所有方法误差必须小于某值”的Goal。MATLAB环境不可用导致数值复核或绘图无法运行时，交付静态进度并保留未完成项，按当前Goal工具规则处理阻塞；不得把未运行写为通过。</li>
+</ul>
+<h3 id="04-高度符号诊断后的证据与复用规则2026-10-21">0.4 高度符号诊断后的证据与复用规则（2026-10-21）</h3>
+<p>本节覆盖旧计划中将PE历史差异无条件称为纯模型误差、直接复用旧PE反射起始场及照单执行旧S2补算清单的解释；不改写任何历史数值包。</p>
+<table>
+<thead>
+<tr class="header">
+<th>分支/成果</th>
+<th>当前地位</th>
+<th>后续处理</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S0–S1旧公式、CSV/MAT、图像与独立重绘</td>
+<td>已完成的历史复现审查</td>
+<td>保留完成状态；旧8.0908%及相位占比只解释旧混合约定下的数据，不能充当新版物理验收锚点</td>
+</tr>
+<tr class="even">
+<td>旧PE-mode 0：正号高度屏及其粗糙反射场</td>
+<td><code>legacy</code>诊断对照</td>
+<td>保存入射场可在核验后复用；错误符号的反射起始场、强正弦x-z场及局部点阵不能直接作为新版PE输入</td>
+</tr>
+<tr class="odd">
+<td>负号高度屏与BIE原生比值的三档正弦诊断</td>
+<td><code>diagnostic</code>，有界新场计算</td>
+<td>强案例复差约6.2911%、幅值L2约0.10485%；尚非正式修复、九点/PM认证，也未解释全部残差</td>
+</tr>
+<tr class="even">
+<td>BIE/Bellhop原生结果及二者对照</td>
+<td>在原有效范围内仍可复用</td>
+<td>核对物理海面、源、坐标和原生转换；共同共轭不改变二者复差，不因PE问题全部重算</td>
+</tr>
+<tr class="odd">
+<td>修正图册<code>20261021_native_reset_v2</code></td>
+<td>已有三条修正接收线、强正弦411×45场、12图及保存数据/像素重绘审计</td>
+<td>优先复用，补查S2a实际入口控制；不再把修正数据一概称为尚未生成，也不因文件齐全自动宣布全部物理门通过</td>
+</tr>
+<tr class="even">
+<td>新约定下的正式对照</td>
+<td>待S2a控制与审计</td>
+<td>使用独立版本、来源和图注，不能把诊断数据仅改标签当作验收通过</td>
+</tr>
+</tbody>
+</table>
+<p>高度符号审计新做6个保存入射场FFT诊断评价；这是S0–S1以外的新增物理场计算，不能写成“所有后续工作仍为零新增”。本次文档审查本身未执行数值计算。</p>
+<p>修正图册v2另记录48个保存入射场FFT评价；其<code>corrected_audit.json</code>状态为<code>PASS_SAVED_DATA_AND_PIXEL_REDRAW</code>，12张PNG重绘像素差为0、三份源哈希匹配。本次读取并核对这些记录，没有重跑；这类保存数据审计不包含实际高度适配入口的正负平移控制。</p>
+<h3 id="05-同源反射复场改写时的优先规则2026-10-23">0.5 同源反射复场改写时的优先规则（2026-10-23）</h3>
+<ul>
+<li>**核心三方法：PE-mode 0、BIE、FullFK。**以独立且有数值可信度证据的BIE为参考，主报PE–BIE和FullFK–BIE，辅报PE–FullFK。Bellhop是条件性第四方法，源映射未闭合不阻塞其他已合格方法对。PE-mode 1保持机制诊断地位；FastFK不是新增物理参考。</li>
+<li><strong>主问题改为同源反射复场的一致性。</strong>“同源”包括复角谱、源强、参考位置、维度与相位，不以指向性相似或平面拟合残差小代替。源资格逐方法对登记，不能预设PE/BIE/FullFK自动通过。</li>
+<li>**先核定约定与源，再检查平面，最后评价粗糙场。**平面差异本身就是结果，不要求不同近似方法逐点严格相等。无法由数值误差或方法近似解释的平面偏差须保留为基线问题，不能静默拟合消除。</li>
+<li>旧G指标、旧54个点值缺口及旧三方图组保留历史含义；后续重新盘点FullFK与原始复场覆盖，不沿用旧工作量承诺。完整x-z场按代表案例和预算安排，不强制所有方法、所有海面都有全场。</li>
+<li>该条记录对应初次改写计划时的<strong>仅文档</strong>工作；后来的S2a已按单独报告执行并通过限定支持的源/约定控制，但仍未完成FullFK九点、PM或通信验证。</li>
+</ul>
+<h3 id="06-s2a完成后的指标缺口与原s2b执行契约历史已关闭">0.6 S2a完成后的指标缺口与原S2b执行契约（历史；已关闭）</h3>
+<blockquote>
+<p><strong>完成状态补注：<strong>下列“下一Goal/P0/P1/60缺点”均描述</strong>2026-10-23执行S2b之前</strong>的计划，并非当前待办。正式S2b已在同一Goal后续补证中完成P0、108/108及参考资格；历史说明保留以便追溯，不得据此再次补算或扣第二次预算。</p>
+</blockquote>
+<ul>
+<li><strong>发现的口径差异：<strong>S2a主报告和实际<code>run_two_dimensional_closeout_s2a.m</code>均在M99的411个z=3 m真实采样点上，用保存的入射能量权重<code>d.weights</code>计算了原生<code>u_flat/u_rough</code>复L2、幅相指标。该计算可复现，但属于</strong>历史入射加权u指标</strong>，不等于本计划4.3a规定的<strong>空间权重主u指标</strong>。旧数据包、图和结论原样保留，<code>S2A_CONVENTION_SOURCE_BASELINE_COMPLETE</code>作为源/高度约定/平面基线资格状态不撤销；新主指标尚待补齐，不能把旧<code>4.39622%</code>改标签冒充空间等权误差。</li>
+<li>**不需要重算物理场：**下一Goal的P0先从<code>20261023_s2a_final/data/line_fields.csv</code>及其保存MAT独立重算4案例×3方法对的12行主指标。使用同一M99的411点、相同复场、相同单位和相同相位约定，只把统计权重换为预冻结空间等权；并列保留旧入射权重结果，报告差异、零幅值/有效分母和幅相平方项闭合。P0新增物理场计算必须为0，不得重新触发PE传播、BIE密度评价或FullFK积分。</li>
+<li>**S2b工作门：**先在真实本地文件上核验48/108现值及来源版本（缺失名义60格：PE18、BIE18、FullFK24），独立审查BIE保存密度能否用于缺点、是否需新边界求解，以及参考收敛证据、预计时间和物理RAM；这些门不闭合时不得直接把60个缺点全部补算或报告完成。点值数不等于求解作业数。</li>
+<li>**Goal边界：**下一轮只执行第9节S2b单Goal，包括P0指标补正、P1参考/成本门和经门允许的P2最小点阵补算、P3图表与审计；不进入S3–S6。若BIE参考/资源门阻塞，保存已做的审查和可独立完成的结果，状态如实为<code>S2B_PARTIAL_REFERENCE_OR_BUDGET_LIMITED</code>，而非把九点物理目标写成完成。</li>
+<li>**Bellhop不被永久排除：**其Gaussian源强、整体相位及二维单位的物理映射仍为独立开放问题；本Goal不新开Bellhop作业，不以固定平面复系数拟合冒充同源；如需纳入S3正式比较，另立限定成本和退出条件的源资格Goal。</li>
+</ul>
+<h3 id="07-s2b正式基线当前未解释现象与s2c插入理由2026-10-23">0.7 S2b正式基线、当前未解释现象与S2c插入理由（2026-10-23）</h3>
+<ul>
+<li><strong>权威证据：</strong><code>20261023_s2b_1305/formal_reference_v2/</code>，状态<code>S2B_COMPLETE_REFERENCE_QUALIFIED</code>；本地真实CSV/MAT/图/审计的存在性与哈希优先于GitHub上的文字导航。正弦三档原生<code>u_rough</code>、同源<code>u_flat</code>和各自的G/δu已冻结。PE/BIE原始72个九点值保持不变；FullFK正式使用<code>FullFK_complete_analytic_flat_exterior_GL8_v1</code>，与早期仅L60有限积分值/图分开；严格平坦外场证明见正式附录，不将其无条件推广到其他海况。</li>
+<li><strong>S2b主结果：<strong>强档<code>A=.20 m,K=.10 rad/m,φ=0</code>时，PE–BIE的411点M99</strong>空间等权原生复差</strong>是<code>0.062911245315</code>（6.2911%），中心3×3<strong>九点等权原生复差</strong>是<code>8.05108583e-5</code>（0.008051%）。这两个范围不同，不能直接解释成“方法精度随距离必然增加”。对应完整FullFK–BIE的空间线/九点为<code>4.29152410e-5</code>与<code>1.17048429e-6</code>；其数值分辨率结论以正式<code>resolutions.csv</code>为准。弱/中档FullFK九点差异未按冻结的5倍经验门被分辨，不得以多位小数宣传物理精度。</li>
+<li><strong>几何事实与待检验假说：<strong>冻结剖面为<code>η(x)=A sin(Kx)χ(x)</code>，中心<code>x=0</code>处<code>η(0)=0</code>，但此处</strong>坡度一般不为0</strong>；幅度曲线接近与复差增长可能主要由相位及空间干涉造成。反射声场是整段被照射海面的贡献，不等于“接收点x对应同一x处海面”的局部反射。因此“中心海面过零导致九点误差很小”只能作为待检验假说；不能把空间相关性写成因果结论。</li>
+<li><strong>数值参照与资源：<strong>BIE当前代码的整密度核验和空间/窗口/64–96自求积经验敏感性已保存；误差估计不是严格界。正式S2b累计核内</strong>扣记<code>1408.660105/7200 s</code>、余额<code>5791.339895 s</code></strong>，包含已记历史失败保守计时150 s；单作业最大289.742 s。此余额继续供<strong>S2c/S3共享</strong>，本次增阶段不自动增加预算，不得把已扣记费用清零。任意新增BIE案例的实际耗时/物理RAM仍需新预检。</li>
+<li><strong>本次研究取舍：<strong>在S3随机PM之前插入S2c以消除对已有正弦结果的解释缺口。优先完成</strong>零新声场</strong>的空间诊断；其次仅一个K变化与一个初相位变化作为受控试点。斜率/曲率配对控制、额外位置/频率、更多海面均不是默认第一轮计算。</li>
+</ul>
+</div></details>
+<details><summary>1. 必须回答的研究问题</summary><div class="original-body"><h2 id="1-必须回答的研究问题">1. 必须回答的研究问题</h2>
+<ol>
+<li>先核定高度/共轭约定和声源，再比较平面与粗糙反射复场：剩余的“幅度图相似而复数误差较大”有多少来自相位、空间位置、基线差异或显示范围？</li>
+<li>中心点及其邻域是否得到一致结论？原接收线指标能否代表这组局部接收位置？接收位置/声场相干叠加与海面<code>x=0</code>过零是否有关？ 2a. 固定A改变K或固定K改变初相位后，BIE预测的<strong>真实海面效应</strong>与PE/FullFK相对BIE的<strong>模型误差</strong>分别怎样变化？海面实际高度、坡度、曲率及其受照射支撑能提供多少解释，哪些仍不能因果分离？</li>
+<li>正弦控制的结论能否延续到声明范围内的若干独立 PM 实现？</li>
+<li>入射源、传播计算、粗糙反射算子和数值误差，能否分别识别？</li>
+<li>哪些方法在什么范围内可保留？哪些问题应转入三维研究，哪些仍需补充参考？</li>
+<li>现有证据是否足以进入固定链路宽带/CIR？若不足，应交付明确缺口，而非直接做 BER。</li>
+</ol>
+<p>核心阶段不研究三维随机海面、不发展新的散射理论、不优化 FastFK rank、不训练统计/深度学习生成器、不扩展实际部署海况、不构建完整通信系统。</p>
+</div></details>
+<details><summary>2. 已有证据与可复用输入</summary><div class="original-body"><h2 id="2-已有证据与可复用输入">2. 已有证据与可复用输入</h2>
+<p>下表是导航，不表示对应文件中的所有历史结论都适用于本轮。S0 必须核对文件存在性、内容、版本和源约定，保存实际使用的哈希。</p>
+<table>
+<thead>
+<tr class="header">
+<th>编号</th>
+<th>当前来源</th>
+<th>可复用内容</th>
+<th>不能直接推导的结论</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>E01</td>
+<td><a href="reports/pe_bellhop_bie_comparison_visualization_report.md">三方图册报告</a>；<code>results/visualization/pe_bellhop_bie_comparison/20261018_194331_523/plot_data/comparison_data.mat</code></td>
+<td>4 kHz、Tx100/Rx3、Gaussian σ=0.3 m、三档正弦；保存 G、权重、掩膜、Bellhop X 分支</td>
+<td>不是原始绝对声压或总信道，也不是多个 PM 实现</td>
+</tr>
+<tr class="even">
+<td>E02</td>
+<td><a href="reports/pe_bellhop_bie_xz_visualization_report.md">真实 x-z 场报告</a>；<code>results/visualization/pe_bellhop_bie_xz/20261019_115214_348/plot_data/xz_data.mat</code></td>
+<td>强正弦；411 个 x 位置、45 个深度；原始复场、源标度说明</td>
+<td>不能将 Bellhop 原生幅相与 PE/BIE 直接作绝对误差排名；不是三种正弦均有完整 x-z 场</td>
+</tr>
+<tr class="odd">
+<td>E03</td>
+<td><a href="reports/pe_bie_error_decomposition_report.md">误差分解</a></td>
+<td>PE-mode 0/1—BIE 的幅度、相位、复数分解</td>
+<td>原空间加权结论不能直接改称点阵或单点结论</td>
+</tr>
+<tr class="even">
+<td>E04</td>
+<td><a href="reports/pe_bie_incident_reflection_covariance_report.md">入射与反射审查</a></td>
+<td>σ=1 m 受控案例的 PE/角谱入射一致性</td>
+<td>不能未经核验把该数值直接当作本轮 σ=0.3 m 新结果</td>
+</tr>
+<tr class="odd">
+<td>E05</td>
+<td><a href="reports/spectral_fast_kirchhoff_pm_pilot_report.md">固定 PM 试验</a>；<code>results/validation/spectral_fast_kirchhoff_pm_pilot/</code></td>
+<td>seed260001/260002/260003 系数、Fast–Full 保真、已保存物理锚点</td>
+<td>三个输入的 Fast–Full 一致不等于三个输入均有独立 BIE/Bellhop 认证</td>
+</tr>
+<tr class="even">
+<td>E06</td>
+<td><a href="reports/full_kirchhoff_pm_validity_boundary_report.md">PM 适用域审查</a>；<code>results/validation/full_kirchhoff_pm_validity_boundary/</code></td>
+<td>一个固定实现的谱/幅度控制与 FullFK—BIE 边界</td>
+<td>不是 PM 总体统计，截止值不是普适物理常数</td>
+</tr>
+<tr class="odd">
+<td>E07</td>
+<td><a href="reports/fk_single_receiver_baseline_freeze_report.md">单接收点原型冻结</a></td>
+<td>点位置、相消、plan 失效与数值护栏</td>
+<td>不能把固定点加速或精度结论推广到整个新点阵</td>
+</tr>
+<tr class="even">
+<td>E08</td>
+<td><a href="reports/pe_bellhop_pm_model_discrepancy_statistics_report.md">历史 50 海面报告</a></td>
+<td>追溯旧研究与局限</td>
+<td>使用 Bellhop R 源，禁止改标签后并入当前 X 源样本</td>
+</tr>
+<tr class="odd">
+<td>E09</td>
+<td><a href="src/channel/build_channel_cir_vertical.m">CIR 转换实现</a>、<a href="reports/deepsea_singlelink_readiness_report.md">确定性通信基础验证</a></td>
+<td>相位契约、解析控制、已知信道与卷积基线</td>
+<td>不是本轮粗糙二维宽带/PM 通信验证</td>
+</tr>
+</tbody>
+</table>
+<p>新增依据E10：<a href="reports/pe_bie_height_phase_sign_audit.md">高度相位符号审计</a>、<code>scripts/validation/audit_pe_bie_height_phase_sign.m</code>与<code>results/validation/pe_bie_height_sign_audit/20261021_mirror_diagnostic/</code>。该证据支持固定比较调用链的符号问题，不认证生产API或正式新版点阵。</p>
+<p>新增依据E11：<a href="reports/pe_bellhop_bie_corrected_visualization_report.md">修正图册报告</a>与<code>results/visualization/pe_bellhop_bie_corrected/20261021_native_reset_v2/</code>。保存三条修正G线、强正弦修正PE二维场、旧BIE/Bellhop原生参考、源副本、指标、图像及独立审计。S2a已按其限定范围登记代码/输入并通过相关控制；该包的合格PE场可在同源、同表示、同点位核验后进入S2b去重，v1不得默认替代。</p>
+<p>新增依据E12：<a href="reports/pe_bie_full_kirchhoff_convention_audit_report.md">FullFK约定审计</a>及<a href="scripts/validation/support/solve_full_kirchhoff_2d.m">完整积分实现</a>。该实现使用真实几何、入水法向、二维出射Green函数及双项积分；历史审计曾修正FullFK与BIE单边共轭错配。历史弱低K、强低K、弱高K案例不等于本计划弱/中/强低K三档；尤其不得假定中档A=0.05 m或全部9点已经保存。旧FullFK–BIE的G结果不转写成新的u_rough误差。</p>
+<p>新增依据E13：<a href="reports/two_dimensional_channel_closeout_report.md">2026-10-23 S2a正式报告</a>及<code>results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/</code>。已登记同源原生反射场4案例×3方法的z=3 m接收线、源/符号/平面控制、独立审计和48/108九点覆盖；12行报告数值使用旧入射加权，<strong>不是新版空间主指标</strong>。复场MAT/CSV、审计JSON和图像须以实际本地文件存在性和哈希为准，不能仅凭GitHub中的报告或脚本断定完整原始包已同步。</p>
+<p>新增依据E14（<strong>当前正式数值基线</strong>）：<a href="reports/two_dimensional_channel_closeout_report.md">S2b参考闭合补证</a>与<code>results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/</code>。包括<code>fields_line.csv</code>（4932行）、<code>fields_core.csv</code>（108格）、<code>line_metrics.csv</code>（24组空间/入射权重）、<code>array_metrics.csv</code>（12组）、<code>point_metrics_detailed.csv</code>、<code>reference.csv</code>、<code>resolutions.csv</code>、<code>reference_data.mat</code>、正式FIG/PNG及独立审计。前期<code>figures_v2</code>和有限L60 FullFK仅为历史快照；<code>formal_reference_v2</code>的FullFK解析平面外场+紧支撑差积分是<strong>相同Kirchhoff双项积分的数值等价完成</strong>，需要每次确认<code>|x|&gt;=50 m</code>严格平坦的前提。历史源码执行时SHA仍未知，但当前BIE源码曾以完整密度重解逐点匹配，不能事后伪填历史SHA。若数值大文件只在本地，GitHub缺CSV/MAT/PNG不代表实验失败，也不得在下载缺失时冒充独立复算通过。</p>
+<p>已核对的历史锚点：E01强正弦PE—BIE接收线G复数相对误差为<code>0.0809081077437715</code>，相位RMS为<code>0.0803363527071867 rad</code>，幅度比RMS为<code>0.0869963865863484 dB</code>。S1已复现这些数值；保留它们检验旧分支的可重复性，但不再作为同一物理边界/表示下的纯PE模型误差或新版应匹配的数值。</p>
+<p>本轮讨论中 MATLAB MCP 曾返回 <code>failed to attach to MATLAB session</code>。这是当时的环境状态；未来执行时应重新检查现有会话，不预设它仍不可用，也不得用 shell 启动 MATLAB 作为回退。</p>
+</div></details>
+<details><summary>3. 固定研究设置</summary><div class="original-body"><h2 id="3-固定研究设置">3. 固定研究设置</h2>
+<h3 id="31-物理与方法范围">3.1 物理与方法范围</h3>
+<table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>默认设置</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>维度</td>
+<td>二维 x-z 传播，一维粗糙剖面 η(x)，z 正向向下</td>
+</tr>
+<tr class="even">
+<td>介质</td>
+<td>均匀 c=1500 m/s；压力释放海面；保持既有一次海面反射研究设置</td>
+</tr>
+<tr class="odd">
+<td>发射</td>
+<td>x=0、z=100 m；沿用冻结离散 Gaussian 初场，σ=0.3 m</td>
+</tr>
+<tr class="even">
+<td>主频率</td>
+<td>4 kHz；核心阶段不自动扩频</td>
+</tr>
+<tr class="odd">
+<td>中心接收点</td>
+<td>(x,z)=(0,3) m</td>
+</tr>
+<tr class="even">
+<td>核心方法</td>
+<td>通过各自约定与源资格检查的PE-mode 0、独立BIE、完整Kirchhoff（FullFK）；旧PE保留为legacy对照</td>
+</tr>
+<tr class="odd">
+<td>条件扩展/辅助方法</td>
+<td>internal-wall Bellhop X源通过物理源映射后加入主比较；未通过时仅列独立诊断。PE-mode 1为辅助；不以FastFK代替FullFK</td>
+</tr>
+<tr class="even">
+<td>控制海面</td>
+<td>平面；正弦 A=0.01/0.05/0.20 m、K=0.10 rad/m；优先复用保存数据</td>
+</tr>
+<tr class="odd">
+<td>高 K 控制</td>
+<td>已有 A=0.02 m、K=0.47 rad/m 作为独立诊断；不能混写成低 K 三案例</td>
+</tr>
+<tr class="even">
+<td>表面嵌入</td>
+<td>复用既定 C2 平台42 m、支撑50 m；原始 PM 与嵌入后几何分别保存</td>
+</tr>
+</tbody>
+</table>
+<p>本 fixture 的 Tx100 m 是历史数学比较设置，不替代 Tx99 m、离底1 m 的安装演示。不得混入旧500 m实验，也不能把本轮解释为底反射或深海真实部署认证。</p>
+<h3 id="32-入射源与传播">3.2 入射源与传播</h3>
+<p>保持物理源不变，优先以保存的离散角谱评价均匀介质入射场及其导数：</p>
+<p>[ u_{\rm inc}(x,z)=\frac1N\sum_j\widehat u_j \exp[ik_{x,j}(x-x_0)]\exp[-ik_{z,j}(z-z_{\rm tx})]. ]</p>
+<p>可复用 <a href="scripts/validation/support/fk_single_receiver_incident.m">fk_single_receiver_incident</a> 的公式与归一化。S0/S2 核对 <code>coeff</code>、<code>kx</code>、<code>kz</code>、<code>n_original</code>、原点、载波、源宽度及频率，不直接复用失效 plan。</p>
+<ul>
+<li>“解析角谱求值”与“PE 传播”是计算途径；不能在比较时顺便把 Gaussian 源换成点源。</li>
+<li>在相同源、均匀介质和约定下检查 PE 入射与角谱评价；不同不能直接归因于反射。</li>
+<li>BIE 与 FullFK 共用入射表达是输入一致性，不是两者反射解的独立性证明。BIE 的边界解和数值收敛仍需独立检查。</li>
+<li>Bellhop保持<code>source_geometry='X'</code>及经哈希核验的internal-wall程序；匹配角分布只是待核验输入，不能据此判定同源。不能改用普通Bellhop或历史R结果。</li>
+</ul>
+<h3 id="32a-固定比较的高度与场表示契约">3.2a 固定比较的高度与场表示契约</h3>
+<ul>
+<li>以物理边界深度<code>eta_z</code>为唯一几何输入：z向下、边界z=eta_z、水在z&gt;eta_z；BIE/Bellhop保持同一物理表面，不能翻转它们来迁就旧PE。</li>
+<li>采用native时间约定exp(−iωt)、出射相位exp(+ikR)。正入射平面波、平面整体下移h的参考比值为exp(−2ikh)。这项精确式只针对该平面波控制，不把有限Gaussian源在整幅平移面上的场比值强制等同于一个常数。</li>
+<li>在当前正号传播核下，固定比较的Model-0对<code>eta_z</code>应使用exp(−2ik eta_z)；若现有helper接受向上高程，则在明确的验证适配层传入<code>eta_up=−eta_z</code>。只转换一次并记录输入/输出语义，不静默改变生产参数。</li>
+<li>主比较统一用native反射复场u_flat/u_rough，G也从同一表示构造；若另显示共轭/DSP表示，对所有待比较场一致转换。Bellhop原始SHD到native的既有转换须单独核验，不能把“取消旧比值的单边共轭”误做成删除所有conj。</li>
+<li>记录<code>convention_version</code>、物理高度方向、实际屏相位符号、传播核、载波恢复、原生表示、比较表示及源ID。旧分支和新分支禁止只凭相同方法名自动合并。</li>
+<li>PE-mode 1及其他含高度/坡度的辅助分支单独审查输入符号和导数；未通过前不引用其旧优劣结论。FullFK/BIE原生对照可按其自身有效范围复用，旧“映射到PE表示”不能作为新PE约定已闭合的证明。</li>
+</ul>
+<h3 id="32b-物理声源资格与平面控制">3.2b 物理声源资格与平面控制</h3>
+<ol>
+<li>冻结<code>source_id</code>：二维源类型、单位源强定义、复角谱系数及离散归一化、Gaussian宽度、原点/发射平面、时间与载波参考、频率、传播与倏逝分量处理。允许共同“单位源响应”单位；没有压力标定不能写Pa或绝对TL。</li>
+<li>核对各方法实际接收的入射复场；BIE与FullFK另核对同一物理边界上的法向导数。共用helper不能替代逐项检查。PE的入射传播误差单独报告；不以反射场吻合反推入射源相同。</li>
+<li>物理映射从源定义和代码推导，记录维度、量纲、相位及适用支持；用于平面和所有粗糙案例的映射完全相同。若需改变源角谱或边界入射数据，旧粗糙解不能只乘系数就复用，须重新登记失效范围和成本。</li>
+<li>对每个方法对登记<code>SOURCE_MATCHED</code>、<code>CALIBRATED_ONLY</code>或<code>SOURCE_UNRESOLVED</code>及证据。前者表示源契约可比，<strong>不表示传播近似或反射模型已经通过</strong>。合格子集继续工作；核心三方未齐时不能声称完整三方法收尾。</li>
+<li>平面必须与粗糙场用同位置、共同支持和权重报告幅度、相位及复差。主报PE–BIE、FullFK–BIE，Bellhop–BIE按资格另列；平面数值敏感性与粗糙场指标并列，不预设零差。</li>
+</ol>
+<h3 id="32c-完整kirchhoff的定义与边界">3.2c 完整Kirchhoff的定义与边界</h3>
+<p>本计划FullFK指现有二维验证积分，不是生产三维算子的改名：</p>
+<p>[ u_{\mathrm{FK}}(X)=-\int_\Gamma\left[G(X,s),\partial_{n_s}u_{\rm inc}(s) +\partial_{n_s}G(X,s),u_{\rm inc}(s)\right],ds, \quad G=\frac{i}{4}H_0^{(1)}(k|X-s|). ]</p>
+<p>法向指向水域，<code>n=(-eta_z',1)/sqrt(1+eta_z'^2)</code>；采用3.2a的时间和几何约定。核心配置为<code>quadrature_measure='arc_length'</code>、<code>local_radius_m=Inf</code>，在声明的有限表面支撑上保留两项、实际距离、坡度及弧长。<code>parameter_x</code>、有限局部半径、常数kz相位屏、谱截断/SVD加速均不能冒充本轮FullFK基准。</p>
+<p>“完整”指上述积分项和几何保留完整，仍是Dirichlet Kirchhoff边界近似，并非严格Helmholtz/BIE解。**S2b正式版已利用<code>|x|&gt;=50 m</code>严格平坦的C2物理外场，以<code>u_flat_analytic + (FK_rough[-L,L] - FK_flat[-L,L])</code>（<code>L&gt;50 m</code>）等价完成无限平面外部贡献，再用Gauss8双项差积分独立审计；这不是新模型或拟合。旧L60有限积分场仅属历史诊断。**S2c的新K/φ海面仍要先实际验证相同平坦外部、相同离散源/Green/法向与数值对照，不能未经证明直接套用新版场。必须检查求积步长、几何/导数采样和有限窗口敏感性；平面与弱粗糙吻合不认证高坡度、高曲率、多重散射或三维海面。保持相同物理C2边界做数值加密；更改支撑造成的物理变化另列。BIE、FullFK的原始<code>receiver_field</code>均按反射/散射分量核验，不能一方加直达而另一方不加。</p>
+<h3 id="33-33-接收点阵">3.3 3×3 接收点阵</h3>
+<p>点阵用于<strong>局部接收位置敏感性</strong>，不是相干合成阵列，不做波束形成或分集收益声明。二维阶段点阵位于 x-z 平面；水平 x-y 点阵属于三维问题。</p>
+<p>本计划建议先使用与已有 E02 保存网格匹配的小邻域：</p>
+<ul>
+<li><code>x0=0 m</code>、<code>z0=3 m</code>；</li>
+<li><code>dx_rx=0.1953125 m</code>、<code>dz_rx=0.125 m</code>；</li>
+<li>x 为 <code>[-0.1953125,0,0.1953125] m</code>，z 为 <code>[2.875,3,3.125] m</code>。</li>
+</ul>
+<p>这是便于保存数据复用的<strong>数值诊断点阵</strong>，不是已知的实际浮标运动包络。S0 必须查验坐标精确存在；不以插值伪造已有样本。接收网格间距不同于海面求积步长。</p>
+<table>
+<thead>
+<tr class="header">
+<th>点号</th>
+<th>x/m</th>
+<th>z/m</th>
+<th>默认详细展示</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>P11</td>
+<td>−0.1953125</td>
+<td>2.875</td>
+<td>热图及全量表</td>
+</tr>
+<tr class="even">
+<td>P12</td>
+<td>0</td>
+<td>2.875</td>
+<td>是，上边中点</td>
+</tr>
+<tr class="odd">
+<td>P13</td>
+<td>0.1953125</td>
+<td>2.875</td>
+<td>热图及全量表</td>
+</tr>
+<tr class="even">
+<td>P21</td>
+<td>−0.1953125</td>
+<td>3</td>
+<td>是，左边中点</td>
+</tr>
+<tr class="odd">
+<td>P22</td>
+<td>0</td>
+<td>3</td>
+<td>是，原中心点</td>
+</tr>
+<tr class="even">
+<td>P23</td>
+<td>0.1953125</td>
+<td>3</td>
+<td>是，右边中点</td>
+</tr>
+<tr class="odd">
+<td>P31</td>
+<td>−0.1953125</td>
+<td>3.125</td>
+<td>热图及全量表</td>
+</tr>
+<tr class="even">
+<td>P32</td>
+<td>0</td>
+<td>3.125</td>
+<td>是，下边中点</td>
+</tr>
+<tr class="odd">
+<td>P33</td>
+<td>0.1953125</td>
+<td>3.125</td>
+<td>热图及全量表</td>
+</tr>
+</tbody>
+</table>
+<p>所有方法、海面及未来频率共享这一坐标表。绘图 z 轴向下，点号不随画图顺序变化。</p>
+<p>若这组小邻域的变化低于数值分辨能力，应报告“该邻域内未分辨出位置效应”，不能宣称任意位移都稳定。需要更大位移研究时，在运行前另登记一组较大间距及物理理由，保留原点阵；不能看误差后移动点位。中心 z=6 m 可作后续独立深度组，不能把它混进 z=3 m 点阵均值。</p>
+<h3 id="34-s2c受控参数设置基线不变新增案例均未执行">3.4 S2c受控参数设置（基线不变；新增案例均未执行）</h3>
+<p><strong>固定不变：<strong>二维、4 kHz、<code>c=1500 m/s</code>、Tx=(0,100)m、Gaussian <code>σ=.3 m</code>、S2b的</strong>相同离散源谱</strong>及单位源表示、z=3 m/M99 411点线、P11–P33原九点、压力释放边界、同一C2窗<code>χ(x)</code>（<code>|x|&lt;=42 m</code>为1、<code>|x|&gt;=50 m</code>为0）及同一时间/相位约定。平面场与基线尽可能只读复用，所有新案例使用相同源和支持；海面参数变动是<strong>真正的物理海面变化</strong>，不能与网格加密、参考收敛或后处理拟合混作一类。</p>
+<p>采用如下定义（深度正向向下，<code>φ</code>以弧度计）：</p>
+<p>[ \eta(x;A,K,\phi)=A\sin(Kx+\phi),\chi(x). ] [ \eta'=A[K\cos(Kx+\phi)\chi+\sin(Kx+\phi)\chi'],\qquad \eta''=A[-K^2\sin(Kx+\phi)\chi+2K\cos(Kx+\phi)\chi'+\sin(Kx+\phi)\chi'']. ]</p>
+<p><strong>必须计算/保存真实含C2的<code>η,η',η''</code></strong>，不能只用理想无限正弦的<code>A</code>、<code>AK</code>、<code>AK²</code>代替，亦需保存有效周期<code>2π/K</code>、有限支撑/受照射权重描述量；声源照射信息优先从已有保存入射场/权重获得，S2c-A不得为此新评价角谱场。固定A改变K时，坡度、曲率、支撑中波峰数和传播/干涉都会同时变化：<strong>K扫描不能单独证明坡度或曲率的因果效应</strong>。C2窗口始终固定在实验原点，<code>φ</code>改变的是窗口内波形相位，<strong>不是连同C2窗口一起平移整个海面</strong>；不得混称纯几何平移。若要进一步区分坡度和曲率，只能做额外匹配控制、报告其余量仍不同，不构造伪因果结论。</p>
+<table>
+<thead>
+<tr class="header">
+<th>案例ID</th>
+<th>A (m)</th>
+<th>K (rad/m)</th>
+<th>φ (rad)</th>
+<th>相对S2b新增声学案例？</th>
+<th>目的与优先级</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>BASE_M</code></td>
+<td>0.05</td>
+<td>0.10</td>
+<td>0</td>
+<td>否，完整复用正式S2b</td>
+<td>中档基线，作所有配对比较</td>
+</tr>
+<tr class="even">
+<td><code>K_HIGH</code></td>
+<td>0.05</td>
+<td>0.20</td>
+<td>0</td>
+<td>是，<strong>首轮试点</strong></td>
+<td>固定A，测试较短空间尺度</td>
+</tr>
+<tr class="odd">
+<td><code>PHI_PLUS90</code></td>
+<td>0.05</td>
+<td>0.10</td>
+<td><code>+π/2</code></td>
+<td>是，<strong>首轮试点</strong></td>
+<td>x=0由过零变为η=+A（海面向下凹、中心坡度为零）</td>
+</tr>
+<tr class="even">
+<td><code>K_LOW</code></td>
+<td>0.05</td>
+<td>0.05</td>
+<td>0</td>
+<td>是，后续条件性</td>
+<td>固定A的较长空间尺度反向验证；波长大于主要平坦平台宽度，须说明支撑影响</td>
+</tr>
+<tr class="odd">
+<td><code>PHI_MINUS90</code></td>
+<td>0.05</td>
+<td>0.10</td>
+<td><code>−π/2</code></td>
+<td>是，后续条件性</td>
+<td>与φ=+π/2配对：η(0)=-A、海面向上隆起，检查符号和对称性</td>
+</tr>
+<tr class="even">
+<td><code>MATCH_SLOPE</code></td>
+<td>0.025</td>
+<td>0.20</td>
+<td>0</td>
+<td>是，<strong>非默认</strong></td>
+<td>与BASE_M理想正弦中心坡度<code>AK</code>相等、但高度/曲率不同</td>
+</tr>
+<tr class="odd">
+<td><code>MATCH_CURV</code></td>
+<td>0.0125</td>
+<td>0.20</td>
+<td>0</td>
+<td>是，<strong>非默认</strong></td>
+<td>与BASE_M理想正弦<code>AK²</code>相等、但高度/坡度不同</td>
+</tr>
+</tbody>
+</table>
+<p>这些是<strong>事前建议候选</strong>，本次尚未冻结执行输入；S2c-A必须在看到新物理结果前将具体数值/海面数组哈希/比较支持/数值门写入一个唯一协议，再由用户授权S2c-B。<code>K_LOW/PHI_MINUS90</code>及两项匹配控制需要<strong>另一次明确授权</strong>，不得因首轮结果“看起来不理想”随意改值。优先固定<code>A=.05 m</code>，因为S2b此档已在整线测得可分辨PE–BIE差异，且可避免一开始重复强档/频率扫描；是否追加<code>A=.20</code>仅在后续独立研究问题和成本门明确后决定。</p>
+<p>在<code>x=0</code>且<code>χ=1</code>时：基线<code>φ=0</code>有<code>η(0)=0, η'(0)=AK, η''(0)=0</code>；<code>φ=+π/2</code>有<code>η(0)=+A, η'(0)=0, η''(0)=-AK²</code>（z向下为正，<strong>海面向下凹而非向上波峰</strong>）。两者除高度外<strong>同时改变局部坡度/曲率</strong>，且整段被照射波形变化，所以它是针对“过零与中心异常小误差”的<strong>反事实检验</strong>，不是对单一局部高度的独立因果识别。</p>
+<p>本阶段不默认改变接收机坐标或频率；如最小试点后仍无法解释空间差异，先提出需要的<strong>一个</strong>额外位置组或<strong>一个</strong>额外频率及其数值参考/预算，不自动实施。</p>
+</div></details>
+<details><summary>4. 比较量、指标与数值规则</summary><div class="original-body"><h2 id="4-比较量指标与数值规则">4. 比较量、指标与数值规则</h2>
+<h3 id="41-主比较诊断量与校准分层">4.1 主比较、诊断量与校准分层</h3>
+<ol>
+<li>**主量：同源、未作rough/flat归一化的反射复场u_rough。**逐点和汇总与参考比较；u_flat以完全相同规则并列报告。源资格按方法对生效，不能因Bellhop未闭合就退回所有方法只比G。用“反射复场”命名，避免“直接场”与直达路径混淆。</li>
+<li>**辅助量：G_m=u_m,rough/u_m,flat和δu_m=u_m,rough−u_m,flat。**G使用各方法自身平面分母，回答相对平面响应如何变化；δu保留共同源单位。两者不能代替u_rough一致性结论，也不自动隔离出纯散射误差。</li>
+<li>**未来信道：H_total=H_direct+H_reflect。**只在S5分量、源强、载波及时间参考兼容后构造。单频空间u或G不等于宽带频响，更不能直接IFFT成CIR。</li>
+</ol>
+<p>每条记录保留原生场、物理源映射后场及其来源；可选校准结果存第三个独立字段，不能覆盖前两者。<code>quantity_kind</code>、<code>source_id</code>、<code>source_tier</code>、<code>source_map_version</code>、<code>phase_convention</code>、<code>normalization</code>和<code>reference_id</code>不可省略。</p>
+<p>**固定平面校准仅是诊断。**若研究需要，可在预先冻结的平面训练支持/权重上拟合单一复数α，使αu_m,flat接近参考；报告拟合公式、α、拟合残差与未参与拟合的位置/深度验证残差。α一经确定即用于所有粗糙案例，不逐点、逐海面或逐方法对照图重新拟合；没有留出数据时注明只有样本内拟合。此结果标<code>CALIBRATED_ONLY</code>，不凭低残差升级为物理同源或并入主排名。</p>
+<p>此前411个有效点的Bellhop/BIE平面最佳单系数拟合残差约0.27%，以及中心幅比约5.7738，均为已有讨论中的诊断值，<strong>本次未重算</strong>。它们不证明源映射，也不能直接识别剩余偏差来自源、传播近似还是数值误差。不得把5.7738当物理换算常数，或把0.27%从粗糙G误差中相减。后续正式引用须存对应复场、权重、拟合及验证支持和独立复算证据。</p>
+<p>对同一可比方法对、同一支持及固定权重，用下式解释平面和粗糙差异：</p>
+<p>[ e_{\rm rough}=u_{A,r}-u_{B,r}=e_{\rm flat}+e_\delta, \quad e_\delta=\delta u_A-\delta u_B, ] [ |e_{\rm rough}|<em>w^2=|e</em>{\rm flat}|<em>w^2+|e</em>\delta|<em>w^2 +2\operatorname{Re}\langle e</em>{\rm flat},e_\delta\rangle_w. ]</p>
+<p>报告交叉项及闭合残差，不把两项平方百分比相加当作因果贡献。δu接近零时优先报绝对差，或用预声明的共同平面参考能量归一化；不以零增量作分母。</p>
+<h3 id="42-每点指标">4.2 每点指标</h3>
+<p>以下 A_i 为待评模型，B_i 为参考，二者必须属于同一种可比场量。</p>
+<p>[ d_i=|A_i-B_i|,\quad e_i=\frac{|A_i-B_i|}{|B_i|},\quad \Delta A_i=20\log_{10}\frac{|A_i|}{|B_i|},\quad \Delta\phi_i=\arg(A_iB_i^*). ]</p>
+<p>逐点保存复数实部/虚部、双方幅度、绝对差、相对差、有符号幅度 dB 差、有符号 wrapped 相位差和有效性标记。单点不使用相关系数。</p>
+<h3 id="43-点阵汇总">4.3 点阵汇总</h3>
+<p>9点等权，不沿用原接收线的入射能量权重。等权表示这9个预设测试位置等重要，不解释成实际运动概率分布。</p>
+<ul>
+<li>逐点相对误差 <code>mean(e_i)</code>、中位数、最大值及其点号；另报绝对差的相同统计。</li>
+<li>幅度 dB 差同时报有符号均值、RMS、最大绝对值，避免正负抵消。</li>
+<li>相位报 <code>sqrt(mean(Δφ_i^2))</code>、最大绝对值；普通有符号均值只能作为偏差诊断。</li>
+<li>点阵整体复数归一误差：</li>
+</ul>
+<p>[ E_{\rm array}= \sqrt{\frac{\sum_i|A_i-B_i|^2}{\sum_i|B_i|^2}}. ]</p>
+<p><code>E_array</code> 不等于 <code>mean(e_i)</code>，必须同时保留名称与公式。禁止先平均复声场再比较：那会引入位置间相干叠加和相消，改变评价对象。</p>
+<p>使用精确恒等式分解：</p>
+<p>[ |A_i-B_i|^2=(|A_i|-|B_i|)^2+ 4|A_i||B_i|\sin^2(\Delta\phi_i/2). ]</p>
+<p>报告幅度项与相位项占复差平方的比例，并检查分解闭合。此处“误差能量占比”是代数平方项，不等于声能损耗占比。</p>
+<h3 id="43a-接收线权重与历史指标">4.3a 接收线权重与历史指标</h3>
+<p>主反射复场接收线指标采用<strong>空间位置权重</strong><code>q_i</code>：<code>E_line=sqrt(sum(q_i*abs(A_i-B_i)^2)/sum(q_i*abs(B_i)^2))</code>。本研究已冻结的z=3 m、M99内411个点为等间距网格，正式S2b-P0已采用**等空间权重<code>q_i=1/411</code>**作主指标；这是在这411点的离散空间均匀平均，不将其声称为全984点或无限接收线积分。对非均匀新网格须提前冻结实际空间求积权重，不事后按误差选取。主相位RMS、幅度dB RMS、幅相平方分解均使用相同声明的<code>q</code>及各指标有效点；原生近零点按4.4标记，绝对复差不因相位无定义而被删除。</p>
+<p><strong>S2a遗留口径已补正（S2b-P0）：</strong><code>20261023_s2a_final</code>的原生反射场12行<code>line_metrics.csv</code>使用<code>w=d.weights(mask)/sum(...)</code>，即<strong>入射能量加权</strong>。S2b-P0已从不变的真实复场按<code>q=ones(411,1)/411</code>生成独立版本指标（见<code>20261023_s2b_1305/data/line_metrics_both_weights.csv</code>），与旧<code>w</code>逐行并列；共同支持、数量、物理场、复数表示均不改变，且从保存CSV独立审计。至少保存<code>weight_kind=spatial_uniform_411</code>和<code>weight_kind=legacy_incident_energy_M99</code>、<code>support_id=M99_z3_411</code>、<code>n_total/n_valid</code>、复L2/幅度L2/相位RMS/dB RMS/平方分解及非有限统计。不能把报告中的4.39622%等旧<code>w</code>结果直接改名为新<code>q</code>结果，也不能用重新选点来减小误差。</p>
+<p>比较支持先按共同几何覆盖、已冻结窗口及数值有效性声明；需要幅值阈值时以预声明参考尺度及数值证据定义，禁止按候选误差筛点。平面/粗糙并列归因使用同一支持；各自完整覆盖结果可另附。不同方法可有合格子集，但必须报告方法对、点集及覆盖率，不混合排名。</p>
+<p>历史M99及入射能量加权G指标另表保留原标签和公式。若为可追溯性也在同一M99上算新u指标，仍使用注明的空间权重；额外入射加权只作敏感性，避免不加说明地重复偏重中心。所有表保存<code>weight_kind</code>和<code>support_id</code>，不能把历史G复L2改名成反射复场误差。</p>
+<h3 id="44-近零缺失掩膜与参考不确定性">4.4 近零、缺失、掩膜与参考不确定性</h3>
+<ul>
+<li>原接收线 M99、原权重、原有效性规则单独保留，复现后另列；不得与新点阵指标混合排名。</li>
+<li>新9点的绝对差和整体 E_array 默认保留所有真实有限样本，不因误差大而删除点。</li>
+<li>B_i=0 时，相对误差和幅度比记 <code>NaN</code> 并标明原因；A_i或B_i任一为零，相位差均不可定义，不能把<code>angle(0)=0</code>当成零相位误差。A_i=0、B_i非零时，幅度dB差为<code>-Inf</code>，显式标记，不能静默删除；双方为零时幅度比也不可定义。绝对差仍照常记录。</li>
+<li>零幅值点的精确分解直接令相位平方项为0、保留幅度平方项；不要把未定义相位带入公式生成伪NaN。完整零参考、零候选及双方零应有独立公式控制。</li>
+<li>小幅度但非零的点保留原始相对误差；再以参考数值不确定性标注 <code>near_null</code>、<code>phase_unreliable</code>。诊断规则在 S0 冻结，不能反向调节到让结果通过。若匹配点/量的参考不确定性证据缺失，写<code>reference_uncertainty=unknown</code>；不能借用不同源或坐标的门限，不能为了首轮标记而新做收敛计算。</li>
+<li>部分点缺失时，同时报告 <code>n_total=9</code>、逐指标<code>n_valid</code>、实际参与点号、缺失点及原因。部分集整体指标命名为<code>E_subset</code>，并声明其分母/点集；<code>E_array</code>保留给完整9点。不同方法比较须另给共同支持上的统计，不能比较各自不同样本集的“平均成绩”。非有限dB值单列计数，有限子集统计不能改称完整9点统计。</li>
+<li>参考能量分母整体为零时 E_array 也无定义。非零但接近参考数值误差时，只报告可分辨的绝对量及限制。</li>
+<li>点阵均值不是置信区间；同一海面的9点不是9个独立海面。</li>
+</ul>
+<h3 id="45-分开验收不同问题">4.5 分开验收不同问题</h3>
+<table>
+<thead>
+<tr class="header">
+<th>检查类型</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>源/表示资格</td>
+<td>按3.2a–c逐方法对检查；物理推导与输入核对支持SOURCE_MATCHED，拟合残差小只支持CALIBRATED_ONLY；与数值精度、模型精度分开登记</td>
+</tr>
+<tr class="even">
+<td>保存数据与公式重建</td>
+<td>对有限可定义量使用显式 absolute+relative 容差；建议 <code>atol=1e-12, rtol=1e-10</code>，记录每个量的尺度，不对近零比值强行作相对比较</td>
+</tr>
+<tr class="odd">
+<td>数值参考可信度</td>
+<td>空间/求积/窗口/波束等敏感性分别报告；建议整体复数尺度的数值变化先控制到1e-4以内，并明显小于待解释差异</td>
+</tr>
+<tr class="even">
+<td>物理模型差异</td>
+<td>报告实际幅相/复数差；不把旧 Fast–Full 的1e-3算法门槛当作所有模型的通信用途门槛</td>
+</tr>
+<tr class="odd">
+<td>通信适用性</td>
+<td>S5/S6用频响、CIR、估计和接收表现评价；核心阶段不预判“PE足够/不足以用于通信”</td>
+</tr>
+</tbody>
+</table>
+<p>数值门槛是本计划的执行建议，S0 根据已有护栏写入配置并声明来源。若某个模型差异与参考敏感性同量级，结论为 <code>UNRESOLVED_AT_NUMERICAL_PRECISION</code>；不能宣布方法相同或物理失败。不得在看到最终差异后放宽门槛。</p>
+<h3 id="46-s2c物理变化与模型误差的区别新阶段强制字段">4.6 S2c物理变化与模型误差的区别（新阶段强制字段）</h3>
+<p>对相同源、频率、接收点和海面<code>θ=(A,K,φ)</code>，以各方法同版本的原生反射复场<code>u_m(θ)</code>定义：</p>
+<ul>
+<li><strong>真实海面响应（以BIE数值参考为观察锚点）</strong>：<code>Δu_BIE(θ)=u_BIE(θ)-u_BIE(flat)</code>；或不同海面间<code>D_phys(θ;θ0)=u_BIE(θ)-u_BIE(θ0)</code>。它们是海面形状改变所导致的参考声场变化，不是PE模型误差。称“真实”时必须写明是<strong>受数值分辨率限制的BIE参考</strong>。</li>
+<li><strong>模型误差</strong>：<code>e_PE(θ)=u_PE(θ)-u_BIE(θ)</code>；<code>e_FK(θ)=u_FullFK(θ)-u_BIE(θ)</code>。分别并列<code>e_m(flat)</code>以及<code>[u_m(θ)-u_m(flat)]-Δu_BIE(θ)=e_m(θ)-e_m(flat)</code>。后者衡量粗糙增量的预测差，不可偷换成主反射场误差。</li>
+<li><strong>相位与幅度</strong>：空间线/点阵均报告<code>|u|</code>、逐点幅度dB、<code>arg(u_m conj(u_BIE))</code>的wrapped差、<code>|e_m|</code>、完整复L2及幅相平方恒等式；在近零处标相位不可靠，不逐案例调常数相位或按峰值重标。</li>
+<li><strong>空间归属与因果限制</strong>：可以在同一x轴上并列海面<code>η,η',η''</code>与z=3 m接收残差以识别空间相关，却不能未经独立传播/照射贡献分析就断言“接收x处残差由相同x处海面造成”。中心九点的三个深度是不同接收高度；只有P21/P22/P23在z=3 m线上，另外六点不得投影到同一条线当真样本。</li>
+<li><strong>数值分辨能力</strong>：同点、同场量、同海面保存BIE空间/窗口/自求积敏感性与PE、FullFK各自误差控制；参考变化与模型差异接近时标<code>UNRESOLVED_AT_NUMERICAL_PRECISION</code>。S2b预冻结“5倍经验数值分辨率”仅可在<strong>同定义、同冻结策略</strong>且事先声明的受控对照中延用，它不是严格误差界或统计显著性；如新K导致分辨率策略失效，先重新冻结、不能事后选宽松门槛。</li>
+</ul>
+</div></details>
+<details><summary>5. 预先固定的图组</summary><div class="original-body"><h2 id="5-预先固定的图组">5. 预先固定的图组</h2>
+<p>每个完成的数值阶段必须有图、有数据、有文字解释。使用MATLAB，保留可编辑<code>.fig</code>和PNG预览；PDF仅在明确要求时导出并标明矢量或栅格，不要求重做历史PDF。保存独立重绘数据，纯绘图不得依赖求解器重算。</p>
+<p>**S2c及之后新增成果采用“图优先”交付：**先给一页可直接查看的现象总览，再给几何、幅相残差、中心局部与九点图，最后才是指标表和计算细节。这个要求仅针对后续新图册，<strong>不追溯修改S2a/S2b的已冻结图</strong>，也不增加任何声学场计算；CSV/MAT和审计仍为必需的可复算证据。</p>
+<table>
+<thead>
+<tr class="header">
+<th>图号</th>
+<th>内容</th>
+<th>必须包含</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>F01</td>
+<td>收发几何、点阵和海面</td>
+<td>点号、坐标、z方向、源、物理表面与数值窗口分别标记</td>
+</tr>
+<tr class="even">
+<td>F02</td>
+<td>入射条件、入口符号控制及平面反射场</td>
+<td>复角谱、入射幅相/法向导数、源/载波转换；u_flat幅相和PE–BIE、FullFK–BIE残差，Bellhop按资格另列</td>
+</tr>
+<tr class="odd">
+<td>F03</td>
+<td>原始二维反射场</td>
+<td>预声明代表案例真实x-z复场；合格方法共同单位、幅值色标及相位色标，配残差；标点阵/近零；缺失方法留缺口，不伪造空间场</td>
+</tr>
+<tr class="even">
+<td>F04</td>
+<td>三档正弦反射复场接收线及局部放大</td>
+<td>u_rough与u_flat并列；共同单位和幅值范围、相位曲线、固定支持；主线只标同深度P21/P22/P23，其余代表点放F06</td>
+</tr>
+<tr class="odd">
+<td>F05</td>
+<td>接收线和9点残差、辅助G/δu</td>
+<td>平面与粗糙的复差、幅度dB差、wrapped相位差；3×3热图/最差点；G及δu另面板，近零/缺失不隐藏</td>
+</tr>
+<tr class="even">
+<td>F06</td>
+<td>5个代表点的复数与幅相对照</td>
+<td>P22/P12/P21/P23/P32；相同单位的复平面图、幅度/相位差；9点全量表同步交付</td>
+</tr>
+<tr class="odd">
+<td>F07</td>
+<td>点阵汇总及幅相分解</td>
+<td>平均、中位数、最大、E_array、幅度/相位贡献；不把不同定义混为一个百分数</td>
+</tr>
+<tr class="even">
+<td>F08</td>
+<td>PM输入与跨海面结果</td>
+<td>每seed高度/坡度/谱/截止、9点汇总散点、经验分布与最差点；先显示全部样本再给汇总</td>
+</tr>
+<tr class="odd">
+<td>F09</td>
+<td>单点阵宽带频响与CIR，仅S5</td>
+<td>5点曲线、9点汇总；频率凹口、相位残差、CIR/PDP、累计能量、采样加密对照</td>
+</tr>
+<tr class="even">
+<td>F10</td>
+<td>最小接收机结果，仅S6</td>
+<td>已知信道控制、估计NMSE/EVM/BER，匹配与失配接收分开；噪声尺度和有效样本数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>S2c专用新图号，不占用已为PM保留的F08，也不覆盖S2b的F01–F07：</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>图号</th>
+<th>S2c内容</th>
+<th>数据与解释护栏</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>M00</td>
+<td><strong>图册首页总览</strong>：以强档<code>A=.20 m</code>为默认例，在相同物理x坐标下四联展示①海面<code>η</code>，②PE/BIE/FullFK同源`</td>
+<td>u_rough</td>
+</tr>
+<tr class="even">
+<td>M01</td>
+<td>同一x轴分别显示三档实际高度<code>η</code>、坡度<code>η′</code>、曲率<code>η″</code>及其单位；标注x=0、C2平台/过渡区、已有源照射权重支持</td>
+<td>几何可分行或分幅，波数/初相位明确；中心高度为0也须显示非零坡度；几何不算新声场</td>
+</tr>
+<tr class="odd">
+<td>M02</td>
+<td><strong>三档都展示</strong>：z=3 m BIE的平面/粗糙响应与物理增量、三方法`</td>
+<td>u_rough</td>
+</tr>
+<tr class="even">
+<td>M03</td>
+<td><strong>整线—局部—九点</strong>配对：M99的411点全线残差及中心x附近局部放大，标明P21/P22/P23；原P11–P33真实3×3点位的幅度、相位、复差对照热图/点图</td>
+<td>411线与9点各自独立统计并标分母，最差位置和经验数值分辨率可视化；另6个不同z的点不得画在z=3 m线上，更不能插成连续x-z场</td>
+</tr>
+<tr class="odd">
+<td>M04</td>
+<td><strong>仅获准后</strong>分别为K变化和φ变化生成“基线 vs 新案例”成对图：同A几何、BIE物理场变化<code>D_phys</code>、PE/FullFK模型残差及数值分辨率</td>
+<td>同组坐标/单位/可比色标冻结，基线和新例并排，不把BIE物理变化画成模型误差；资源阻塞案例只标未计算，不画预测曲线</td>
+</tr>
+</tbody>
+</table>
+<p>S2c-A仅用保存数据完成<strong>M00首页及M01–M03</strong>，并预冻结M04的待授权协议（可画<strong>明确标记为几何候选</strong>的海面曲线，不得虚构新反射场）。S2c-B才可能以新真实复场制作M04；S3继续保留F08及其原既有图组。</p>
+<p><strong>图册阅读与验收要求（S2c-A必需）：<strong>在新run目录交付<code>mechanism_atlas.md</code>，按</strong>M00总览→M01几何→M02幅相及复残差→M03全线/局部/九点</strong>排列，以相对路径直接嵌入真实PNG预览、链接相应FIG与保存数据。每张图用简明中文写清“看到了什么、能支持什么、不能推出什么”（特别是幅度相近≠复数相近、空间相关≠局部海面因果、九点≠整线）。Goal回复<strong>先展示总览图链接与2–4张关键图的预览/链接和一句话读图结论</strong>，再汇报数值表及审计；不得只列CSV路径和完成状态。每张图标题/图例/字体可阅读，横轴真实x、纵轴/色标单位齐全；不同案例用一致坐标范围和必要的统一色标，微小残差用独立放大轴并注明尺度；相位跨±π断线，参考近零/未分辨标志不可隐藏。目标是少而清楚的图组，避免重复堆砌几十张图片；缺图必须声明真实原因，不可用示意或插值图冒充。</p>
+<p>阶段图组：S2a已交付F02、F04/F05；S2b正式交付F01–F07及108点与411线数据，当前以<code>formal_reference_v2</code>为准，历史有限窗口图不覆盖。S2c新增M00–M04；S3保留F08。旧PE x-z图只能按实际核验的版本和支持标注；FullFK连续x-z缺失，不能由接收线或点阵插出。</p>
+<p>固定代表案例：平面、弱/中/强低K正弦、canonical PM及首批其他PM。可追加“误差最大案例”，但必须注明为事后诊断并与固定案例同时显示。</p>
+<p>同一比较组使用一致坐标、单位和色标；dB图也须用同一个参考幅值。残差图允许独立窄范围，但标注范围。禁止逐方法峰值归一化、额外相位对齐、平滑掩盖波动或隐藏失败样本。4.1节固定校准分栏并标α及适用范围，不混入同源主图；原生Bellhop不同单位图仅示形态，不据颜色相似宣称幅值一致。相位主值跨±π处断线，残差用wrapped差；宽带解缠只在可靠幅度和连续区段使用。</p>
+<p>F03优先强正弦已有真实场；FullFK缺场时先列成本与覆盖，再按代表案例预算评价真实网格。三档正弦均须有接收线/点阵，但不强制每档、每个PM都有完整x-z场。不存在二维网格时用真实线/点展示缺口，不能把9点或接收线插成精细声场图。</p>
+</div></details>
+<details><summary>6. 分阶段执行</summary><div class="original-body"><h2 id="6-分阶段执行">6. 分阶段执行</h2>
+<h3 id="s0输入契约与预算冻结">S0：输入、契约与预算冻结</h3>
+<p>本节与S1保留2026-10-20已完成的历史范围；当前源资格、方法清单和新增缺口在S2a更新，不追溯改写首轮数据或完成状态。</p>
+<p>**目标：**明确能复用什么、缺什么，以及这轮实际比较什么。</p>
+<p>工作：</p>
+<ol>
+<li>阅读 AGENTS.md、PROJECT_CONTEXT.md 当前索引、本计划及 E01–E09；检查 Git 工作区，保留用户已有修改。</li>
+<li>只检查活动路径和已明确引用的来源；所有搜索排除 <code>cash/</code>。源文件缺失时登记缺口，不自动恢复档案。</li>
+<li>核对源、相位、G定义、点阵坐标、参考版本；提取数值变量时避免执行历史 MAT 中的函数句柄。</li>
+<li>创建“案例×方法×频率×接收点×场量”可用性表，区别已有场、可从已有密度评价的场、需要新边界解的场。</li>
+<li>冻结9点表、方法列表、正弦与PM系数来源、图组、近零规则、数值容差和资源预算。</li>
+<li>若需要数值执行，验证已有 MATLAB MCP 会话版本和 cwd；不改变 cwd、不启动新 MATLAB。会话不可用时完成静态盘点并报告环境阻塞。</li>
+</ol>
+<p><strong>交付：</strong><code>protocol.json</code>、<code>receiver_grid.csv</code>、<code>case_manifest.csv</code>、<code>source_manifest.csv</code>、<code>data_availability.csv</code>、<code>cost_plan.json</code>及S0说明。</p>
+<p>**进入S1条件：**所用分支的已有输入可追溯、几何/源/相位没有未解释冲突。缺失或冲突分支单独隔离、登记，不阻止其他可比数据复核，不能假装齐全。首轮以E01–E03为主要数值输入；E04–E09先核对导航与适用范围，只有定位具体来源缺口时才继续追溯。</p>
+<h3 id="s1保存数据的单点点阵接收线重新评价">S1：保存数据的单点—点阵—接收线重新评价</h3>
+<p>**目标：**在不新增声学求解的条件下解释指标与图形的表观矛盾。</p>
+<p>工作：</p>
+<ol>
+<li>原样重建E01三种正弦的411点G指标；复现历史数值。 若定位到旧指标实现错误，保留旧实现/旧值的复现与修正公式/新值的独立验证两条记录；不得覆盖旧证据或以“必须匹配旧值”阻止正确修正。</li>
+<li>从已有CSV/MAT读取中心点与存在的点阵样本；强正弦优先使用E02真实 x-z 数据。</li>
+<li>同时保存G与原始场的可用性。E02没有相同点位的平面分母时，不可直接把原始场当作G，缺口留给S2。</li>
+<li>对存在的数据计算逐点、等权点阵和原接收线三套结果；明确区别相位、幅度与复数误差。</li>
+<li>重建F01、已有F03、F04–F07；不齐的9点使用缺失标识，不能用部分结果宣布点阵完成。F04接收线只能标出同深度的P21/P22/P23；P12/P32用真实其他深度样本在F06展示，不把它们放到z=3 m线上。F07按场量与完整/部分支持分别展示，不能混算。</li>
+<li>添加少量有意义的指标单元控制：相同场、纯幅度误差、纯相位误差、零候选/零参考/双方零、近零参考、缺失点及精确分解闭合。</li>
+</ol>
+<p>**交付：**逐点/汇总CSV、MAT、图片、重绘入口与S1解释；清晰回答“旧指标公式是否有错”和“旧指标是否适合当前目标”，分别给证据。</p>
+<p>**完成条件：**历史结果重建通过，或旧实现错误已定位且旧/新结果均有独立核验；所有差异有明确量纲、归一化和坐标；图表、公式测试、独立重绘与缺失点清单完整。历史表若存在舍入差异，使用同精度基准或有来源的舍入区间；不能以展示表的少量有效位检验<code>1e-10</code>相对一致性。尚未解决的来源/公式矛盾应写未闭合，不能靠放宽门限宣告重建通过。此阶段不要求PE通过任何物理精度门槛；完成分类按0.3节。</p>
+<h3 id="s2a实际入口声源资格与平面基线已执行历史权重已由s2b-p0补正">S2a：实际入口、声源资格与平面基线（已执行；历史权重已由S2b-P0补正）</h3>
+<p>**已执行目标（2026-10-23）：**在已完成S0–S1和符号诊断基础上，冻结PE/BIE/FullFK可比的源与表示，检查平面基线，重建可用的三档正弦接收线；未补齐全套九点或扩展PM。实际入口/源资格/平面门限于z=3 m闭合。<strong>本节下列工作为历史执行契约，不要求下一轮重新执行；S2a当时采用旧入射能量权重，空间权重主指标已由S2b-P0在独立正式结果包中补正，不覆盖S2a旧数值。</strong></p>
+<ol>
+<li>盘点E01–E12实际代码、数据和哈希；按3.2a–c冻结几何、屏相位、传播核、载波恢复、复角谱、二维源强及原生复场表示。复用现有修正包的已通过检查，新增FullFK输入、法向/弧长、两个积分项与输出分量核对；保存旧版本。</li>
+<li>PE正式使用的高度适配、反射屏、传播与比值链路必须通过正入射平面波控制：eta_z=0与h=±0.01 m、固定Tx/Rx，与独立路径差−2h推导的exp(−2ikh)比较。不能仅测试两个相同exp表达式。BIE/FullFK通过其实际几何、法向及表示入口核对；有限窗口Gaussian平移不强行套用常数比值。</li>
+<li>根据源代码核定PE/BIE/FullFK共同入射场及法向导数；从源定义推导必要映射，按方法对登记源资格。Bellhop先做保存数据/代码审查和已有平面线诊断；单点幅比或全线最佳α都不能替代物理源映射。未闭合分支保留G和可选固定平面校准诊断，不阻塞合格方法对。</li>
+<li>优先从保存数据取u_flat/u_rough；只有G与同点、同源、同表示的真实u_flat均保存时，才允许用u_rough=G*u_flat重建，并交叉核验。缺少分母则登记缺口，不从别的方法借分母。主平面控制优先已有z=3 m共同接收线，另声明留出位置/深度验证是否已有，不能暗示未计算的离深度点已验证。</li>
+<li>必要时允许有界的新PE保存入射场反射/传播评价，以及FullFK的平面和三档固定正弦接收线积分。先做代表作业估成本，复用相同海面/入射数据并共享计算；超预算保留缺口，不擅自缩减支持后称完整接收线。S2a不新解BIE、不评价保存BIE密度、不跑Bellhop，不生成完整x-z场。缺失的这些参考值列入S2b；有参考的合格子集可先完成控制。</li>
+<li>用同单位、同支持/权重并列报告平面与三档粗糙反射复场，主报PE–BIE、FullFK–BIE，PE–FullFK辅助；G、δu及旧/新PE对照另列。共同共轭不变性、平面分母、载波恢复与两个误差恒等式独立复算。不得以小于6.2911%为调参目标。</li>
+<li>交付F02及可用接收线F04/F05；保存源资格表、平面控制表、版本化基线、复用/失效清单及新的S2b补算表。缺口维度至少为方法×案例×频率×点号×场量×源/约定版本，分清源变化导致重算与单纯缺点。</li>
+</ol>
+<p>**范围：**上述人工/解析控制、PE场评价及FullFK积分均如实计入新增计算；不做PM、宽带、生产API修复或FastFK优化。本次改写计划不执行这些工作。</p>
+<p>**交付/进入S2b条件：**对可继续的方法对，实际入口、表示和源契约已闭合，现有平面控制已解释或明确限定其不确定性，图表与独立复算完成；数据缺点可交S2b补齐。源资格是进入同源主比较的必要条件，平面数值可信度是作模型精度结论的另一个条件，不能合并成一个PASS。</p>
+<ul>
+<li><code>S2A_CONVENTION_SOURCE_BASELINE_COMPLETE</code>：核心三方法约定/源资格完成，已声明支持上的平面基线审查完成；不代表模型精度通过或九点已齐。</li>
+<li><code>S2A_PARTIAL_SOURCE_OR_REFERENCE_LIMITED</code>：仅合格子集完成，明确剩余方法/参考/支持；可继续不依赖缺口的S2b工作，不宣称三方法完成。</li>
+<li><code>S2A_CONVENTION_UNRESOLVED</code>：实际入口约定未闭合，停止依赖它的新物理比较，交付证据和有界缺口，不无限修补。</li>
+</ul>
+<h3 id="s2b核心三方法点阵与反射复场补齐已完成下列原执行流程仅供追溯">S2b：核心三方法点阵与反射复场补齐（<strong>已完成；下列原执行流程仅供追溯</strong>）</h3>
+<blockquote>
+<p><strong>最终状态补注：</strong><code>S2B_COMPLETE_REFERENCE_QUALIFIED</code>，当前正式输入为<code>formal_reference_v2</code>。下列P0–P3、48/108、60缺格、“下一次Goal”等均是其执行前合同，不是本次再次运行清单。有限L60版FullFK与最终解析平面外场版分别保存，禁止将前者数值冒充正式物理误差。报告中受限参考版本保留为真实历史快照，参见0.7。</p>
+</blockquote>
+<p>**目标（历史合同）：**在S2a合格版本上，先补正旧接收线权重口径并通过BIE参考与资源门，再形成平面及弱/中/强正弦的PE/BIE/FullFK完整3×3比较，结合接收线与数值参考给出结论。Bellhop单独登记加入范围。<strong>下一次Goal严格依次执行P0→P1→（门通过后）P2→P3，不自动进入S3。</strong></p>
+<p><strong>S2b-P0｜保存数据指标补正，新增物理场计算=0。</strong> 从S2a正式包的<code>line_fields.csv</code>和MAT读取相同411点原生复数，独立计算4案例×3方法对的12组<code>spatial_uniform_411</code>主指标，并原样重算<code>legacy_incident_energy_M99</code>以确保旧值保留。测试同场、纯幅差、纯相差、相消/零场、近零参考、缺失及平方恒等式；从CSV独立复核MAT和两个权重表。若已有复场不可读取，登记实际缺失并停止宣称补正成功，不启动物理场计算来绕过数据问题。输出版本化CSV/MAT、权重向量、支持、分母/有效数、差异解释；不覆盖S2a历史包。</p>
+<p><strong>S2b-P1｜先审参考和成本，不盲补点。</strong> 核验本地保存BIE边界密度/复场的源、物理海面、求解器版本、法向、参考相位及每个案例的可评价点集合；判定18个BIE缺失位置分别能否通过保存密度评价、必须重新解方程，或因输入失效无法复用。核对48/108现值的逐格真实可用性和哈希。冻结BIE数值敏感性检查的案例/位置/变量、参考尺度、预算与停止条件；测量或从可靠日志估算单代表作业时间和<strong>增量物理RAM</strong>，扣除S2a已消耗的7200 s核心累计预算。若预算/内存/参考来源不满足，停止依赖该参考的新增计算，形成<code>REFERENCE_INCONCLUSIVE</code>及可独立处理的剩余项，<strong>不得</strong>将预检通过等同于BIE数值精度已认证。</p>
+<p><strong>S2b-P2｜通过门才允许的最小物理补算。</strong> 以S2a版本和固定九点为唯一正式输入，按照可用性表去重补齐名义60格（PE18/BIE18/FullFK24），不解释为60次求解；严格区分PE反射起始场评价、BIE保存密度接收场评价/新边界解和FullFK双项积分，计入全部新物理计算。按本节已有步骤2–4执行，保持同一个Gaussian源、4 kHz、C2、海面系数、native相位与点号；每个作业先过第7节单作业900 s、30%可用物理RAM和累计7200 s门，逐案保存检查点。BIE必须有可追溯的参考敏感性证据才可支持模型精度判断；FullFK的有限窗口、求积与BIE不确定性分别列出。参考失配或资源门失败时停止相关分支，不通过调源、改变海面或缩小点阵取得PASS。</p>
+<p><strong>S2b-P3｜汇总、图表与验收。</strong> 当完整点值具备时按九点等权计算主反射场逐点与完整<code>E_array</code>、均值/中位数/最差点及幅相分解；平面与三档粗糙并列，G、δu与交叉项只作诊断；接收线主指标必须采用P0的空间权重。若某些格缺失，只报真实共同支持及<code>E_subset</code>、缺失原因和有效分母，不得填补为0或插值。完成适用的F01–F07、MATLAB可编辑FIG/PNG、保存复场与图像独立重绘，保留来源/代码哈希和新旧指标并列表。数值参考不确定性大于或接近模型差异时标<code>REFERENCE_INCONCLUSIVE</code>，不以图像相似或FullFK低误差宣布物理PASS。</p>
+<ol>
+<li>按S2a可用性表重新去重。旧“18个平面分母＋24个BIE/Bellhop弱中粗糙值＋12个PE弱中值＝54”仅是2026-10-21旧三方在特定复用假设下的记录，<strong>不包含新增FullFK需求，也不是此次预算或任务数</strong>。核心目标覆盖3方法×4案例（平面及3粗糙）×9点＝108个复场样本格，这是总覆盖而非108次新求解；源版本失效和实际缺点另外统计，接收线也另列。</li>
+<li>PE从核验的保存入射场构造正确符号反射场；不复用错误符号起始场。BIE优先评价源/边界一致的保存密度，必要的新边界解须先经过预算门。FullFK复用完整积分入口，按3.2c核心配置评价平面和三档粗糙的所有缺失点；不以PE相位屏、局部截断或FastFK替代。</li>
+<li>平面/粗糙原生复场及物理映射场分别保存，同一频率/源/边界共享预处理与积分或密度评价批次。Bellhop若已有源资格且预算允许，仅补必要X源网格；未完成源映射时原生场、G和固定校准留在诊断层，不将其称为同源绝对误差。</li>
+<li>检查平面、强正弦及最大差异/最小参考幅度点的数值敏感性：BIE离散/求积与窗口，PE步长/横向网格，FullFK表面求积/几何导数采样/有限窗口，已纳入Bellhop的波束/步长/壁面采样。一次只改变数值设置并保留物理海面；C2支撑或PM截止变化另作物理范围敏感性，不能当作网格收敛。</li>
+<li>完成主反射复场的逐点、五个代表点、九点均值/中位数/最差点及E_array，平面与粗糙并列；G、δu及交叉项另表。采用4.3a空间线权重与九点等权，历史G权重另列。参考不确定性、近零和缺失如实显示。</li>
+<li>完成F01–F07的适用内容。F03优先已有强正弦真实场，新增FullFK二维场只在代表案例成本获准范围内计算；无场时留缺口，不由接收线插值。PE-mode 1只在其自身约定通过后加入辅助诊断。</li>
+</ol>
+<p>**交付：**核心三方法平面/三档粗糙的原生与同源复场表、G/δu诊断、源资格/共同支持、数值敏感性、图组、独立重绘和S2报告；Bellhop结果单列资格与覆盖。</p>
+<p><strong>S2b阶段与Goal完成分类（不得混淆）：</strong></p>
+<ul>
+<li><code>S2B_COMPLETE_REFERENCE_QUALIFIED</code>：P0/P1完成，108/108个核心点值可追溯，P2规定的参考敏感性与模型数值控制足以解释差异，P3全部必要图表、独立数据复算和审计通过。<strong>仍不表示PE/FullFK物理误差一定低于阈值。</strong></li>
+<li><code>S2B_DATA_COMPLETE_REFERENCE_LIMITED</code>：P0、108/108点值及必要图表/审计齐全，但BIE/FullFK部分数值可信度不足；只称数据覆盖完成，不得宣布物理精度通过或将其当作无保留进入S3的资格。</li>
+<li><code>S2B_PARTIAL_REFERENCE_OR_BUDGET_LIMITED</code>：P0或P1如实完成，但参考、物理内存、时间或部分点位阻塞，九点未齐；交付有界结果、成本与缺口，<strong>Goal不能以“九点已完成”结束</strong>。P0本身无法从真实数据完成时同样保持未完成/阻塞。</li>
+</ul>
+<p>**进入S3条件：**所纳入方法的S2a入口与源门已通过、S2b空间主指标及数据/图表已审查，且对应BIE参考数值可信或被严格限定；模型差异大是允许结果。若核心方法/点位缺失或参考未闭合，S4保留缺口，只有不依赖缺口的方法对才能被单独授权开展有限PM；不得以Bellhop或mode 1替换缺失FullFK来宣称核心三方法齐全。</p>
+<h3 id="s2c受控参数敏感性与空间误差机理s2c-a已完成s2c-b未执行">S2c：受控参数敏感性与空间误差机理（<strong>S2c-A已完成；S2c-B未执行</strong>）</h3>
+<p>**2026-10-23 S2c-A完成时的执行注：**零新声学场的S2c-A已在<code>20261023_s2c_a_1642</code>完成，状态<code>S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE</code>，交付<a href="results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md">中文机制图册</a>、11组M00–M03 FIG/PNG、独立审计与已哈希协议。下述S2c-A步骤保留执行契约含义；当时S2c-B两个候选均未计算、未授权。共享余额5791.339895 s不变，建议先一个K_HIGH代表以避免两案完整参考超出1800 s子额度；不自动转S3。此后K_HIGH单独获授权并停于本文件顶部所述资源门，PHI_PLUS90仍未授权。详细结果见唯一主报告。</p>
+<p><strong>阶段目标：<strong>先理解S2b既有数据中“幅度曲线相似但复数差随A增长”及“中心九点远小于整条线”的机制，再以尽量少的新海面试验检查这种行为是否依赖<code>K</code>及<code>φ</code>。本阶段定位为</strong>S2b与S3之间的有界机理诊断</strong>，不是建立一般波浪参数的响应面或海况统计规律。</p>
+<p><strong>S2c-A｜历史已完成Goal契约：保存数据空间诊断＋实验协议/资源冻结，新增声学场计算=0。</strong></p>
+<ol>
+<li>**来源门：**核对本地<code>formal_reference_v2</code>（<code>fields_line/fields_core</code>、<code>reference/resolutions</code>、<code>plot_data.mat</code>、图/审计），S2b final status、三方法源/相位/单位、正式FullFK数值版本、S2b扣记<code>1408.660105/7200 s</code>和现有RAM口径。若GitHub仅有文本/代码而缺CSV/MAT/PNG，优先寻找真实本地包；没找到则标来源受限，<strong>不</strong>凭报告舍入表伪造411点场。</li>
+<li><strong>冻结几何并绘图：<strong>对已存在的平面+3档<code>A=.01/.05/.20,K=.1,φ=0</code>，仅计算几何<code>η,η',η''</code>与描述量，绘制M01。读保存同源u并用CSV/MAT独立核验11或12位数复场一致性、同点场量和411空间权重；制作M02、M03及必要局部放大，幅相、原生复差、平面—粗糙增量并列。最后</strong>仅从同一批保存绘图数据组成M00四联首页总览</strong>，所有关键图按第5节规定共享真实x轴，并优先展示中/强档的差异。中档作为候选机制对照，强档作为显著误差实例；三种振幅均有完整场输入时不得只挑利于论点的一档。</li>
+<li>**先证实“现象”再写机理：**按4.6节区分<code>BIE粗糙场-平面场</code>的海面效应与<code>PE/FullFK-BIE</code>模型误差；报告按x位置及五点/九点的幅相平方项、近零/相消、中心对称性和空间支持差异。<code>M01–M03</code>只是位置相关与候选机制证据；不能单凭海面x=0过零或两张曲线相似宣布因果。</li>
+<li><strong>冻结不运行的小实验：<strong>按3.4的<code>BASE_M</code>、<code>PHI_PLUS90</code>、<code>K_HIGH</code>形成</strong>首轮2个新物理海面</strong>；<code>K_LOW/PHI_MINUS90</code>及匹配坡度/曲率仅列待单独审批。为每个新案例输出真实二维海面数组/导数、C2支持、周期、峰值/受照射几何描述、固定源与九点/411线、方法对与主指标、需补BIE数值层级。记录若改变K会改变哪些因素；不得把“只固定A改变K”称为只改变斜率或只改变曲率。</li>
+<li><strong>成本与停止门：<strong>从S2b余<code>5791.339895 s</code>总额提出S2c-B试点的</strong>建议子额度≤1800 s</strong>（包含失败/保守扣记，绝非增加总预算），并预留S3A所需的合理余额；据已有中/强档新BIE解约169–290s/作业仅作量级参考，<strong>新K/φ及所需多层自求积/窗口求解不能沿用旧成本作保证</strong>。列每类代表作业、可重用平面、BIE单案例预检/两层数值参考、FullFK当前正式解析外场条件、PE同源网格护栏、单作业900s和物理RAM30%保留要求。预算若不能承担完整可信参考，可只建议先做一个代表案例或停止，不能把缺失BIE误差“按旧强档经验填写”。</li>
+<li>**交付与退出：**新的唯一run_id内保存<code>mechanism_baseline/</code>的原始复场来源索引、<strong>M00–M03 FIG/PNG和<code>mechanism_atlas.md</code>中文可预览图册</strong>、几何CSV、逐点和整线误差/幅相平方分解/物理增量表、统一权重/近零审计、候选解释及反证、<code>design_freeze.json</code>（或等价MAT/CSV）和<code>cost_gate.md</code>。提供只读重绘、独立CSV复算与逐张图片检查，<strong>Goal汇报以图册和关键图的中文解读为先，表格与审计为后</strong>；在唯一主报告追加S2c-A附录并更新README/PROJECT_CONTEXT阶段状态。真正完成的分类为<code>S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE</code>；若源/复场缺失或独立审计未通过，标<code>S2C_A_PARTIAL_OR_INPUT_BLOCKED</code>并列实际缺口。<strong>本Goal到此结束，不启动新PE/BIE/FullFK求解、不进入S2c-B/S3。</strong></li>
+</ol>
+<p><strong>S2c-B｜用户第二次明确授权后，按最小真实单因素试点进行计算。</strong></p>
+<ol>
+<li>先读取并验证S2c-A冻结协议、剩余预算、物理RAM、真实保存场与代码SHA。只考虑<code>K_HIGH</code>和<code>PHI_PLUS90</code>两种新增海面，按“代表BIE+同源PE/FullFK+匹配点收敛/参考资格”的<strong>串行</strong>作业执行，先一个案例，通过前置门才考虑第二个；若可信参考估算已超1800s建议子额度或可能侵占后续S3，先停下提交预算决策，不以放宽参考门替代。</li>
+<li><code>φ</code>对照固定<code>A=.05,K=.10</code>，<code>K</code>对照固定<code>A=.05,φ=0</code>；所有方法共享新海面、真实法向、同一Gaussian谱、同一Rx点集和原生相位。平面解析解可同源复用；BIE新海面原则上要新边界密度解且做适用的空间/求积/窗口数值敏感性；PE核验物理高度适配和网格；FullFK只在C2严格平坦外侧且独立验证等价式成立时沿用<code>FullFK_complete_analytic_flat_exterior_GL8_v1</code>，不得退回未经补全的有限L60近似冒充正式版。任何新场都计成本。</li>
+<li>保存原生<code>u_rough/u_flat</code>、BIE物理海面变化<code>D_phys</code>、各方法的模型误差<code>e_m</code>，同一M99等空间权重和原九点等权分别统计、幅/相分解、局部与全线差异及数值分辨率。图M04须按第5节将<code>BASE_M↔︎K_HIGH</code>及<code>BASE_M↔︎PHI_PLUS90</code>分别成对展示<strong>海面几何、BIE的<code>D_phys</code>、PE/FullFK相对BIE模型残差与数值分辨率</strong>，并更新图册中文读图页；所有真实CSV/MAT/FIG/PNG需独立重绘审计；小差异未数值分辨标<code>UNRESOLVED_AT_NUMERICAL_PRECISION</code>，不称“无误差”。</li>
+<li>首轮只检验<code>K_HIGH</code>与<code>PHI_PLUS90</code>两条配对假说，<strong>不</strong>做A×K×φ网格、频率扫描、接收机重新定位或PM。<code>K_LOW/PHI_MINUS90</code>可在下一轮按预登记反向控制申请；<code>MATCH_SLOPE/MATCH_CURV</code>仅在确实需要分辨高度/坡度/曲率、且前两组结果和参考支持后另行授权。没有配对控制不能声称三个几何描述量的独立因果效应。</li>
+<li>成功标准是两个被授权的<strong>真实案例与数值可信度、图/审计/成本、否定或支持假说的解释</strong>均按规则交付，不以PE误差单调、低于阈值或任何模型PASS为完成要求。部分案例预算/参考不通过时只称<code>S2C_B_PARTIAL_REFERENCE_OR_BUDGET_LIMITED</code>；若两例正式可比、审计完成可记<code>S2C_B_PILOT_COMPLETE_REFERENCE_QUALIFIED</code>，它也不表示普适物理结论。</li>
+</ol>
+<p><strong>与S3关系：<strong>S2c-A是解释与设计门，宜先于S3A完成。若S2c-B因资源/参考被拒绝，仍可经</strong>用户另行授权</strong>用S2b合格子集进入S3A，但S4须明确“新K/φ未做、正弦机制仅为候选解释”，不得用PM作为S2c的自动补偿。若S2c-B成功，把其冻结的空间诊断方法带入S3A的三个seed，检查中心低误差是否仍出现；三个seed不是三种海面时间快照，也非统计总体证明。S3B与S4仍依原计划独立门推进。</p>
+<h3 id="s3有限pm实现的匹配点阵对照">S3：有限PM实现的匹配点阵对照</h3>
+<p>**目标：**检查固定正弦及S2c所报告的候选机制在多个随机海面上的表现，形成有界二维证据。S2c未能完成的新物理对照必须列作未执行，不把PM分析当作已证实正弦高度/坡度/曲率因果关系。</p>
+<p><strong>S3前置补充：<strong>复用正式S2b的4 kHz同源反射复场定义、空间线与九点统计方法，以及经S2c-A冻结的M01–M03空间诊断。每个PM输入先检查能否满足FullFK解析平面外场方法的</strong>严格平坦外部</strong>前提；只有实际C2嵌入且<code>|x|&gt;=50 m</code>确实为0、源谱/几何一致时才可用相同完整外场数值版本。未经嵌入或外侧仍有粗糙度的原生PM不得把仅有限窗口FullFK冒充已合格完整参考；应明确限制或另做有界方法论证。S2c-B消耗计入同一7200s剩余预算，不能拿初始余额再次重置。</p>
+<p>工作分两批：</p>
+<p><strong>S3A，3个已有输入：</strong></p>
+<ul>
+<li>前置条件为所纳入方法对的S2a约定/声源门与S2b审查完成。先审计每条PM路径的高度方向、坡度、场表示及版本；同一seed不代表同一符号语义。冻结源映射与FullFK完整积分配置，平面控制沿用同源同坐标版本，不能逐seed再拟合。保存系数/入射场可核验复用，已知错误符号的PE粗糙场须重建。未核验分支单列。</li>
+<li>使用保存的 seed260001/260002/260003 Fourier系数，不重新抽样。</li>
+<li>核查每个输入究竟有哪些PE/BIE/Bellhop/FullFK数据；仅补缺失分支。</li>
+<li>首先建立三种输入的9点PE-mode 0—BIE—FullFK反射复场对照，附G/δu；Bellhop按资格和剩余预算加入，未加入不阻塞核心。不得把Fast–Full通过写成FullFK–BIE物理通过，不能以FastFK结果填充FullFK真值。</li>
+</ul>
+<p><strong>S3B，扩至8个输入：</strong></p>
+<ul>
+<li>在S3A的成本与数值条件允许时，默认扩至总计8个独立系数实现；建议登记260001–260008，并先检查同名seed与保存系数的来源是否一致。</li>
+<li>复用符合本fixture的已有系数；新系数只按同一冻结谱律生成一次，再交给所有方法。禁止使用旧R源结果代替X源结果。</li>
+<li>默认只做8个；若预算仍有余量且预先登记的诊断问题未解决，可追加至12个，并在读取追加输出前冻结追加名单与目的。不得因为前8个结果不理想而换seed。</li>
+<li>这8–12个是诊断样本量，不保证协方差、尾部概率、海况总体或通信统计可靠性。</li>
+</ul>
+<p>固定项：</p>
+<ul>
+<li>4 kHz、同一源与9点阵、同一父谱与周期、同一C2几何。</li>
+<li>复用canonical实际截止 <code>Kmax=0.4712389 rad/m</code> 的有限带定义；它不同于数值Nyquist，不能作为真实海面的普适截止。</li>
+<li>保存每个实现的原始/嵌入后高度、坡度、曲率、实际模式与系数；不逐实现重归一化波高。</li>
+<li>截止增大或高K追加属于另一个机制控制组，不计入8个独立实现。</li>
+</ul>
+<p>评价：</p>
+<ol>
+<li>每个海面先给u_rough九点结果、均值、中位数、最大值、E_array和最差点，并列同源u_flat控制；G/δu、校准分支另列，不能混入原始复场平均。</li>
+<li>跨海面比较采用同一seed/点号配对；显示全部样本，给中位数、范围和探索性经验分布。</li>
+<li>如计算重采样区间，以海面为重采样单元，不以9个接收点或频点为独立样本。样本少时明确区间不稳定。</li>
+<li>保留参考不确定、超预算和失败案例，不静默移出总体表；不报告虚假的“8/8通过”。</li>
+<li>给F08，并把canonical、另外两个预定输入及最差案例的F04–F07并列展示；<strong>沿用M01–M03的图式</strong>制作PM高度/坡度/曲率与误差位置对应的小多图。只有真实411线数据时才画整线；如仅有9点，则提供真实九点图并显式标“整线缺失”，不得插值凑齐。</li>
+</ol>
+<p>**交付：**配对PM数据、系数与描述量、参考有效性、全部点阵指标、图组与S3报告。</p>
+<p>**完成条件：**回答“本次有限带、有限支撑、固定源/频率/点阵下是否出现显著实现依赖”。不要求所有方法通过；不能推导三维PM或无限海面的可靠性。</p>
+<h3 id="s4二维核心收尾与去留决策">S4：二维核心收尾与去留决策</h3>
+<p>**目标：**形成唯一收尾报告，结束无明确问题的二维扫描。</p>
+<p>报告必须逐项给出：</p>
+<ol>
+<li>分开列出历史复现、符号诊断、源资格通过后的反射复场比较；旧接收线G指标的局限，以及新版中心/点阵/接收线结果。8.0908%与6.2911%不改名为u_rough误差，也不能作为同一表示下的直接精度改善曲线。</li>
+<li>原始幅度图、相位残差、复数指标是否一致解释；有哪些未分辨或近零情况。</li>
+<li><strong>S2c阶段</strong>所支持/未支持的空间相位—幅度—误差关联、K/初相位配对和局部过零假说；明确哪几组为保存数据诊断、哪几组有真实新BIE参考、哪些高度/坡度/曲率独立机制尚不可识别。再分列正弦与PM各自支持的结论；原生、物理同源、固定平面校准三层结果分开，平面与粗糙差值及交叉项如实报告，不能用增量分解宣称唯一因果来源。</li>
+<li>核心PE-mode 0、BIE、FullFK的证据、用途和未闭合范围；辅助mode 1、条件扩展Bellhop另列。FullFK仍是Kirchhoff近似，不因“完整”视为精确解；不作跨范围总排名。</li>
+<li>所有参考失败、方法差异、资源停止及剩余问题。</li>
+<li>是否值得进入S5，所需源映射、频率点数预案、成本和验收目标。</li>
+</ol>
+<p>最终分类分别登记：</p>
+<ul>
+<li><code>CORE_COMPLETE</code>：核心PE/BIE/FullFK源资格、平面/三档正弦接收线与完整九点、已声明PM批次的数据/图表和独立审计完成，可包含模型不通过；<strong>S2c-A的保存数据空间诊断应如实交付，S2c-B未获授权或数值受限时可作为有界未执行问题单列，而不是伪称完成K/φ新物理试验</strong>；须同时列PM实际完成seed数和范围，不能掩盖原定批次缺失；</li>
+<li><code>CORE_PARTIAL_SOURCE_LIMITED</code>：核心方法源定义/映射未闭合；只报告合格子集和诊断。只有Bellhop源受限、核心三方法完整时，不因此降级核心状态，但标<code>BELLHOP_SOURCE_UNRESOLVED</code>；</li>
+<li><code>CORE_PARTIAL_REFERENCE_LIMITED</code>：某些物理问题因参考或数据不足未闭合；</li>
+<li><code>S5_READY</code> / <code>S5_NOT_READY</code>：只表示后续条件，不自动启动扩展；</li>
+<li>三维 <code>G1_target_PM=OPEN</code>、<code>WP2_formal=false</code> 不变。</li>
+</ul>
+<p><strong>交付：</strong><code>reports/two_dimensional_channel_closeout_report.md</code>、完整结果包、可独立重绘/审计入口、README/PROJECT_CONTEXT更新。到此核心收尾可以结束，不把S5/S6未执行写成核心失败。</p>
+<h3 id="s5条件扩展固定点阵宽带频响与cir">S5：条件扩展——固定点阵宽带频响与CIR</h3>
+<p>**目标：**只有在需要回答通信相关性且前置条件通过后，才把单频结论扩展到带内波形。</p>
+<p>进入条件：用户要求本扩展；S4列出明确带宽与问题；原始反射/直达场的源标度、载波、native→DSP、时间参考已通过；预算可承受。仅有G或4/6/8 kHz离散锚点不满足条件。</p>
+<p>工作：</p>
+<ol>
+<li>默认候选频带4–8 kHz，需在配置中写清这是研究设置。频点数由时延窗、相位变化及收敛决定，不把65/257点等历史数字当成充分性证明。</li>
+<li>沿用相同9点、同一海面系数和源定义。冻结源宽度及其跨频语义；不得逐频拟合源。</li>
+<li>先做平面、一个预定正弦和canonical PM；若PM参考不具资格，保留受控案例并标明PM不能进入，不换成“有利”海面隐藏失败。</li>
+<li>核对DSP约定后构造H_direct、H_reflect、H_total；所有分量共享时间原点。禁止各路径分别移峰或逐频相位对齐。</li>
+<li>检查Δf、时延周期1/Δf、带宽分辨率约1/B、窗函数、零填充和截断。零填充不增加物理时延分辨率。</li>
+<li>若用稀疏频点重建，预留未参与拟合的频点；在凹口附近检查绝对/相对误差。没有独立频点证据，不交付“认证宽带CIR”。</li>
+<li>报告反射和总场的带内误差、主要到达、相对时延、PDP/尾部能量、频率凹口、F09及采样加密变化。深凹口处群时延不可靠时标记，不强行解释。</li>
+</ol>
+<p>静态宽带结果写 <code>h_tau</code>/静态CIR；不同PM实现不是时间序列，不把它们拼成 <code>h(t,tau)</code>。本阶段不增加运动或多普勒。</p>
+<h3 id="s6条件扩展最小通信敏感性测试">S6：条件扩展——最小通信敏感性测试</h3>
+<p>**目标：**检查模型差异是否影响选定接收机，不构建完整通信系统。</p>
+<p>进入条件：用户要求本扩展；S5频响/CIR可信；实际选择的带宽、符号率、脉冲、帧长、保护区、噪声、估计器和均衡器已冻结。</p>
+<p>最小流程：</p>
+<ol>
+<li>平面/已知复增益及已知双径控制先通过：无噪声、定时/CSI已知时，验证卷积、帧边界和接收处理，不把结构性误码底当作声学模型问题。</li>
+<li>使用一套固定QPSK基线，先已知CSI，再导频估计；不同时扫描多个调制、编码和深度网络。</li>
+<li>配对bits/noise种子；分别声明固定发射功率/噪声与按接收SNR归一化的实验，不静默逐信道等功率化而消除衰落差异。</li>
+<li>分别做“每个模型使用自身CSI的匹配接收”和“近似模型提供信道信息、信号通过参考信道的失配接收”。后者用于揭示可迁移性问题。</li>
+<li>报告估计NMSE、EVM、BER/PER与失败率；置信区间按独立海面/记录分层，不把同一海面的9点当独立海况。</li>
+<li>画F10，保留理想与实际导频结果；不能因为单一接收机BER相近就宣称两个物理模型普遍等价。</li>
+</ol>
+<p>最终二维成果仍限于上述静态场景。实际浮标动力学、时变海面、三维效应、深度学习泛化与完整链路工程另行研究。</p>
+</div></details>
+<details><summary>7. 资源、停止与恢复规则</summary><div class="original-body"><h2 id="7-资源停止与恢复规则">7. 资源、停止与恢复规则</h2>
+<p>以下是本计划建议的初始资源上限，执行S0时写入配置；用户明确给定新预算时记录修订。超限意味着本次预算不足，不等于物理方法失败。</p>
+<ul>
+<li>核心S2a/S2b/<strong>S2c</strong>/S3新增声学计算共享累计墙钟上限：<strong>7200 s</strong>；正式S2b完结时累计扣记<code>1408.660105 s</code>、可用预算<code>5791.339895 s</code>，每次新核调用必须在这一余额上继续扣记（原历史未计时/失败保守扣记150s不得退回）。S2c-A为0新增声学场计算，S2c-B建议首批≤1800s<strong>子额度</strong>且必须保持S3A成本余量，不是新增加1800s。单个外部/数值作业初始上限：<strong>900 s</strong>。包括保存入射场FFT评价、密度场评价及完整求解，不能只统计求解器进程。图形与I/O另计；已有符号诊断单列历史成本，不因本次修订自动追加预算。<strong>进入S2b先从S2a <code>cost.json</code>与日志扣除已用成本，禁止把S2b视为新获7200 s。P0只做指标重算，不占用新声学计算预算。</strong></li>
+<li>增加FullFK或S2c不自动增加预算。已完成的S2a/S2b不得重复计成本；<strong>当前优先次序为S2c-A只读机理图/实验冻结 → 经二次授权的S2c-B最多2个最小物理试点 → S3A三份PM</strong>；其他K/φ控制、扩展PM、FullFK代表性完整x-z及Bellhop新作业须另外审批成本。有限预算下以真实覆盖与缺口收尾，不能改用FastFK或从线插值来填齐。</li>
+<li>默认先串行完成一个代表作业并测量成本；不并发启动多个高内存BIE任务。不得启动重复Bellhop作业来处理观察超时。</li>
+<li>新作业前估算增量内存，保留至少30%当时可用物理RAM；记录估计、可用量及测量口径。估计不可得或门未通过时不分配大型数组。</li>
+<li>同一失败类型只做一次有明确诊断依据的修正/加密；仍失败则保留 <code>INCONCLUSIVE</code>，禁止无限调参。</li>
+<li>在job/seed边界保存检查点与日志。MATLAB工具超时先确认任务是否仍运行；不能因工具超时认定数值失败或重复运行。</li>
+<li>参考可信但模型差异大：报告物理差异，继续已登记的其他案例；不能停止在一个好看的结果上。</li>
+<li>参考本身不可信、坐标/源不匹配或数据哈希冲突：暂停依赖该输入的物理结论，继续不依赖它的盘点、绘图和报告。</li>
+<li>S5/S6单独做预算，不从剩余核心预算自动启动。</li>
+</ul>
+</div></details>
+<details><summary>8. 代码、输出和审计组织</summary><div class="original-body"><h2 id="8-代码输出和审计组织">8. 代码、输出和审计组织</h2>
+<h3 id="81-代码位置">8.1 代码位置</h3>
+<p>先复用现有入口和计算函数，不复制生产实现。S0–S1已有<code>run_two_dimensional_closeout_s0_s1</code>、<code>audit_two_dimensional_closeout_s0_s1</code>、<code>render_two_dimensional_closeout_s0_s1</code>与<code>test_two_dimensional_closeout_metrics</code>，继续保留其历史语义。</p>
+<p>FullFK优先复用<code>scripts/validation/support/solve_full_kirchhoff_2d.m</code>；入射评价参考<code>fk_single_receiver_incident.m</code>，约定与收敛设置参考<code>validate_full_kirchhoff_convention_audit.m</code>、<code>validate_full_kirchhoff_bie_vertical.m</code>及对应报告。这些历史驱动不得直接以旧默认案例/单边共轭产出新版结果；在验证适配层传入冻结配置，保留既有实现。FullFK内核为验证专用，并不要求迁移为生产模块。</p>
+<p>E10/E11历史符号与修正图册数据已于S2a按报告的受限范围核验；S2a入口为<code>scripts/comparisons/run_two_dimensional_closeout_s2a.m</code>，实际PE高度适配为<code>scripts/validation/support/run_pe_physical_surface_model0_validation.m</code>，保存复场和指标审计为<code>scripts/validation/support/audit_two_dimensional_closeout_s2a.m</code>，重绘为<code>scripts/reporting/render_two_dimensional_closeout_s2a.m</code>。S2b正式场、空间权重修正、完整FullFK外场、参考与图审计<strong>已在<code>formal_reference_v2</code>完成</strong>。下一Goal必须优先<strong>只读</strong>S2b正式<code>fields_core/fields_line</code>与相应审计/参考数组，不再把S2a旧权重补正作为待做任务。以下尚未实现的跨阶段名称仍只是建议：</p>
+<ul>
+<li><code>scripts/comparisons/run_2d_channel_closeout.m</code>：阶段调度、固定配置、配对案例与检查点。</li>
+<li><code>scripts/validation/support/closeout2d_*.m</code>：指标、输入断言、表示检查和验证专用读写辅助。</li>
+<li><code>scripts/validation/audit_2d_channel_closeout.m</code>：保存数据、指标、维度、哈希、重绘一致性审计。</li>
+<li><code>scripts/reporting/generate_2d_channel_closeout_visuals.m</code>：只读保存数据的绘图。</li>
+<li><code>scripts/validation/test_2d_closeout_metrics.m</code>：公式/缺失/近零等必要单元控制。</li>
+</ul>
+<p>新入口在 <code>setup_vertical_project</code> 后可从任意cwd运行，显式解析项目根与输出目录，不调用cd解决路径问题。默认不修改生产PE、BIE、FullFK及公共API；必要的验证修正另建有版本的分支实现并保留旧证据，不能覆盖冻结求解器。</p>
+<h3 id="82-输出位置">8.2 输出位置</h3>
+<p>统一使用 <code>results/comparisons/two_dimensional_channel_closeout/&lt;run_id&gt;/</code>：</p>
+<pre class="text"><code>config/       协议、点阵、案例、谱、预算、阶段状态
+provenance/   输入与代码哈希、版本、源/表示/单位、来源清单
+inputs/       必需的数值快照与系数，保留原路径对应关系
+checkpoints/  每个case/seed/job状态与可恢复记录
+fields/       原生和映射后复场，平面/粗糙与分量分别保存
+metrics/      逐点、点阵、接收线、跨海面、数值敏感性
+plot_data/    独立重绘所需数据
+figures/      MATLAB FIG、PNG及图注；S2c新增图册按相对路径直接预览；明确要求时另导出PDF
+logs/         执行命令、回执、异常、耗时和资源口径
+audit/        一致性与独立重绘结果</code></pre>
+<p>长表至少包含<code>case_id, sea_seed, method, frequency_hz, receiver_id, x_m, z_m, quantity_kind, reference_id, source_id, source_tier, source_map_version, convention_version, representation, normalization, real, imag, unit, validity, reference_status</code>。指标表另含<code>support_id, weight_kind, n_total, n_valid</code>。可选校准表记录<code>alpha, coefficient_origin, fit_support, validation_support</code>；未留出验证必须显式标明。FullFK记录法向方向、求积设置、local_radius、几何/入射/导数版本与代码哈希。字段名可适配已有schema，语义不可省略。</p>
+<p>每阶段更新实际执行状态，不把计划表当结果表。结果报告集中在 <code>reports/two_dimensional_channel_closeout_report.md</code>；阶段细节可作其附录，避免多个“最终结论”并存。</p>
+<h3 id="83-完成前审计">8.3 完成前审计</h3>
+<ul>
+<li>全部9点位置和点号一致；已知旧中心点在对应量/约定下复现。</li>
+<li>原始场、G、直达、反射、总场与DSP表示无混用；无双重共轭或路径单独移峰。</li>
+<li>源资格有代码/输入依据；物理映射与拟合α分开，校准不泄漏到主结果；FullFK实际执行完整双项、弧长和无限局部半径配置。有限分母处G*u_flat=u_rough闭合，u_rough−u_flat=δu及含交叉项误差恒等式独立核验。</li>
+<li>指标从保存复数独立重算一致；<strong>411点原生反射场空间主指标与旧入射能量加权指标分别保留<code>weight_kind/support_id</code>并有12行逐对复核</strong>；幅相分解闭合；NaN/近零/缺失及覆盖数可追溯。</li>
+<li>所有参与结论的图实际检查过：坐标、色标、图例、单位、截断、相位断点与失败点显示正确。<strong>S2c-A另检查M00/M01–M03覆盖真实三档场、全线和中心局部、真实九点；<code>mechanism_atlas.md</code>的相对PNG预览链接、中文三句读图与图号/源版本逐项对应。图册缺失或关键图不可阅读不能记完整图像验收。</strong></li>
+<li>纯绘图重建不调用物理求解器；底层数值与原图一致，固定渲染环境下优先检查像素一致性。</li>
+<li>PM系数、源与参考哈希、R/X标志、数值设置和失败历史完整。</li>
+<li>每项成本区分预计算、场评价、完整求解、I/O和绘图；9点共享成本不按9次单点误报。</li>
+<li>S2c的新增几何函数对<code>η,η′,η″</code>作解析/有限差分交叉检查，核对C2外部零值与源/法向一致性；海面形貌图与接收残差的x轴对齐不作为局部反射因果证明。新MATLAB代码做Code Analyzer和有意义的指标/契约检查；执行 <code>git diff --check</code>。</li>
+<li>若仅新增比较/报告工作流且生产接口不变，说明为何无需重跑不相关的生产宽带通信；若确有非平凡生产改动，按AGENTS运行标量频率与宽带通信回归并记录精确参数。</li>
+<li>更新README、脚本索引和PROJECT_CONTEXT中的实际状态；物理/接口/解释发生实质变化时同步技术指南。未执行阶段明确标为未执行。</li>
+<li>不提交、不推送、不自动归档；不读取或恢复 <code>cash/</code>。</li>
+</ul>
+</div></details>
+<details><summary>9. 可直接交给Codex的执行提示</summary><div class="original-body"><h2 id="9-可直接交给codex的执行提示">9. 可直接交给Codex的执行提示</h2>
+<h3 id="仅启动第一步">仅启动第一步</h3>
+<p>此提示保留为2026-10-20首轮历史入口；S0–S1、S2a、S2b均已完成，当前下一步使用下方<strong>S2c-A Goal</strong>提示。</p>
+<blockquote>
+<p>阅读根目录 two_dimensional_channel_closeout_plan.md，按0.3节契约执行S0与S1。只读活动保存的物理场，完成旧接收线复现、可用点阵/部分集指标、实际图表与独立重绘审计；新增物理场计算为0，包括禁止保存BIE密度的新接收场评价。资料缺口完整登记后可作为首轮审查成果，不自动进入S2–S6，不以模型PASS为目标。MATLAB仅用MCP现有会话；不可用时交付静态进度并保留未完成项。完整Goal提示词见配套审查文档。</p>
+</blockquote>
+<h3 id="已完成的历史goals2a仅供追溯不再启动">已完成的历史Goal：S2a（仅供追溯，不再启动）</h3>
+<blockquote>
+<p>请以Goal模式执行 two_dimensional_channel_closeout_plan.md 的S2a，仅完成实际入口、声源资格及平面基线审查，不自动进入S2b。复用已完成S0–S1、E10–E12及修正图册v2。核心方法为PE-mode 0/BIE/完整Kirchhoff（FullFK）；Bellhop作有条件扩展，不因其源映射未闭合阻塞合格子集。先按3.2a–c核定实际源强、复角谱、载波/几何/法向及输出分量；PE实际适配—屏—传播—比值入口运行eta_z=0与h=±0.01 m平面波控制。FullFK使用现有完整双项积分、arc_length与local_radius_m=Inf。保存场优先；允许预算内必要PE评价及FullFK平面/三档正弦接收线积分，禁止新BIE求解/密度评价、Bellhop作业、整套x-z场、PM、宽带、生产API修改及FastFK替代。以同源u_flat/u_rough为主量，G和δu辅助；物理映射与固定平面拟合严格分层，不用中心幅比定源强，不以误差降至阈值为目标。交付源资格表、平面控制/现有正弦线图、原始复场与指标、版本/失效清单、独立复算/重绘和含FullFK的新S2b缺口及成本表，更新唯一主报告和索引。执行预算遵守第7节；完成是审查与实际可执行控制交付完整，真实源/参考限制可作为有界成果，但有可用数据未处理或应运行控制未运行不能写完成。MATLAB只使用MCP现有会话，环境不可用时保留未完成状态，不启动shell MATLAB。Goal工具状态遵守其实际规则，不因一次受阻或预算临近就标完成；不提交、不推送、不读取cash/。</p>
+</blockquote>
+<p>本段是2026-10-23初次计划修订时的提示词；S2a现已按其限定范围执行，详见主报告。**禁止下一Goal重新执行它或覆盖其结果。**既有旧状态<code>S2A_CONVENTION_BASELINE_COMPLETE</code>若出现，仅说明旧范围，不自动满足本版声源/FullFK验收。</p>
+<h3 id="已完成的历史goals2b保留原提示词不得重启">已完成的历史Goal：S2b（保留原提示词，不得重启）</h3>
+<p>以下提示词为S2b执行前原合同；其P0、108/108、参考/完整FullFK/审计现已在<code>formal_reference_v2</code>闭合，<strong>当前不得据此再次创建或执行S2b Goal</strong>。真正下一Goal在本节下方。</p>
+<blockquote>
+<p>请<strong>创建并执行一个Goal</strong>：完成二维收尾计划S2b，先补正S2a的411点原生反射场空间权重主指标，再通过BIE参考与资源门，按资格和预算最小补齐PE-mode 0/BIE/完整Kirchhoff（FullFK）的平面及弱/中/强正弦3×3点阵。交付可复算的真实复场、指标、图表、独立审计和未闭合问题；<strong>不要只给计划</strong>。本Goal只涵盖S2b及其必要P0补正，<strong>不自动执行S3–S6、Bellhop源映射或通信</strong>，不自行设置token预算。</p>
+<p>工作目录：<code>E:\MISC\CARPE3D_matlab\Explain</code>。先读取<code>AGENTS.md</code>、<code>PROJECT_CONTEXT.md</code>顶部当前索引、根目录<code>two_dimensional_channel_closeout_plan.md</code>（重点0.6、3.2a–c、4.1–4.5、S2b、7–9节）、<code>reports/two_dimensional_channel_closeout_report.md</code>、S2a正式包<code>results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/</code>中的本地MAT/CSV、来源哈希、审计与成本。先核对工作区和上述文件的真实存在性；GitHub上看到报告/代码不代表大型原始数据已同步。不得读取<code>cash/</code>。</p>
+<p><strong>P0（零新声学场计算，必须最先完成）</strong>：只读S2a原生<code>line_fields.csv</code>及MAT，在同一M99的411个真实z=3 m样本和相同PE/BIE/FullFK反射复场上，为平面及三档正弦、三组方法对计算12行<code>q_i=1/411</code>空间主指标；独立复现旧<code>d.weights</code>入射能量加权值并并列保存。保存复L2、幅度L2、幅度dB RMS、相位RMS、幅相平方分解、有效点/近零、复场来源和明确的<code>weight_kind/support_id</code>；从CSV独立审计MAT及恒等式。不能把旧4.39622%等数值只改标签，也不能修改/覆盖S2a历史MAT、CSV或图。修订图注和唯一主报告的解释，但不改写原结果。P0禁止任何PE传播、BIE密度评价、FullFK积分和Bellhop作业。</p>
+<p><strong>P1（BIE参考与成本门）</strong>：逐项复查S2a冻结的源/相位/高度/法向、四案例的BIE保存密度及求解版本、可评价位置、已有48/108真实点值与名义60缺点（PE18、BIE18、FullFK24）。从<code>cost.json</code>和日志扣除S2a核内耗时，冻结拟新增作业列表、必要数值敏感性和参考误差评价方法；先确认BIE18缺点是只需保存密度新点场评价还是必须重解边界，分别估计峰值内存和耗时。严格执行核心新增场累计7200 s、单作业900 s、至少保留当时可用物理RAM的30%和代表作业先行规则。新物理作业前检查<strong>真实</strong>可用物理RAM而不是仅MATLAB虚拟/页文件容量。缺少可信参考、输入版本或预算不可行时，不得强行启动高内存BIE；保存阻塞与可替代的独立工作。</p>
+<p><strong>P2（仅P1门通过后执行）</strong>：固定4 kHz、c=1500 m/s、Gaussian σ=0.3 m、Tx=(0,100)m、原C2海面及P11–P33坐标，复用经哈希及源资格核验的现值，按必要点集批量评价PE/BIE/FullFK平面和三档粗糙反射复场。不复用错误符号的旧PE反射起始场；FullFK必须完整两项、真实法向/弧长、<code>local_radius_m=Inf</code>，不得用FastFK/局部截断代替。BIE保存密度的新接收场评价算<strong>新物理场计算</strong>；如需新BIE求解，先独立过预算与数值门。平面与粗糙保持同源/native表示，禁止共轭只施加于一方、逐点拟合幅相、换seed、改点位或挑数据以获得PASS。逐案例保存检查点，记录真实有效格数和每次计算成本。</p>
+<p><strong>P3（数据、图表、审计）</strong>：以未作rough/flat归一化的同源<code>u_rough</code>为主，<code>u_flat</code>并列，G与δu/交叉项仅辅助；接收线主统计使用P0空间权重，九点一律等权。真实完整9点才计算<code>E_array</code>；否则报<code>E_subset</code>、共同支持、最差点、NaN/近零及每项分母，不插值填补。按实有数据完成F01–F07适用图组，MATLAB保存可编辑<code>.fig</code>和PNG，检查坐标/单位/幅相/截断，交付从保存MAT独立绘图与从CSV独立复算结果。匹配点BIE参考收敛、PE步长/网格和FullFK求积/窗口分别检查；不把约0.019%的FullFK–BIE既有差异直接当作已认证模型精度。</p>
+<p><strong>状态与退出条件</strong>：只有P0通过、核心108/108真实点值可追溯、BIE参考及必要数值门可支持所做结论、图表和独立审计实际通过，才将本Goal与阶段标记<code>S2B_COMPLETE_REFERENCE_QUALIFIED</code>。点值齐但参考未可信，则标<code>S2B_DATA_COMPLETE_REFERENCE_LIMITED</code>，明确不等于物理PASS；仍缺点或P1被源/预算阻塞，则标<code>S2B_PARTIAL_REFERENCE_OR_BUDGET_LIMITED</code>并保留Goal未完成/受阻，给出完成部分、缺点、实际成本及下一次可执行的单项。<strong>任何数值误差增大均可如实作为结果，不以模型通过为Goal</strong>。原S2a <code>S2A_CONVENTION_SOURCE_BASELINE_COMPLETE</code>状态和旧8.0908%、6.2911%、4.39622%历史口径保持原样；<code>G1_target_PM=OPEN</code>、<code>WP2_formal=false</code>不变。</p>
+<p>全部新产物用唯一<code>run_id</code>写入<code>results/comparisons/two_dimensional_channel_closeout/&lt;run_id&gt;/</code>，保存来源/代码哈希、空间主指标和历史权重并列、九点逐格覆盖、BIE参考误差/成本、MAT/CSV、FIG/PNG、独立审计及<code>reports/two_dimensional_channel_closeout_report.md</code>唯一主报告附录；同步必要README/索引和脚本索引。MATLAB仅经MCP<strong>现有会话</strong>运行，不从shell另起MATLAB、不以<code>cd</code>改变cwd、不访问<code>cash/</code>、不覆盖旧结果、不修改生产求解器或公共API、<strong>不提交或推送</strong>。完成后报告证据、检查运行情况和后续建议，然后结束本轮Goal。</p>
+</blockquote>
+<h3 id="当前下一轮创建并执行一个-s2c-a-goal只读机理诊断新实验协议冻结">当前下一轮：创建并执行<strong>一个 S2c-A Goal</strong>（只读机理诊断＋新实验协议冻结）</h3>
+<p><strong>以下整段可直接交给Codex的Goal模式。必须先创建Goal并执行P0–P3；本次计划修订自身没有创建Goal或做新声学计算。</strong></p>
+<blockquote>
+<p>请在 <code>E:\MISC\CARPE3D_matlab\Explain</code> <strong>创建并执行一个独立Goal：<code>S2c-A 正弦空间机理与受控试验冻结</code></strong>。本轮只做已保存的正式S2b复场与几何数据分析、图表和下一最小计算试验协议；<strong>新增声学场计算必须为0</strong>。不要只产出另一份计划，也<strong>不要自动启动S2c-B、S3–S6、Bellhop或宽带/通信</strong>；不自行设置token预算。</p>
+<p>**P0 证据与版本门：**先阅读<code>AGENTS.md</code>、<code>PROJECT_CONTEXT.md</code>当前索引、根目录唯一<code>two_dimensional_channel_closeout_plan.md</code>（重点0.7、3.4、4.6、5、S2c、7–9节）和<code>reports/two_dimensional_channel_closeout_report.md</code>最后的S2b参考闭合附录。核查本地<code>results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/</code>的MAT、CSV、正式图与独立审计，读取当前<code>S2B_COMPLETE_REFERENCE_QUALIFIED</code>和正式FullFK版本<code>FullFK_complete_analytic_flat_exterior_GL8_v1</code>；<strong>不要</strong>误用旧有限L60、旧8.0908% G或S2a历史加权值。核验三方法同源/native相位/单位、411点空间等权、原9点坐标、场和数值参考哈希。若真实本地大数据缺失，报告缺什么，不能凭GitHub文本表重造4932行数据。不访问<code>cash/</code>。</p>
+<p><strong>P1 零新声场的空间诊断：<strong>对已冻结A=.01/.05/.20 m、K=.1 rad/m、φ=0的三档正弦及平面，计算解析C2海面几何<code>η,η′,η″</code>（仅几何，不调用声学传播/求解/新接收点评价）。从正式保存复场逐x分析BIE参考的<code>|u_rough|</code>、相位和<code>u_rough-u_flat</code>；PE–BIE与完整FullFK–BIE的逐点复残差、幅度dB、wrapped相位差及精确幅/相平方项。必须分开“BIE参考真实海面响应”和“近似模型相对于BIE的误差”。九点与411线分别统计；仅P21/P22/P23属于z=3m线，其他六点不得插投到线上。按第5节</strong>生成M01/M02/M03与M00四联总览的FIG+PNG</strong>：M01几何三行同x轴，M02三档的平面/粗糙BIE物理响应、三方法幅度叠加与相位/复残差，M03同屏比较411全线、中心局部放大与真实九点热图。制作**<code>mechanism_atlas.md</code>图册**，按M00→M01→M02→M03直接嵌入PNG并链接FIG，每图附中文“现象/证据/限制”。重点检查中心x=0零高度、非零坡度、源照射/相消、边缘差异和参考近零；<strong>空间相关只作为候选机制，不得声称局部表面高度已被证实为唯一原因</strong>。读取已有强档411×45可视化时核验保存场版本与z=3截线，非正式支持的其它深度只用于限定说明；不得生成FullFK伪连续场。</p>
+<p><strong>P2 预冻结但不运行新增案例：<strong>根据计划3.4固定基线<code>BASE_M(A=.05,K=.1,φ=0)</code>，给出两个第一批候选<code>K_HIGH(A=.05,K=.20,φ=0)</code>和<code>PHI_PLUS90(A=.05,K=.1,φ=+π/2)</code>；列<code>K_LOW/PHI_MINUS90/MATCH_SLOPE/MATCH_CURV</code>仅为另行授权的条件对照。固定原Gaussian FFT离散源、c=1500m/s、4kHz、Tx100m、原C2窗、接收线/九点、native相位与主反射复场定义，生成每个候选解析<code>η,η′,η″</code>、有限支撑/周期/实际高度坡度曲率统计及可重建配置哈希。明确：固定A改变K同时改变坡度/曲率/周期，φ=π/2同时改变中心高度/坡度/曲率；单因素指</strong>只修改输入参数</strong>，不等于只改变一个物理几何描述量。保存事前判据、最小参考敏感性设置、<code>design_freeze.json</code>及待授权作业清单；<strong>不得调用PE、BIE、FullFK计算新案例</strong>。</p>
+<p><strong>P3 资源门、独立审计和退出：<strong>以正式S2b累计扣记<code>1408.660105/7200 s</code>、余额<code>5791.339895 s</code>为核内成本基线，提出S2c-B首批<code>≤1800 s</code>建议子预算而非新增预算；依据历史BIE每次约169–290s</strong>只做量级预估</strong>，按需要的新BIE边界求解/64–96自求积/空间与窗口层级分别估成本，查已有真实RAM记录并说明执行时必须重新采Windows物理可用字节数、预估增量保留30%、单作业≤900s。预留S3A最小预算，不得因为本Goal结束便默认新物理许可。对<strong>M00–M03</strong>从保存CSV独立重算关键数值、图像从保存MAT独立重绘、逐张检查坐标/量纲/相位跳变/未分辨标志，并核实图册相对路径预览有效、全线与局部支持不混用；新MATLAB文件Code Analyzer通过并<code>git diff --check</code>。以唯一新run_id存档几何、复场来源索引、图、指标、成本门、协议、源码/输入哈希，在唯一主报告新增S2c-A附录，必要同步README和PROJECT_CONTEXT。</p>
+<p>**完成/阻塞：**只有真实本地正式S2b数据读取成功、<strong>M00总览、三档M01–M03可读实图、中心局部/真实九点对照和中文可预览图册交付</strong>、独立审计通过、两个候选试验协议/资源/退出门冻结，才将Goal及阶段标为<code>S2C_A_DIAGNOSTIC_PROTOCOL_COMPLETE</code>；若被本地来源/数据/审计阻塞，标<code>S2C_A_PARTIAL_OR_INPUT_BLOCKED</code>，说明已完成部分与缺口，<strong>不得虚报完成</strong>。模型差异大或假说被否定是正常研究结果。不得改写S0–S2b原始场、指标、结果状态及参考版本；不修改生产API或求解器、不另起shell MATLAB（只能使用现有MATLAB MCP会话）、不<code>cd</code>改变cwd、不提交/推送。<strong>最终回复先给M00与M01–M03关键图的直接链接/预览、简明中文读图，再给CSV/审计/成本；完成S2c-A后立即停止，等待用户核对并单独授权S2c-B或S3。</strong></p>
+</blockquote>
+<h3 id="下一个可选goals2c-b-两个新海面试点本次不授权">下一个可选Goal：S2c-B 两个新海面试点（<strong>本次不授权</strong>）</h3>
+<blockquote>
+<p>只有用户看过S2c-A图表/冻结方案并明确要求后，才<strong>创建并执行另一个S2c-B Goal</strong>，先读其<code>design_freeze.json</code>、正式S2b参考和最新物理RAM/核心剩余成本，再在<code>≤1800 s</code>建议子额度与共享7200s、单作业900s/保留30%物理RAM三门之内，<strong>串行</strong>检查两个物理新海面<code>K_HIGH</code>、<code>PHI_PLUS90</code>。每次先做代表性BIE成本/数值参考预检，通过后才做同源PE、可信BIE和正式完整双项FullFK九点及411点复场，不以FastFK替换FullFK；保存BIE物理海面增量、PE/FullFK相对BIE模型误差、空间/九点指标与数值分辨率；按第5节生成<strong>K变化与φ变化分别成对、可直接看懂的M04</strong>，更新中文图册，并完成独立MAT/CSV/FIG/PNG审计和单Goal总结。预算、源资格、C2严格平坦外场或参考门失败则停在有界部分结果，不为了完成率放宽标准；不自动扩至K_LOW、PHI_MINUS90、匹配坡度/曲率、S3及其它阶段，不提交推送。</p>
+</blockquote>
+<h3 id="执行核心收尾">执行核心收尾</h3>
+<blockquote>
+<p>按 two_dimensional_channel_closeout_plan.md <strong>只读复用已经完成的S0–S2b</strong>，先创建并执行S2c-A零新增声场的空间/幅相机制与小试验冻结Goal；用户第二次明确授权且BIE参考/预算门通过后，才执行S2c-B两个受控新海面，然后另行授权S3有限PM、S4收尾。主量为同源反射复场，平面必须并列，G/δu辅助；Bellhop仅在源资格和预算允许时加入，不以固定α拟合代替物理同源。固定边界、点阵和系数，保留旧新版本；只沿已合格的方法对扩展，预算/参考受限则交付有界结果与缺口，不能冒称核心三方法齐全。不要执行S5/S6、三维PM、FastFK优化或统计训练。交付复场、图表、源资格与参考不确定性、独立重绘/审计及下一步决策，不以模型PASS为目标。</p>
+</blockquote>
+<h3 id="启动可选扩展">启动可选扩展</h3>
+<blockquote>
+<p>在二维核心报告的明确边界内评估并执行S5；只有源/相位/参考与资源条件通过才生成固定点阵宽带频响和CIR。条件不满足时给出缺口与有界结果，不用离散三频或未验证插值替代宽带认证。S6需另有执行范围指令。</p>
+</blockquote>
+</div></details>
+<details><summary>10. 本计划编制记录</summary><div class="original-body"><h2 id="10-本计划编制记录">10. 本计划编制记录</h2>
+<ul>
+<li><p>**2026-10-23（S2c-B K_HIGH执行补记）：**用户仅授权K_HIGH单案。S2b/S2c-A正式输入及哈希核验，P0解析几何、BASE_M保存复场、M04a预实验图与独立审计完成；五层BIE保守成本估计1749.8 s满足子额度，但当前物理RAM不足以保障30%保留，自动审批拒绝可能启动高成本BIE的入口。K_HIGH新声学场0，M04b–d未生成，Goal未完成；未降低参考层级或5倍经验判据。结果与阻塞证据见<a href="reports/two_dimensional_channel_closeout_report.md">唯一主报告</a>及<code>20261023_s2c_b_khigh_02/</code>。不涉及PHI_PLUS90、S3–S6、生产API或旧正式包覆盖。</p></li>
+<li><p>**2026-10-23（同一S2c-B K_HIGH后续实测，覆盖上一条当时RAM状态）：**物理RAM恢复并在代表调用前实测2,101,432,320 bytes，完整五层最大内存估计的30%保留门通过。仅启动L60/12 ppw/qa96 BIE代表，实耗311.2095523 s；保存417点真复场、密度、残差和回执。按实耗重新保守估计五层加必要预留2157.6201 s，超过1800 s子预算357.6201 s，因此不运行余四层、PE/FullFK，也不生成M04b–d正式声场图。单层K_HIGH参考未取得空间/窗口/自求积及5倍经验分辨率资格；P1独立审计、单层CSV与成本停止记录见同run及<a href="reports/two_dimensional_channel_closeout_report.md">唯一主报告</a>。状态<code>S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED</code>；Goal不标完整完成，不执行PHI_PLUS90或后续阶段。</p></li>
+<li><p>**2026-10-23（可视化小幅补强，仅文档）：**不改S0–S2b既有结果、S2c/S3阶段顺序、K/φ实验、声源/数值参考/预算及Goal授权边界；第5节为S2c补充从保存数据拼接的M00四联总览、M01–M04固定布局、中心局部/九点真点位、中文可预览<code>mechanism_atlas.md</code>和图优先验收；S2c-A/B及S3/F08和第9节Codex Goal同步图像交付口径。原计划SHA-256为<code>e0d7615019819edd306370b7b689366d2344c371149f900c213aea0e1a3842c3</code>。未执行Goal、声场新算、MATLAB或仓库修改，不覆盖正式数据。</p></li>
+<li><p>**2026-10-23（S2b最终补证后，新增S2c；本次仅修改完整计划，不执行Goal/计算）：**以<code>S2B_COMPLETE_REFERENCE_QUALIFIED</code>及<code>formal_reference_v2</code>为当前权威基线；保留S0–S2a历史状态、原48+60版本与正式108/108点、原生复场/空间权重及参考的不同数值版本。针对K=.1、A三档下整线误差与中心九点差异、幅度贴近与相位复差的未解释现象，增加3.4、4.6、S2c-A/B及M01–M04；一律区分BIE海面物理增量和相对BIE的模型误差，不把中心x=0过零和局部坡度/曲率当作已证因果。下一Goal只执行S2c-A保存数据诊断/冻结（新声场=0）；S2c-B默认两个新海面<code>K_HIGH/PHI_PLUS90</code>需二次授权，K低、负峰与匹配斜率/曲率不自动展开。S2a/S2b旧提示均标已完成历史；S3/S4保留并补前置/解释缺口。S2c/S3共享原7200 s上限，正式S2b已扣记1408.660105 s，余额5791.339895 s，不新增预算。源文件来自本地前次完整修订计划（SHA-256 <code>c891b271c01efe5ffa01fdc8a25d376d0a05a84bf0621d51dbf41326e1687562</code>），并与GitHub提交<code>672b089c3643edbcc2826819abc2cbf46fb0cd3b</code>的最新S2b顶部状态及上传主报告互相核对；既有正式数据不改。未使用MATLAB、未调用任何声学求解器、未创建Goal、未提交/推送或访问cash/。</p></li>
+<li><p>2026-10-23（S2a执行后审查，<strong>仅修改本计划</strong>）：确认<code>20261023_s2a_final</code>的411点原生复场指标实际沿用历史入射能量权重，而4.3a要求空间主权重。保留<code>S2A_CONVENTION_SOURCE_BASELINE_COMPLETE</code>的有限源/约定/平面资格结论，不改旧报告、旧MAT/CSV/图或历史数值；新增0.6节和S2b-P0从保存复场以<code>q=1/411</code>补正12组主指标，并列旧权重。将后续Goal切换为含BIE预检、参考不确定性与7200s累计预算门的S2b单Goal；明确108格48已有/60缺失和阶段退出状态。修订前本地上传计划SHA-256为<code>9926da862fd39f1d287cba84279889e4b3484d7ed95e3ec9207b57ea493842b6</code>。本次没有执行MATLAB、BIE密度评价、新求解、Goal或通信仿真，也没有修改生产API、提交或推送。</p></li>
+<li><p>2026-10-23：按本计划S2a实际执行入口、源资格、平面控制与接收线审查；PE/BIE/FullFK在固定源与z=3 m线的输入合同闭合，Bellhop保留源映射缺口。独立审计和图像重绘通过；核心108个S2b九点值中48个已有、60个缺失，不能称模型精度PASS或九点完成。唯一实绩、成本、来源与限制见<a href="reports/two_dimensional_channel_closeout_report.md">主报告</a>及其<code>20261023_s2a_final</code>数据包。没有启动S2b–S6、生产求解器修改、BIE新评价或Bellhop作业。</p></li>
+<li><p>2026-10-23：按同源反射复场问题改写；PE-mode 0/BIE/FullFK列为核心三方法，Bellhop保留条件扩展。核对完整Kirchhoff代码与既有约定审计，新增源资格/平面门、物理映射与拟合分层、原始场主指标、δu交叉项、固定绘图及FullFK成本/缺口要求，更新S2a–S4和Goal提示。旧S0–S1、符号诊断和旧54点值记录保留历史边界。修订前主计划SHA-256为<code>D7E1DC52C12F7F805FF1EE7602B59BCFA2D6D553F530170C2C996826271989BD</code>。本轮仅文档，未运行MATLAB、新场、通信或Goal，未改生产代码/接口；约0.27%等旧诊断数值未重算。</p></li>
+<li><p>2026-10-21：结合高度相位符号审计的报告、代码、CSV/JSON及S0–S1独立审计记录修订。保留首轮完成状态；新增S2a约定控制/基线，原点阵补齐改为S2b；修订PE复用边界、缺口计数、PM前置、图表和计算预算口径。本次仅文档修订，没有新求解、Goal或生产改动；修订前主计划SHA-256为<code>AC3441E5ED4500D0D49B2712812D2ED91F7061570C7523F7A8934DD42CAB9B5B</code>。未重跑诊断；报告中的新数值按已有CSV/JSON核对。</p></li>
+<li><p>同次审查增补：工作区已有修正图册v2及独立审计，新增E11与优先复用规则；在其通过S2a资格核验后，强正弦修正场不必重复评价，S2b按实际现值重新去重。此更新不撤销其保存数据审计，也不将其等同完整S2a/点阵物理验收。</p></li>
+<li><p>本文依据当前代码、活动报告、保存CSV以及本轮讨论编制；历史数值作为复现锚点，不作为新点阵结果。</p></li>
+<li><p>使用 experimental-design 的配对/独立样本原则及 scientific-writing 的来源、限制和未执行状态分离方法组织计划；它们不是声学验证依据。</p></li>
+<li><p>本项为2026-10-20早期文档记录，保持其历史时间语义；本次2026-10-23修订仅生成计划文件，不修改求解器、公共接口或历史结果，不运行MATLAB/Bellhop/通信实验。</p></li>
+<li><p>执行本计划后的任何范围变更应追加版本说明，保留原设置与失败结果；不另建一份与本文件冲突的二维收尾主计划。</p></li>
+<li><p>2026-10-20审查修订：增加0.3节首轮边界，细化零幅值、部分集、参考不确定性未知、接收线点位和历史舍入精度规则；物理参数、点阵、S2–S6范围均未改变。此次只审查文档，没有执行S0/S1或创建Goal；审查前SHA-256记于配套审查文档。</p></li>
+</ul>
+</div></details></div></section>
+<section class="section" id="review"><div class="section-index">10 / Codex审阅记录</div><h2>把下一次 Codex 回复翻译成人能判断的研究记录</h2><p class="section-lead">这个页面不会自动连接Codex或判断一篇回复的科学真假。你可以粘贴原文、用自己的话概括、核对证据，并保存你的审阅结论。<strong>初始验收全部为“未审核”</strong>，不会因为Codex写了PASS而自动通过。</p><div class="review-intro"><strong>建议的审阅顺序：</strong>先问“这次到底解决了哪个科研问题？” → 再看“新数据和旧数据相比哪里变了？” → 最后查“文件、图、指标、限制和资源记录是否齐全？”</div>
+ <div class="review-cols"><div class="form-panel"><h3>我对一个已交付成果的理解和验收</h3>
+  <div class="fgrp"><label for="reviewItem">选择成果</label><select id="reviewItem"></select></div>
+  <div class="current-review" id="reviewHelper">选择条目后，显示该项需要审什么。</div>
+  <div class="fgrp"><label for="reviewStatus">我的审阅状态（不改变原始执行记录）</label><select id="reviewStatus"><option value="unreviewed">尚未审阅</option><option value="understood">已看懂，未核对数据</option><option value="verify">需要Codex补证据</option><option value="disputed">存在异议</option><option value="limited">有条件接受，并保留局限</option><option value="accepted">人工验收通过</option></select></div>
+  <div class="fgrp"><label for="reviewMeaning">我用自己的话理解它做了什么</label><textarea id="reviewMeaning" placeholder="例：S2b填齐了九点的真实复数场，让我们可以比较中心附近的位置差异。"></textarea></div>
+  <div class="fgrp"><label for="reviewEvidence">我实际核对过的文件、哈希、截图或回执</label><textarea id="reviewEvidence" placeholder="填真实查过的路径/证据和发现；如果只读了报告，就如实写“只查报告”。"></textarea></div>
+  <div class="fgrp"><label for="reviewLimit">我仍然不懂或尚未解决的地方</label><textarea id="reviewLimit" placeholder="例：尚未取得BIE数值密度文件，所以只接受文字交付，不独立验收原始计算。"></textarea></div>
+  <strong style="font-size:12px">核查层级（不要仅凭报告勾选原始数据）</strong>
+  <label class="checkline"><input type="checkbox" id="chkPurpose">我已经能解释这项工作要回答什么研究问题</label>
+  <label class="checkline"><input type="checkbox" id="chkReport">我实际读过这项工作的报告或图注</label>
+  <label class="checkline"><input type="checkbox" id="chkData">我实际核对过原始数据、运行回执或独立审计结果</label>
+  <label class="checkline"><input type="checkbox" id="chkLimits">我知道它能证明什么，以及不能推出什么</label>
+  <div class="form-actions"><button class="btn primary" id="saveItemReview">保存本项审阅</button><button class="btn" id="copyAuditPrompt">生成一条只读审阅Codex提示词</button></div><div class="status-error" id="reviewError" role="alert"></div>
+ </div>
+ <div class="form-panel"><h3>登记一次新的 Codex 交付</h3>
+  <div class="formgrid"><div class="fgrp"><label for="runDate">执行日期</label><input id="runDate" type="date"></div><div class="fgrp"><label for="runStage">关联研究阶段</label><select id="runStage"></select></div><div class="fgrp span2"><label for="runItem">关联具体成果</label><select id="runItem"><option value="">只关联研究阶段</option></select></div><div class="fgrp span2"><label for="runId">run_id / Goal（可选）</label><input id="runId" placeholder="例如 20261025_...；没有则留空"></div><div class="fgrp span2"><label for="codexRaw">Codex原始回复（保留原话，便于日后追溯）</label><textarea id="codexRaw" class="large" placeholder="粘贴Codex回复。页面只保存文字，不会自行分析或运行任何代码。"></textarea></div><div class="fgrp span2"><label for="runPlain">一句人话：它具体做了什么？（必填）</label><textarea id="runPlain" placeholder="不要复制“Gate PASS”，写“完成了哪项计算，比较了什么，得到了什么结果”。"></textarea></div><div class="fgrp span2"><label for="runFinding">主要发现及数值（写清支持、参考、单位）</label><textarea id="runFinding" placeholder="例：九点PE/BIE复L2=...；411线=...；均为同源反射复场。"></textarea></div><div class="fgrp span2"><label for="runProof">实际数据/图/审计的位置</label><textarea id="runProof" placeholder="例如 results/.../jobs/...json；如果还没查到，写“未取得原始证据”。"></textarea></div><div class="fgrp"><label for="runVerdict">我的当前判断</label><select id="runVerdict"><option value="pending">未判断</option><option value="question">有疑问，要补证</option><option value="limited">有限接受</option><option value="accepted">已核验本次范围</option></select></div><div class="fgrp"><label for="runNext">下一步决定（不自动执行）</label><input id="runNext" placeholder="例：只读复查run回执，暂不启动新求解"></div><div class="fgrp span2"><label for="runQuestions">还要问Codex什么？</label><textarea id="runQuestions" placeholder="例：这条数值是整线还是中心？用的是哪个参考？"></textarea></div></div>
+  <div class="form-actions"><button class="btn primary" id="saveLog">保存这次Codex交付</button><button class="btn" id="clearLog">清空输入框</button></div><p class="smallprint">纯浏览器本地记录。未接通GitHub写入，不会发起新的MATLAB任务；更换浏览器或文件位置时，请先导出JSON备份。</p>
+ </div></div>
+ <div class="panel" style="margin-top:17px"><div class="tool-row"><h3 style="margin-right:auto">我的审阅档案</h3><button class="btn" id="exportJson">导出JSON备份</button><button class="btn" id="exportMd">导出Markdown审阅报告</button><button class="btn" id="exportHtml">导出带记录HTML</button><button class="btn" id="importBtn">导入JSON</button><input type="file" id="importFile" accept="application/json,.json"><button class="btn" onclick="window.print()">打印 / PDF</button></div><div id="storageWarning" class="important hidden">当前浏览器不允许本地自动保存。请每次审阅后导出JSON或带记录的HTML；刷新前没有可靠持久化。</div><div class="divider"></div><div id="reviewEntries"><p class="subtle" style="font-size:13px">尚无人工审阅记录。</p></div></div>
+</section>
+<footer class="footer">内容核对：本地2026-10-26 S4正式报告、result_index.md、关键CSV与历史独立审计；本次只读抽查，不运行声学求解。附录保留旧计划快照以便追溯。审阅记录只在浏览器本地或导出的JSON/HTML中保存；建议定期导出备份。</footer>
+</div></main></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script id="data" type="application/json">{"D_ITEMS":[{"id":"s0_inputs","stage":"s0","title":"建立“到底拿什么比较”的清单","lead":"先锁定考试题，再批卷。","why":"如果声源、海面、接收位置、时间相位各不一样，后面的模型误差根本没法公平比较。","did":"Codex检查既有数据和版本，冻结9个接收点坐标、三档正弦案例、源信息、可用性、预算及输出组织。","result":"冻结同源比较所需的声源、三档海面、M99接收线与P11–P33九点及数据缺口；本阶段没有新增声学求解。","meaning":"后面的计算有了统一的“考卷”和可追溯的材料来源。","limit":"“冻结清单完成”不是物理模型已经准确；部分旧数据当时仍缺。","review":"查是否能说清用的哪份数据、哪些点缺失，而不只是看到目录名。","evidence":[{"label":"S0–S1 主报告","path":"reports/two_dimensional_channel_closeout_report.md","grade":"本地已找到（历史资料）","reason":""},{"label":"S0存档目录","path":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/","grade":"本地已找到（历史资料）","reason":"原始CSV/JSON多数被忽略"},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/line_metrics.csv","grade":"本地文件已找到","reason":""}],"image":null,"tag":"历史交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史复现或诊断"},{"id":"s1_repeat","stage":"s1","title":"复算旧接收线指标，证明公式没算错","lead":"把旧报告的算术重新核一遍。","why":"看起来相似的两张图，却报告较大的复数误差，需要先排除指标公式或读文件错误。","did":"读取保存的411点数据，重新计算9组旧 G（粗糙场÷平面场）指标，测试幅度/相位分解、零值和缺失值。","result":"旧强档G口径PE–BIE复差8.0908%，相位平方项占98.4676%；只是旧输入与旧表示的算术复现。","meaning":"旧公式能重复算出来，但这个8.09%是“旧数据、旧相位约定、旧G指标”的结果。","limit":"之后定位了高度符号错配。不能把8.09%继续称作改正后的纯PE物理误差。","review":"确认Codex没有删除旧记录，且旧结果与新版不同口径并排标注。","evidence":[{"label":"主报告·S0–S1","path":"reports/two_dimensional_channel_closeout_report.md","grade":"本地已找到（历史资料）","reason":""},{"label":"旧接收线图及缺口表","path":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/figures/","grade":"本地已找到（历史资料）","reason":"部分PNG/PDF未跟踪"},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/line_metrics.csv","grade":"本地文件已找到","reason":""}],"image":null,"tag":"历史交付","detail":"旧G以每种方法自己的平面场作分母；现在的主比较量改为同源的原生反射复场 u_rough。","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史复现或诊断"},{"id":"s1_points","stage":"s1","title":"解释“411点一整条线”和“中心附近9点”的区别","lead":"不能用全班平均分代表第一排。","why":"原来只看z=3m的接收线；你还关心漂移邻域内的多个接收位置。","did":"抽取中心P22、同深度三点和现有九点样本，逐一标出哪些能算G、哪些只有原生场。","result":"早期三点 G 可计算，但完整九点 G 因平面分母缺失不能写成已完成；强档九点原生幅度可比。","meaning":"即使中心幅度很像，整线相位差或边缘差异仍可能很大。","limit":"九点处于同一个海面，不是九个随机海面；不能做统计置信区间。","review":"查看图里是否区分真的九点采样与由线插值伪造的二维场。","evidence":[{"label":"主报告·九点缺口","path":"reports/two_dimensional_channel_closeout_report.md","grade":"本地已找到（历史资料）","reason":""},{"label":"S0–S1图片清单","path":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/logs/execution.md","grade":"本地已找到（历史资料）","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/line_metrics.csv","grade":"本地文件已找到","reason":""}],"image":null,"tag":"历史交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史复现或诊断"},{"id":"sign_issue","stage":"sign","title":"找到高度相位正负号的不一致","lead":"发现两种方法把“海面向下”理解成了相反的方向。","why":"早期PE和BIE幅度曲线出现接近镜像的波动，可能不是物理近似失效，而是输入规则对不上。","did":"使用整体下移平面这个简单控制，检查PE相位屏对海面深度的正负号；再用保存入射场做有限诊断。","result":"负号高度屏诊断使旧G口径强档幅度差约1.0016%→0.10485%，复差约8.0908%→6.2911%；这是旧比值与符号诊断，不是S2b同源原生等权主指标。","meaning":"高度z正向向下，边界位移进入PE相位屏的符号需要与BIE几何一致；发现并纠正约定错配后，旧G比较仍因源标度与相位参考不能作为最终精度证据。","limit":"这是固定验证链路的问题定位，不等于所有生产API调用者都已修复或所有6.29%都已解释。","review":"旧图一定标“legacy/旧约定”；不能把更正后的结果覆盖旧历史。","evidence":[{"label":"2026-10-21高度符号审计","path":"reports/pe_bie_height_phase_sign_audit.md","grade":"本地已找到（历史资料）","reason":""},{"label":"修正图册报告","path":"reports/pe_bellhop_bie_corrected_visualization_report.md","grade":"本地已找到（历史资料）","reason":""}],"image":null,"tag":"关键更正","detail":"向下为正的深度坐标下，海面整体下移h的平面波反射相位比应为 exp(−2ikh)；原固定比较使用了另一种高度语义。","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"先看修正图册中的正负高度屏和相位曲线；镜像外观提示约定问题，修正后仍需同源控制。","science":"历史复现或诊断"},{"id":"sign_atlas","stage":"sign","title":"重新生成修正对比图册","lead":"留下两套图：旧的做历史，新的用于更正后的理解。","why":"单靠文字说符号修正，不容易直观看出曲线如何变化。","did":"复用保存入射场重算负号PE相位屏，和BIE/Bellhop原生比值对照，并生成接收线与强档二维场展示图。","result":"报告记载三档修正接收线、强档411×45场、12张图及像素级重绘审计。","meaning":"帮助区分“旧数据能复算”与“物理比较约定正确”，也为S2a提供输入。","limit":"旧Bellhop同源标度仍没有闭合；图形对得上也不能据此认证Bellhop与Gaussian同源。","review":"请Codex指明本次图册实际来自哪些保存场，而不是重跑错误符号起始场。","evidence":[{"label":"修正图册","path":"reports/pe_bellhop_bie_corrected_visualization_report.md","grade":"本地已找到（历史资料）","reason":""},{"label":"高度审计","path":"reports/pe_bie_height_phase_sign_audit.md","grade":"本地已找到（历史资料）","reason":""}],"image":null,"tag":"历史交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史复现或诊断"},{"id":"s2a_source","stage":"s2a","title":"保证PE、BIE和FullFK在比较同一个问题","lead":"比赛必须同题、同单位、同评分规则。","why":"不同方法可能默认不同相位、声源强度或反射场表示，直接相减会不公平。","did":"检查实际代码入口、反射相位符号、Gaussian入射源、法向、平面场，并把Bellhop暂放到待定栏。","result":"在固定4kHz、离散Gaussian、z=3m接收线的有限范围内，核心三方法取得“可同源比较”的资格。","meaning":"后续可以有意义地讨论PE/FullFK相对BIE的差异。","limit":"“输入可比”不等于某个模型在物理上一定准确；Bellhop的源强/相位映射还没证明。","review":"报告中必须同时列源ID、原生/显示相位、量纲，以及平面反射控制。","evidence":[{"label":"S2a主报告","path":"reports/two_dimensional_channel_closeout_report.md","grade":"本地已找到","reason":""},{"label":"S2a运行目录","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2a_line","stage":"s2a","title":"做出三种方法的平面/粗糙接收线对照","lead":"同一排测点，三位选手同时答题。","why":"源统一之后，才能看PE、BIE、FullFK在哪些位置幅度相近、相位不同。","did":"记录平面+弱/中/强海面的411点原生反射复场；生成F02/F04/F05图与独立复算记录。","result":"主报告称保存了4932条线场样本、三张图及独立审计；仍未补满九点。","meaning":"这是“主量u_rough”正式登场，不再靠旧的G比值决定模型好坏。","limit":"S2a初版指标采用入射能量加权，后来S2b改为等空间权重；不得把两个数字混为同一个。","review":"看同一纵轴单位，图上不要把接收线插值画成完整二维声场。","evidence":[{"label":"S2a主报告","path":"reports/two_dimensional_channel_closeout_report.md","grade":"本地已找到","reason":""},{"label":"S2a图目录","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/figures/","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2b_weight","stage":"s2b","title":"纠正“整条线误差如何平均”的口径","lead":"原来中心点被赋予更大权重，现在每个测点权重相同。","why":"如果给接收线不同位置不同权重，求出的“整线误差”就可能显著变化。","did":"不改变任何声场数据，把S2a同样的411个点重新按空间等权计算，并列保留旧的入射能量加权。","result":"强正弦PE–BIE原生反射场的旧加权复差约4.3962%，改为等空间权重后约6.2911%。","meaning":"同一批保存的原生场，仅把411个位置如何平均从入射加权改为空间等权，指标随之改变；这不代表求解器精度变坏或变好。","limit":"这个6.2911%与旧G历史8.0908%仍不同：对象、相位约定和权重均可能不同。","review":"每个数旁边要有“指标对象 + 使用哪些位置 + 什么权重”。","evidence":[{"label":"正式S2b README","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md","grade":"本地已找到","reason":""},{"label":"S2b补充执行记录","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/execution.md","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"空间等权 q=1/411，旧敏感性权重为保留的入射能量权重。","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2b_108","stage":"s2b","title":"补齐4种海面 × 3种方法 × 9个位置","lead":"终于把九点表里原来空白的格子填全。","why":"只有接收线，无法回答局部漂移九点的结论；只看部分点又容易低估位置差异。","did":"重新核实已存在的48个复场值，并补齐需要的点，最终记录108/108个九点原生复场。","result":"正式S2b文件说明：平面+三档正弦、PE/BIE/FullFK、P11–P33，全覆盖；没有把缺失填成0或做空间插值。","meaning":"数据覆盖率已经完成，能对中心九点真正计算整体误差。","limit":"108/108说的是样本齐全，并不是模型准确率100%，也不是108次BIE求解。","review":"要求能拿出真正的九点CSV/MAT、坐标和完整的每点复场，不能只看报告数字。","evidence":[{"label":"S2b正式结果说明","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md","grade":"本地已找到","reason":"fields_core.csv未随Git跟踪"},{"label":"S2b正式执行回执","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/execution.md","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2b_ref","stage":"s2b","title":"确认BIE参考和完整FullFK积分没有偷偷简化","lead":"先确保“参考答案”自身计算足够稳定。","why":"拿BIE当对照前，需要知道它随网格精细程度变化多大；FullFK也不能把重要的海面远处贡献扔掉。","did":"S2b重新求解并比较五套BIE边界离散/求积/窗口设置，检查线性残差、保存密度和417位置场；再用PE半步长/同谱双网格及FullFK完整双项积分、真实法向弧长、解析平面外场与求积/窗口变化估计数值敏感性。","result":"五层BIE给出固定417真位置的经验参考；正式九点108/108有值。弱、中正弦的FullFK九点差仍低于五倍经验数值分辨率。","meaning":"五层改变空间采样、自求积及窗口等条件，若结果仍稳定，就比单层更有理由把BIE当固定案例的经验数值参照；也能判断某些方法差是否大过自身数值波动。","limit":"九点填齐只说明数据完整；五层稳定性是经验数值分辨率，不是严格误差上界或水池真值。","review":"要检查BIE是独立参考、计算精度变化和模型差异是否分表，不得因“看起来很小”直接说PASS。","evidence":[{"label":"正式S2b README","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md","grade":"本地已找到","reason":""},{"label":"S2b参考闭合过程","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/execution.md","grade":"本地已找到","reason":""},{"label":"正式数值表","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/resolutions.csv","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"FullFK仍是Kirchhoff近似，并非Helmholtz精确解；“完整”表示保留双项积分和可证明的平坦外部贡献。","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2b_result","stage":"s2b","title":"发现“整条线差很多，中心九点却差很小”","lead":"研究开始出现真正需要解释的现象。","why":"你最关心的是中心仪器附近，这与整条接收线的平均表现可能完全不同。","did":"用同一强档正弦海面分别统计411点整线与真实九点的PE–BIE原生复数误差。","result":"强正弦PE–BIE复L2：411线0.0629112（6.29112%），九点8.05109e-5（0.00805109%）；两组分别归一化。","meaning":"中心位置的模型比较结果确实比整条线小很多，但这是不同空间范围下的观察。","limit":"不能推成“方法精度随距离必然变差”，也不能说“中心海面过零一定让误差为零”。","review":"问Codex是否同时标明411点、九点的不同分母、数值分辨率和位置范围。","evidence":[{"label":"S2b正式说明","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/README.md","grade":"本地已找到","reason":""},{"label":"S2c-A空间图册","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"关键发现","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2ca_m00","stage":"s2ca","title":"M00：为什么两条幅度曲线差不多，却有明显复数差？","lead":"复数声场不仅有“音量”，还有“时间上的节奏位置”。","why":"单看颜色或幅值线，很容易忽略微小相位错开；两种声压同时叠加时，相位十分重要。","did":"把强档海面的几何、幅值、相位差、复残差放在同一张图，总览原生复数差异。","result":"图册报告幅度接近，但PE复差在远离中心的接收位置增大；FullFK的差值使用另一显示尺度。","meaning":"后续审图不能只问两条曲线像不像，要分别问幅度与相位是否一致。","limit":"M00使用的是保存数据的二次分析，未添加新声场；不是新的独立实验。","review":"看轴标签和两个方法残差的尺度，不能用颜色深浅跨不同色标直接比较。","evidence":[{"label":"S2c-A图册","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M00原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M00_overview.png","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M00_overview.png","tag":"M00图解","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2ca_m01","stage":"s2ca","title":"M01：真实海面并非只有波高","lead":"波高、斜坡、弯曲程度都可能影响反射。","why":"海面是否在中心过零，只是几何信息的一部分。","did":"将三档正弦海面的高度、坡度、曲率和C2过渡区一起画出，并对照已有的源照射数据。","result":"三档x=0都过零，但中心坡度不为零；过渡区的坡度/曲率可能比正弦平台更大。","meaning":"不能把中心海面高度为零直接理解成“这附近等同平坦海面”。","limit":"在固定K的平台区，高度与曲率有数学耦合；不能只用相关性判断单一原因。","review":"读图时区分“x坐标上的海面函数图”和“实际x-z空间剖面”。","evidence":[{"label":"S2c-A图册 M01","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M01原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M01_geometry_all.png","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M01_geometry_all.png","tag":"M01图解","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2ca_m02","stage":"s2ca","title":"M02：先看海面引起的真实变化，再看模型是否算对","lead":"“海浪改变了声场”与“PE算得不够准”是不同问题。","why":"如果不分开，可能把很大的真实声场变化错误地当成方法的计算错误。","did":"分别展示BIE从平面到粗糙海面的变化，以及PE、FullFK相对BIE的残差。","result":"BIE粗糙/平面物理响应复L2：弱/中/强的411线为0.230056/1.05943/1.21751，九点为0.00518843/0.0260504/0.110703；这组数与PE/FullFK相对BIE的模型残差分开。","meaning":"可以开始分辨“物理变化有多大”与“近似方法偏离参考多少”。","limit":"BIE是数值参考而非实验真值；代数相位平方项不是声能损耗或独立的物理散射机制。","review":"让Codex分别给出D_phys（参考场变化）和e_model（模型差异），不要合并成“误差”。","evidence":[{"label":"S2c-A图册 M02","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M02强档原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M02b_strong_errors.png","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M02b_strong_errors.png","tag":"M02图解","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2ca_m03","stage":"s2ca","title":"M03：中心11点、九点、边缘104点与整线分别读","lead":"不同尺子量同一个问题，结果可以很不一样。","why":"只看接收器附近的几个点，会漏掉边缘的大误差；只看整线又掩盖中心特点。","did":"固定411点线、中心11点、真实九点、五点十字和边缘104点等空间支持，逐组独立统计。","result":"强档PE–BIE复差：整线6.2911%，中心九点约0.008051%，边缘104点约11.8393%。","meaning":"同一模型在不同观察位置的残差尺度不同，这是研究下一轮要解释的现象。","limit":"不能根据接收点x直接断言只由同x的海面反射点决定；九点不是连续二维图。","review":"检查数据里每个“支持集”的实际点数和位置，勿把不同范围的误差当成可直接比较的统计结论。","evidence":[{"label":"S2c-A图册 M03","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M03强档原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M03_strong_supports.png","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M03_strong_supports.png","tag":"M03图解","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"s2ca_design","stage":"s2ca","title":"在计算新海面前先“锁题”和估价","lead":"避免Codex看完结果后改参数，导致解释失去说服力。","why":"一旦按结果好坏修改波数、位置或参考门槛，研究就难以复现。","did":"冻结BASE_M、K_HIGH、PHI_PLUS90三组几何与原声源/接收点；记录输出支持、源哈希、预算和RAM停止条件。","result":"S2c-A不产生任何新声学场，交付M00–M03图册与两种候选受控试验协议。","meaning":"这是有价值的实验设计工作，而不是“还没动手”的空计划。","limit":"“只改输入参数K/φ”并不意味着坡度、曲率和所有传播机理只改一个。","review":"核查freeze协议是否比新实验结果更早写入，不能看结果后换参数。","evidence":[{"label":"S2c-A图册协议","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"S2c-A README","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/README.md","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"khigh_geom","stage":"khigh","title":"M04a：把海面波纹挤得更密","lead":"波高不变，峰谷之间距离变短。","why":"先弄清新海面真实长什么样，再看声场变化。","did":"把A保持为0.05m，将K从0.10提高到0.20 rad/m；解析计算C2窗口内的高度、坡度和曲率。","result":"平台波长从约62.83m变成约31.42m；中心坡度从0.005变为0.010。","meaning":"控制输入是波数K；它对空间结构会造成一系列变化。","limit":"不能说只改变了坡度、只改变了曲率，或直接把K当成单一因果机制。","review":"对照M04a，检查A、φ、声源、九点和C2窗口是否保持不变。","evidence":[{"label":"K_HIGH图册 M04a","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"GitHub保留的M04a图片","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04a_geometry_only.png","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04a_geometry_only.png","tag":"M04科研图","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"khigh_physical","stage":"khigh","title":"M04b：BIE预测海面变密后反射场确实改变","lead":"物理问题变了，参考声场会跟着变。","why":"哪怕两次的声压幅度差不多，复杂的相位变化也可能让复数波场明显不同。","did":"用冻结源和同一批接收位置，比较BASE_M与K_HIGH的BIE参考复场。","result":"全线参考复数变化指标约1.014765，最大单点复数变化0.14646；幅度图仍整体接近。","meaning":"这是海面参数改变带来的BIE参考场变化，不是PE模型本身的误差。","limit":"这个指标不是“声压幅值提升101%”；BIE的数值收敛证据也不是实验真值。","review":"先让Codex解释“物理变化”与“模型误差”分别用了哪两个量。","evidence":[{"label":"K_HIGH图册 M04b","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M04b真实原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04b_BIE_physical_response.png","grade":"本地已找到","reason":""},{"label":"逐点物理变化CSV","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/BIE_physical_pair.csv","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04b_BIE_physical_response.png","tag":"M04科研图","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"khigh_error","stage":"khigh","title":"M04c：K变大后，PE和FullFK相对参考的误差如何变化","lead":"同一批考点，再看近似算法的成绩变化。","why":"海面越密并不等同于某个模型必然无效，需要定量比较。","did":"分别计算BASE_M与K_HIGH的PE–BIE、FullFK–BIE整线差异，分开幅值与相位部分。","result":"BASE_M→K_HIGH：PE整线0.0155868→0.0178365；FullFK整线1.07328e-5→4.34208e-5；九点也变化，但FullFK五点十字变化未过经验分辨门。","meaning":"在这两个冻结案例及当前数值分辨率下，可报告误差随K变化的配对观察。","limit":"两个K点不能推出所有海况下“频率/曲率越大误差越大”的普遍规律。","review":"注意FullFK误差轴与PE的尺度不同；模型残差必须和BIE物理场变化分开。","evidence":[{"label":"K_HIGH图册 M04c","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M04c真实原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04c_model_error_pair.png","grade":"本地已找到","reason":""},{"label":"M04审计JSON","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/final_independent_audit_v4.json","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04c_model_error_pair.png","tag":"M04科研图","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"khigh_position","stage":"khigh","title":"M04d：全线、中心和真实九点不应混为一谈","lead":"在中心表现不错，不代表边缘也一样。","why":"研究要知道接收器稍微移动会不会让模型比较结果变化。","did":"将411点线、中心11点、9点、五点十字、边缘104点分别画图、核对同源支持和数值分辨率。","result":"PE九点复差由约0.00128%变为约0.00301%；FullFK九点仍很小，但其资格按样本分辨率分别判定。","meaning":"“中心低误差”在K_HIGH里依然能观察到，但误差发生了可测变化。","limit":"不能推成“中心过零导致低误差”的因果证据；有些极小FullFK变化未能数值分辨。","review":"核查是否直接用了P11–P33的真实复数，没有拿九个彩色格子插成连续声场。","evidence":[{"label":"K_HIGH图册 M04d","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M04d真实原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04d_line_center_nine.png","grade":"本地已找到","reason":""},{"label":"配对变化CSV","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/paired_changes.csv","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/M04d_line_center_nine.png","tag":"M04科研图","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"khigh_audit","stage":"khigh","title":"五层BIE、时间预算和“证据可重复”检查","lead":"这部分是在证明结果不是单次网格偶然算出来的。","why":"精细程度不同的计算应能给出稳定且有界的对照，不能挑选单层最漂亮结果。","did":"依次完成五层真BIE以及匹配PE和完整FullFK、417个真实接收位置，保存日志、独立CSV复算及PNG重绘。","result":"主报告记载7次新声学作业实耗1277.054秒；图册记载四张FIG/PNG可重绘，五层经验参考合格。","meaning":"这使K_HIGH成为有“限定数值参考资格”的具体试验案例。","limit":"不是物理模型通用正确性证明，更不是三维或通信证据；大型MAT是否上传GitHub与本地参考资格分开判断。","review":"优先核对实际五层参数、接收点、独立审计和预算扣记。","evidence":[{"label":"K_HIGH实验图册","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"K_HIGH执行记录","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/execution.md","grade":"本地已找到","reason":""},{"label":"M04简化公开包","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/README.md","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"阶段交付","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"有条件支持"},{"id":"phi_geom","stage":"phi","title":"M05a：不改变波高和K，只把波形错开四分之一个周期","lead":"中心原先过零，现在变成+0.05m。","why":"为了测试中心低误差与“海面恰好在中心过零”是否有关，需要一个不同的对照海面。","did":"冻结A=0.05m、K=0.10rad/m，将初相位φ由0改为+π/2，核算高度、坡度、曲率和C2边界。","result":"A=0.05 m、K=0.10 rad/m、φ从0转为+π/2；中心高度0→+0.05 m，坡度0.005→0，曲率0→−0.0005 m⁻¹。此为输入几何。","meaning":"已经定义好了合理的反事实对照输入，能为后面的声场计算服务。","limit":"只是几何改变；中心高度、斜率、曲率及整段波形都在变，不能独立识别高度因果。","review":"M05a只画几何，没有任何PHI新反射声场；绝不能当作验证了中心假说。","evidence":[{"label":"PHI M05图册","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md","grade":"本地已找到","reason":""},{"label":"M05a原图","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final/M05a_geometry_only.png","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","grade":"本地文件已找到","reason":""}],"image":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final/M05a_geometry_only.png","tag":"已交付几何","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史复现或诊断"},{"id":"phi_preflight","stage":"phi","title":"PHI执行前的预算与输入门（历史过程）","lead":"这项审查在真场续算前完成，所列“尚未算”的句子只代表当时。","why":"新边界求解耗时且吃内存，需要保证单次作业安全、旧结果可复用。","did":"完成预算修订至7506.601秒、30%物理RAM保护规则、M04小型可查图/CSV包、三份PM种子只读清单和对称性输入检查。","result":"当时确认冻结几何、M04已合格图与PM输入；后续PHI五层场、M05b–e及S3A三seed均已完成。","meaning":"执行前对资源与输入的约束可追溯，但不能将旧停止门当作今天的科研进度。","limit":"早期0声场、2/5层、S3A只查输入均被2026-10-26正式S4状态覆盖。","review":"检查是否保留预算记录、没有借走S3A预留、停止时没有伪造新的声场结果。","evidence":[{"label":"PHI运行回执（GitHub旧版）","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md","grade":"本地已找到","reason":""},{"label":"PM清单","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/S3A_readonly_feasibility.md","grade":"本地已找到","reason":""},{"label":"M04公开小包","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/publication_review_M04/README.md","grade":"本地已找到","reason":""},{"label":"阶段数据或独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"历史执行门","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史过程"},{"id":"phi_2bie","stage":"phi","title":"PHI 五层BIE与三方法真场已保存","lead":"旧“只完成两层”是中途停机快照，续算后五层参考与417个真接收位置已齐。","why":"要检验中心海面从过零变为波峰后，中心低误差是否还在，必须重新计算PHI海面下的真实反射复场。","did":"Windows R2025b保存main96/self64两层BIE密度与场；SHA选择性迁移至Ubuntu R2023b，续算其余三层BIE、PE-mode0和完整FullFK；417个位置均直接求值，并独立审计保存CSV/MAT/FIG/PNG。","result":"PHI的PE–BIE复L2：中心11点5.09698e-4，九点5.06113e-4，411线0.0203315；FullFK九点1.49251e-5、整线1.10184e-5。M05a–e正式v2图均存在。","meaning":"中心误差相对BASE_M增大约16.83倍，仍远低于PHI整线；“中心过零”不足以单独解释中心低误差。","limit":"BIE边界密度在两个MATLAB版本/平台混合求解，同网格跨平台求解差没有直接界定；不能把PHI提升为与同平台案例一样的参考资格，也不能把相位变化归因于唯一局部几何量。","review":"核对final_independent_audit_phi_v2、跨平台保存密度重评价审计及M05正式v2图；将参考受限与图像审计通过分开。","evidence":[{"label":"PHI真场与支持指标","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","grade":"本地文件已找到","reason":""},{"label":"PHI最终独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","grade":"本地文件已找到","reason":""},{"label":"跨平台保存密度重评价","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/remote_saved_density_boundary_20261025.json","grade":"本地文件已找到","reason":""},{"label":"M05图册","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md","grade":"本地文件已找到","reason":""}],"image":null,"tag":"数据齐全·参考受限","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"M05b看BIE物理响应，M05c看模型残差，M05d对比整线/中心/九点，M05e看±x配对；图像结论均保留混合平台参考限制。","science":"有条件支持"},{"id":"phi_stop","stage":"phi","title":"PHI 早期RAM停机与后来续算","lead":"资源门曾在第三层前阻止作业，后来经授权改用Ubuntu续算；停机记录是历史过程。","why":"保留失败和资源回执，才能知道实验是怎样完成的，以及为何混合平台参考资格受限。","did":"保存Windows内存门失败与两层BIE作业回执；迁移冻结输入及两层密度，再在Ubuntu续算；后续对保存Windows密度在Ubuntu重评价408个边界点，但没有同网格双平台重新求解。","result":"边界残差重评价最大差main96/self64约1.04e-16/8.09e-17；这是算子评价一致性证据，不是边界求解差的直接上界。","meaning":"资源停机没有否定实验；续算补齐数据，仍留下一个明确的跨平台数值参考缺口。","limit":"“2/5层、第三层前停机、M05b–e不存在”均为2026-10-25中途快照，不再代表最终PHI交付。","review":"按时间线看execution、remote_recovery和最终审计；不能用早期RAM快照覆盖后续正式结果。","evidence":[{"label":"执行时间线","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/execution.md","grade":"本地文件已找到","reason":""},{"label":"远端回传清单","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/remote_recovery/remote_return_manifest.json","grade":"本地文件已找到","reason":""},{"label":"最终审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"历史停机·已续算","detail":"","evidenceState":"报告有结论；上述本地文件存在；独立审计为保存的历史审计记录；本轮只读抽查路径及关键CSV/JSON，不重跑数值或图像审计；人工验收待用户决定。","figureGuide":"到下方对应阶段真图核对坐标、图例和分母；图像直观重合不能替代复数场CSV。","science":"历史过程"},{"id":"phi_m05","stage":"phi","title":"M05b–e：用真实声场检验中心与整线","lead":"几何图之后，真正的检验是同点复场。","why":"改变初相位也改变整段窗口海面及散射干涉，因此要分别量物理响应和方法误差。","did":"用已求得的PHI和BASE_M保存场生成M05b–e；M05c旧PNG刻度导致像素差，固定刻度后重新绘制v2并逐像素审计，声场没有改。","result":"PHI中心11点PE误差5.09698e-4，整线0.0203315；九点FullFK误差1.49251e-5。","meaning":"中心低误差在中心不再过零时仍相对整线较低；±x配对提供辅助空间诊断。","limit":"一次初相位配对不能把差异唯一归因于中心高度；PHI跨平台BIE参考受限。","review":"检查M05b–e坐标、同一色标、九点真值和审计v2；旧M05c PNG失败是修复前快照。","evidence":[{"label":"M05图册","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/mechanism_atlas.md","grade":"本地文件已找到","reason":""},{"label":"M05数值CSV","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","grade":"本地文件已找到","reason":""},{"label":"正式像素审计","path":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"正式交付","detail":"","science":"有条件支持","figureGuide":"M05c下排是复数残差；M05d九个格是真接收点，不是连续二维场。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"},{"id":"pm_seed1","stage":"s3a","title":"PM seed260001：第一个固定随机海面真场","lead":"从理想正弦走向保存的有限谱PM实现。","why":"需要检查正弦的中心/整线现象在一个较复杂海面上是否仍可见。","did":"复用冻结12模系数与同一984项Gaussian源；在Ubuntu R2023b新解五层BIE、PE-mode0与完整FullFK，共417个真接收位置；旧L60/FastFK场没有冒充新九点。","result":"九点BIE PM/平面物理响应1.766354；PE–BIE 0.109921，FullFK–BIE 0.000560766；整线分别0.127452与0.000762687。","meaning":"这个实现的PE误差在中心九点和整线均可分辨，FullFK更接近条件BIE参考。","limit":"一个保存seed不代表PM总体；经验分辨率不是严格误差界。","review":"核对F01几何、F02真九点、F03整线与保存数据审计。","evidence":[{"label":"运行检查点","path":"results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260001_01/checkpoint.json","grade":"本地文件已找到","reason":""},{"label":"独立保存数据审计","path":"results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260001_01/audit/independent_saved_data_audit_v3.json","grade":"本地文件已找到","reason":""},{"label":"真九点图","path":"results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260001_01/figures/F02_nine_point_errors_v2.png","grade":"本地文件已找到","reason":""}],"image":null,"tag":"正式交付","detail":"","science":"有条件支持","figureGuide":"F01灰色原PM与蓝色C2真实边界不同；F02九格是真值；F03幅度与复残差要分开读。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"},{"id":"pm_seed2","stage":"s3a","title":"PM seed260002：第二个实现为何不同","lead":"同一谱，换一组冻结随机系数。","why":"第一seed的PE九点误差较大，需要检验是否为每个实现都相似。","did":"不重算第一seed；第二seed新做五层BIE、PE半步长/同谱双网格、完整FullFK及九点和整线独立审计。","result":"九点PE–BIE降至0.00208993，整线仍0.0939661；FullFK九点0.000267327，整线0.000400121。","meaning":"九点对随机相位实现很敏感；整线变化较小，进一步说明中心不能代表全线。","limit":"两seed的描述性差异不能估计PM总体分布或因果机制。","review":"对比两个seed相同源、接收支持、分母和五层参考，再读F02/F03。","evidence":[{"label":"运行检查点","path":"results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260002_01/checkpoint.json","grade":"本地文件已找到","reason":""},{"label":"独立保存数据审计","path":"results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260002_01/audit/independent_saved_data_audit_v3.json","grade":"本地文件已找到","reason":""},{"label":"真九点图","path":"results/comparisons/two_dimensional_channel_closeout/20261025_s3a_seed260002_01/figures/F02_nine_point_errors_v2.png","grade":"本地文件已找到","reason":""}],"image":null,"tag":"正式交付","detail":"","science":"有条件支持","figureGuide":"F02色标要与同图左右方法比较；跨seed图的色标不可不核实便直接按颜色比较。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"},{"id":"pm_seed3","stage":"s3a","title":"PM seed260003：完成预定3/3及六行对照","lead":"第三个固定实现补齐预定S3A范围。","why":"要判断前两个实现差异是否仍出现在另一个冻结样本，并完成事先规定的三样本收尾。","did":"第三seed在Ubuntu新算五层BIE、PE/FullFK与417真位置；汇总三seed九点/411线六行表和F08，独立核对保存输入、图像和SHA。","result":"第三seed九点PE–BIE 0.0605063、整线0.119206；FullFK九点0.000900020、整线0.000669488。三seed PE九点范围约53倍，整线约1.36倍。","meaning":"固定二维PM实现存在明确位置和实现依赖；三seed的两方法差均高于各自五倍经验分辨率。","limit":"三seed不能给出PM总体尾部、三维或宽带通信结论。","review":"F08六行必须分清九点与411线的独立分母；检查第三seed保存CSV和审计。","evidence":[{"label":"六行原表","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv","grade":"本地文件已找到","reason":""},{"label":"三seed独立审计","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/independent_audit.json","grade":"本地文件已找到","reason":""},{"label":"F08真图","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/F08_S3A_three_seed_summary.png","grade":"本地文件已找到","reason":""}],"image":null,"tag":"正式交付","detail":"","science":"有条件支持","figureGuide":"F08横向按seed读，纵向把九点与411线分开；图中误差与BIE相对平面响应是两类量。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"},{"id":"s3b_budget","stage":"s3b","title":"S3B五个新增PM样本未运行：预算门的结论","lead":"未运行也是需要诚实记录的研究决策。","why":"三seed不足以估计PM总体，但追加样本需要新的资源预算。","did":"S4只读汇总实际保守扣记与剩余额度，没有抽取260004–260008，也没有再解声场。","result":"共享剩余2095.176896 s；按每seed 1100 s计划，新增五个需5500 s，缺3404.823104 s。","meaning":"在原预算下不具备完整S3B执行条件。","limit":"不能将S3A 3/3写成计划八样本8/8，亦不能从三样本外推总体统计。","review":"如要重启S3B，先明确新问题和预算，不从旧预算余额暗中执行。","evidence":[{"label":"S4检查点","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/checkpoint.json","grade":"本地文件已找到","reason":""},{"label":"正式结果索引","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md","grade":"本地文件已找到","reason":""}],"image":null,"tag":"预算阻塞·未运行","detail":"","science":"尚无证据","figureGuide":"见下方真图与对应图册。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"},{"id":"s4_closeout","stage":"s4","title":"S4：二维核心有边界地收尾","lead":"把已算、可参考、仍不成立的推论放在同一张结论表。","why":"长期研究需要冻结能够移交的证据与仍未闭合的条件。","did":"只读复核S2b 247/247、S2c-A 203/203、K_HIGH 132/132、三seed正式清单24/24、23/23、130/130及PHI关键文件；核对各阶段独立审计和预算，新增声场0。","result":"正式状态CORE_COMPLETE，只覆盖固定4 kHz二维源和所列正弦/K/PHI/3个PM样本；PHI仍参考受限，S3B未运行，S5未准备好。","meaning":"同源、真接收支持、条件数值参考与图像审计方法可移交给下一阶段设计。","limit":"BIE没有严格误差界，弱中FullFK九点未分辨；二维单频结论不能直接生成宽带CIR或证明三维通信性能。","review":"从S4索引逐项点回原CSV/MAT、SHA、审计和真图，确认所称范围。","evidence":[{"label":"正式结果索引","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md","grade":"本地文件已找到","reason":""},{"label":"S4只读审计","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json","grade":"本地文件已找到","reason":""},{"label":"检查点","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/checkpoint.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"限定核心收尾","detail":"","science":"有条件支持","figureGuide":"见下方真图与对应图册。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"},{"id":"s5_boundary","stage":"s5","title":"S5/S6尚无二维粗海面宽带与通信资格","lead":"单频空间图不能变成时延响应。","why":"通信CIR需要跨频同源复传函、共同相位与时间原点及频率采样收敛。","did":"S4检查既有输入与证据缺口，记录S5_NOT_READY；未运行宽带、CIR或BER/EVM试验。","result":"当前只在4 kHz比较反射复场；4/6/8 kHz离散锚点不能直接组成可验证的CIR。","meaning":"下一步应先设计三维单链路同源场资格，再单独规划宽带和通信验证。","limit":"G1_target_PM仍OPEN，WP2_formal=false；不能将S4核心收尾写成通信系统已验证。","review":"下一Goal先冻结三维源、海面、接收表示、独立参考、预算和验收门。","evidence":[{"label":"S4正式摘要","path":"reports/two_dimensional_channel_closeout_report.md","grade":"本地文件已找到","reason":""},{"label":"S4检查点","path":"results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/checkpoint.json","grade":"本地文件已找到","reason":""}],"image":null,"tag":"尚未执行","detail":"","science":"尚无证据","figureGuide":"见下方真图与对应图册。","evidenceState":"报告有结论；列出的本地文件已找到，保存的独立审计已找到；本轮只读抽查关键CSV/JSON与路径，不重跑声学求解或独立图像审计；人工验收待用户决定。"}],"STAGES":[{"id":"s0","name":"S0 · 清点家底","status":"done","sub":"冻结资料、收发位置和规则","desc":"先确定研究输入，避免之后每轮运行都悄悄换数据。","count":"资料索引及协议已交付","science":"范围已澄清"},{"id":"s1","name":"S1 · 核对旧结论","status":"done","sub":"复算已保存的结果","desc":"先确认原来的数值和图可重复，并暴露原来的数据缺口。","count":"旧指标与公式审计已交付","science":"历史复现"},{"id":"sign","name":"关键更正 · 高度符号","status":"done","sub":"找到旧比较的约定问题","desc":"解释早期幅值“镜像”现象，也说明旧8.09%不能当作新版模型误差。","count":"符号诊断及修正图册已报告","science":"旧约定已定位"},{"id":"s2a","name":"S2a · 统一比较条件","status":"done","sub":"同一声源、相位与平面反射","desc":"确认几种方法比的确实是同一类声场。","count":"源与实际入口资格已交付","science":"同源条件支持"},{"id":"s2b","name":"S2b · 补齐九点","status":"done","sub":"完成108个复数样本和数值参考","desc":"把原来只看一条线的比较扩到真实的3×3邻域。","count":"108/108完整；精度结论有限定","science":"固定案例参考合格"},{"id":"s2ca","name":"S2c-A · 解释空间差异","status":"done","sub":"只用旧数据解释“为什么中心误差小”","desc":"把大小、相位、位置和表面几何区分开，不新增声学计算。","count":"M00–M03机制图册已报告","science":"空间诊断支持"},{"id":"khigh","name":"K_HIGH · 改海浪间距","status":"done","sub":"第一个新物理控制实验","desc":"把K从0.10改到0.20，观察声场及模型残差如何变化。","count":"五层BIE + PE/FullFK已交付","science":"固定案例参考合格"},{"id":"phi","name":"PHI_PLUS90 · 改海浪相位","status":"done","sub":"五层真场齐全，混合平台参考受限","desc":"M05a–e最终v2数值与像素审计通过；同网格跨平台BIE边界求解差未单独界定。","count":"数据完成，参考资格受限","science":"数据齐全·参考受限"},{"id":"s3a","name":"S3A · 三个随机海面","status":"done","sub":"预定三个PM实现全部完成","desc":"固定三seed、417真位置、五层BIE/PE/FullFK及F08六行对照。","count":"3/3；非PM总体统计","science":"三固定实现参考合格"},{"id":"s3b","name":"S3B · 有条件增加样本","status":"blocked","sub":"新增五样本成本门不通过","desc":"共享余额不足五个1100秒子预算；260004–260008未运行。","count":"0/5新增样本","science":"尚无新增样本证据"},{"id":"s4","name":"S4 · 二维收尾","status":"done","sub":"二维核心限定收尾","desc":"S4只读索引和审计完成；未闭合项继续明示。","count":"CORE_COMPLETE（固定范围）","science":"限定核心收尾"},{"id":"s5","name":"S5 · 可选宽带/CIR","status":"blocked","sub":"宽带/CIR条件未备齐","desc":"跨频源标度、共同时间原点、频率采样及预算未闭合。","count":"S5_NOT_READY","science":"尚无宽带证据"},{"id":"s6","name":"S6 · 可选通信验证","status":"todo","sub":"通信验证尚无本轮证据","desc":"待跨频复传函和CIR资格成立后另定通信试验。","count":"未执行","science":"尚无通信证据"}],"FIGS":[{"title":"S0 F01：声源与接收几何","stage":"s0","src":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/figures/F01.png","question":"比较的空间设置是什么？","read":"分清海面z=0、Tx、z=3 m接收线及P11–P33九点；z正向向下。","finding":"S0冻结了坐标与可用资料，为后续同源对照建立地址簿。","limit":"几何图不证明声场或数值精度。","data":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/receiver_grid.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S1 F05：历史点阵缺口","stage":"s1","src":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/figures/F05_grid.png","question":"旧数据究竟有哪些九点缺失？","read":"看每个格子的可用/缺失标记，别将缺值涂成零。","finding":"S1明确旧九点覆盖不完整，后来S2b用真实计算补齐。","limit":"旧覆盖图不能代表S2b正式108/108状态。","data":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/data_availability.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261020_2330_s0s1/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2a F02：同源平面控制","stage":"s2a","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/figures/F02_flat_control.png","question":"三方法的平面基线是否对齐？","read":"看同源平面复场幅相与残差；注意图示单位为单位源响应。","finding":"固定Gaussian源和平面镜像控制建立正式对照入口。","limit":"S2a旧线指标曾使用入射加权；不能当作S2b空间等权结果。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/data/plane_control.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2a_final/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2b F03：已有强档二维真场","stage":"s2b","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/figures/F03_saved_strong_xz.png","question":"哪些连续x-z场确实存在？","read":"上排是PE与BIE的|u|，色标都到约0.12；下排是包裹相位rad。横轴x约±40 m、深度z向下增加；两法外观相似仍需看复数残差。","finding":"PE与BIE已有强档二维真场，可辅助看空间形态。","limit":"FullFK连续二维真场不存在；不得用九点插值伪造。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/fields_line.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2b F02：平面同源控制","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/figures/F02_flat.png","stage":"s2b","question":"三方法在平面基线是否比较同一复场？","read":"读平面三方法同点幅相及残差；x为接收线位置，z=3 m。","finding":"PE/BIE与FullFK/BIE平面九点约1.52e-13/4.68e-17。","limit":"只验证固定源与表示的平面控制。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/line_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2b F04：四案原生接收线","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/figures/F04_native_lines.png","stage":"s2b","question":"粗糙海面三方法的原生线场在哪里不同？","read":"x为411个接收位置；分别看幅度、相位和复残差。","finding":"强档PE/BIE整线0.0629112，幅度外观重合仍可有相位差。","limit":"不是二维全场，也不能代替九点。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/fields_line.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2b F05：真实九点残差","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/figures/F05_point_residuals.png","stage":"s2b","question":"九点是否都是真实计算值？","read":"3×3格子的z正向向下；对照各点复残差。","finding":"四海面三方法共108/108个真点。","limit":"数据完整不等于每个微小差都可数值分辨。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/fields_core.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/resolution_audit.json","kind":"MATLAB真实科研图"},{"title":"S2c-A M00：幅度与相位","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M00_overview.png","stage":"s2ca","question":"为何幅度近似仍有复数差？","read":"上排看几何/原生幅度，下排看包裹相位差/复残差。","finding":"强档PE整线复L2 0.0629112，FullFK 4.29152e-5。","limit":"同x曲线并列不证明局部海面单独致因。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_baseline/fields_line.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2c-A M01：高度坡度曲率","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M01_geometry_all.png","stage":"s2ca","question":"中心过零是否等于海面局部全无变化？","read":"x为水平位置；η是海面z坐标，另看坡度、曲率与C2过渡。","finding":"三档中心高度均0，坡度分别0.001/0.005/0.020。","limit":"入射强度不是接收x位置的因果贡献权重。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_baseline/diagnostic_data.mat","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2c-A M02：物理响应","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M02a_strong_response.png","stage":"s2ca","question":"海面改变本身引起多大场变化？","read":"比较BIE粗糙与平面复场；曲线是已保存线点。","finding":"强档中心幅差仅−0.000732 dB，相位仍变−0.038986 rad。","limit":"BIE响应不是PE/FullFK模型误差。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_baseline/fields_line.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"S2c-A M03：整线与局部","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/figures/M03_strong_supports.png","stage":"s2ca","question":"整线能否代表中心九点？","read":"横轴x；区分411线、中心11点与三个深度的九点。","finding":"强档PE整线0.0629112，九点8.05109e-5。","limit":"九点不是九个独立海况或连续二维场。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_baseline/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/audit/independent_audit.json","kind":"MATLAB真实科研图"},{"title":"K_HIGH M04a：改变K实际怎样改变海面？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final/M04a_geometry_only.png","stage":"khigh","question":"改变K实际怎样改变海面？","read":"看BASE_M与K_HIGH的η、坡度、曲率；x单位m。","finding":"K从0.10到0.20 rad/m，中心坡度翻倍。","limit":"不含声场。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","kind":"MATLAB真实科研图"},{"title":"K_HIGH M04b：改变K后参考场如何变化？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final/M04b_BIE_physical_response.png","stage":"khigh","question":"改变K后参考场如何变化？","read":"看BIE两案及差值，区分九点与411线。","finding":"BIE相对BASE_M物理变化：411线1.014765，九点0.026930。","limit":"不是模型误差。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","kind":"MATLAB真实科研图"},{"title":"K_HIGH M04c：模型残差如何随K变化？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final/M04c_model_error_pair.png","stage":"khigh","question":"模型残差如何随K变化？","read":"PE与FullFK分量级/色轴读取。","finding":"PE整线0.0155868→0.0178365；FullFK 1.07328e-5→4.34208e-5。","limit":"两案变化不能唯一归因于曲率。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","kind":"MATLAB真实科研图"},{"title":"K_HIGH M04d：中心与全线有何差异？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/figures_final/M04d_line_center_nine.png","stage":"khigh","question":"中心与全线有何差异？","read":"核对横向x、九点z方向与独立分母。","finding":"K_HIGH九点PE 3.01212e-5，整线0.0178365。","limit":"局部五点FullFK变化未过五倍经验门。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json","kind":"MATLAB真实科研图"},{"title":"PHI M05a：初相位如何改变中心海面？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete_v2/M05a_geometry_only.png","stage":"phi","question":"初相位如何改变中心海面？","read":"x为水平位置，η为向下为正的海面z坐标。","finding":"中心高度0→+0.05 m，坡度0.005→0。","limit":"解析几何不是声场。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","kind":"MATLAB真实科研图"},{"title":"PHI M05b：PHI下BIE物理场怎样改变？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete_v2/M05b_BIE_physical_response.png","stage":"phi","question":"PHI下BIE物理场怎样改变？","read":"分开BIE粗糙/平面幅相和复增量。","finding":"海面相位配对产生真实参考响应。","limit":"混合平台参考受限。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","kind":"MATLAB真实科研图"},{"title":"PHI M05c：PHI的PE/FullFK模型差在哪？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete_v2/M05c_model_error_pair.png","stage":"phi","question":"PHI的PE/FullFK模型差在哪？","read":"分清PE和FullFK量级与横轴x。","finding":"中心11点PE 5.09698e-4，整线0.0203315。","limit":"幅相分解不是因果分解。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","kind":"MATLAB真实科研图"},{"title":"PHI M05d：PHI九点与整线有何不同？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete_v2/M05d_line_center_nine.png","stage":"phi","question":"PHI九点与整线有何不同？","read":"上排蓝线PE−BIE、绿线FullFK−BIE为411点残差；中排放大中心11点；下排九格为真接收位置，左BASE_M右PHI，z向下。色块先看图例和单位源残差，不能直接当连续场。","finding":"九点PE 5.06113e-4，FullFK 1.49251e-5。","limit":"经验门不是严格误差界。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","kind":"MATLAB真实科研图"},{"title":"PHI M05e：左右配对能看出什么？","src":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/figures_final_complete_v2/M05e_mirror_symmetry.png","stage":"phi","question":"左右配对能看出什么？","read":"按相同z的±x真点读复数配对。","finding":"PHI左右差低于BASE_M。","limit":"不能证明局部高度的唯一因果作用。","data":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","kind":"MATLAB真实科研图"},{"title":"S3A F08：三个PM实现","src":"results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/F08_S3A_three_seed_summary.png","stage":"s3a","question":"随机海面实现会怎样改变九点和整线误差？","read":"横轴为三个固定seed；蓝圆是真实九点，橙方为411线。左栏BIE相对平面物理响应，中栏PE/BIE为对数轴，右栏FullFK/BIE为×10⁻⁴刻度；每种支持独立分母。","finding":"PE九点三seed相差约53倍，整线仅约1.36倍。","limit":"三个固定样本不足以估计总体。","data":"results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv","audit":"results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/independent_audit.json","kind":"MATLAB真实科研图"}],"GLOSSARY":[["PE","一种近似传播算法","你可以理解为计算速度较实用、带有近似条件的“解题方法”，不是自动的真值。"],["BIE","边界积分数值求解","本轮用于做独立数值参考，但只代表特定数值设置下的参考，不是实测真值。"],["FullFK","完整双项Kirchhoff积分","与BIE不同的一种近似反射计算；“完整”指本次积分保留了应有的项和有效外部贡献，不等于精确。"],["Bellhop","声线/声束传播工具","这份二维同源比较里，其与Gaussian源的物理映射尚未合格，故是有条件的第四方法。"],["复数声场","幅度+相位共同描述的结果","幅度相似不代表复数一致，因为两条波的相位仍可能错开。"],["u_rough","粗糙海面反射复场","当前主比较对象；不等于总声场，也不包含默认的直达波。"],["u_flat","平坦海面反射复场","作为比较的对照，能帮助区分基线问题和海面变化。"],["G","粗糙场 / 同方法平面场","以前常用的相对变化指标；不是绝对声压，也不能和原生u_rough误差混称。"],["δu","粗糙场减平面场","某方法预测“换成粗糙面后变化了多少”。"],["D_phys","BIE对两种海面的场变化","比较的是物理海面参数变化后的参考结果；不是算法准确度。"],["模型残差","某方法预测 − BIE参考","在同源同点同规则下，衡量方法与参考的差异。"],["411点接收线","z=3m的一条横向测点线","是一排测点，不是连续的真实二维声场，也不代表近中心九点。"],["3×3九点","中心附近三个x乘三个z坐标","用于研究接收位置的小幅变化，不等于9个独立海况，也没有做波束形成。"],["K","正弦海面空间波数","K越大，波峰间距越短；同时可能改变坡度、曲率等几何量。"],["φ","正弦海面的初相位","改变φ相当于让窗口内的波形在空间上错开，但窗口没有一起平移。"],["C2窗口","将研究海面平滑接到外部平面的函数","此处海面42m内为平台，50m外严格平坦；中间过渡也会影响坡度曲率。"],["PM海面","按冻结谱和种子得到的随机海面样本","这份计划中是三个已完成固定实现的物理比较，不等于PM总体统计认证。"],["数值分辨率","改变网格/求积后观察到的计算敏感性","它帮助判断差值是否大到足够稳定；不是严格误差上界。"],["独立审计","用保存的数据再次核查计算、绘图和文件","图像像素一致证明可重绘，不自动证明物理模型正确。"],["RAM门","计算前检查剩余物理内存","设置安全余量的停止规则；触发后停止不等于模型算错。"],["CIR / BER","信道时延响应 / 比特错误率","这是后续可选通信阶段，不能从单频空间反射场直接得出。"]],"REPO_EVIDENCE":[{"level":"原始CSV与审计已在本地找到","name":"S2b正式参考","text":"array_metrics 12行、line_metrics 24行；独立审计及数值分辨审计文件存在。本轮只读抽查字段和关键结果，未重新运行审计。","paths":["results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/array_metrics.csv","results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/line_metrics.csv","results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json"]},{"level":"原始CSV与审计已在本地找到","name":"S2c-A与K_HIGH","text":"空间支持指标、K_HIGH真实场指标和最终独立审计存在；实际真图可在上方打开。","paths":["results/comparisons/two_dimensional_channel_closeout/20261023_s2c_a_1642/mechanism_baseline/support_metrics.csv","results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/analysis/support_metrics.csv","results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json"]},{"level":"数据齐全·参考受限","name":"PHI_PLUS90","text":"五层混合平台场、417位置指标、M05a–e正式v2图及最终审计存在；缺同网格跨平台BIE边界重新求解差界。","paths":["results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv","results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json","results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/audit/remote_saved_density_boundary_20261025.json"]},{"level":"三固定实现完成","name":"S3A与S4","text":"三seed六行对照、F08、三seed审计与S4只读结果索引存在。S4核对SHA；本轮没有重复数值审计。","paths":["results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv","results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/independent_audit.json","results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md","results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json"]}],"REPO":"https://github.com/nanxin-49/UWA","PLAN_SHA":"cbba7dc5ad1b671de5fce69501df453d64bd4db351e477cad73e4d752fe16ab1","PLAN_NAME":"two_dimensional_channel_closeout_plan(5).md"}</script>
+<script id="embedded-state" type="application/json">{}</script>
+<script>
+(() => {
+ 'use strict';
+ const data=JSON.parse(document.getElementById('data').textContent);
+ const {STAGES,D_ITEMS,FIGS,GLOSSARY,REPO_EVIDENCE,REPO}=data;
+ const $=(id)=>document.getElementById(id);
+ const esc=(v)=>String(v??'').replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const pathLink=(p)=>p.split('/').map(encodeURIComponent).join('/');
+ const stageName=(id)=>STAGES.find(x=>x.id===id)?.name||id;
+ const nameStatus={unreviewed:'尚未审阅',understood:'已看懂 · 未核数据',verify:'需补证据',disputed:'存在异议',limited:'有条件接受',accepted:'人工验收通过'};
+ const statusName={done:'已完成阶段交付',blocked:'资源或证据阻塞',todo:'尚未开始',optional:'条件扩展未执行'};
+ const key='uwa2d_human_workbench_v1';
+ const defaultState=()=>({schema:1,source:data.PLAN_SHA,updatedAt:'',reviews:{},logs:[]});
+ let state=defaultState(); let saveAvailable=true; let activeReview='phi_2bie'; let editingLogId=null;
+ const embedded=()=>{try{return JSON.parse($('embedded-state').textContent||'{}')}catch(_){return{}}};
+ const validState=(s)=>s&&s.schema===1&&s.reviews&&typeof s.reviews==='object'&&!Array.isArray(s.reviews)&&Array.isArray(s.logs);
+ try {let ls=JSON.parse(localStorage.getItem(key)||'null');let em=embedded();state=validState(ls)&&(!validState(em)||String(ls.updatedAt||'')>=String(em.updatedAt||''))?ls:validState(em)?em:defaultState();}catch(_){if(validState(embedded()))state=embedded();saveAvailable=false;}
+ const notify=(s)=>{const t=$('toast');t.textContent=s;t.classList.add('show');clearTimeout(notify.t);notify.t=setTimeout(()=>t.classList.remove('show'),3200)};
+ function save(){state.updatedAt=new Date().toISOString();try{localStorage.setItem(key,JSON.stringify(state));saveAvailable=true}catch(_){saveAvailable=false;$('storageWarning').classList.remove('hidden');notify('浏览器自动存储不可用，请导出JSON/HTML备份。')}}
+ if(!saveAvailable)$('storageWarning').classList.remove('hidden');
+ const stageOptions=(skipOptional=false)=>STAGES.filter(s=>!skipOptional||s.status!=='optional').map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');
+ function renderJourney(){ $('journeyList').innerHTML=STAGES.map(s=>`<article class="milestone"><div class="m-head"><div class="m-name">${esc(s.name)}</div><span class="chip ${esc(s.status)}">执行：${esc(statusName[s.status])}</span></div><div class="m-sub">${esc(s.sub)}</div><div class="m-desc">${esc(s.desc)}</div><div class="m-foot">科学结论：${esc(s.science||'尚无证据')}<br>${esc(s.count)}<br>人工审阅：按下方具体成果分别记录</div><button type="button" class="btn" style="margin-top:11px" data-stage-jump="${esc(s.id)}">查看对应成果</button></article>`).join(''); }
+ function evidenceHtml(e){return `<div class="evi"><span class="evi-type">${esc(e.grade||'资料入口')}</span><a href="${esc(pathLink(e.path))}" target="_blank" rel="noopener noreferrer">${esc(e.label)} ↗</a><code style="font-size:11px;overflow-wrap:anywhere">${esc(e.path)}</code>${e.reason?`<span class="evi-note">${esc(e.reason)}</span>`:''}</div>`}
+ function itemCard(d){const rev=state.reviews[d.id]||{};const rStatus=rev.status||'unreviewed';let sourceTag=d.tag?.includes('受限')||d.tag?.includes('阻塞')?'blocked':d.tag?.includes('未执行')?'todo':'done';let blocks=[['1. 这项工作研究什么？',d.lead],['2. 为什么需要做？',d.why],['3. Codex实际做了什么？',d.did],['4. 得到了什么结果？',d.result],['5. 这些结果说明什么？',d.meaning],['6. 还不能证明什么？',d.limit],['7. 怎样读相关真图？',d.figureGuide||'请查看下方对应阶段真图。']];return `<article class="deliverable" id="delivery-${esc(d.id)}"><div class="delivery-summary"><div class="d-top"><span class="d-stage">${esc(stageName(d.stage))}</span><span class="chip ${sourceTag}">${esc(d.tag)}</span></div><h3>${esc(d.title)}</h3><p class="d-lead">${esc(d.lead)}</p><div class="d-preview"><strong>主要结果：</strong>${esc(d.result)}</div><div class="smallprint">科学结论：${esc(d.science||'待判断')}　｜　人工审阅：${esc(nameStatus[rStatus])}</div><div class="delivery-actions"><button type="button" class="btn primary" data-open-delivery="${esc(d.id)}">展开讲明白</button><button type="button" class="btn" data-review-jump="${esc(d.id)}">记录我的审阅</button></div></div><details class="readmore" id="details-${esc(d.id)}"><summary>完整说明、证据层级与审阅重点</summary><div class="readmore-content"><div class="explain-list">${blocks.map(([h,v])=>`<div class="explain"><h4>${esc(h)}</h4><p>${esc(v)}</p></div>`).join('')}<div class="explain special"><h4>你应该重点审什么？</h4><p>${esc(d.review)}</p></div></div><p class="smallprint">证据层级：${esc(d.evidenceState||'请按报告、原始文件、审计与人工验收分别判断。')}</p>${d.detail?`<p class="smallprint">技术备注：${esc(d.detail)}</p>`:''}<div class="evidences"><strong style="font-size:12px">8. 原始数据、报告与审计入口</strong>${d.evidence.map(evidenceHtml).join('')}</div></div></details></article>`}
+ function renderDeliveries(){const q=$('deliverySearch').value.trim().toLowerCase(),s=$('stageFilter').value;const shown=D_ITEMS.filter(d=>(s==='all'||d.stage===s)&&(!q||[d.title,d.lead,d.why,d.did,d.result,d.meaning,d.limit,d.stage,d.tag].some(v=>String(v).toLowerCase().includes(q))));$('deliveryCards').innerHTML=shown.map(itemCard).join('')||'<div class="panel">这个阶段没有已完成的具体声学交付（或者搜索无匹配）。如果它尚未启动，这是正常状态；请先阅读上方路线图与阶段依赖。</div>';$('deliveryCount').textContent=`显示 ${shown.length} / ${D_ITEMS.length} 项`;$('reviewCount').innerHTML=`${Object.values(state.reviews).filter(r=>r.status==='accepted').length} <small>/ ${D_ITEMS.length}</small>`}
+ function renderFigures(){ $('figGrid').innerHTML=FIGS.map((f,i)=>`<article class="fig-card"><div class="fig-preview" id="fig-preview-${i}"><img alt="${esc(f.title)}，${esc(f.kind)}" loading="lazy"><div class="fig-placeholder"><strong>本地图片未加载</strong><div>请保持HTML位于项目根目录，并核对下列真实图像路径。</div><small>${esc(f.src)}</small></div></div><div class="fig-body"><span class="chip done">${esc(f.stage)} · ${esc(f.kind)}</span><h3>${esc(f.title)}</h3><p><strong>想回答：</strong>${esc(f.question)}</p><p><strong>读图：</strong>${esc(f.read)}</p><p><strong>主要发现：</strong>${esc(f.finding)}</p><p><strong>不能推出：</strong>${esc(f.limit)}</p><details><summary>原图、绘图数据和审计入口</summary><div class="evidences">${[ ['原始PNG',f.src],['绘图数据',f.data],['历史独立审计',f.audit] ].map(([label,path])=>`<div class="evi"><a href="${esc(pathLink(path))}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a><code style="font-size:11px;overflow-wrap:anywhere">${esc(path)}</code></div>`).join('')}</div></details></div></article>`).join('');document.querySelectorAll('.fig-preview img').forEach((img,i)=>{img.onload=()=>img.parentElement.classList.add('img-loaded');img.onerror=()=>{img.style.display='none';img.parentElement.classList.add('img-missing')};img.src=pathLink(FIGS[i].src);});}
+ function loadReview(id){const d=D_ITEMS.find(x=>x.id===id)||D_ITEMS[0];activeReview=d.id;$('reviewItem').value=d.id;const r=state.reviews[d.id]||{};$('reviewStatus').value=r.status||'unreviewed';$('reviewMeaning').value=r.meaning||'';$('reviewEvidence').value=r.evidence||'';$('reviewLimit').value=r.limit||'';for(const [key,field] of [['purpose','chkPurpose'],['report','chkReport'],['data','chkData'],['limits','chkLimits']])$(field).checked=Boolean(r.checks?.[key]);$('reviewHelper').innerHTML=`<strong>${esc(d.title)}</strong><div style="margin-top:4px"><b>最需要审核：</b>${esc(d.review)}</div><div style="margin-top:4px"><b>不能误解：</b>${esc(d.limit)}</div>`;$('reviewError').textContent='';}
+ function saveReview(){const status=$('reviewStatus').value;const checks={purpose:$('chkPurpose').checked,report:$('chkReport').checked,data:$('chkData').checked,limits:$('chkLimits').checked};const evidence=$('reviewEvidence').value.trim(),limit=$('reviewLimit').value.trim();if(status==='accepted'&&(!Object.values(checks).every(Boolean)||!evidence)){$('reviewError').textContent='标记“人工验收通过”需要四项核查均完成，并写清你实际查看过的证据。';return;}if(status==='limited'&&!limit){$('reviewError').textContent='有条件接受时，请写明尚未解决的局限。';return;}state.reviews[activeReview]={status,checks,evidence,meaning:$('reviewMeaning').value.trim(),limit,reviewedAt:new Date().toISOString()};save();renderDeliveries();renderEntries();$('reviewError').textContent='';notify('你的审阅已保存（未改变原始项目完成状态）。');}
+ function setupSelects(){$('stageFilter').insertAdjacentHTML('beforeend',stageOptions());$('runStage').innerHTML=stageOptions();$('runStage').value='s4';$('runItem').innerHTML='<option value="">只关联研究阶段</option>'+D_ITEMS.map(d=>`<option value="${esc(d.id)}">${esc(stageName(d.stage))} · ${esc(d.title)}</option>`).join('');$('reviewItem').innerHTML=D_ITEMS.map(d=>`<option value="${esc(d.id)}">${esc(stageName(d.stage))} · ${esc(d.title)}</option>`).join('');loadReview(activeReview);const today=new Date();$('runDate').value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');}
+ function resetLogForm(){for(let id of ['runId','codexRaw','runPlain','runFinding','runProof','runNext','runQuestions'])$(id).value='';$('runItem').value='';$('runVerdict').value='pending';editingLogId=null;$('saveLog').textContent='保存这次Codex交付'}
+ function saveLog(){const plain=$('runPlain').value.trim();if(!plain){notify('请先用自己的话总结本次交付，再保存。');$('runPlain').focus();return}const raw=$('codexRaw').value.trim(),proof=$('runProof').value.trim(),prior=editingLogId?state.logs.find(x=>x.id===editingLogId):null;const log={id:prior?.id||'run-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),date:$('runDate').value||'',stage:$('runStage').value,item:$('runItem').value,runId:$('runId').value.trim(),raw:raw.slice(0,150000),plain,finding:$('runFinding').value.trim(),proof,verdict:$('runVerdict').value,next:$('runNext').value.trim(),questions:$('runQuestions').value.trim(),addedAt:prior?.addedAt||new Date().toISOString(),editedAt:new Date().toISOString()};if(prior){state.logs=state.logs.map(x=>x.id===prior.id?log:x)}else state.logs.unshift(log);save();renderEntries();resetLogForm();notify('本次Codex交付已保存；人工认可需你自己核对。')}
+ const verdictName={pending:'未判断',question:'需补证',limited:'有限接受',accepted:'已核验本次范围'};
+ function renderEntries(){let revs=Object.entries(state.reviews).filter(([id,r])=>r.status!=='unreviewed').sort((a,b)=>String(b[1].reviewedAt).localeCompare(String(a[1].reviewedAt))).slice(0,16);let logs=state.logs.slice(0,20);let html='';if(revs.length){html+=`<h4>我对已交付成果的审阅（${revs.length}项）</h4>`+revs.map(([id,r])=>`<div class="review-record"><div class="rec-head"><strong>${esc(D_ITEMS.find(x=>x.id===id)?.title||id)}</strong><span class="chip">${esc(nameStatus[r.status]||r.status)}</span></div><p>${esc(r.meaning||'未填写个人理解')}</p>${r.limit?`<p><b>保留问题：</b>${esc(r.limit)}</p>`:''}<small>${esc((r.reviewedAt||'').slice(0,16).replace('T',' '))}</small></div>`).join('')}if(logs.length){html+=`<h4 style="margin-top:22px">Codex执行记录（${state.logs.length}条）</h4>`+logs.map(l=>`<div class="review-record"><div class="rec-head"><strong>${esc(l.date)} · ${esc(stageName(l.stage))}</strong><span class="chip">${esc(verdictName[l.verdict]||'未判断')}</span></div><p>${esc(l.plain)}</p>${l.finding?`<p><b>主要发现：</b>${esc(l.finding)}</p>`:''}${l.item?`<small>关联成果：${esc(D_ITEMS.find(d=>d.id===l.item)?.title||l.item)}</small>`:''}${l.runId?`<small>run_id：${esc(l.runId)}</small>`:''}<div class="tool-row" style="margin-top:8px"><button class="btn" data-edit-log="${esc(l.id)}">重新编辑</button><button class="btn alert" data-del-log="${esc(l.id)}">删除记录</button></div></div>`).join('')}if(!html)html='<p class="subtle" style="font-size:13px">暂无人工审阅或Codex执行记录。首次记录不会自动设置为通过。</p>';$('reviewEntries').innerHTML=html;}
+ const download=(name,content,mime)=>{const url=URL.createObjectURL(new Blob([content],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
+ function exportJson(){download('UWA_2D_review_backup.json',JSON.stringify(state,null,2),'application/json;charset=utf-8');notify('JSON备份已生成。')}
+ function markdown(){const lines=['# UWA 二维声学研究 · 人工审阅报告','','生成于：'+new Date().toLocaleString('zh-CN'),'','## 来源和限制','','- 当前状态依据：本地2026-10-26 S4正式报告与结果索引。','- 本工作台本轮未运行MATLAB声学求解；只读抽查本地关键CSV/JSON，历史独立审计不等于本轮重跑。','- 原报告的完成与人的验收独立。','','## 各项人工审阅'];D_ITEMS.forEach(d=>{let r=state.reviews[d.id]||{};lines.push('','### '+d.title,'- 来源阶段：'+stageName(d.stage),'- 我审阅状态：'+(nameStatus[r.status||'unreviewed']),'- 通俗成果：'+d.result,'- 我的理解：'+(r.meaning||'未填写'),'- 我核验的证据：'+(r.evidence||'未填写'),'- 保留问题：'+(r.limit||'未填写'));});lines.push('','## Codex交付日志');state.logs.forEach(l=>{lines.push('','### '+l.date+' · '+stageName(l.stage)+' '+(l.runId||''),'**人话总结**：'+l.plain,'','**关联成果**：'+(D_ITEMS.find(d=>d.id===l.item)?.title||'仅关联阶段'),'','**主要发现**：'+(l.finding||'未填写'),'','**证据**：'+(l.proof||'未填写'),'','**审阅判断**：'+(verdictName[l.verdict]||'未判断'),'','**下一步**：'+(l.next||'未填写'),'','**仍有疑问**：'+(l.questions||'未填写'),'','<details><summary>Codex原文</summary>','','```text',l.raw||'（未粘贴）','```','','</details>');});return lines.join('\n')}
+ function exportHtml(){const source='<!doctype html>\n'+document.documentElement.outerHTML;const json=JSON.stringify(state).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026');const updated=source.replace(/(<script id="embedded-state" type="application\/json">)[\s\S]*?(<\/script>)/i,(_m,a,b)=>a+json+b);download('UWA_2D_workbench_with_reviews.html',updated,'text/html;charset=utf-8');notify('已导出含审阅记录的独立HTML。')}
+ function importJson(file){if(!file||file.size>5*1024*1024){notify('文件缺失或超过5MB，不导入。');return}const reader=new FileReader();reader.onload=()=>{try{const d=JSON.parse(String(reader.result));if(!validState(d))throw Error('备份文件结构不符');const conflicts=Object.keys(d.reviews).filter(id=>state.reviews[id]&&JSON.stringify(state.reviews[id])!==JSON.stringify(d.reviews[id]));const existingIds=new Set(state.logs.map(l=>l.id));const incoming=d.logs.filter(l=>l&&typeof l==='object'&&typeof l.id==='string'&&!existingIds.has(l.id));const dup=d.logs.length-incoming.length;if(!confirm(`将合并导入：新增${Object.keys(d.reviews).filter(id=>!state.reviews[id]).length}项成果审阅、${incoming.length}条交付日志；${conflicts.length}项审阅冲突及${dup}条同ID日志会保留当前版本，不覆盖。继续吗？`))return;for(const [id,r] of Object.entries(d.reviews))if(!state.reviews[id])state.reviews[id]=r;state.logs.push(...incoming);save();renderDeliveries();renderEntries();loadReview(activeReview);notify(`合并完成；保留${conflicts.length}项当前审阅冲突。`)}catch(e){notify('无法读取有效审阅JSON：'+String(e.message).slice(0,90))}};reader.readAsText(file,'utf-8')}
+ async function copyText(v){try{await navigator.clipboard.writeText(v);notify('提示词已复制，可粘贴到Codex。')}catch(_){const ta=document.createElement('textarea');ta.value=v;ta.style.cssText='position:fixed;top:20%;left:20%;width:60%;height:50%;z-index:999;background:white';document.body.appendChild(ta);ta.focus();ta.select();notify('浏览器禁止自动复制，已选中提示词。按Ctrl+C复制，之后点击页面空白处。');ta.addEventListener('blur',()=>ta.remove(),{once:true})}}
+ function auditPrompt(){const d=D_ITEMS.find(x=>x.id===activeReview);return `请只读核查【${d.title}】，不要运行新的MATLAB/PE/BIE/FullFK计算、不要改变Git工作区、不要提交或推送。\n\n请用适合水声通信研究生理解的中文依次回答：\n1. 这项研究原本想回答什么问题？用生活类比解释。\n2. 本轮究竟使用了哪些已有数据、执行了哪些真实新计算？请区分。\n3. 给出最关键的1–3个结果，分别写清指标对象、支持点数、单位、参考方法和口径。\n4. 这些结果能支持什么科学判断？哪些因数据、数值分辨率、源/相位或因果问题还不能说？\n5. 给出真实run_id、文件路径、代码/输入哈希、CSV/MAT/PNG/审计回执的存在性；若缺失则如实写缺失，不重算补齐。\n6. 哪些内容需要我人工核验？请按优先级给出最少的检查步骤。\n\n这次需要特别核对：${d.review}\n明确限制：${d.limit}\n结束后停止，不自动执行后续Goal。`}
+ function gitPrompt(){return `请只读核查本地UWA二维成果的小型证据文件，依据S4 result_index.md逐项列相对路径、大小、SHA256、git跟踪和check-ignore结果。优先正式指标CSV、审计JSON、SHA清单与代表性PNG；大型MAT/FIG留本地评估。给出最小放行建议，不批量上传、不提交/推送、不访问cash/。`}
+ function renderEvidence(){$('sourceList').innerHTML=REPO_EVIDENCE.map(e=>`<div class="source-entry"><div class="d-top"><span class="chip done">${esc(e.level)}</span></div><h3>${esc(e.name)}</h3><p>${esc(e.text)}</p><ul>${e.paths.map(p=>`<li><a href="${esc(pathLink(p))}" rel="noopener noreferrer" target="_blank">${esc(p)} ↗</a></li>`).join('')}</ul></div>`).join('')}
+ function renderGlossary(){const q=$('glossSearch').value.trim().toLowerCase();const g=GLOSSARY.filter(([term,a,b])=>[term,a,b].some(x=>x.toLowerCase().includes(q)));$('glossCount').textContent=`${g.length}/${GLOSSARY.length}个术语`;$('glossary').innerHTML=g.map(([t,a,b])=>`<article class="gloss"><strong>${esc(t)}</strong><small>${esc(a)}</small><p>${esc(b)}</p></article>`).join('')}
+ function renderSurface(which){document.querySelectorAll('#surfaceTabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.surf===which));const parms={base:{K:.1,phi:0,desc:'基线：A=0.05m，K=0.10rad/m，φ=0；中心海面高度为0，但斜率并非0。'},khigh:{K:.2,phi:0,desc:'K_HIGH：A不变、K翻倍，波峰间距缩短；中心坡度由0.005变成0.010，其他几何也同时变化。'},phi:{K:.1,phi:Math.PI/2,desc:'PHI_PLUS90：A和K不变，φ=+π/2，中心由过零变为+0.05m；下方M05b–e另展示已完成的真声场。'}};const p=parms[which];function chi(x){const v=Math.abs(x);if(v<=42)return 1;if(v>=50)return 0;const t=(v-42)/8;return 1-(6*t**5-15*t**4+10*t**3)}function curve(K,phi){let parts=[];for(let i=0;i<=500;i++){let x=-55+i*110/500;let y=.05*Math.sin(K*x+phi)*chi(x);let px=22+i*459/500,py=110+y*930;parts.push((i?'L':'M')+px.toFixed(2)+','+py.toFixed(2))}return parts.join(' ')}$('surfBaseline').setAttribute('d',curve(.1,0));$('surfChanged').setAttribute('d',curve(p.K,p.phi));$('surfZero').setAttribute('cy',String(110+.05*Math.sin(p.phi)*930));$('surfaceNote').textContent=p.desc;}
+ document.addEventListener('click',e=>{const op=e.target.closest('[data-open-delivery]');if(op){const id=op.dataset.openDelivery;const det=$('details-'+id);if(det){det.open=!det.open;op.textContent=det.open?'收起说明':'展开讲明白'}return}const review=e.target.closest('[data-review-jump]');if(review){loadReview(review.dataset.reviewJump);$('review').scrollIntoView({behavior:'smooth'});return}const stage=e.target.closest('[data-stage-jump]');if(stage){$('stageFilter').value=stage.dataset.stageJump;$('deliverySearch').value='';renderDeliveries();$('deliveries').scrollIntoView({behavior:'smooth'});return}const surf=e.target.closest('[data-surf]');if(surf){renderSurface(surf.dataset.surf);return}const edit=e.target.closest('[data-edit-log]');if(edit){const l=state.logs.find(x=>x.id===edit.dataset.editLog);if(!l)return;for(const [id,val] of Object.entries({runDate:l.date,runStage:l.stage,runItem:l.item||'',runId:l.runId,codexRaw:l.raw,runPlain:l.plain,runFinding:l.finding||'',runProof:l.proof,runVerdict:l.verdict,runNext:l.next,runQuestions:l.questions}))$(id).value=val??'';editingLogId=l.id;$('saveLog').textContent='保存修改';$('review').scrollIntoView({behavior:'smooth'});notify('已载入旧记录；保存修改前原记录会保留。');return}const del=e.target.closest('[data-del-log]');if(del){if(!confirm('确定删除这条Codex执行记录？删除后不可自动恢复，请先导出备份。'))return;state.logs=state.logs.filter(x=>x.id!==del.dataset.delLog);save();renderEntries();notify('记录已删除。')}});
+ $('deliverySearch').addEventListener('input',renderDeliveries);$('stageFilter').addEventListener('change',renderDeliveries);$('reviewItem').addEventListener('change',e=>loadReview(e.target.value));$('saveItemReview').addEventListener('click',saveReview);$('saveLog').addEventListener('click',saveLog);$('clearLog').addEventListener('click',resetLogForm);$('glossSearch').addEventListener('input',renderGlossary);$('copyAuditPrompt').addEventListener('click',()=>copyText(auditPrompt()));$('exportJson').addEventListener('click',exportJson);$('exportMd').addEventListener('click',()=>download('UWA_2D_review_report.md',markdown(),'text/markdown;charset=utf-8'));$('exportHtml').addEventListener('click',exportHtml);$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',e=>{importJson(e.target.files?.[0]);e.target.value=''});
+ setupSelects();renderJourney();renderDeliveries();renderFigures();renderEntries();renderEvidence();renderGlossary();renderSurface('base');
+})();
+</script>
+</body>
+</html>

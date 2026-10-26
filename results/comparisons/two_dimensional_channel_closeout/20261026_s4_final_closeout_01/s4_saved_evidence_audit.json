@@ -1,0 +1,57 @@
+{
+  "run_id": "20261026_s4_final_closeout_01",
+  "status": "S4_READ_ONLY_EVIDENCE_AUDIT_PASS_WITH_DECLARED_LIMITS",
+  "execution_mode": "PowerShell read-only file SHA and JSON/CSV inspection; no MATLAB execution",
+  "new_acoustic_field_computations": 0,
+  "sha_rechecks": [
+    {"case": "S2B_formal", "manifest": "20261023_s2b_1305/formal_reference_v2/provenance/final_output_hashes.csv", "matched": 247, "expected": 247, "missing": 0, "mismatch": 0},
+    {"case": "S2cA", "manifest": "20261023_s2c_a_1642/provenance/final_output_hashes.csv", "matched": 203, "expected": 203, "missing": 0, "mismatch": 0},
+    {"case": "K_HIGH", "manifest": "20261023_s2c_b_khigh_02/provenance/P5_final_artifact_hashes_v6.csv", "matched": 132, "expected": 132, "missing": 0, "mismatch": 0},
+    {"case": "S3A_seed260001", "manifest": "20261025_s3a_seed260001_01/audit/SHA256SUMS_v2.txt", "matched_frozen_inputs_and_results": 24, "skipped_mutable_live_script_paths": 8, "missing": 0, "mismatch": 0},
+    {"case": "S3A_seed260002", "manifest": "20261025_s3a_seed260002_01/audit/SHA256SUMS_final.txt", "matched": 23, "expected": 23, "missing": 0, "mismatch": 0},
+    {"case": "S3A_seed260003", "manifest": "20261026_s3a_seed260003_01/audit/SHA256SUMS_final.txt", "matched": 130, "expected": 130, "missing": 0, "mismatch": 0}
+  ],
+  "current_key_files_sha256": {
+    "20261023_s2a_final/data/source_qualification.csv": "14275e6e2a8cfdc877ef3610231297c5c303e5dc969c867c33b118c2a33a2a1a",
+    "20261023_s2b_1305/formal_reference_v2/audit/independent_audit.json": "e9f4128433fff6be2f55a93090a7f3438039345458816946fa4e23e46a502b77",
+    "20261023_s2c_a_1642/audit/independent_audit.json": "7cd682d8c4ef4b21bbc63ca9d6ffec89e35a4c9731c0717ad476d66b96ede58e",
+    "20261023_s2c_b_khigh_02/audit/final_independent_audit_v4.json": "ffe4a0411dfc062c43e0e2eba4783b967477cc101e86ce61e00536919307b5e4",
+    "20261023_s2c_b_phi_plus90_01/audit/final_independent_audit_phi_v2.json": "0abfbbdecab39f98303f6b75043f0a54854c25cc7cbc054160af683399a5a9b4",
+    "20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv": "ecc0bd82f17d3c19a1d2308b8ab8f23bd2a925026b2fd5c855be39f231c04a11",
+    "20261023_s2c_b_phi_plus90_01/remote_recovery/final_cost_and_status.json": "3aa77388ce6319cf1d1ea0e6f738fac43669c63292d445dac1851a9b2addfa15",
+    "20261025_s3a_seed260001_01/audit/independent_saved_data_audit_v3.json": "049f698381024f8b1f44b102cf35c06f9380f5ec5e7e940847ce507e9a0e2814",
+    "20261025_s3a_seed260002_01/audit/independent_saved_data_audit_v3.json": "f8a4857bcac12f0f9d164e9cf88674dc7c1c8e937fd2d62f1b9555001525d8ea",
+    "20261026_s3a_seed260003_01/audit/independent_saved_data_audit_v3.json": "21fc3138bed4d084d24592eeb54ba9ceb85c132bedee75e37aacfe7495abdcad",
+    "20261026_s3a_seed260003_01/three_seed_closeout/independent_audit.json": "c856ab5eb3d96cc1ed3d4165b36f360788d392bfafae225c6e811f24cd873f2b",
+    "20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv": "5ee3ae5068dbfd7f99daadcdcbc14118ba92169ab058446d18f0f1666b420fd5"
+  },
+  "prior_independent_audit_states": {
+    "S2a": "pass; PE/BIE/FullFK SOURCE_MATCHED, Bellhop SOURCE_UNRESOLVED",
+    "S2b": "pass; 108 core points, 4932 line fields, 24 resolution classifications",
+    "S2cA": "pass; saved-field spatial diagnostic, 11 FIG/PNG pairs",
+    "K_HIGH": "S2C_B_K_HIGH_INDEPENDENT_AUDIT_PASS; four pixel-identical redraws",
+    "PHI_PLUS90": "S2C_B_PHI_PLUS90_INDEPENDENT_AUDIT_PASS; five pixel-identical v2 redraws; mixed-platform BIE reference remains limited",
+    "S3A_seed260001": "S3A_SEED260001_SAVED_DATA_AUDIT_PASS",
+    "S3A_seed260002": "S3A_SEED260002_SAVED_DATA_AUDIT_PASS",
+    "S3A_seed260003": "S3A_SEED260003_SAVED_DATA_AUDIT_PASS",
+    "S3A_three_seed_F08": "S3A_THREE_SEED_INDEPENDENT_AUDIT_PASS; six CSV rows and zero FIG/PNG pixel difference"
+  },
+  "budget_seconds": {
+    "S3A_charged": 2010,
+    "S3A_cap": 3000,
+    "S3A_remaining": 990,
+    "shared_charged": 5411.424104,
+    "shared_cap": 7506.601,
+    "shared_remaining": 2095.176896,
+    "S3B_five_seed_conservative_requirement": 5500,
+    "S3B_shortfall": 3404.823104
+  },
+  "failed_required_S4_evidence_checks": 0,
+  "declared_limitations": [
+    "PHI_PLUS90 mixed-platform same-grid BIE boundary solve difference lacks a direct bound.",
+    "BIE numerical resolution is empirical, not a rigorous error bound or independent physical truth.",
+    "Weak and medium sinusoid FullFK nine-point differences remain unresolved under the frozen 5x rule.",
+    "S3B five additional PM seeds were not run; three seeds do not represent the PM population.",
+    "Broadband frequency response, shared time origin, CIR and communication qualification are absent."
+  ]
+}
