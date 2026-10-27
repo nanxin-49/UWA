@@ -1,5 +1,7 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+二维 S5/S6 Goal 已按用户要求暂停审阅。A 的解析/代数、冻结源 4/6/8 kHz 平面 P22、129 点同源 Tx/直达子门和原弱正弦 P22 的 6/8 kHz 五层 BIE 单点经验参考已有结果；A 整体仍 PARTIAL，完整频带反射参考/九点未认证，B/C 未进入，无可信 CIR 或 BER。全带首批预算只有待批 48 h 提案；PM 有 S4 4 kHz 参考但缺宽带资格，CIR/S6 不含在预算请求内。8 kHz 专用 `.fig/PNG` 未生成。审查结论及证据入口见[2026-10-27 中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。
+
 本仓库用于研究海底发射机到近海面接收机的垂直水声传播。公共模型以 PE/WAPE 计算直达与海面反射频响，并提供粗糙海面、joint-kstat、接收端精确离散伴随、二阶统计和 MPSK 通信验证工具。
 
 三维固定 compact-dual 单链路已在原4/6/8kHz基础上完成独立5/7kHz参考及事前锁定的两个局部跨频重建检验；五个离散点为条件性案例结论，连续频响、CIR和目标PM仍未认证。见[三维5/7kHz报告](reports/deepsea_dual_5k7k_independent_validation_2026-10-26.md)与[结果索引](results/validation/deepsea3d_5k7k_20261026/README.md)。

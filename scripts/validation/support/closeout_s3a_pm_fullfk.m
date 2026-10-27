@@ -19,7 +19,14 @@ xs=reshape((centers+half*gx.').',[],1); qw=repmat(half*gw,panels,1);
 jac=hypot(1,ep); nx=-ep./jac; nz=1./jac;
 [ui,ux,uz]=fk_single_receiver_incident(src,xs,eta);
 [u0,~,uz0]=fk_single_receiver_incident(src,xs,zeros(size(xs)));
-dni=nx.*ux+nz.*uz; k=2*pi*4000/1500;
+dni=nx.*ux+nz.*uz;
+% Original S3A sources have no frequency fields and remain exactly 4 kHz.
+if isfield(src,'frequency_hz')
+    assert(isfield(src,'c0_mps') && src.frequency_hz>0 && src.c0_mps>0);
+    k=2*pi*src.frequency_hz/src.c0_mps;
+else
+    k=2*pi*4000/1500;
+end
 t1=complex(zeros(size(x))); t2=t1;
 for first=1:32:numel(x)
     ii=first:min(first+31,numel(x)); dx=x(ii)-xs.'; dz=z(ii)-eta.'; rr=hypot(dx,dz);

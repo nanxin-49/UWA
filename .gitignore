@@ -31,6 +31,8 @@
 !/scripts/validation/support/launch_deepsea3d_65grid_four_render_v2.sh
 !/scripts/validation/support/launch_deepsea3d_65grid_four_render_v3.sh
 !/scripts/validation/support/launch_deepsea3d_65grid_four_figaudit.sh
+!/scripts/validation/support/launch_two_dimensional_s5a_weak_bie.sh
+!/scripts/validation/support/launch_two_dimensional_s5a_weak_bie_8k.sh
 
 # Re-generable build, compiler, toolchain, and Python cache content must stay
 # ignored even though the repository-wide source/documentation rules above

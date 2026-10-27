@@ -1,5 +1,23 @@
 # 脚本与验证运行索引
 
+**2026-10-27 二维 S5 前置控制：**`validation/validate_two_dimensional_s5_prerequisites(output_dir)` 在新结果目录验证 native↔DSP、解析双径及 FFT 往返，不调用声学求解器。阶段 A 物理源/参考/资源门阻塞，见[中文回执](../reports/two_dimensional_s5_s6_2026-10-27.md)。
+
+**二维 S5 原九点解析 CIR 代数控制（新增、待运行）：**`validation/validate_two_dimensional_s5_nine_point_cir_controls(output_dir)` 对归一化已知点路径与复系数双径，按全局 `tau_ref` 覆盖原九点，保存 H 分量、CIR、MAT/CSV/JSON 回执并检查复误差与到达采样容差；不调用 PE/BIE/FullFK，也不代表冻结 Gaussian 源的物理平面结果。入口尚未由 MATLAB MCP 运行，不能记作 PASS。
+
+**2026-10-27 二维冻结源平面续行（先前步骤）：**`validation/support/closeout2d_source_at_frequency` 按固定 Fourier 源重新计算 `k_z(f)`；`validation/validate_two_dimensional_s5_source_flat(frozen_source_path,output_dir,available_physical_bytes)` 在新目录仅检查 4/6/8 kHz 的 P22 平面 PE 直达/反射与解析镜像。旧 S3A PM FullFK helper 的 4 kHz 行为不变，新源可显式给频率；该步骤当时尚无粗糙面 BIE 资格，[续行数据](../results/validation/two_dimensional_s5a_source_flat/20261027_s5a_flat_01/)。当前状态见下一条。
+
+**2026-10-27 二维 6 kHz 弱正弦 P22 试点：**`validation/validate_two_dimensional_s5a_weak_p22` 与 `validate_two_dimensional_s5a_weak_pe_sensitivity` 在已有 MATLAB MCP 会话计算同源 PE/FullFK 及半步长/同谱双网格；`validation/run_two_dimensional_s5a_weak_bie_remote` 由验证专用 `support/launch_two_dimensional_s5a_weak_bie.sh` 在获批独立 Ubuntu 目录串行做 smoke、配对模型与五层 BIE，并留真实退出码/日志；`validation/audit_two_dimensional_s5a_weak_bie` 重开回传 MAT/CSV 做 1e−4/五倍门。结果限单频 P22，[中文报告](../reports/two_dimensional_s5_s6_2026-10-27.md)与[原数据包](../results/validation/two_dimensional_s5a_weak_bie/20261027_01/)，不视为 S5/CIR 或 S6 通过。
+
+**2026-10-27 二维 8 kHz 弱正弦 P22 试点：**`validation/run_two_dimensional_s5a_weak_bie_8k_remote` 与 `validation/support/launch_two_dimensional_s5a_weak_bie_8k.sh` 在获批任务子目录执行 R2023b smoke、配对 PE/FullFK 和五层 BIE；`validation/audit_two_dimensional_s5a_weak_bie_8k` 独立重开 MAT 并计算敏感性/五倍分辨率门。[原始日志、87 项输出 SHA、审计和检查点](../results/validation/two_dimensional_s5a_weak_bie_8k/20261027_01/)齐全。A 仅新增一个 8 kHz P22 参考锚点，非宽带/CIR；图入口 `reporting/render_two_dimensional_s5a_weak_bie_8k` 已写但本轮 MATLAB MCP 调用被自动审批 404 阻断，没有 `.fig/PNG`。双锚点成本规划 CSV 同样缺 MATLAB MCP 独立重审，见报告中的限定。
+
+**二维 S5 全带首批预算仍待批准：**[预算提案 v2](../results/validation/two_dimensional_s5a_fullband_cost/20261027_02/budget_scope_proposal_v2.json)请求固定平面解析/PE/FullFK 对照及原弱正弦九点、129 频点 BIE/PE/FullFK，累计上限 48 h；逐层 RAM 保留、`<900 s` 作业、零并行与阶段边界停止均为强制条件。PM 的 S4 参考仅覆盖固定 4 kHz，不构成宽带资格，因此本批明确留 PM 缺口；CIR/S6 也不由该预算自动授权。仅规划提案，未获批未运行；范围和证据边界见[中文报告](../reports/two_dimensional_s5_s6_2026-10-27.md)。
+
+全带复用九点的 BIE helper 已接受配对接收深度向量；`validation/test_two_dimensional_s5_bie_receiver_coordinates.m` 覆盖新旧输入契约。MATLAB Code Analyzer 已检查该单测文件（0 项），helper 本身未在这次调用中直接受检；单测数值执行被自动审批服务 404 阻断。首个获批频点要核对九点复场并测量评价耗时后再按预算继续，见[报告](../reports/two_dimensional_s5_s6_2026-10-27.md)。
+
+九点分属三个深度，PE每频按三层输出整条横向场再抽点；全九点及P22初算统一使用预先冻结的全局 `tau_ref=min_r[hypot(x_rx,z_tx-z_rx)/c]` 转 DSP，并保留 `hypot(x_rx,z_tx∓z_rx)/c` 得到的逐点理论到达差，禁止逐点或逐路径移峰。预算提案 v2 已冻结此相位约定，尚待全频数值验证。
+
+**2026-10-27 二维 129 点 A 源/直达检查：**`validation/validate_two_dimensional_s5a_source_band(frozen_source_path,output_dir,available_physical_bytes)` 在原计划加密频点固定 984 项 Tx Fourier 场，仅计算 PE 与同源角谱直达，检查 65 点嵌套、传播谱及 `1e−10` 源/直达门；[MAT/CSV/审计/检查点](../results/validation/two_dimensional_s5a_source_band/20261027_01/)已保存。没有反射场、CIR 或通信资格。
+
 **2026-10-27 三维固定dual 65点网格四频点验收：**`validation/validate_deepsea3d_65grid_four_frequency.m`和`run_deepsea3d_65grid_four_frequency.m`仅在已完成独立目录执行4750/7250/4125/6562.5Hz的原FE/FullFK门；`validation/support/freeze_deepsea3d_65grid_four.py`事前锁五锚点B预测，`audit_deepsea3d_65grid_four_saved.py`只读重算保存复数/门/成本/SHA，`reporting/render_deepsea3d_65grid_four_v3.m`从审计CSV绘制最终两张FIG/PNG，`validation/audit_deepsea3d_65grid_four_figures.m`重开FIG核坐标。四点条件资格和冻结`e_R/e_Δ/a_D`门各4/4通过，总保守进程账341/720s。见[正式报告](../reports/deepsea3d_65grid_four_holdout_2026-10-27.md)与[结果索引](../results/validation/deepsea3d_65grid_four_20261027/README.md)。目录及入口不授权重复运行、扩展频点或CIR/BER。
 
 **2026-10-26 三维固定dual四频点独立盲测：**`validation/validate_deepsea3d_four_holdout_frequency.m`复用旧FE/FullFK资格门、仅改变4500/5500/6500/7500Hz频率，`validation/run_deepsea3d_four_holdout_frequency.m`按单点成本上限执行；`validation/support/freeze_deepsea3d_four_holdout.py`在新FE前锁定A/B预测，`package_deepsea3d_four_holdout.py`打包19项SHA输入，`audit_deepsea3d_four_holdout_saved.py`独立复算回传MAT/CSV与图。五个新远端MATLAB进程总计141/400s，四点各`CONDITIONAL_G1_PASS`，八个反射预测过原`1e−3`筛查。[正式报告](../reports/deepsea3d_four_frequency_holdout_2026-10-26.md)与[结果索引](../results/validation/deepsea3d_four_holdout_20261026/README.md)。仅GO后续网格设计；不自动重跑/扩频/生成CIR。生产API不变。

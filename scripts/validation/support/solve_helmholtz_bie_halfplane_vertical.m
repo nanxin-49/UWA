@@ -32,6 +32,25 @@ if cfg.window_plateau_ratio <= 0 || cfg.window_plateau_ratio >= 1
     error('window_plateau_ratio must lie in (0,1).');
 end
 
+receiver_x = cfg.receiver_x_m(:);
+receiver_z = cfg.receiver_z_m(:);
+if isscalar(receiver_z)
+    receiver_z = receiver_z + zeros(size(receiver_x));
+elseif numel(receiver_z) ~= numel(receiver_x)
+    error('receiver_z_m must be scalar or match receiver_x_m.');
+end
+if ~isreal(receiver_x) || ~isreal(receiver_z) || ...
+        any(~isfinite(receiver_x)) || any(~isfinite(receiver_z))
+    error('Receiver coordinates must be finite real values.');
+end
+surface_z_at_receiver = cfg.eta_fn(receiver_x);
+surface_z_at_receiver = surface_z_at_receiver(:);
+if numel(surface_z_at_receiver) ~= numel(receiver_x) || ...
+        any(receiver_z <= surface_z_at_receiver) || ...
+        any(receiver_z <= cfg.halfplane_h_m)
+    error('Each receiver must lie in the water domain below the surface.');
+end
+
 target_spacing = lambda/cfg.points_per_wavelength;
 panel_width_target = target_spacing*cfg.panel_order;
 panel_count = max(4, ceil(2*cfg.half_width_m/panel_width_target));
@@ -101,8 +120,6 @@ rhs = -2*u_inc_nodes;
 psi = A\rhs;
 linear_residual = vecnorm(A*psi-rhs,2,1)./max(vecnorm(rhs,2,1),realmin);
 
-receiver_x = cfg.receiver_x_m(:);
-receiver_z = cfg.receiver_z_m + zeros(size(receiver_x));
 u_receiver = local_evaluate_off_surface(receiver_x,receiver_z,x,z,nx,nz, ...
     weighted_arc,psi,k,cfg.halfplane_h_m);
 
