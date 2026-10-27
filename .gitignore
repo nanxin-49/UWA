@@ -17,6 +17,20 @@
 !/scripts/validation/support/freeze_deepsea3d_four_holdout.py
 !/scripts/validation/support/package_deepsea3d_four_holdout.py
 !/scripts/validation/support/audit_deepsea3d_four_holdout_saved.py
+!/scripts/validation/support/freeze_deepsea3d_65grid_four.py
+!/scripts/validation/support/audit_deepsea3d_65grid_lock.py
+!/scripts/validation/support/package_deepsea3d_65grid_four.py
+!/scripts/validation/support/ingest_deepsea3d_65grid_four.py
+!/scripts/validation/support/audit_deepsea3d_65grid_four_saved.py
+!/scripts/validation/support/finalize_deepsea3d_65grid_four.py
+!/scripts/validation/support/launch_deepsea3d_65grid_four_remote.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_remote_v2.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_remote_v3.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_audit.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_render.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_render_v2.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_render_v3.sh
+!/scripts/validation/support/launch_deepsea3d_65grid_four_figaudit.sh
 
 # Re-generable build, compiler, toolchain, and Python cache content must stay
 # ignored even though the repository-wide source/documentation rules above

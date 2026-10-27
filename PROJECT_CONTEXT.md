@@ -9,6 +9,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 三维固定dual 65点网格四新频点验收（2026-10-27；最新三维状态）
+
+- [正式报告](reports/deepsea3d_65grid_four_holdout_2026-10-27.md)与[原生结果索引](results/validation/deepsea3d_65grid_four_20261027/README.md)：事前锁定五锚点B及4750/7250Hz常规、4125/6562.5Hz相消压力四点原生复预测和SHA，锁独立审计先于新FE；Ubuntu MATLAB R2023b按序取得四点FE/FullFK条件性资格。四点`e_R/e_Δ/a_D<1e−3`各4/4，最大`5.932e−5/3.013e−5/5.515e−5`；4125Hz`C=17.05`、`e_H=2.654e−4`且`a_D=3.004e−5`并列。4750/4125/6562.5Hz预测差超过五倍保存FE经验敏感性，不能称不可分辨。状态`COMPACT_DUAL_65GRID_HOLDOUT_SCREENING_PASS`仅支持固定案例的有限离散频点筛查，65点仍是预测输出而非65个FE或已认证连续宽带/CIR/BER。原MAT/CSV、133个首批回传SHA、两图FIG/PNG与重开审计、检查点齐备；版本探测及设置/图形失败照实计入，总保守远端MATLAB墙钟`341/720 s`。不自动扩频或进入时域/通信。Q1 BIE`STOP`、二维S4`CORE_COMPLETE`、`G1_target_PM=OPEN`、`WP2_formal=false`，生产API和历史失败不变。
+
+### 三维固定dual宽带网格设计（2026-10-27；最新设计状态）
+
+- 已完成[唯一正式网格设计](reports/deepsea_compact_dual_broadband_grid_design.md)：只读复用九个条件性 FE 频点及预测锁，解析复核直达/零高度镜面相对时延 `6.633361620 ms`，优先 65 个含端点预测输出点、`Δf=62.5 Hz`、相对 DSP 周期窗 `16 ms`；129 点仅为待证候选。五锚点 `Q=R/B*` 复线性 B 固定，旧四半千赫盲测已用于选择/设计，不能再算下一轮新独立保留。下一轮建议事前锁 4750/7250 Hz 常规点与 4125/6562.5 Hz 相消压力点、原生复预测及 SHA；建议新批准四点上限 `720 s`，本轮未授权或执行。65 点只是预测网格，不是 65 次 FE 或认证 CIR；STOP 参考数值门、预测门、物理资源/成本上限均已写明。Q1 BIE `STOP`、二维 S4 `CORE_COMPLETE`、`G1_target_PM=OPEN`、`WP2_formal=false`，生产 API 与旧失败证据不变。
+
 ### 三维固定dual四频点独立盲测（2026-10-26；最新compact-dual状态）
 
 - 在旧4/5/6/7/8 kHz条件性五点与固定`η*`原样保留的基础上，事前锁定A(4/6/8锚点)和B(4/5/6/7/8锚点)的`Q=R/B*`分段复线性预测；4500/5500/6500/7500 Hz四点均未参与构造。Ubuntu MATLAB R2023b逐点通过原FE/FullFK资格门，四点都是`CONDITIONAL_G1_PASS`；A最大反射相对复误差`5.193e−5`，B最大`3.050e−5`，八次比较均过冻结`1e−3`筛查。5500/6500 Hz两预测器的绝对偏差均大于五倍FE经验敏感性，4500/7500 Hz则同量级而不能判更细精度；7500 Hz FK粗Gauss数值差`9.892e−4`，仅以小裕量过原`1e−3`门。[正式报告](reports/deepsea3d_four_frequency_holdout_2026-10-26.md)、[九点表/原生MAT/图/SHA/审计/检查点](results/validation/deepsea3d_four_holdout_20261026/README.md)。
