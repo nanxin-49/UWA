@@ -5,8 +5,19 @@ end
 
 function testPairedCoordinatesMatchSeparateEvaluations(testCase)
 cfg = local_config();
-cfg.receiver_x_m = [-0.4; 0; 0.4];
-cfg.receiver_z_m = [2.9; 3.0; 3.1];
+xv = [-0.1953125;0;0.1953125];
+zv = [2.875;3;3.125];
+cfg.receiver_x_m = repmat(xv,3,1);
+cfg.receiver_z_m = repelem(zv,3);
+ids = ["P11";"P12";"P13";"P21";"P22";"P23";"P31";"P32";"P33"];
+for iz = 1:3
+    for ix = 1:3
+        idx = (iz-1)*3+ix;
+        verifyEqual(testCase,ids(idx),string(sprintf('P%d%d',iz,ix)));
+        verifyEqual(testCase,cfg.receiver_x_m(idx),xv(ix));
+        verifyEqual(testCase,cfg.receiver_z_m(idx),zv(iz));
+    end
+end
 paired = solve_helmholtz_bie_halfplane_vertical(cfg);
 
 separate = complex(zeros(size(cfg.receiver_x_m)));
@@ -21,6 +32,7 @@ end
 relative_error = norm(paired.receiver_field - separate) / norm(separate);
 verifyLessThan(testCase, relative_error, 1e-12);
 verifyEqual(testCase, paired.receiver_z_m, cfg.receiver_z_m);
+verifyEqual(testCase, paired.receiver_x_m, cfg.receiver_x_m);
 end
 
 function testScalarDepthStillExpandsAcrossReceivers(testCase)
@@ -31,6 +43,39 @@ out = solve_helmholtz_bie_halfplane_vertical(cfg);
 
 verifyEqual(testCase, out.receiver_z_m, 3.0 + zeros(size(cfg.receiver_x_m)));
 verifySize(testCase, out.receiver_field, size(cfg.receiver_x_m));
+end
+
+function testInvalidReceiverCoordinatesFailBeforeAssembly(testCase)
+cfg = local_config();
+invalid = {struct('receiver_x_m',NaN,'receiver_z_m',3), ...
+    struct('receiver_x_m',1i,'receiver_z_m',3), ...
+    struct('receiver_x_m',0,'receiver_z_m',Inf), ...
+    struct('receiver_x_m',[],'receiver_z_m',3)};
+for ii = 1:numel(invalid)
+    bad = cfg;
+    bad.receiver_x_m = invalid{ii}.receiver_x_m;
+    bad.receiver_z_m = invalid{ii}.receiver_z_m;
+    did_fail = false;
+    try
+        solve_helmholtz_bie_halfplane_vertical(bad);
+    catch exception
+        did_fail = contains(exception.message,'Receiver coordinates must');
+    end
+    verifyTrue(testCase,did_fail);
+end
+end
+
+function testOutOfWaterReceiverFailsBeforeAssembly(testCase)
+cfg = local_config();
+cfg.receiver_x_m = [0;0.1];
+cfg.receiver_z_m = [3;0];
+did_fail = false;
+try
+    solve_helmholtz_bie_halfplane_vertical(cfg);
+catch exception
+    did_fail = contains(exception.message,'Each receiver must lie in the water domain');
+end
+verifyTrue(testCase,did_fail);
 end
 
 function testMismatchedDepthVectorFailsBeforeAssembly(testCase)

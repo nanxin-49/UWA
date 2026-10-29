@@ -9,6 +9,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维 S5/S6 阶段 0–4 实际验证续行（2026-10-29；最新二维状态）
+
+- [正式回执最新节](reports/two_dimensional_s5_s6_preflight_2026-10-29.md)：SSH 经新版 AGENTS 所述权限预检可连通，但 `/home/misc/cwx` 缺本项目必要源码且磁盘接近满载，未同步或执行远端 MATLAB；共享 MATLAB MCP R2025b 已恢复。旧 129 点源包 6/6、6 kHz 56/56、8 kHz 107/107 保存 SHA 本轮重核通过。九点 BIE 低节点接收单测 5/5 通过；九点解析 CIR 最大复相对误差 `1.7623e-13`、到达偏差 `0.083464 ms`；解析 Gray-QPSK 20,000 bit 无噪声 0 错、6 dB AWGN 100,000 bit 237 错，落事前二项区间 `[209,270]`；独立重开 MAT/CSV 审计及两版 970 行预算算术审计通过。阶段 0/1/2/3 均为其**限定的轻量/解析范围 PASS**，阶段 4 为规划 PASS。原物理 A=`PARTIAL`、B/C=`BLOCKED`，S4=`CORE_COMPLETE`，没有物理宽带 CIR/BER；阶段 5–6 未运行且未获预算批准。最终 [解析 CIR 包](results/validation/two_dimensional_s5_nine_point_cir_controls/20261029_04/)、[DSP 包](results/validation/two_dimensional_s6_analytic_dsp_controls/20261029_04/)、[独立审计](results/validation/two_dimensional_s5_s6_preflight/20261029_07/audit.json) 和 [成本审计](results/validation/two_dimensional_s5_s6_cost_audit/20261029_02/audit.json)为证据。
+
+### 二维 S5/S6 阶段 0–4 续行（2026-10-29；最新二维状态）
+
+- [本轮回执](reports/two_dimensional_s5_s6_preflight_2026-10-29.md)：修正九点解析控制的 `meshgrid` 展开与 P11–P33 标签错配，补 BIE 接收坐标断言/非法输入测试和 65/129 频率网格声明；旧 129 点同源直达包指定 6 项 SHA 本轮复核一致。本轮 MATLAB MCP 无法附着共享会话，用户要求优先 SSH 后远端别名 `matlab-ubuntu` 在当前环境无法解析；未运行 Code Analyzer、九点单测、九点解析 CIR 或 QPSK 数值控制，新增 MATLAB 进程与 BIE 边界解均为 0。阶段 0/1/3=`PARTIAL`、2=`BLOCKED`、4=`PASS`（仅规划）。原 A=`PARTIAL`、B/C=`BLOCKED`，S4=`CORE_COMPLETE` 保持，物理 CIR/BER 仍无。A/B 先导预算只是申请，阶段 5–6 不自动执行。[本轮检查点](results/validation/two_dimensional_s5_s6_preflight/20261029_01/checkpoint.json)。
+
 ### 二维 S5/S6 Goal 阶段 A 前置门（2026-10-27；最新二维状态）
 
 - **用户审阅暂停状态（2026-10-27）：**用户要求先审查报告和既有结果，暂停新增数值工作；Goal 已设为 `PAUSED`。阶段仍为 A=`PARTIAL`、B=`BLOCKED/未进入`、C=`BLOCKED/未进入`；未形成可信二维 CIR 或通信误码结果。48 小时 S5 提案 v2 尚未批准。[中文报告开头](reports/two_dimensional_s5_s6_2026-10-27.md)现有审阅摘要与报告完整性检查；恢复时先遵从用户审查意见，不把暂停或已有单点结果解释为阶段 PASS。

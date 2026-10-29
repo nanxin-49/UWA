@@ -1,5 +1,9 @@
 # 脚本与验证运行索引
 
+**2026-10-29 二维 S5/S6 最终轻量控制：**`validation/test_two_dimensional_s5_bie_receiver_coordinates.m` 在现有 MATLAB MCP R2025b 会话 5/5 通过；`validation/validate_two_dimensional_s5_nine_point_cir_controls(output_dir)` 以新目录保存九点解析 H/CIR、65/129 网格和端点检查（最终 `20261029_04`）；`validation/validate_two_dimensional_s6_analytic_dsp_controls(output_dir)` 保存无噪声与 Gray-QPSK AWGN 真实计数、PER/EVM、事前二项区间（最终 `20261029_04`）；`validation/audit_two_dimensional_s5_s6_analytic_controls(cir_dir,dsp_dir,audit_dir)` 独立重开 MAT/CSV（最终审计 `20261029_07`）。`validation/audit_two_dimensional_s5_cost_projections(single_dir,dual_dir,audit_dir)` 独立核旧 970 行单/双锚点规划表。详见[正式回执最新节](../reports/two_dimensional_s5_s6_preflight_2026-10-29.md)。这些是解析/软件和预算算术资格，不是物理 S5 CIR 或正式 S6 BER。
+
+**2026-10-29 二维 S5/S6 轻量资格续行：**九点解析 CIR 控制已修正 P11–P33 的行优先点号顺序并显式区分 65 含端点频率、129 嵌套加密频率与 64 个 IFFT bin；BIE 接收单测覆盖原九点坐标、逐点/批量、旧标量深度及非法输入。当前 MATLAB MCP 无法附着共享会话，SSH 别名无法解析，本轮 Code Analyzer、单测及解析 CIR/QPSK 均**未运行**；不得把改动或旧 Analyzer 结果写成 PASS。见[本轮回执](../reports/two_dimensional_s5_s6_preflight_2026-10-29.md)与[检查点](../results/validation/two_dimensional_s5_s6_preflight/20261029_01/checkpoint.json)。
+
 **2026-10-27 二维 S5 前置控制：**`validation/validate_two_dimensional_s5_prerequisites(output_dir)` 在新结果目录验证 native↔DSP、解析双径及 FFT 往返，不调用声学求解器。阶段 A 物理源/参考/资源门阻塞，见[中文回执](../reports/two_dimensional_s5_s6_2026-10-27.md)。
 
 **二维 S5 原九点解析 CIR 代数控制（新增、待运行）：**`validation/validate_two_dimensional_s5_nine_point_cir_controls(output_dir)` 对归一化已知点路径与复系数双径，按全局 `tau_ref` 覆盖原九点，保存 H 分量、CIR、MAT/CSV/JSON 回执并检查复误差与到达采样容差；不调用 PE/BIE/FullFK，也不代表冻结 Gaussian 源的物理平面结果。入口尚未由 MATLAB MCP 运行，不能记作 PASS。

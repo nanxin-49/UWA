@@ -34,18 +34,23 @@ end
 
 receiver_x = cfg.receiver_x_m(:);
 receiver_z = cfg.receiver_z_m(:);
+if isempty(receiver_x) || isempty(receiver_z)
+    error('Receiver coordinates must be nonempty.');
+end
 if isscalar(receiver_z)
     receiver_z = receiver_z + zeros(size(receiver_x));
 elseif numel(receiver_z) ~= numel(receiver_x)
     error('receiver_z_m must be scalar or match receiver_x_m.');
 end
-if ~isreal(receiver_x) || ~isreal(receiver_z) || ...
+if ~isnumeric(receiver_x) || ~isnumeric(receiver_z) || ...
+        ~isreal(receiver_x) || ~isreal(receiver_z) || ...
         any(~isfinite(receiver_x)) || any(~isfinite(receiver_z))
     error('Receiver coordinates must be finite real values.');
 end
 surface_z_at_receiver = cfg.eta_fn(receiver_x);
 surface_z_at_receiver = surface_z_at_receiver(:);
 if numel(surface_z_at_receiver) ~= numel(receiver_x) || ...
+        ~isreal(surface_z_at_receiver) || any(~isfinite(surface_z_at_receiver)) || ...
         any(receiver_z <= surface_z_at_receiver) || ...
         any(receiver_z <= cfg.halfplane_h_m)
     error('Each receiver must lie in the water domain below the surface.');
