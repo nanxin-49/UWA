@@ -9,6 +9,18 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### P22 PE 相位屏二维宽带通信模拟闭环（2026-10-30；最新模拟状态）
+
+- [模拟结题报告](reports/pe_screen_p22_comm_closeout_2026-10-30.md)及[最终 QPSK 结果/审计](results/communication/pe_screen_p22_qpsk/20261030_03/)：原 Gaussian、平面/原弱 C2 正弦、P22、4–8 kHz 及共同 `τ0=97/1500 s` 不变。原 65/129 不同周期窗无窗 CIR 差 `0.0438747` 是后半窗精确折叠，原失败保留；新增交错 256 个 PE 频点构成独立 257 点、64 ms 网格后，按几何 4 ms 反射时延解相位插值，将 65/129 响应投影到统一 257 点/64 ms 窗，65→129/独立257 CIR 最大 `7.1033e-6/8.2248e-6 <1e-3`，独立审计 `PE_SCREEN_COMMON_WINDOW_CIR_INDEPENDENT_AUDIT_PASS`。冻结配置后运行完美 CSI、4 ksps Gray QPSK、线性卷积/255 CP/块 LMMSE，五个 0–24 dB SNR 点每海面各 262144 bit；无噪声 0 错，通信独立重放审计 PASS，曲线几乎重合，无可分辨海面损失证据。标记 **`PE_SCREEN_COMM_SIMULATION_PASS` 仅限二维 PE 相位屏近似模型模拟**；原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。未运行 BIE/FullFK/三维，未提交/推送；本地 MATLAB MCP R2025b。
+
+### P22 PE 相位屏 257 点独立时窗诊断：原 CIR 门仍未通过（2026-10-30；最新模拟状态）
+
+- 在上轮冻结源、平面/原弱正弦、P22、4–8 kHz、共同 `τ0=97/1500 s` 不变下，本地 MATLAB MCP R2025b 新算交错的 256 个 PE 频点，形成 257 点/64 ms 网格。原 65→129 无窗 CIR `0.0438747` 差逐样本等于 129 点 16–32 ms 尾部折叠，恒等式残差 `≤1.3343e-16`；257 点 16–32 ms 能量约 `1.09e-6`，32–64 ms 约 `0.0019002`，且绝大部分在末 4 ms，支持有限带宽前振铃的周期折叠解释。独立无周期延拓积分 `[-4,12] ms` 中 65→129 仍 `0.0047261 > 1e-3`，129→257 为 `0.00080853 <1e-3`；已知 4 ms 反射时延去相位后的频响插值 65→129 约 `8.24e-6`。原 CIR 门未被替换或追认为通过，QPSK/BER/PER/EVM 未运行，`PE_SCREEN_COMM_SIMULATION_PASS` 不成立。详见[诊断报告](reports/pe_screen_p22_aliasing_diagnosis_2026-10-30.md)、[MAT/CSV/FIG/PNG、审计和 SHA 检查点](results/validation/pe_screen_p22_aliasing/20261030_01/)；原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。
+
+### P22 PE 相位屏宽带通信模拟：CIR 加密门停止（2026-10-30；最新模拟状态）
+
+- 在 `3D_try` 用原冻结 Gaussian 源与原弱正弦海面、P22、4–8 kHz 完成平面/弱正弦各 129 点的本地 MATLAB MCP R2025b PE 相位屏复频响及 65/129 CIR/PDP；258 次 PE 用时 67.8247 s。直达源最大相对差 `8.108e-13`、分量闭合 `8.301e-17`、FFT 往返 `1.686e-16` 均通过；65/129 CIR 相对差 `0.0438747 > 1e-3`，129 点后半窗能量 `0.00192499 > 1e-3`，故 `PE_SCREEN_CIR_GATE_FAILED`，不运行 QPSK、BER/PER/EVM，不标 `PE_SCREEN_COMM_SIMULATION_PASS`。远端 SSH/R2023b 短探测成功，但共享根非检出，本轮未传/运行项目代码。详见[阶段报告](reports/pe_screen_p22_broadband_comm_2026-10-30.md)、[原结果和检查点](results/validation/pe_screen_p22_comm/20261030_01/)。这是 PE 近似模型内部模拟，不升级原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED`，旧许可证/参考门结论保留。
+
 ### 二维 S5 P22 双频先导暂时停止：远端非交互许可待恢复（2026-10-30；最新二维状态）
 
 - 用户要求[记录许可证故障与恢复门](reports/two_dimensional_s5_p22_matlab_license_recovery_2026-10-30.md)并暂时停止本 Goal。远端 R2023b 新进程间歇性提示 MathWorks 账号登录；一次受控重试虽成功，后续三层 BIE 作业再次提示登录失败，真实退出码与耗时未观测，且无层结果。不能据日志断言许可证文件缺失。按保守上限占用 `1780/1800 s`；恢复非交互许可、短作业实测及新的计算预算均未执行或批准。4031.25 Hz 五层参考未完成，无正式 CIR/PDP/BER；原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。
