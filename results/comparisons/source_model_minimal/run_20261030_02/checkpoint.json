@@ -1,0 +1,63 @@
+{
+  "run_id": "run_20261030_02",
+  "job_id": "source_model_minimal",
+  "status": "COMPLETE",
+  "completed_steps": [
+    "source_definition_review",
+    "normalized_angle_and_receiver_calculation",
+    "six_model_checks",
+    "MAT_CSV_and_FIG_audit",
+    "PNG_visual_review"
+  ],
+  "config": {
+    "frequency_hz": 4000,
+    "c_mps": 1500,
+    "water_depth_m": 1500,
+    "z_tx_m": 1490,
+    "z_rx_m": 6,
+    "x_range_m": "0:1:200",
+    "sigma_m": 0.3,
+    "piston_radius_m": 0.05,
+    "random_seed": "none",
+    "gaussian_transform_tolerance": 1E-08
+  },
+  "input_versions_sha256": {
+    "src/propagation/gaussian_source_initial_field_vertical.m": "e4414cd42fe246088cbeadebaa314daf604465f4cb9ebd3e5eefacf05f13a407"
+  },
+  "code_versions_sha256": {
+    "scripts/comparisons/run_source_model_minimal_comparison.m": "81a2e7d4d64df631d25f043d1ddd380348fc48011f80a98fa5ba750b8f04fd98"
+  },
+  "artifacts_sha256": {
+    "receiver_amplitude.png": "92645390685cb220a29a68df80b050b6c0a1d59c480d1ee23684f639054497ca",
+    "receiver_amplitude.fig": "1299ac82ca5b722cbcbc1783737b7fd8a0dfb89fddfe1f03a0adf184ce76e84a",
+    "matlab_diary.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emission_pattern.fig": "fd8d965bc7a64722f3421cd428f514239a66444e84df7fa4da9f56fdd8e582bc",
+    "sample_positions.csv": "8d81f9a5110f4ebeba23df6afabfe1ba5715c1b6700d57e6bc56fdc96122592f",
+    "source_comparison.mat": "b8b9366635b7c3cd2824a8ff46b83e3b0b67477cffda62a8d066811b47495e73",
+    "stdout.log": "5bc8d1f72985b89d352d79f42c0bf16ddfdc58bd185560b698256fc7ae960a73",
+    "receiver_curves.csv": "a7ae8ee899b9d31d2da169483521970d8212d488f411234830963d953d8eca0c",
+    "emission_pattern.png": "0ded1b5b1ae6eace780f2487777d0b2371e8dd518b6bc57f9afe96f8220a1042",
+    "audit.txt": "bb2affd643da4d5be5b578b8d4851902e2fb50ff3324b26f8ed56f4362a41ef7"
+  },
+  "metrics": {
+    "gaussian_vs_point_db_x200": -1.957486694,
+    "theta_max_deg": 7.675555272,
+    "csv_gaussian_max_abs": 5.55E-16,
+    "gaussian_transform_max_abs": 4.96E-11,
+    "piston_vs_point_db_x200": -0.013597205
+  },
+  "failed_or_unrun_checks": [],
+  "resource_usage": {
+    "ram_after_bytes": "unknown",
+    "disk_bytes": "unknown",
+    "cpu": "unknown",
+    "ram_before_bytes": "unknown",
+    "elapsed_s": 6.245
+  },
+  "audit_status_and_path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\comparisons\\source_model_minimal\\run_20261030_02\\audit.txt",
+  "stdout_log": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\comparisons\\source_model_minimal\\run_20261030_02\\stdout.log",
+  "matlab_diary": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\comparisons\\source_model_minimal\\run_20261030_02\\matlab_diary.txt",
+  "execution_mode": "MATLAB MCP existing session",
+  "matlab_release": "R2025b Update 6",
+  "next_allowed_step": "Stop: requested comparison complete"
+}

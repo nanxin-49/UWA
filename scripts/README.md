@@ -1,5 +1,9 @@
 # 脚本与验证运行索引
 
+**2026-10-30 理想活塞频率补充分析：**`comparisons/run_piston_frequency_minimal_comparison('new_unique_run_id')` 用解析 `2J1(u)/u` 比较固定 5 cm 活塞在 4/8/12 kHz、0–10° 的轴向归一化方向图，并标记 7.6756°；输出 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG，不调用传播求解器。
+
+**2026-10-30 三声源最小对照：**`comparisons/run_source_model_minimal_comparison('new_unique_run_id')` 在 `setup_vertical_project` 后独立计算 Gaussian 初始场角谱、理想全向点源及 5 cm 圆形活塞的轴向归一化角响应和均匀自由场接收幅度；输出新目录 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG。不调用 PE/BIE/FullFK/Bellhop 或通信链。结果与限制见[报告](../reports/source_model_minimal_comparison_report.md)。
+
 **2026-10-27 二维 S5 前置控制：**`validation/validate_two_dimensional_s5_prerequisites(output_dir)` 在新结果目录验证 native↔DSP、解析双径及 FFT 往返，不调用声学求解器。阶段 A 物理源/参考/资源门阻塞，见[中文回执](../reports/two_dimensional_s5_s6_2026-10-27.md)。
 
 **二维 S5 原九点解析 CIR 代数控制（新增、待运行）：**`validation/validate_two_dimensional_s5_nine_point_cir_controls(output_dir)` 对归一化已知点路径与复系数双径，按全局 `tau_ref` 覆盖原九点，保存 H 分量、CIR、MAT/CSV/JSON 回执并检查复误差与到达采样容差；不调用 PE/BIE/FullFK，也不代表冻结 Gaussian 源的物理平面结果。入口尚未由 MATLAB MCP 运行，不能记作 PASS。

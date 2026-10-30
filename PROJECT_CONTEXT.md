@@ -9,6 +9,10 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 三类声源独立归一化对照（2026-10-30）
+
+- [最小对照报告](reports/source_model_minimal_comparison_report.md)与[结果目录](results/comparisons/source_model_minimal/run_20261030_02/)：4 kHz、均匀自由场、Tx1490 m/Rx6 m、x=0–200 m；Gaussian 初始平面角谱、全向点源及 5 cm 理想圆活塞按轴向归一化比较。最大角 7.6756°，x=200 m 时 Gaussian/全向 `-1.9575 dB`、活塞/全向 `-0.013597 dB`，6项检查通过。仅方向权重与共同 1/R 几何的轻量对照，不是三种源在 PE/BIE/FullFK 的同源资格；生产接口/默认配置未改。
+
 ### 二维 S5/S6 Goal 阶段 A 前置门（2026-10-27；最新二维状态）
 
 - **用户审阅暂停状态（2026-10-27）：**用户要求先审查报告和既有结果，暂停新增数值工作；Goal 已设为 `PAUSED`。阶段仍为 A=`PARTIAL`、B=`BLOCKED/未进入`、C=`BLOCKED/未进入`；未形成可信二维 CIR 或通信误码结果。48 小时 S5 提案 v2 尚未批准。[中文报告开头](reports/two_dimensional_s5_s6_2026-10-27.md)现有审阅摘要与报告完整性检查；恢复时先遵从用户审查意见，不把暂停或已有单点结果解释为阶段 PASS。
