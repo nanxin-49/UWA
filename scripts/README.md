@@ -1,5 +1,9 @@
 # 脚本与验证运行索引
 
+**2026-10-30 理想活塞频率补充分析：**`comparisons/run_piston_frequency_minimal_comparison('new_unique_run_id')` 用解析 `2J1(u)/u` 比较固定 5 cm 活塞在 4/8/12 kHz、0–10° 的轴向归一化方向图，并标记 7.6756°；输出 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG，不调用传播求解器。
+
+**2026-10-30 三声源最小对照：**`comparisons/run_source_model_minimal_comparison('new_unique_run_id')` 在 `setup_vertical_project` 后独立计算 Gaussian 初始场角谱、理想全向点源及 5 cm 圆形活塞的轴向归一化角响应和均匀自由场接收幅度；输出新目录 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG。不调用 PE/BIE/FullFK/Bellhop 或通信链。结果与限制见[报告](../reports/source_model_minimal_comparison_report.md)。
+
 **2026-10-30 P22 双频先导执行检查点：**用户批准的远端独立目录和 13 文件快照已就位；`validation/support/launch_two_dimensional_s5_p22_dualfreq.sh` 串行运行的 4062.5 Hz PE/FullFK 与五层 BIE 已完成，`validation/support/audit_two_dimensional_s5_p22_saved.py` 因共享 MATLAB MCP 无法附着而只读重开保存 MAT，经验 BIE 参考门通过。预测冻结作业新 MATLAB 进程遇 MathWorks 帐户提示并以 124 超时，4031.25 Hz 未运行。只在用户通知许可证恢复后按原预算做一次独立重试。[报告](../reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[检查点](../results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/checkpoint.json)列日志、SHA、成本和未完成门；不生成 CIR/PDP/BER。
 
 **2026-10-29 二维 S5 P22 双频资格先导（授权前）：**`validation/run_two_dimensional_s5_p22_dualfreq_remote(task_root,frequency_hz,job_id,available_physical_bytes)` 是仅限 `4062.5/4031.25 Hz` 的验证专用远端作业入口；`validation/freeze_two_dimensional_s5_p22_halfstep_prediction(task_root)` 在真实 4062.5 Hz 五层参考合格后、4031.25 Hz BIE 前锁定半步复数预测及 SHA。目前只做本地 Code Analyzer、非法输入拒绝和明确标记为 synthetic 的预测 fixture；没有同步或运行物理分支。必须先通过远端磁盘/项目身份门，再取得独立目录、必要文件同步及 1800 s 预算的明确批准。见[授权前报告](../reports/two_dimensional_s5_p22_dualfreq_preflight_2026-10-29.md)。

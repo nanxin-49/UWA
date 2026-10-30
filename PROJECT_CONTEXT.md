@@ -9,6 +9,10 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维 S5 P22 先导分支接续（2026-10-30；当前执行状态）
+
+- 当前工作树为 `3D_try`；此前在 `s5s6` 核对的 27 个 S5 相关文件与 `3D_try` 已有版本逐项 Git blob 一致，声源对照提交已迁入并合并两份索引。已保存的远端镜像重新核验 SHA 96/96；远端原 13 文件、失败日志和 `829/1800 s` 账本不变。远端 PID 2862345 是其他人的图形 MATLAB 会话，用户确认等待其自行结束；本任务尚未创建 `freeze_retry1` 或运行 4031.25 Hz。没有推送、追加远端同步或新 MATLAB 求解；后续仅在串行资源门解除后继续原批准范围。
+
 ### 二维 S5 P22 双频物理先导执行检查点（2026-10-30；最新二维状态）
 
 - [执行报告](reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[检查点](results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/checkpoint.json)：用户已批准独立远端目录、冻结 13 文件同步和串行 1800 s 预算。4062.5 Hz 同源 PE/FullFK 与五层 BIE 完成，独立保存 MAT 审计得 BIE 经验敏感性 `4.7804e-8 ≤1e-4`；PE/FullFK 相对 BIE 的差异 `2.0805e-7/4.0561e-8` 尚不可判为可分辨。远端 96 文件 SHA 回传 96/96 通过。半步预测冻结新 MATLAB 进程触发 MathWorks 邮箱提示，75 s 超时退出码 124；原日志与失败证据保留，4031.25 Hz 尚未运行，累计 `829/1800 s`。用户仅在远端无交互许可证修复并通知后授权一次受控重试；当前停止新 MATLAB 作业。没有正式 CIR/PDP/BER。S4=`CORE_COMPLETE` 限 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级。
@@ -28,6 +32,10 @@ superseded; a newer explicitly marked entry is authoritative.
 ### 二维 S5/S6 阶段 0–4 续行（2026-10-29；最新二维状态）
 
 - [本轮回执](reports/two_dimensional_s5_s6_preflight_2026-10-29.md)：修正九点解析控制的 `meshgrid` 展开与 P11–P33 标签错配，补 BIE 接收坐标断言/非法输入测试和 65/129 频率网格声明；旧 129 点同源直达包指定 6 项 SHA 本轮复核一致。本轮 MATLAB MCP 无法附着共享会话，用户要求优先 SSH 后远端别名 `matlab-ubuntu` 在当前环境无法解析；未运行 Code Analyzer、九点单测、九点解析 CIR 或 QPSK 数值控制，新增 MATLAB 进程与 BIE 边界解均为 0。阶段 0/1/3=`PARTIAL`、2=`BLOCKED`、4=`PASS`（仅规划）。原 A=`PARTIAL`、B/C=`BLOCKED`，S4=`CORE_COMPLETE` 保持，物理 CIR/BER 仍无。A/B 先导预算只是申请，阶段 5–6 不自动执行。[本轮检查点](results/validation/two_dimensional_s5_s6_preflight/20261029_01/checkpoint.json)。
+
+### 三类声源独立归一化对照（2026-10-30）
+
+- [最小对照报告](reports/source_model_minimal_comparison_report.md)与[结果目录](results/comparisons/source_model_minimal/run_20261030_02/)：4 kHz、均匀自由场、Tx1490 m/Rx6 m、x=0–200 m；Gaussian 初始平面角谱、全向点源及 5 cm 理想圆活塞按轴向归一化比较。最大角 7.6756°，x=200 m 时 Gaussian/全向 `-1.9575 dB`、活塞/全向 `-0.013597 dB`，6项检查通过。仅方向权重与共同 1/R 几何的轻量对照，不是三种源在 PE/BIE/FullFK 的同源资格；生产接口/默认配置未改。
 
 ### 二维 S5/S6 Goal 阶段 A 前置门（2026-10-27；最新二维状态）
 
