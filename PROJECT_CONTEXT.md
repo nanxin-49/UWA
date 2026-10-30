@@ -9,6 +9,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维 S5 P22 双频先导暂时停止：远端非交互许可待恢复（2026-10-30；最新二维状态）
+
+- 用户要求[记录许可证故障与恢复门](reports/two_dimensional_s5_p22_matlab_license_recovery_2026-10-30.md)并暂时停止本 Goal。远端 R2023b 新进程间歇性提示 MathWorks 账号登录；一次受控重试虽成功，后续三层 BIE 作业再次提示登录失败，真实退出码与耗时未观测，且无层结果。不能据日志断言许可证文件缺失。按保守上限占用 `1780/1800 s`；恢复非交互许可、短作业实测及新的计算预算均未执行或批准。4031.25 Hz 五层参考未完成，无正式 CIR/PDP/BER；原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。
+
+### 二维 S5 P22 双频先导续行：许可证门停止（2026-10-30；最新二维状态）
+
+- [最新执行报告](reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[4031.25 Hz 部分独立审计](results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/audit_4031_partial_01/audit.json)：在 `3D_try` 上复用原 13 文件远端任务，成功冻结半步原生复预测及 SHA，4031.25 Hz PE/FullFK、BIE 主层和自积分层退出 0 并回传核验；剩余三层未取得结果。两层相对变化 `3.0961e-8` 只是部分敏感性，**不**构成五层 BIE 参考合格。后续合并作业遇 MathWorks 账号登录失败，最后一次进程退出码/实际耗时未观测；已知进程时间 1270 s，加该作业 510 s 上限后保守占用 `1780/1800 s`，停止物理计算。续算镜像 SHA 69/69，原首频镜像 96/96。S4=`CORE_COMPLETE` 限 4 kHz，S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级；无物理 CIR/PDP/BER。下一次必须先恢复非交互许可证并另批批准资源，补完三层参考；全带 65/129 点仍为待审方案。
+
 ### 二维 S5 P22 先导分支接续（2026-10-30；当前执行状态）
 
 - 当前工作树为 `3D_try`；此前在 `s5s6` 核对的 27 个 S5 相关文件与 `3D_try` 已有版本逐项 Git blob 一致，声源对照提交已迁入并合并两份索引。已保存的远端镜像重新核验 SHA 96/96；远端原 13 文件、失败日志和 `829/1800 s` 账本不变。远端 PID 2862345 是其他人的图形 MATLAB 会话，用户确认等待其自行结束；本任务尚未创建 `freeze_retry1` 或运行 4031.25 Hz。没有推送、追加远端同步或新 MATLAB 求解；后续仅在串行资源门解除后继续原批准范围。

@@ -1,5 +1,7 @@
 # 脚本与验证运行索引
 
+**2026-10-30 P22 双频续算部分审计：**`validation/support/audit_two_dimensional_s5_p22_partial_saved.py ORIGINAL_MIRROR CONTINUATION_MIRROR NEW_OUTPUT` 只读重开远端回传的 4031.25 Hz 模型与两层 BIE MAT，核冻结预测、源、native/DSP 闭合、SHA 和保守时间账本；输出 `audit.json`、两张 CSV 及 SHA。当前 [审计包](../results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/audit_4031_partial_01/)为 `PARTIAL_NUMERICS_VALIDATED_FULL_BIE_REFERENCE_BLOCKED_LICENSE`，剩余三层没有数值结果；详见[执行报告最新节](../reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)。该审计不执行 MATLAB、BIE 或通信，也不授予 CIR/BER 资格。
+
 **2026-10-30 理想活塞频率补充分析：**`comparisons/run_piston_frequency_minimal_comparison('new_unique_run_id')` 用解析 `2J1(u)/u` 比较固定 5 cm 活塞在 4/8/12 kHz、0–10° 的轴向归一化方向图，并标记 7.6756°；输出 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG，不调用传播求解器。
 
 **2026-10-30 三声源最小对照：**`comparisons/run_source_model_minimal_comparison('new_unique_run_id')` 在 `setup_vertical_project` 后独立计算 Gaussian 初始场角谱、理想全向点源及 5 cm 圆形活塞的轴向归一化角响应和均匀自由场接收幅度；输出新目录 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG。不调用 PE/BIE/FullFK/Bellhop 或通信链。结果与限制见[报告](../reports/source_model_minimal_comparison_report.md)。

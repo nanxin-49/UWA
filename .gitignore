@@ -36,6 +36,7 @@
 !/scripts/validation/support/launch_two_dimensional_s5_p22_dualfreq.sh
 !/scripts/validation/support/launch_two_dimensional_s5_p22_dualfreq_resume.sh
 !/scripts/validation/support/audit_two_dimensional_s5_p22_saved.py
+!/scripts/validation/support/audit_two_dimensional_s5_p22_partial_saved.py
 
 # Re-generable build, compiler, toolchain, and Python cache content must stay
 # ignored even though the repository-wide source/documentation rules above
