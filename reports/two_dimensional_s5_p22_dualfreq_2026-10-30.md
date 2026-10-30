@@ -1,0 +1,30 @@
+# 二维 S5 P22 双频物理资格先导：执行检查点（2026-10-30）
+
+## 当前状态
+
+用户明确批准在 `/home/misc/cwx/uwa2d_s5_p22_dualfreq_20261029_01` 建独立目录、仅同步[冻结的 13 文件清单](../results/validation/two_dimensional_s5_p22_dualfreq_preflight/20261030_01/sync_manifest.json)、远端 MATLAB 新进程累计不超过 1800 s 且串行运行 4062.5/4031.25 Hz。当前阶段 0–3 前置门已完成；阶段 4 **PARTIAL / STOP_LICENSE_PROMPT**：4062.5 Hz 同源 PE/FullFK 与五层 BIE 完成，4031.25 Hz 预测冻结进程失败，半步参考没有运行。阶段 5 只能做首频限定分析，双频比较与后续全带决策尚未形成。S4=`CORE_COMPLETE`（仅已有 4 kHz 范围），S5 A=`PARTIAL`、B=`BLOCKED`，S6 C=`BLOCKED`，均未升级。没有正式 CIR、PDP 或 BER。
+
+本地分支 `3D_try`、HEAD `a30655b921030a35e73613410b65e4f245f1ee78`；现有工作树改动没有覆盖或提交。远端根目录是旧任务集合，已确认新目录原先不存在，创建后只在该目录内操作。13/13 输入/代码 SHA 传输前后相同；远端派生 `input/SHA256SUMS` 供每次启动检查。远端原始数据、日志、真实退出码与 SHA 在上述任务目录；[本地镜像](../results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/remote_mirror/)保留 96 个文件，远端清单 SHA `ee96b23c1307bbd1164b3d40e0af209b1a6595aa4a07bf5fda03300f5f0c307d`，本地逐文件 SHA 96/96 通过。镜像是 4062.5 Hz 完成及预测失败时的冻结快照，后续若有获准重试须另建镜像版本，不覆盖此证据。
+
+## 4062.5 Hz 实际执行与数值
+
+R2023b 兼容性 smoke 真实进程 60 s，旧 6 kHz 同源平面直达/反射相对本地已验基线分别为 `8.44e-14 / 2.48e-13`，退出码 0。4062.5 Hz PE/FullFK 模型作业 9 s，FullFK 400/800 面板变化 `6.2167e-15`。五个 BIE 进程依次为 112/71/218/107/177 s，节点 3904/3904/4552/3256/3792，所有退出码 0、stderr 0 byte、保存输出 SHA 通过；最大单作业 218 s <900 s，峰值规划增量 1,460,342,784 byte，逐作业可用物理 RAM 约 29.7 GB，磁盘保持约 623 GB 可用。五层及模型进程共 694 s。
+
+[独立只读审计 v2](../results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/audit_4062p5_02/audit.json)使用保存的 v7.3 MAT、原冻结源和原始回执，独立核 SHA、源 Fourier 系数、PE 网格与 `step_m=0.05`、FullFK 400/800、BIE 节点/残差/坐标、native 分量闭合及共同 `tau_ref=96.875/1500 s` 的 DSP 映射。MATLAB MCP 共享会话当时返回 `failed to attach to MATLAB session`，因此审计使用本机已安装的 Python `h5py`/`scipy` **只读解析已保存的 MAT**；它没有启动 MATLAB 或重新求解声学。审计源码是 [audit_two_dimensional_s5_p22_saved.py](../scripts/validation/support/audit_two_dimensional_s5_p22_saved.py)。初版审计输出目录 `audit_4062p5_01` 的状态名易被误读为全频资格，已保留原证据并在 v2 收紧为 `BIE_EMPIRICAL_REFERENCE_PASS_MODEL_LIMITED`；数值相同。
+
+P22 BIE 主参考原生反射 `-0.06175837515473458 + 0.10513118108769792i`；直达 `-0.10829605349216705 - 0.06370544238924551i`；相加的总场 `-0.17005442864690162 + 0.04142573869845241i`。五层对主参考的最大复相对变化 `4.7803721e-8 ≤ 1e-4`，属于**经验 BIE 参考资格**。FullFK 与 PE 对 BIE 的反射场相对差分别为 `4.0560633e-8` 与 `2.0805216e-7`。FullFK 的经验分辨率（BIE 五层变化+FK 400/800 变化）为 `4.7803727e-8`，FullFK 差未超过其 5 倍；PE 本频的独立步长/网格敏感性未测，不能判为可分辨。PE 差甚至低于单用 BIE 变化得到的 5 倍下界 `2.3901860e-7`。这些模型差异**不**是物理模型可分辨结论。
+
+## 失败保留与停止
+
+第七个新进程是预测冻结作业，原冻结上限 90 s，launcher 设置 75 s 前台 timeout 并保留余量；它运行 75 s 后以真实退出码 `124` 结束。原始 [stdout](../results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/remote_mirror/jobs/freeze/stdout.log)显示 `请输入您的 MathWorks 帐户电子邮件地址，然后按 Enter 键:`；stderr 0 byte。没有 `prediction/` 文件，也没有 4031.25 Hz 作业目录；MATLAB 进程已退出。该失败是新 MATLAB 进程的**非交互许可证/账户门**，不能解释为数值预测失败，也不能伪称预测已冻结。
+
+当前累计远端 MATLAB 进程墙钟 `60+9+112+71+218+107+177+75=829/1800 s`，余额 971 s。预测冻结时间门已失败，依赖该预测的半步计算立即停止；未重复作业、未变更预测器或门槛。用户已回复：**远端许可证修复后通知，并批准在原总预算内做一次受控重试**。在得到恢复通知并重新检查无交互授权、资源和 SHA 前，不启动新 MATLAB 进程。原 `jobs/freeze` 失败输入/日志/退出码不覆盖；受控重试须使用新作业 ID 和单独日志，并在预算内重算。不能向聊天索取或记录 MathWorks 凭据。
+
+## 尚缺证据
+
+- 4031.25 Hz 的事前冻结预测复数、配置与 SHA，以及独立半步 BIE 参考和预测误差。
+- 第二频 PE/FullFK 和五层 BIE，双频经验参考、模型差异及有效时窗/高频深衰落检查。
+- 本频 PE 独立步长/网格敏感性；FullFK 400/800 已测但模型差不可分辨。
+- 65/129 点的可信全带成本、频率重建 `L2≤1e-3`、8 kHz 端点/带内相消区与正式 CIR 门。
+
+首频五层与模型共 694 s，明显高于旧同低频规划的核时间；其 MATLAB 启动/许可证行为也不稳定。不得将这一个频点线性外推为全带预算上界。待半步点及实际时间完成后再重算 65/129 资源申请与下一轮 Goal Prompt。当前无正式 CIR/PDP/BER、无 S6 资格；不自动扩大预算或提交/推送。

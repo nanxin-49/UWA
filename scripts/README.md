@@ -1,5 +1,12 @@
 # 脚本与验证运行索引
 
+**2026-10-30 P22 双频先导执行检查点：**用户批准的远端独立目录和 13 文件快照已就位；`validation/support/launch_two_dimensional_s5_p22_dualfreq.sh` 串行运行的 4062.5 Hz PE/FullFK 与五层 BIE 已完成，`validation/support/audit_two_dimensional_s5_p22_saved.py` 因共享 MATLAB MCP 无法附着而只读重开保存 MAT，经验 BIE 参考门通过。预测冻结作业新 MATLAB 进程遇 MathWorks 帐户提示并以 124 超时，4031.25 Hz 未运行。只在用户通知许可证恢复后按原预算做一次独立重试。[报告](../reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[检查点](../results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/checkpoint.json)列日志、SHA、成本和未完成门；不生成 CIR/PDP/BER。
+
+**2026-10-29 二维 S5 P22 双频资格先导（授权前）：**`validation/run_two_dimensional_s5_p22_dualfreq_remote(task_root,frequency_hz,job_id,available_physical_bytes)` 是仅限 `4062.5/4031.25 Hz` 的验证专用远端作业入口；`validation/freeze_two_dimensional_s5_p22_halfstep_prediction(task_root)` 在真实 4062.5 Hz 五层参考合格后、4031.25 Hz BIE 前锁定半步复数预测及 SHA。目前只做本地 Code Analyzer、非法输入拒绝和明确标记为 synthetic 的预测 fixture；没有同步或运行物理分支。必须先通过远端磁盘/项目身份门，再取得独立目录、必要文件同步及 1800 s 预算的明确批准。见[授权前报告](../reports/two_dimensional_s5_p22_dualfreq_preflight_2026-10-29.md)。
+
+**2026-10-30 远端恢复后资源复核：**同一报告末节记录实时 623 GB 可用盘、29.76 GB available RAM、独立任务布局、13 文件 SHA 清单，以及 `validation/support/launch_two_dimensional_s5_p22_dualfreq.sh` 的本地语法检查。阶段 1 仅在全新独立快照方案下只读通过；阶段 3 等待目录、同步、1800 s 预算三个明确授权，物理作业未运行。
+
+
 **2026-10-29 二维 S5/S6 最终轻量控制：**`validation/test_two_dimensional_s5_bie_receiver_coordinates.m` 在现有 MATLAB MCP R2025b 会话 5/5 通过；`validation/validate_two_dimensional_s5_nine_point_cir_controls(output_dir)` 以新目录保存九点解析 H/CIR、65/129 网格和端点检查（最终 `20261029_04`）；`validation/validate_two_dimensional_s6_analytic_dsp_controls(output_dir)` 保存无噪声与 Gray-QPSK AWGN 真实计数、PER/EVM、事前二项区间（最终 `20261029_04`）；`validation/audit_two_dimensional_s5_s6_analytic_controls(cir_dir,dsp_dir,audit_dir)` 独立重开 MAT/CSV（最终审计 `20261029_07`）。`validation/audit_two_dimensional_s5_cost_projections(single_dir,dual_dir,audit_dir)` 独立核旧 970 行单/双锚点规划表。详见[正式回执最新节](../reports/two_dimensional_s5_s6_preflight_2026-10-29.md)。这些是解析/软件和预算算术资格，不是物理 S5 CIR 或正式 S6 BER。
 
 **2026-10-29 二维 S5/S6 轻量资格续行：**九点解析 CIR 控制已修正 P11–P33 的行优先点号顺序并显式区分 65 含端点频率、129 嵌套加密频率与 64 个 IFFT bin；BIE 接收单测覆盖原九点坐标、逐点/批量、旧标量深度及非法输入。当前 MATLAB MCP 无法附着共享会话，SSH 别名无法解析，本轮 Code Analyzer、单测及解析 CIR/QPSK 均**未运行**；不得把改动或旧 Analyzer 结果写成 PASS。见[本轮回执](../reports/two_dimensional_s5_s6_preflight_2026-10-29.md)与[检查点](../results/validation/two_dimensional_s5_s6_preflight/20261029_01/checkpoint.json)。

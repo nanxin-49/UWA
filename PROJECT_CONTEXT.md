@@ -9,6 +9,18 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维 S5 P22 双频物理先导执行检查点（2026-10-30；最新二维状态）
+
+- [执行报告](reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[检查点](results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/checkpoint.json)：用户已批准独立远端目录、冻结 13 文件同步和串行 1800 s 预算。4062.5 Hz 同源 PE/FullFK 与五层 BIE 完成，独立保存 MAT 审计得 BIE 经验敏感性 `4.7804e-8 ≤1e-4`；PE/FullFK 相对 BIE 的差异 `2.0805e-7/4.0561e-8` 尚不可判为可分辨。远端 96 文件 SHA 回传 96/96 通过。半步预测冻结新 MATLAB 进程触发 MathWorks 邮箱提示，75 s 超时退出码 124；原日志与失败证据保留，4031.25 Hz 尚未运行，累计 `829/1800 s`。用户仅在远端无交互许可证修复并通知后授权一次受控重试；当前停止新 MATLAB 作业。没有正式 CIR/PDP/BER。S4=`CORE_COMPLETE` 限 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级。
+
+### 二维 S5 P22 双频远端恢复后授权门（2026-10-30；最新二维状态）
+
+- [授权前报告最新节](reports/two_dimensional_s5_p22_dualfreq_preflight_2026-10-29.md)：`matlab-ubuntu` BatchMode 可连，`/home/misc/cwx` 下拟建独立目录不存在；共享磁盘可用 623.06 GB、物理 RAM available 29.76 GB、MATLAB 进程 0，R2023b 安装可执行。根目录是任务集合，故只申请新独立任务快照，不覆盖旧任务。[13 文件同步清单](results/validation/two_dimensional_s5_p22_dualfreq_preflight/20261030_01/sync_manifest.json)逐项 SHA 13/13 通过，总 118,246 byte，串行 launcher 本地 `bash -n` 通过。阶段 1 只读资源检查在独立快照方案下 `PASS`；阶段 3 等待用户对**目录、同步、1800 s 物理预算**的明确批准。未同步、未启动远端 MATLAB，阶段 4–5 `NOT_RUN`；S4=`CORE_COMPLETE` 仅 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED`。
+
+### 二维 S5 P22 双频物理资格先导（2026-10-29；最新二维状态）
+
+- [授权前检查](reports/two_dimensional_s5_p22_dualfreq_preflight_2026-10-29.md)与[检查点](results/validation/two_dimensional_s5_p22_dualfreq_preflight/20261029_01/checkpoint.json)：4 kHz 旧 S2a/S2c 与本轮冻结源的 984 项系数和 `kx` 实际逐项相同；4062.5/4031.25 Hz 配置及半步复比值预测规则已事前冻结。本地双频验证/半步冻结入口经 Code Analyzer，2/2 非法输入拒绝及 synthetic 预测 fixture 通过，物理分支未运行。SSH 可连，远端 R2023b 安装存在，但 `/home/misc/cwx` 不是项目检出，根分区 `df` 显示 100% 使用、只余约 5.61 GB；阶段 1/3 资源与授权门阻断。没有同步、远端 MATLAB 进程或物理求解；阶段 4–5 未运行。S4=`CORE_COMPLETE` 仅 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 均不升级。
+
 ### 二维 S5/S6 阶段 0–4 实际验证续行（2026-10-29；最新二维状态）
 
 - [正式回执最新节](reports/two_dimensional_s5_s6_preflight_2026-10-29.md)：SSH 经新版 AGENTS 所述权限预检可连通，但 `/home/misc/cwx` 缺本项目必要源码且磁盘接近满载，未同步或执行远端 MATLAB；共享 MATLAB MCP R2025b 已恢复。旧 129 点源包 6/6、6 kHz 56/56、8 kHz 107/107 保存 SHA 本轮重核通过。九点 BIE 低节点接收单测 5/5 通过；九点解析 CIR 最大复相对误差 `1.7623e-13`、到达偏差 `0.083464 ms`；解析 Gray-QPSK 20,000 bit 无噪声 0 错、6 dB AWGN 100,000 bit 237 错，落事前二项区间 `[209,270]`；独立重开 MAT/CSV 审计及两版 970 行预算算术审计通过。阶段 0/1/2/3 均为其**限定的轻量/解析范围 PASS**，阶段 4 为规划 PASS。原物理 A=`PARTIAL`、B/C=`BLOCKED`，S4=`CORE_COMPLETE`，没有物理宽带 CIR/BER；阶段 5–6 未运行且未获预算批准。最终 [解析 CIR 包](results/validation/two_dimensional_s5_nine_point_cir_controls/20261029_04/)、[DSP 包](results/validation/two_dimensional_s6_analytic_dsp_controls/20261029_04/)、[独立审计](results/validation/two_dimensional_s5_s6_preflight/20261029_07/audit.json) 和 [成本审计](results/validation/two_dimensional_s5_s6_cost_audit/20261029_02/audit.json)为证据。
