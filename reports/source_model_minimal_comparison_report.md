@@ -41,3 +41,9 @@
 原始数据、MAT、CSV、图 1/2 的 `.fig` 与 `.png`、stdout、审计及哈希检查点见 `results/comparisons/source_model_minimal/run_20261030_02/`。图 1 显示下限为 -30 dB，更低角度权重仍保存在 MAT 中；该截断不影响本场景的 0–7.7° 部分。`run_20261030_01` 是首次绘图检查版本，图例多了自动项；保留而不覆盖，最终使用 `run_20261030_02`。本次没有新增生产模块或默认参数；`vertical_comm_guide.md` 的物理/通信实现未变化，无需修订。
 
 图形制作流程参考：Kassis, T., Agarwal, V., He, Y., Patel, D., & Brueckner, A. M. (2026). *Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents*. arXiv:2609.00065. https://doi.org/10.48550/arXiv.2609.00065
+
+## 二维方向增益可视化补充（2026-10-30）
+
+`scripts/reporting/render_source_model_2d_beam_maps.m` 读取本报告的三声源配置及已保存的 4/8/12 kHz 活塞频率配置，将轴向归一化的解析角度压力权重 `D[atan2(|x|,s)]` 映射到水平偏移 `x` 与从 Tx 向上的距离 `s`。两张图的上排使用 `|x|≤1484 m` 的宽角域展示形状；下排仅显示当前 `|x|≤(200/1484)s` 的接收角锥。颜色为 `20log10(D)`，上下排各有明确色标，并已剥离共同几何扩散。宽角域为说明方向图而外推，超出本实验 x=0–200 m 接收范围；白/灰区域不是零声压。Gaussian 仍是初始平面角谱权重，不代表实测换能器波束；这些图不是求解所得二维声场，也不提供绝对声源级。
+
+最终 FIG/PNG 和元数据见 `results/visualization/source_model_2d_beams/beam_maps_20261030_03/`。较早的 `_01`、`_02` 是绘图检查版本，最终只使用 `_03`。当前角锥边界重算的三声源差值为 `-1.957487/0/-0.013597 dB`，活塞频率序列为 `-0.013597/-0.054431/-0.122631 dB`（4/8/12 kHz）；只是前述曲线的二维坐标映射，未新增传播物理或数值资格。

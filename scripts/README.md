@@ -1,5 +1,7 @@
 # 脚本与验证运行索引
 
+**2026-10-30 声源二维方向增益图：**`reporting/render_source_model_2d_beam_maps('new_unique_run_id')` 从已保存的三声源与活塞频率对照配置绘制两张 2×3 解析方向增益图，上排显示宽角域，下排只显示当前 ±7.6756° 接收角锥；输出 `results/visualization/source_model_2d_beams/<run_id>/` 的 FIG/PNG/MAT。颜色仅代表轴向归一化角度权重，已去除距离扩散，不是 PE/BIE/FullFK/Bellhop 场。
+
 **2026-10-30 理想活塞频率补充分析：**`comparisons/run_piston_frequency_minimal_comparison('new_unique_run_id')` 用解析 `2J1(u)/u` 比较固定 5 cm 活塞在 4/8/12 kHz、0–10° 的轴向归一化方向图，并标记 7.6756°；输出 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG，不调用传播求解器。
 
 **2026-10-30 三声源最小对照：**`comparisons/run_source_model_minimal_comparison('new_unique_run_id')` 在 `setup_vertical_project` 后独立计算 Gaussian 初始场角谱、理想全向点源及 5 cm 圆形活塞的轴向归一化角响应和均匀自由场接收幅度；输出新目录 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG。不调用 PE/BIE/FullFK/Bellhop 或通信链。结果与限制见[报告](../reports/source_model_minimal_comparison_report.md)。
