@@ -9,6 +9,10 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维 S5 P22 双频物理资格先导：双频数据完整，模型可分辨门未关闭（2026-10-31；最新物理状态）
+
+- [结题报告](reports/two_dimensional_s5_p22_dualfreq_closeout_2026-10-31.md)、[新检查点](results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json)与[双频独立审计](results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json)：用户通知 R2023b 非交互许可已修复并另批 `≤1200 s`，许可探针及 4031.25 Hz 缺的三层 BIE 串行完成，实际新进程 `339 s`、全部真实退出 0。新增 53/53 远端文件 SHA、合并审计镜像 234/234 SHA 通过；4062.5/4031.25 Hz 五层 BIE 经验敏感性 `4.7804e-8/5.5509e-8 ≤1e-4`。事前冻结的 4031.25 Hz 复反射预测误差 `2.7742e-7` 仅限一个独立半步点；FullFK/BIE 差小于五倍分辨率，PE 缺同频独立步长/网格敏感性。状态 `DATA_COMPLETE_REFERENCE_PASS_MODEL_RESOLUTION_LIMITED`，无 65/129 全带资格或正式 CIR/PDP/BER；S4=`CORE_COMPLETE` 限 4 kHz，S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级。原许可证失败与本轮许可探针 RAM 算术控制缺陷均保留；不自动使用新预算余额或启动下轮大规模计算。
+
 ### P22 PE 相位屏二维宽带通信模拟闭环（2026-10-30；最新模拟状态）
 
 - [模拟结题报告](reports/pe_screen_p22_comm_closeout_2026-10-30.md)及[最终 QPSK 结果/审计](results/communication/pe_screen_p22_qpsk/20261030_03/)：原 Gaussian、平面/原弱 C2 正弦、P22、4–8 kHz 及共同 `τ0=97/1500 s` 不变。原 65/129 不同周期窗无窗 CIR 差 `0.0438747` 是后半窗精确折叠，原失败保留；新增交错 256 个 PE 频点构成独立 257 点、64 ms 网格后，按几何 4 ms 反射时延解相位插值，将 65/129 响应投影到统一 257 点/64 ms 窗，65→129/独立257 CIR 最大 `7.1033e-6/8.2248e-6 <1e-3`，独立审计 `PE_SCREEN_COMMON_WINDOW_CIR_INDEPENDENT_AUDIT_PASS`。冻结配置后运行完美 CSI、4 ksps Gray QPSK、线性卷积/255 CP/块 LMMSE，五个 0–24 dB SNR 点每海面各 262144 bit；无噪声 0 错，通信独立重放审计 PASS，曲线几乎重合，无可分辨海面损失证据。标记 **`PE_SCREEN_COMM_SIMULATION_PASS` 仅限二维 PE 相位屏近似模型模拟**；原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。未运行 BIE/FullFK/三维，未提交/推送；本地 MATLAB MCP R2025b。
