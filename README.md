@@ -1,8 +1,14 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+研究生开题报告草稿：[面向深海近垂直水声链路的信道估计与自适应均衡方法研究](reports/graduate_proposal_channel_estimation_equalization.md)。报告以通信算法为研究目标，现有传播仿真作为数据准备与适用范围依据；正文不改变当前数值验证状态。
+
+二维 S5/S6 Goal 已按用户要求暂停审阅。A 的解析/代数、冻结源 4/6/8 kHz 平面 P22、129 点同源 Tx/直达子门和原弱正弦 P22 的 6/8 kHz 五层 BIE 单点经验参考已有结果；A 整体仍 PARTIAL，完整频带反射参考/九点未认证，B/C 未进入，无可信 CIR 或 BER。全带首批预算只有待批 48 h 提案；PM 有 S4 4 kHz 参考但缺宽带资格，CIR/S6 不含在预算请求内。8 kHz 专用 `.fig/PNG` 未生成。审查结论及证据入口见[2026-10-27 中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。
+
 本仓库用于研究海底发射机到近海面接收机的垂直水声传播。公共模型以 PE/WAPE 计算直达与海面反射频响，并提供粗糙海面、joint-kstat、接收端精确离散伴随、二阶统计和 MPSK 通信验证工具。
 
-二维同源反射复场比较已正式S4收尾：`CORE_COMPLETE`仅限固定4 kHz源、平面/三档正弦、K_HIGH、参考受限的PHI_PLUS90及预定三个PM实现（S3A `3/3`）；S3B登记`S3B_NOT_RUN_BUDGET_LIMITED`，S5为`S5_NOT_READY`。本轮不新增声场计算；资格、数值结论、预算与未闭合项见[唯一正式报告](reports/two_dimensional_channel_closeout_report.md)及[S4结果索引](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)。历史阶段状态保留在各自结果包，不能替代报告顶部当前结论。
+三维固定 compact-dual 单链路已在原4/6/8kHz基础上完成独立5/7kHz参考及事前锁定的两个局部跨频重建检验；五个离散点为条件性案例结论，连续频响、CIR和目标PM仍未认证。见[三维5/7kHz报告](reports/deepsea_dual_5k7k_independent_validation_2026-10-26.md)与[结果索引](results/validation/deepsea3d_5k7k_20261026/README.md)。
+
+二维同源反射复场比较已正式S4收尾：`CORE_COMPLETE`仅限固定4 kHz源、平面/三档正弦、K_HIGH、参考受限的PHI_PLUS90及预定三个PM实现（S3A `3/3`）；S3B登记`S3B_NOT_RUN_BUDGET_LIMITED`，S5为`S5_NOT_READY`。该S4收尾轮不新增声场计算；资格、数值结论、预算与未闭合项见[唯一正式报告](reports/two_dimensional_channel_closeout_report.md)及[S4结果索引](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)。历史阶段状态保留在各自结果包，不能替代报告顶部当前结论。
 
 ## 快速开始
 

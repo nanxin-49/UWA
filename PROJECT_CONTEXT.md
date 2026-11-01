@@ -9,6 +9,96 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
 
+### 二维 S5 P22 双频物理资格先导：双频数据完整，模型可分辨门未关闭（2026-10-31；最新物理状态）
+
+- [结题报告](reports/two_dimensional_s5_p22_dualfreq_closeout_2026-10-31.md)、[新检查点](results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json)与[双频独立审计](results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json)：用户通知 R2023b 非交互许可已修复并另批 `≤1200 s`，许可探针及 4031.25 Hz 缺的三层 BIE 串行完成，实际新进程 `339 s`、全部真实退出 0。新增 53/53 远端文件 SHA、合并审计镜像 234/234 SHA 通过；4062.5/4031.25 Hz 五层 BIE 经验敏感性 `4.7804e-8/5.5509e-8 ≤1e-4`。事前冻结的 4031.25 Hz 复反射预测误差 `2.7742e-7` 仅限一个独立半步点；FullFK/BIE 差小于五倍分辨率，PE 缺同频独立步长/网格敏感性。状态 `DATA_COMPLETE_REFERENCE_PASS_MODEL_RESOLUTION_LIMITED`，无 65/129 全带资格或正式 CIR/PDP/BER；S4=`CORE_COMPLETE` 限 4 kHz，S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级。原许可证失败与本轮许可探针 RAM 算术控制缺陷均保留；不自动使用新预算余额或启动下轮大规模计算。
+
+### P22 PE 相位屏二维宽带通信模拟闭环（2026-10-30；最新模拟状态）
+
+- [模拟结题报告](reports/pe_screen_p22_comm_closeout_2026-10-30.md)及[最终 QPSK 结果/审计](results/communication/pe_screen_p22_qpsk/20261030_03/)：原 Gaussian、平面/原弱 C2 正弦、P22、4–8 kHz 及共同 `τ0=97/1500 s` 不变。原 65/129 不同周期窗无窗 CIR 差 `0.0438747` 是后半窗精确折叠，原失败保留；新增交错 256 个 PE 频点构成独立 257 点、64 ms 网格后，按几何 4 ms 反射时延解相位插值，将 65/129 响应投影到统一 257 点/64 ms 窗，65→129/独立257 CIR 最大 `7.1033e-6/8.2248e-6 <1e-3`，独立审计 `PE_SCREEN_COMMON_WINDOW_CIR_INDEPENDENT_AUDIT_PASS`。冻结配置后运行完美 CSI、4 ksps Gray QPSK、线性卷积/255 CP/块 LMMSE，五个 0–24 dB SNR 点每海面各 262144 bit；无噪声 0 错，通信独立重放审计 PASS，曲线几乎重合，无可分辨海面损失证据。标记 **`PE_SCREEN_COMM_SIMULATION_PASS` 仅限二维 PE 相位屏近似模型模拟**；原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。未运行 BIE/FullFK/三维，未提交/推送；本地 MATLAB MCP R2025b。
+
+### P22 PE 相位屏 257 点独立时窗诊断：原 CIR 门仍未通过（2026-10-30；最新模拟状态）
+
+- 在上轮冻结源、平面/原弱正弦、P22、4–8 kHz、共同 `τ0=97/1500 s` 不变下，本地 MATLAB MCP R2025b 新算交错的 256 个 PE 频点，形成 257 点/64 ms 网格。原 65→129 无窗 CIR `0.0438747` 差逐样本等于 129 点 16–32 ms 尾部折叠，恒等式残差 `≤1.3343e-16`；257 点 16–32 ms 能量约 `1.09e-6`，32–64 ms 约 `0.0019002`，且绝大部分在末 4 ms，支持有限带宽前振铃的周期折叠解释。独立无周期延拓积分 `[-4,12] ms` 中 65→129 仍 `0.0047261 > 1e-3`，129→257 为 `0.00080853 <1e-3`；已知 4 ms 反射时延去相位后的频响插值 65→129 约 `8.24e-6`。原 CIR 门未被替换或追认为通过，QPSK/BER/PER/EVM 未运行，`PE_SCREEN_COMM_SIMULATION_PASS` 不成立。详见[诊断报告](reports/pe_screen_p22_aliasing_diagnosis_2026-10-30.md)、[MAT/CSV/FIG/PNG、审计和 SHA 检查点](results/validation/pe_screen_p22_aliasing/20261030_01/)；原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。
+
+### P22 PE 相位屏宽带通信模拟：CIR 加密门停止（2026-10-30；最新模拟状态）
+
+- 在 `3D_try` 用原冻结 Gaussian 源与原弱正弦海面、P22、4–8 kHz 完成平面/弱正弦各 129 点的本地 MATLAB MCP R2025b PE 相位屏复频响及 65/129 CIR/PDP；258 次 PE 用时 67.8247 s。直达源最大相对差 `8.108e-13`、分量闭合 `8.301e-17`、FFT 往返 `1.686e-16` 均通过；65/129 CIR 相对差 `0.0438747 > 1e-3`，129 点后半窗能量 `0.00192499 > 1e-3`，故 `PE_SCREEN_CIR_GATE_FAILED`，不运行 QPSK、BER/PER/EVM，不标 `PE_SCREEN_COMM_SIMULATION_PASS`。远端 SSH/R2023b 短探测成功，但共享根非检出，本轮未传/运行项目代码。详见[阶段报告](reports/pe_screen_p22_broadband_comm_2026-10-30.md)、[原结果和检查点](results/validation/pe_screen_p22_comm/20261030_01/)。这是 PE 近似模型内部模拟，不升级原正式 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED`，旧许可证/参考门结论保留。
+
+### 二维 S5 P22 双频先导暂时停止：远端非交互许可待恢复（2026-10-30；最新二维状态）
+
+- 用户要求[记录许可证故障与恢复门](reports/two_dimensional_s5_p22_matlab_license_recovery_2026-10-30.md)并暂时停止本 Goal。远端 R2023b 新进程间歇性提示 MathWorks 账号登录；一次受控重试虽成功，后续三层 BIE 作业再次提示登录失败，真实退出码与耗时未观测，且无层结果。不能据日志断言许可证文件缺失。按保守上限占用 `1780/1800 s`；恢复非交互许可、短作业实测及新的计算预算均未执行或批准。4031.25 Hz 五层参考未完成，无正式 CIR/PDP/BER；原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不变。
+
+### 二维 S5 P22 双频先导续行：许可证门停止（2026-10-30；最新二维状态）
+
+- [最新执行报告](reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[4031.25 Hz 部分独立审计](results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/audit_4031_partial_01/audit.json)：在 `3D_try` 上复用原 13 文件远端任务，成功冻结半步原生复预测及 SHA，4031.25 Hz PE/FullFK、BIE 主层和自积分层退出 0 并回传核验；剩余三层未取得结果。两层相对变化 `3.0961e-8` 只是部分敏感性，**不**构成五层 BIE 参考合格。后续合并作业遇 MathWorks 账号登录失败，最后一次进程退出码/实际耗时未观测；已知进程时间 1270 s，加该作业 510 s 上限后保守占用 `1780/1800 s`，停止物理计算。续算镜像 SHA 69/69，原首频镜像 96/96。S4=`CORE_COMPLETE` 限 4 kHz，S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级；无物理 CIR/PDP/BER。下一次必须先恢复非交互许可证并另批批准资源，补完三层参考；全带 65/129 点仍为待审方案。
+
+### 二维 S5 P22 先导分支接续（2026-10-30；当前执行状态）
+
+- 当前工作树为 `3D_try`；此前在 `s5s6` 核对的 27 个 S5 相关文件与 `3D_try` 已有版本逐项 Git blob 一致，声源对照提交已迁入并合并两份索引。已保存的远端镜像重新核验 SHA 96/96；远端原 13 文件、失败日志和 `829/1800 s` 账本不变。远端 PID 2862345 是其他人的图形 MATLAB 会话，用户确认等待其自行结束；本任务尚未创建 `freeze_retry1` 或运行 4031.25 Hz。没有推送、追加远端同步或新 MATLAB 求解；后续仅在串行资源门解除后继续原批准范围。
+
+### 二维 S5 P22 双频物理先导执行检查点（2026-10-30；最新二维状态）
+
+- [执行报告](reports/two_dimensional_s5_p22_dualfreq_2026-10-30.md)与[检查点](results/validation/two_dimensional_s5_p22_dualfreq/20261030_01/checkpoint.json)：用户已批准独立远端目录、冻结 13 文件同步和串行 1800 s 预算。4062.5 Hz 同源 PE/FullFK 与五层 BIE 完成，独立保存 MAT 审计得 BIE 经验敏感性 `4.7804e-8 ≤1e-4`；PE/FullFK 相对 BIE 的差异 `2.0805e-7/4.0561e-8` 尚不可判为可分辨。远端 96 文件 SHA 回传 96/96 通过。半步预测冻结新 MATLAB 进程触发 MathWorks 邮箱提示，75 s 超时退出码 124；原日志与失败证据保留，4031.25 Hz 尚未运行，累计 `829/1800 s`。用户仅在远端无交互许可证修复并通知后授权一次受控重试；当前停止新 MATLAB 作业。没有正式 CIR/PDP/BER。S4=`CORE_COMPLETE` 限 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 不升级。
+
+### 二维 S5 P22 双频远端恢复后授权门（2026-10-30；最新二维状态）
+
+- [授权前报告最新节](reports/two_dimensional_s5_p22_dualfreq_preflight_2026-10-29.md)：`matlab-ubuntu` BatchMode 可连，`/home/misc/cwx` 下拟建独立目录不存在；共享磁盘可用 623.06 GB、物理 RAM available 29.76 GB、MATLAB 进程 0，R2023b 安装可执行。根目录是任务集合，故只申请新独立任务快照，不覆盖旧任务。[13 文件同步清单](results/validation/two_dimensional_s5_p22_dualfreq_preflight/20261030_01/sync_manifest.json)逐项 SHA 13/13 通过，总 118,246 byte，串行 launcher 本地 `bash -n` 通过。阶段 1 只读资源检查在独立快照方案下 `PASS`；阶段 3 等待用户对**目录、同步、1800 s 物理预算**的明确批准。未同步、未启动远端 MATLAB，阶段 4–5 `NOT_RUN`；S4=`CORE_COMPLETE` 仅 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED`。
+
+### 二维 S5 P22 双频物理资格先导（2026-10-29；最新二维状态）
+
+- [授权前检查](reports/two_dimensional_s5_p22_dualfreq_preflight_2026-10-29.md)与[检查点](results/validation/two_dimensional_s5_p22_dualfreq_preflight/20261029_01/checkpoint.json)：4 kHz 旧 S2a/S2c 与本轮冻结源的 984 项系数和 `kx` 实际逐项相同；4062.5/4031.25 Hz 配置及半步复比值预测规则已事前冻结。本地双频验证/半步冻结入口经 Code Analyzer，2/2 非法输入拒绝及 synthetic 预测 fixture 通过，物理分支未运行。SSH 可连，远端 R2023b 安装存在，但 `/home/misc/cwx` 不是项目检出，根分区 `df` 显示 100% 使用、只余约 5.61 GB；阶段 1/3 资源与授权门阻断。没有同步、远端 MATLAB 进程或物理求解；阶段 4–5 未运行。S4=`CORE_COMPLETE` 仅 4 kHz，原 S5 A=`PARTIAL`、B=`BLOCKED`、S6 C=`BLOCKED` 均不升级。
+
+### 二维 S5/S6 阶段 0–4 实际验证续行（2026-10-29；最新二维状态）
+
+- [正式回执最新节](reports/two_dimensional_s5_s6_preflight_2026-10-29.md)：SSH 经新版 AGENTS 所述权限预检可连通，但 `/home/misc/cwx` 缺本项目必要源码且磁盘接近满载，未同步或执行远端 MATLAB；共享 MATLAB MCP R2025b 已恢复。旧 129 点源包 6/6、6 kHz 56/56、8 kHz 107/107 保存 SHA 本轮重核通过。九点 BIE 低节点接收单测 5/5 通过；九点解析 CIR 最大复相对误差 `1.7623e-13`、到达偏差 `0.083464 ms`；解析 Gray-QPSK 20,000 bit 无噪声 0 错、6 dB AWGN 100,000 bit 237 错，落事前二项区间 `[209,270]`；独立重开 MAT/CSV 审计及两版 970 行预算算术审计通过。阶段 0/1/2/3 均为其**限定的轻量/解析范围 PASS**，阶段 4 为规划 PASS。原物理 A=`PARTIAL`、B/C=`BLOCKED`，S4=`CORE_COMPLETE`，没有物理宽带 CIR/BER；阶段 5–6 未运行且未获预算批准。最终 [解析 CIR 包](results/validation/two_dimensional_s5_nine_point_cir_controls/20261029_04/)、[DSP 包](results/validation/two_dimensional_s6_analytic_dsp_controls/20261029_04/)、[独立审计](results/validation/two_dimensional_s5_s6_preflight/20261029_07/audit.json) 和 [成本审计](results/validation/two_dimensional_s5_s6_cost_audit/20261029_02/audit.json)为证据。
+
+### 二维 S5/S6 阶段 0–4 续行（2026-10-29；最新二维状态）
+
+- [本轮回执](reports/two_dimensional_s5_s6_preflight_2026-10-29.md)：修正九点解析控制的 `meshgrid` 展开与 P11–P33 标签错配，补 BIE 接收坐标断言/非法输入测试和 65/129 频率网格声明；旧 129 点同源直达包指定 6 项 SHA 本轮复核一致。本轮 MATLAB MCP 无法附着共享会话，用户要求优先 SSH 后远端别名 `matlab-ubuntu` 在当前环境无法解析；未运行 Code Analyzer、九点单测、九点解析 CIR 或 QPSK 数值控制，新增 MATLAB 进程与 BIE 边界解均为 0。阶段 0/1/3=`PARTIAL`、2=`BLOCKED`、4=`PASS`（仅规划）。原 A=`PARTIAL`、B/C=`BLOCKED`，S4=`CORE_COMPLETE` 保持，物理 CIR/BER 仍无。A/B 先导预算只是申请，阶段 5–6 不自动执行。[本轮检查点](results/validation/two_dimensional_s5_s6_preflight/20261029_01/checkpoint.json)。
+
+### 三类声源独立归一化对照（2026-10-30）
+
+- [最小对照报告](reports/source_model_minimal_comparison_report.md)与[结果目录](results/comparisons/source_model_minimal/run_20261030_02/)：4 kHz、均匀自由场、Tx1490 m/Rx6 m、x=0–200 m；Gaussian 初始平面角谱、全向点源及 5 cm 理想圆活塞按轴向归一化比较。最大角 7.6756°，x=200 m 时 Gaussian/全向 `-1.9575 dB`、活塞/全向 `-0.013597 dB`，6项检查通过。仅方向权重与共同 1/R 几何的轻量对照，不是三种源在 PE/BIE/FullFK 的同源资格；生产接口/默认配置未改。
+
+### 二维 S5/S6 Goal 阶段 A 前置门（2026-10-27；最新二维状态）
+
+- **用户审阅暂停状态（2026-10-27）：**用户要求先审查报告和既有结果，暂停新增数值工作；Goal 已设为 `PAUSED`。阶段仍为 A=`PARTIAL`、B=`BLOCKED/未进入`、C=`BLOCKED/未进入`；未形成可信二维 CIR 或通信误码结果。48 小时 S5 提案 v2 尚未批准。[中文报告开头](reports/two_dimensional_s5_s6_2026-10-27.md)现有审阅摘要与报告完整性检查；恢复时先遵从用户审查意见，不把暂停或已有单点结果解释为阶段 PASS。
+
+- **8 kHz 原弱正弦 P22 试点（最新）：**独立预算获批后，Ubuntu R2023b 七个串行作业均退出 0，总进程 `1567/3000 s`、最长 `408/900 s`，输入 SHA `10/10`、输出 `87/87` 且回传复核通过。五层 BIE 最大敏感性 `3.0980e−8`，通过单点 `1e−4` 门；PE/BIE `7.2710e−8` 与 FullFK/BIE `8.6243e−9` 均在五倍经验分辨率内，标为**未分辨**。完整证据与复算见[8 kHz 结果包](results/validation/two_dimensional_s5a_weak_bie_8k/20261027_01/)和[中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。A=PARTIAL，B/C 未进入；MATLAB 导图和双锚点成本 CSV 的独立审计请求均受 Codex 自动审批服务 404 阻断，暂无 `.fig/PNG`。
+- **129 点全带同源直达子门（最新）：**在原计划 `4–8 kHz/31.25 Hz` 129 点冻结同一 984 项 Fourier 发射场，65 点严格嵌套；MATLAB MCP R2025b 129 次 PE 直达对同源角谱最大复相对差 `5.6963e−13`、Tx 面 `1.6868e−14`，40.184 s，无 BIE。独立 MAT/CSV/IFFT 审计及 SHA 见[结果包](results/validation/two_dimensional_s5a_source_band/20261027_01/)和[报告](reports/two_dimensional_s5_s6_2026-10-27.md)。仅 A 源/直达子门 PASS；A 整体 PARTIAL，B/C BLOCKED。
+- **全带成本门再估：**按已观测 6 kHz 五层 BIE 核时间与逐频节点立方规划外推，仅原弱正弦 P22 的 65/129 点五层分别约 `15.03/29.79 h` 核时间，未计其他海面、PE/FullFK、启动与审计；这些不是实测上界或获批预算。[逐频成本/审计/检查点](results/validation/two_dimensional_s5a_fullband_cost/20261027_01/)及[中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。8 kHz 单点已另行通过；全带预算及逐频 RAM 门仍缺，A=PARTIAL、B/C 未进入。
+- **S5 全带首批预算提案（待用户批准）：**新增 v2 范围为平面解析镜像/PE/FullFK 与原弱正弦九点、129 频点 BIE/PE/FullFK；129 点包含 65 点基网格。仅弱正弦 BIE 立方规划为 `29.79 h` 核时间，加估计层作业开销约 `7.17 h`；请求总累计上限 `48 h`，含约 25% 规划余量。逐层须保留至少 30% 可用物理 RAM、单作业 `<900 s`、串行并在阶段边界停止。双锚点敏感性表未独立 MATLAB 审计，不用于压低预算。S4 PM seed260001–260003仅有4 kHz、既有源/接收支持的经验BIE参考，没有宽带参考资格；PM不纳入本批并在结论中留缺口。CIR/S6也不在该请求内。[提案 v2](results/validation/two_dimensional_s5a_fullband_cost/20261027_02/budget_scope_proposal_v2.json)、[报告](reports/two_dimensional_s5_s6_2026-10-27.md)。未获批准，未运行；A=PARTIAL，B/C 未进入。
+- **九点接收/相位约定（回归尚未执行）：**S4 保存表确认九点由三个横坐标和 `2.875/3.000/3.125 m` 三个深度组成；PE按三个深度复用整条横向场。预先冻结全局 `tau_ref=min_r[hypot(x_rx,z_tx-z_rx)/c]`，P22初算及九点的所有模型、接收点、direct/reflect/total均使用同一DSP原点；理论到达分别为 `hypot(x_rx,z_tx-z_rx)/c-tau_ref`、`hypot(x_rx,z_tx+z_rx)/c-tau_ref`，不得逐路径或逐点移峰。MATLAB Code Analyzer 已检查接收坐标**单测文件**（0 项）与解析 CIR 控制文件（1 条提示）；本次未直接分析 BIE helper。单测运行请求被 Codex 自动审批服务 404 拒绝，工具确认未执行。首频仍须验证九点和全局相位合同并测量实际耗时。[实现](scripts/validation/support/solve_helmholtz_bie_halfplane_vertical.m)、[单测](scripts/validation/test_two_dimensional_s5_bie_receiver_coordinates.m)、[CIR控制](scripts/validation/validate_two_dimensional_s5_nine_point_cir_controls.m)、[本次检查点](results/validation/two_dimensional_s5a_preflight/20261027_01/checkpoint.json)、[提案](results/validation/two_dimensional_s5a_fullband_cost/20261027_02/budget_scope_proposal_v2.json)。
+- **九点解析 CIR 控制入口（尚无数值结果）：**solver-free `scripts/validation/validate_two_dimensional_s5_nine_point_cir_controls.m` 对平面镜像/已知双径、全九点与全局 `tau_ref` 保存 H/CIR/MAT/CSV/JSON，并检查代数、FFT/IFFT、到达与复幅门。静态分析完成，但还未运行，不能记 PASS；当前执行审批服务异常，状态见[检查点](results/validation/two_dimensional_s5a_preflight/20261027_01/checkpoint.json)及[报告](reports/two_dimensional_s5_s6_2026-10-27.md)。
+- **8 kHz 本地预参考诊断（最新）：**已有 MATLAB MCP 会话对同一原弱正弦 P22 执行 PE 原/半步长/同谱双网格及 FullFK 400/800 panel 控制；直达解析相对差 `3.3001e−13`，PE 双网格 `4.5116e−8`，FullFK 求积 `2.9259e−12`。独立重开 MAT/CSV 最大绝对不符 `5.987e−16`；没有运行 8 kHz BIE。见[检查点与原始值](results/validation/two_dimensional_s5a_weak_p22/20261027_8k_local_01/)及[中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。8 kHz 独立远端预算尚待授权，A=PARTIAL、B/C=BLOCKED；无可信 CIR/BER。
+- **同日获批 6 kHz 原弱正弦 P22 参考试点（最新）：**用户批准独立远端目录与 `3600 s` 子预算，七个远端 R2023b MATLAB 作业（smoke、配对模型、五层 BIE）串行完成，进程累计 `915/3600 s`、最长 `221/900 s`；原输入 `10/10`、回传 `56/56` SHA，全部退出码 0。五层 BIE 最大复相对敏感性 `3.0942943e−8`，过新 `1e−4` 经验参考门；PE/BIE `7.3185558e−8`、FullFK/BIE `8.8903616e−9` 均未超过五倍合并经验分辨率，**模型差未分辨**。三个模型一频点同源 DSP 分量闭合，非连续宽带。原数据/日志/双重审计/检查点见[6 kHz 结果包](results/validation/two_dimensional_s5a_weak_bie/20261027_01/)与[中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。**A=PARTIAL，B/C=BLOCKED且未进入**；4–8 kHz 加密、九点、canonical PM、CIR 与 BER 均未认证。原 S4 `CORE_COMPLETE` 保持。
+- **同日平面源续行：**在冻结 984 项 Gaussian 发射面 Fourier 场下，验证专用逐频 `k_z` 重建及 4/6/8 kHz 的 P22 平面 PE/解析直达、镜像反射子门通过；总场最大复相对差 `1.071e-11`，三次轻量 PE 共 `0.9974 s`。旧 S3A FullFK helper 4 kHz 数值等价检查绝对差 0，新源 8 kHz 粗求积仅有限性诊断。[结果、12 项 SHA、审计与检查点](results/validation/two_dimensional_s5a_source_flat/20261027_s5a_flat_01/)及[报告续行](reports/two_dimensional_s5_s6_2026-10-27.md)。这三个稀疏锚点不能认证宽带/CIR；正弦与 PM 的跨频 BIE 参考、加密频点、九点及内存/独立预算门仍缺。A/B/C 整体状态保持阻塞，S4 旧结论不变。
+- [门槛及中文回执](reports/two_dimensional_s5_s6_2026-10-27.md)在运行前冻结新 A/B/C 判据，并只调用已有 MATLAB MCP 会话做零声学求解的 native↔DSP、解析平面/双径及 FFT 控制。代数子门最大平面 CIR 复相对误差 `9.1962e-14`，通过 `1e-10`；保存 [MAT/CSV/JSON、SHA 与检查点](results/validation/two_dimensional_s5a_prerequisite/20261027_s5a_prerequisite_02/) 并独立复核（首版 `_01` 留存）。4 kHz 冻结源 984 谱项全部可传播，但跨频同源直达/反射三方法场及 BIE `≤1e-4` 参考门未完成；8 kHz BIE 规划增量约 3.91 GB，高于本轮可用物理 RAM 1.85 GB 的 70% 允许值。**A=BLOCKED，B/C=BLOCKED且未进入**；无二维认证 CIR/BER，不把 S4 单频结论换算为通信损失。原 S4 `CORE_COMPLETE` 与历史结果不变，未提交/推送。
+
+### 三维固定dual 65点网格四新频点验收（2026-10-27；最新三维状态）
+
+- [正式报告](reports/deepsea3d_65grid_four_holdout_2026-10-27.md)与[原生结果索引](results/validation/deepsea3d_65grid_four_20261027/README.md)：事前锁定五锚点B及4750/7250Hz常规、4125/6562.5Hz相消压力四点原生复预测和SHA，锁独立审计先于新FE；Ubuntu MATLAB R2023b按序取得四点FE/FullFK条件性资格。四点`e_R/e_Δ/a_D<1e−3`各4/4，最大`5.932e−5/3.013e−5/5.515e−5`；4125Hz`C=17.05`、`e_H=2.654e−4`且`a_D=3.004e−5`并列。4750/4125/6562.5Hz预测差超过五倍保存FE经验敏感性，不能称不可分辨。状态`COMPACT_DUAL_65GRID_HOLDOUT_SCREENING_PASS`仅支持固定案例的有限离散频点筛查，65点仍是预测输出而非65个FE或已认证连续宽带/CIR/BER。原MAT/CSV、133个首批回传SHA、两图FIG/PNG与重开审计、检查点齐备；版本探测及设置/图形失败照实计入，总保守远端MATLAB墙钟`341/720 s`。不自动扩频或进入时域/通信。Q1 BIE`STOP`、二维S4`CORE_COMPLETE`、`G1_target_PM=OPEN`、`WP2_formal=false`，生产API和历史失败不变。
+
+### 三维固定dual宽带网格设计（2026-10-27；最新设计状态）
+
+- 已完成[唯一正式网格设计](reports/deepsea_compact_dual_broadband_grid_design.md)：只读复用九个条件性 FE 频点及预测锁，解析复核直达/零高度镜面相对时延 `6.633361620 ms`，优先 65 个含端点预测输出点、`Δf=62.5 Hz`、相对 DSP 周期窗 `16 ms`；129 点仅为待证候选。五锚点 `Q=R/B*` 复线性 B 固定，旧四半千赫盲测已用于选择/设计，不能再算下一轮新独立保留。下一轮建议事前锁 4750/7250 Hz 常规点与 4125/6562.5 Hz 相消压力点、原生复预测及 SHA；建议新批准四点上限 `720 s`，本轮未授权或执行。65 点只是预测网格，不是 65 次 FE 或认证 CIR；STOP 参考数值门、预测门、物理资源/成本上限均已写明。Q1 BIE `STOP`、二维 S4 `CORE_COMPLETE`、`G1_target_PM=OPEN`、`WP2_formal=false`，生产 API 与旧失败证据不变。
+
+### 三维固定dual四频点独立盲测（2026-10-26；最新compact-dual状态）
+
+- 在旧4/5/6/7/8 kHz条件性五点与固定`η*`原样保留的基础上，事前锁定A(4/6/8锚点)和B(4/5/6/7/8锚点)的`Q=R/B*`分段复线性预测；4500/5500/6500/7500 Hz四点均未参与构造。Ubuntu MATLAB R2023b逐点通过原FE/FullFK资格门，四点都是`CONDITIONAL_G1_PASS`；A最大反射相对复误差`5.193e−5`，B最大`3.050e−5`，八次比较均过冻结`1e−3`筛查。5500/6500 Hz两预测器的绝对偏差均大于五倍FE经验敏感性，4500/7500 Hz则同量级而不能判更细精度；7500 Hz FK粗Gauss数值差`9.892e−4`，仅以小裕量过原`1e−3`门。[正式报告](reports/deepsea3d_four_frequency_holdout_2026-10-26.md)、[九点表/原生MAT/图/SHA/审计/检查点](results/validation/deepsea3d_four_holdout_20261026/README.md)。
+- 四频点新进程墙钟29/33/34/34 s，总审计11 s，合计`141/400 s`；19项输入SHA和106项回传SHA通过。决策`COMPACT_DUAL_FREQUENCY_HOLDOUT_SCREENING_PASS`，仅**GO设计**固定dual宽带频率网格及独立参考预算，不启动更多频点。连续宽带、CIR、BER均未认证。Q1 BIE仍`STOP`，二维S4仍`CORE_COMPLETE`，`G1_target_PM=OPEN`、`WP2_formal=false`；生产求解器/API和历史失败证据不改。下方Q1及5/7条目保留各自历史结论，其“当前三维状态”以本节为准。
+
+### 三维目标 PM 高阶 BIE 最小可行性决策（2026-10-26；最新参考路线状态）
+
+- 在旧 6 kHz 平面 Gaussian 制造问题上，仅测试连续节点 Q1 密度及匹配局部 Duffy/Gauss 求积。最佳独立离节点边界/离面复场误差 `0.0250587454/0.0409758501`，均不过原 `1e−4`；新鲜线性残差 `1.36e−15`，基础 Gauss8→12 复边界/场变化约 `5e−9`。旧 P0 最细独立边界/场为 `0.033851/0.004222`，但旧 L3/h0.15 与新 L4/h0.333 不匹配，不能把差异全归因于基函数。未知密度无限外区未闭合；**STOP 当前 Q1 BIE 作为目标 PM 独立参考的路线**，本轮未运行 compact-dual 或 PM BIE。[技术报告](reports/deepsea3d_bie_q1_decision_2026-10-26.md)、[原 MAT/日志/SHA/独立审计/检查点](results/validation/deepsea_bie_q1_20261026/README.md)。
+- Ubuntu R2023b 独立目录三个正式远端 MATLAB 作业墙钟 11/13/15 s，版本探测另保守计 14 s，总计 `53/600 s`；49 项回传 SHA 及保存原生复数独立复算通过。原三维五频点 compact-dual 条件性状态与下节证据不变；二维 S4 `CORE_COMPLETE`。`G1_target_PM=OPEN`、`WP2_formal=false`；生产求解器/API 未改，不立即尝试第二参考路线。
+
+### 固定三维 compact-dual 5/7 kHz 独立参考与冻结重建检验（2026-10-26；当前三维状态）
+
+- 在原三维点源、Tx(0,150.5,1500)m/Rx(0,0,5)m、dual C2 plateau8/support12及既有4/6/8kHz证据原样冻结的条件下，Ubuntu MATLAB R2023b 在 `/home/misc/cwx/deepsea3d_5k7k_20261026` 独立目录完成5/7kHz FE 参考和完整两项FullFK，两点均 `CONDITIONAL_G1_PASS`。先锁的 `Q=R/B*` 复线性预测对独立反射复场相对误差分别 `6.766229e-5/2.954437e-5`，过原 `1e-3` 筛查；其绝对差 `3.3310e-9/1.4545e-9m⁻¹` 与保存FE变体经验敏感性 `3.2886e-9/1.2975e-9m⁻¹` 同量级，不能声称更细精度或连续频率响应/CIR/带内衰落已认证。[唯一新三维报告](reports/deepsea_dual_5k7k_independent_validation_2026-10-26.md)与[原生MAT/五点CSV/FIG/PNG/日志/SHA/审计/检查点](results/validation/deepsea3d_5k7k_20261026/README.md)为证据。
+- 固定6kHz跨平台同配置诊断原生反射复差 `8.37e-16`、增量 `4.05e-16`；远端17输入SHA及115回传文件SHA全通过，独立审计PASS。全部7个新远端MATLAB进程墙钟 `129/600s`，5/7kHz分别27/33s，物理RAM 30%余量门通过。下一独立研究优先提高参考分辨率把握并继续扩展可信频率证据，但本Goal到此停止、不借用旧二维余额、不自动扩频。二维S4保持下节 `CORE_COMPLETE` 且其Gaussian源不用于三维；原振幅目标PM独立参考仍未认证，`G1_target_PM=OPEN`、`WP2_formal=false`。生产求解器和公共API未改。
+
 ### S4 二维核心正式收尾（2026-10-26；权威当前状态）
 
 - `CORE_COMPLETE`仅指固定4 kHz、同源离散Gaussian源、平面/三档C2正弦、K_HIGH、受混合平台参考限制的PHI_PLUS90及预定`seed260001–260003`三个固定二维PM实现。S2a源/表示闭合，S2b九点108/108及411线参考限定合格，S2c-A空间诊断、K_HIGH、PHI保存真场及S3A三seed已逐项验收；后续日期节中“当前阻塞”“S4未开始”均为历史快照。唯一[正式收尾报告顶部S4摘要](reports/two_dimensional_channel_closeout_report.md)给出各支持数值、方法范围、旧G口径区别和未闭合问题；[S4索引与检查点](results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md)连到原MAT/CSV/配置/SHA/审计/图件。S4新增声场计算0，既有数值包未覆盖。

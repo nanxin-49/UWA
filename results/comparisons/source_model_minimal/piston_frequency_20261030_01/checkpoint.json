@@ -1,0 +1,36 @@
+{
+  "run_id": "piston_frequency_20261030_01",
+  "status": "COMPLETE",
+  "completed_steps": [
+    "analytic_sweep",
+    "axis_and_order_checks",
+    "CSV_recalculation",
+    "FIG_reopen",
+    "PNG_visual_review"
+  ],
+  "config": {
+    "c_mps": 1500,
+    "theta_marker_deg": 7.6756,
+    "frequencies_hz": [
+      4000,
+      8000,
+      12000
+    ],
+    "radius_m": 0.05
+  },
+  "code_sha256": "121ba2051376ad6295d55a5a1880c3e55bf6ef978f040c2035446f38e324d3a5",
+  "artifacts_sha256": {
+    "audit.txt": "6d707a8627f0c38c137737e7f5d8b5e3ad0052d10501042410c8b59f6ae8d161",
+    "frequency_summary.csv": "a867fb05d874785a0354ab20b17f420f6042ee55d3d66fe2ffd4c0645541a9a8",
+    "direction_curves.csv": "7dc9bba970b7638b9aca2c68dd4640829bb4acc741de2284ca57e520c7f4ad59",
+    "piston_frequency_pattern.fig": "74fc97c7d35b0a490f073c7279d7ee8d655c55f4e3668c647be0c1eb9a4fdab3",
+    "stdout.log": "f5d6a595aa7ec5f23adac73ec9c7a8c897fdcb1b79ae3599454e1f915ed3bfe3",
+    "piston_frequency_data.mat": "68e04237ec44b48366b63d4aad7f0da47236e5a8a071f3919aa991b04ed1bd77",
+    "piston_frequency_pattern.png": "d73f84be073e5055ccf46d8f4103c24c0b2e3fee9e644b4348ad41c78d0c08c9"
+  },
+  "failed_checks": 0,
+  "audit_path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\comparisons\\source_model_minimal\\piston_frequency_20261030_01\\audit.txt",
+  "execution_mode": "MATLAB MCP existing session",
+  "matlab_release": "R2025b Update 6",
+  "next_allowed_step": "Stop: requested supplement complete"
+}

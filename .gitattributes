@@ -2,6 +2,10 @@
 *.txt text eol=lf
 *.md text eol=lf
 
+# Preserve source-model comparison evidence exactly as hashed in checkpoints.
+results/comparisons/source_model_minimal/run_20261030_02/** -text
+results/comparisons/source_model_minimal/piston_frequency_20261030_01/** -text
+
 # Preserve the frozen numerical CSV bytes and their recorded SHA-256 values.
 UWA_2D_research_review_workbench.html -text
 results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/array_metrics.csv -text
