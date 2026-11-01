@@ -1,5 +1,7 @@
 # 脚本与验证运行索引
 
+**2026-11-01 RC1 目标深海解析几何：**`reporting/render_target_deepsea_flat_geometry('new_unique_run_id')` 在 `setup_vertical_project` 后计算 1500 m 水深、Tx 1490 m、Rx 3/6/10 m、偏移 0–200 m 的等声速平面海面镜像路径，输出 603 行 CSV 和 F01–F05 PNG/FIG 到 `results/visualization/rc1_target_deepsea_flat_geometry/<run_id>/`。只做解析几何，不运行 PE。孔径资格设计和数值阻塞见[报告](../reports/rc1_target_deepsea_geometry_and_pe_aperture_design_2026-11-01.md)。
+
 **2026-10-30 声源二维方向增益图：**`reporting/render_source_model_2d_beam_maps('new_unique_run_id')` 从已保存的三声源与活塞频率对照配置绘制两张 2×3 解析方向增益图，上排显示宽角域，下排只显示当前 ±7.6756° 接收角锥；输出 `results/visualization/source_model_2d_beams/<run_id>/` 的 FIG/PNG/MAT。颜色仅代表轴向归一化角度权重，已去除距离扩散，不是 PE/BIE/FullFK/Bellhop 场。
 
 **2026-10-30 理想活塞频率补充分析：**`comparisons/run_piston_frequency_minimal_comparison('new_unique_run_id')` 用解析 `2J1(u)/u` 比较固定 5 cm 活塞在 4/8/12 kHz、0–10° 的轴向归一化方向图，并标记 7.6756°；输出 `results/comparisons/source_model_minimal/<run_id>/` 的 MAT/CSV/FIG/PNG，不调用传播求解器。
