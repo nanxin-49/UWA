@@ -1,0 +1,10 @@
+name,value,limit,pass
+DSP_direct,0,1e-12,1
+DSP_reflect,3.06090662420544e-13,1e-12,1
+legacy,4.44089209850063e-16,1e-12,1
+physical_to_DSP,4.28530915147466e-13,1e-12,1
+4062_factor_minus_i,9.01668103909844e-14,1e-12,1
+external_adapter_no_double_conjugation,0,1e-12,1
+component_closure,4.44089209850063e-16,1e-12,1
+reject_DSP_ready_reconversion,0,0,1
+reject_adapted_to_physical,0,0,1

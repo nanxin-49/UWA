@@ -1,0 +1,8 @@
+Captured tool-error transcription; original numerical diary and payload are retained separately.
+错误使用 java.security.MessageDigest$Delegate/update
+为标量参数传递了非标量值
+出错 run_m0_phase_job_vertical>local_sha (第 78 行)
+bytes=fread(fid,Inf,'*uint8'); md.update(typecast(bytes,'int8'));
+出错 run_m0_phase_job_vertical (第 68 行)
+artifacts(end+1)=struct('path',ap,'sha256',local_sha(ap));
+The numerical table in the original tool response had all seven Gaussian gates PASS. No propagation retry was launched.

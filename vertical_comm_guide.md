@@ -235,6 +235,8 @@ H_{\mathrm{ref}}^{\mathrm{phys}}=e^{+i2\pi f\tau_{\mathrm{ref},0}}H_{\mathrm{ref
 2026-07-22 发布候选是历史 carrier-only 合同的限定 PASS，没有验证任意非实原生包络的物理↔DSP关系；不再用于认证当前合同。
 修复、失败记录与验收见 [M0 修复报告](reports/m0_phase_contract_closeout_2026-11-10.md)。
 
+M0制造控制的50m/256²不代表窗口合格。M1当前优先采用历史已测192.1875m/984²、无吸收层配置，平面4/6/8kHz的新窗口/网格/步长门尚未运行；旧结果的源码绑定、深度采样及DSP复用边界见[封存与预审设计](reports/m0_seal_m1_preflight_2026-11-10.md)。
+
 公共 `phase_reference_meta.phase_contract_version='2.0.0'`，包含
 `input_representation`、`output_representation`、`conjugate_input`。四参数 helper
 接口保留，输入合同为 `native_pe_reduced`；已预共轭桥接须传第五参数

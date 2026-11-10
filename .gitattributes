@@ -12,3 +12,7 @@ results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_re
 results/comparisons/two_dimensional_channel_closeout/20261023_s2b_1305/formal_reference_v2/line_metrics.csv -text
 results/comparisons/two_dimensional_channel_closeout/20261023_s2c_b_phi_plus90_01/analysis/support_metrics.csv -text
 results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/three_seed_closeout/three_seed_comparison.csv -text
+
+# Keep selected M0/M1 receipts byte-identical to their SHA manifests.
+results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/** -text whitespace=cr-at-eol
+results/validation/m1_preflight/** -text whitespace=cr-at-eol

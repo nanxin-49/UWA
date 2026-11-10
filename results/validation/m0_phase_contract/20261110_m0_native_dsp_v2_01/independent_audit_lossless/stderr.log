@@ -1,0 +1,15 @@
+错误使用 hex2num>hex2decImpl (第 41 行)
+hex2num 的输入应仅包含 0-9、a-f 或 A-F。
+
+出错 hex2num (第 7 行)
+        x = hex2decImpl(s);
+            ^^^^^^^^^^^^^^
+出错 audit_m0_static_phase_vertical (第 27 行)
+    exact=hex2num(char(csv.value_ieee754_hex));
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+出错 validate_m0_static_phase_vertical (第 128 行)
+        [checks,data]=audit_m0_static_phase_vertical(run_dir);
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+出错 run_m0_phase_job_vertical (第 30 行)
+    payload=validate_m0_static_phase_vertical(stage,run_dir);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

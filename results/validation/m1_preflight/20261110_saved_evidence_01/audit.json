@@ -1,0 +1,11 @@
+{
+  "status": "FAILED",
+  "new_propagation_calls": 0,
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "exit_code_kind": "MATLAB exception status; existing shared session",
+  "available_physical_bytes": 2.277384192E+9,
+  "exit_code": 1,
+  "error_identifier": "MATLAB:nonExistentField",
+  "error_message": "无法识别的字段名称 \"H_total_f\"。",
+  "elapsed_s": 1.6068301
+}

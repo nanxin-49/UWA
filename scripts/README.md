@@ -1,5 +1,7 @@
 # 脚本与验证运行索引
 
+**2026-11-10 M0封存/M1预审：**M0源码已提交`969127f`；本轮只读入口`validation/audit_m1_saved_window_evidence_vertical(absolute_new_output_dir)`读取明确列出的旧窗口MAT/CSV，验证固定主海面裁剪、原生/物理表示与保存门，记录源码身份缺口；不调用传播器/AS参考或外部求解器。结果为`results/validation/m1_preflight/20261110_saved_evidence_04/`。下一次M1的5个PE与10组AS配置、预算和停止条件见[封存与设计报告](../reports/m0_seal_m1_preflight_2026-11-10.md)，本轮未执行。
+
 **2026-11-10 M0 相位合同修复：**`validation/run_m0_phase_job_vertical(stage, absolute_run_dir)` 在已有 MATLAB MCP 会话执行单线程、逐作业资源门与日志/检查点；`validation/validate_m0_static_phase_vertical` 含非实包络、P22 平面波高度、Gaussian 同源角谱、统计/迁移/SSA、CIR/通信与外部桥接控制。`validation/audit_m0_static_phase_vertical` 只重开新结果并独立重建物理场、C/P 和 DFT，不调用传播器。结果目录为 `results/validation/m0_phase_contract/<new_run_id>/`；不得复用已有作业子目录。阶段名和本轮失败/恢复记录见[M0验收报告](../reports/m0_phase_contract_closeout_2026-11-10.md)。这些入口不授权 M1 扫描或大规模 PM/BIE/FullFK。
 
 **项目进度看板（2026-11-10）：**在已有 MATLAB MCP 会话中执行 `setup_vertical_project; render_project_progress_dashboard();`。入口位于 `reporting/`，从 `reports/project_progress.json` 生成 `reports/project_progress.md` 与 `results/visualization/project_progress/index.html`，并保存引用文件检查回执。只读取 JSON、模板和明确引用的文件存在性，不调用声场求解器、不加载 MAT/FIG、不检查归档；不依赖当前目录。可用 `source_path`、`output_dir`、`markdown_path` 绝对路径字段覆盖默认值，输出仍限定在相应项目目录。首次整理时 MATLAB MCP 无法连接，MATLAB 实跑/Analyzer 未执行，初版以有记录的文本打包方式生成；见[维护说明](../reports/project_progress_maintenance.md)。

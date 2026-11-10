@@ -1,0 +1,10 @@
+{
+  "job_id": "C_gaussian",
+  "status": "FAILED_RECEIPT_PACKAGING",
+  "numerical_payload_status": "saved all numerical checks PASS; independent audit pending",
+  "elapsed_conservative_s": 22,
+  "real_error": "java.security.MessageDigest$Delegate/update: empty-byte array overload error in receipt hashing",
+  "no_retry_solve": true,
+  "next_allowed_step": "recover receipt by reopening saved payload only",
+  "code_manifest": "code_manifest.json (numerical code unchanged)"
+}

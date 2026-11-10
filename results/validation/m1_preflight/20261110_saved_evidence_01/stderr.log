@@ -1,0 +1,5 @@
+无法识别的字段名称 "H_total_f"。
+
+出错 audit_m1_saved_window_evidence_vertical (第 52 行)
+    evidence.fixed_wideband.old_vs_v2_total_relative=norm(current-reference.H_total_f(:))/norm(current);
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^

@@ -1,0 +1,70 @@
+[
+  {
+    "status": "PASS",
+    "evidence": [
+      "A_algebra",
+      "H_metadata_guards"
+    ],
+    "requirement": "native/reduced/physical/DSP definitions and guards"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "B_zero",
+      "B_positive",
+      "B_negative",
+      "C_receipt_recovery",
+      "C_direct_only",
+      "G_contract_edges"
+    ],
+    "requirement": "source, height, reflection independent physical controls"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "D_statistics",
+      "G_contract_edges"
+    ],
+    "requirement": "SSA/cached/adjoint/C/P/eigensystems/migration/sampling"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "F_external_empirical",
+      "A_algebra"
+    ],
+    "requirement": "FullFK bridge avoids double conversion; empirical provenance"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "E_cir_comm_boundary_fixed"
+    ],
+    "requirement": "CIR/taps/known-CSI noiseless production communication"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "independent_audit_final",
+      "lossless_metrics"
+    ],
+    "requirement": "independent numerical and artifact audit"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "static_analysis_final",
+      "dashboard_final",
+      "code_snapshot"
+    ],
+    "requirement": "documentation/progress/dashboard/source parsing"
+  },
+  {
+    "status": "PASS",
+    "evidence": [
+      "changed_files.txt",
+      "implementation.patch"
+    ],
+    "requirement": "historical results preserved and branch instruction followed"
+  }
+]

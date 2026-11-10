@@ -1,0 +1,41 @@
+{
+  "status": "M0_SEAL_VERIFIED_M1_DESIGN_ONLY",
+  "date": "2026-11-10",
+  "branch": "compare",
+  "m0_source_commit": "969127fb2861a5d3b423f63bd7c3c34232284d71",
+  "m0_source_parent": "3f7071dbfb8e7bc7cf7ff22c1962506bd3a7388d",
+  "necessary_M0_files_tracked": 41,
+  "initial_M0_artifact_SHA_matches": 181,
+  "initial_M0_source_document_SHA_matches": 48,
+  "final_M0_artifact_SHA_matches": 181,
+  "M1_related_input_SHA_matches": 37,
+  "M0_original_checkpoint_sha256": "6CEA9C9A02634C0602EB16DADFF93C58E74BF566808581F2E419DE60A4378294",
+  "M0_artifact_manifest_sha256": "8E938BDFDBB732FCA44E7A64DC2B63DA1CF5E165BD538B77035A105E0C6C9F02",
+  "phase_v2_regressions": [
+    "A_algebra",
+    "H_metadata_guards",
+    "independent_audit_final"
+  ],
+  "full_linear_regressions": [
+    "E_cir_comm (failed .07421875 preserved)",
+    "E_cir_comm_boundary_fixed (BER 0)",
+    "independent_audit_final same_physical_channel_after_boundary_fix 0"
+  ],
+  "expected_navigation_document_drift": [
+    "PROJECT_CONTEXT.md",
+    "README.md",
+    "reports/project_progress.json",
+    "reports/project_progress.md",
+    "scripts/README.md",
+    "vertical_comm_guide.md"
+  ],
+  "large_data_policy": "MAT/FIG/raw fields kept locally; small explicit receipt whitelist only",
+  "existing_snapshot_count": 47,
+  "new_snapshot_policy": "ignored; existing history retained",
+  "new_propagation_calls": 0,
+  "main_merged": false,
+  "force_operation": false,
+  "remote_push": false,
+  "code_audit": "READONLY_AUDIT_PASS_WITH_PROVENANCE_LIMITS",
+  "original_run_metadata_kept_unchanged": true
+}

@@ -1,0 +1,715 @@
+{
+  "status": "READONLY_AUDIT_PASS_WITH_PROVENANCE_LIMITS",
+  "new_propagation_calls": 0,
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "exit_code_kind": "MATLAB exception status; existing shared session",
+  "available_physical_bytes": 2.667884544E+9,
+  "checks": [
+    {
+      "name": "fixed_MAT_CSV_edge",
+      "value": 3.8857805861880479E-16,
+      "limit": 1E-15,
+      "pass": true
+    },
+    {
+      "name": "fixed_192_strict",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "fixed_160_failure_retained",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "fixed_master_exact_crop_256",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "fixed_master_exact_crop_656",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "fixed_master_exact_crop_820",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "fixed_master_exact_crop_984",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "saved_native_direct_identity",
+      "value": 1.6263032587282567E-18,
+      "limit": 1E-12,
+      "pass": true
+    },
+    {
+      "name": "saved_native_reflect_identity",
+      "value": 8.6736173798840355E-19,
+      "limit": 1E-12,
+      "pass": true
+    },
+    {
+      "name": "saved_wideband_axis",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "random_192_all_pass",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "random_160_all_fail",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "random_reference_validity",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "random_case_count",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    },
+    {
+      "name": "direct_MAT_CSV_hard",
+      "value": 4.1651855795669423E-28,
+      "limit": 1E-25,
+      "pass": true
+    },
+    {
+      "name": "extended_direct_MAT_CSV",
+      "value": 5.0487097934144756E-28,
+      "limit": 1E-25,
+      "pass": true
+    },
+    {
+      "name": "extended_direct_window_pass",
+      "value": 0,
+      "limit": 0,
+      "pass": true
+    }
+  ],
+  "failed_checks": 0,
+  "exit_code": 0,
+  "evidence": {
+    "fixed": {
+      "config": {
+        "output_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_reflected_chain_window",
+        "report_path": "E:\\MISC\\CARPE3D_matlab\\Explain\\reports\\pe_reflected_chain_window_validation_report.md",
+        "frequency_hz": 4000,
+        "c0_mps": 1500,
+        "z_tx_m": 100,
+        "z_rx_m": 3,
+        "sigma_src_m": 0.3,
+        "stepz_lamb": 0.5,
+        "dx_m": 0.1953125,
+        "wind_speed_mps": 5,
+        "target_hs_m": 0.5,
+        "sea_seed": 12345,
+        "reflect_coeff": -1,
+        "master_window_nominal_m": 384,
+        "initial_windows_m": [
+          50,
+          128,
+          160,
+          192
+        ],
+        "escalation_windows_m": [
+          256,
+          320,
+          384
+        ],
+        "center_radii_m": [
+          0.5,
+          1,
+          2
+        ],
+        "max_z_samples": 65,
+        "tl_limit_db": 0.1,
+        "phase_limit_rad": 0.02,
+        "center_l2_limit": 0.01,
+        "boundary_limit_db": -40,
+        "edge5_fraction_limit": 0.0001,
+        "fail_on_nonconvergence": true
+      },
+      "windows_m": [
+        50,
+        128.125,
+        160.15625,
+        192.1875
+      ],
+      "nx": [
+        256,
+        656,
+        820,
+        984
+      ],
+      "edge_pass": [
+        false,
+        false,
+        false,
+        true
+      ],
+      "max_edge5": [
+        0.11838679194680161,
+        0.00106807942895534,
+        0.00011769352667128868,
+        1.7699259984993004E-5
+      ],
+      "max_boundary_db": [
+        -1.2308313844408829,
+        -28.859348043835173,
+        -41.141948326521373,
+        -52.289643939835216
+      ],
+      "upward_saved_planes": 65,
+      "upward_total_steps": 534,
+      "has_code_revision": false,
+      "has_run_sha": false,
+      "master_surface_meta": {
+        "nominal_width_m": 384,
+        "actual_width_m": 383.984375,
+        "nx": 1966,
+        "ny": 1966,
+        "dx_m": 0.1953125,
+        "seed": 12345,
+        "wind_speed_mps": 5,
+        "target_hs_m": 0.5,
+        "raw_hs_m": 0.52821521654297432,
+        "scaled_hs_m": 0.49999999999999989,
+        "mean_m": -1.3603632672587448E-19,
+        "min_m": -0.66682348828487348,
+        "max_m": 0.5506850489003976,
+        "sum_m": -5.2580162446247414E-13,
+        "sum_squares_m2": 60393.046874999971,
+        "generation_meta": {
+          "seed": 12345,
+          "generation_rule": "sqrt(2)*real(ifft2(sqrt(Phi2D*dkx*dky).*CN(0,1))) with MATLAB ifft2 normalization compensated",
+          "mean_eta_m": 2.316294211818944E-19,
+          "variance_about_zero_m2": 0.017438202675077504,
+          "variance_about_mean_m2": 0.017438202675077504,
+          "target_discrete_variance_m2": 0.017765555741642788,
+          "energy_rel_error_about_zero": 0.018426277867455727
+        },
+        "normalization_count": 1,
+        "crop_rule": "exact central crop on common dx grid; crops are never renormalized"
+      },
+      "old_vs_v2_direct_difference": 0.03108291854395305
+    },
+    "fixed_wideband": {
+      "config": {
+        "output_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_reflected_chain_window",
+        "f_axis_hz": [
+          3000,
+          3062.5,
+          3125,
+          3187.5,
+          3250,
+          3312.5,
+          3375,
+          3437.5,
+          3500,
+          3562.5,
+          3625,
+          3687.5,
+          3750,
+          3812.5,
+          3875,
+          3937.5,
+          4000,
+          4062.5,
+          4125,
+          4187.5,
+          4250,
+          4312.5,
+          4375,
+          4437.5,
+          4500,
+          4562.5,
+          4625,
+          4687.5,
+          4750,
+          4812.5,
+          4875,
+          4937.5,
+          5000
+        ],
+        "f_ref_hz": 4000,
+        "c0_mps": 1500,
+        "z_tx_m": 100,
+        "z_rx_m": 3,
+        "sigma_src_m": 0.3,
+        "stepz_lamb": 0.5,
+        "dx_m": 0.1953125,
+        "wind_speed_mps": 5,
+        "target_hs_m": 0.5,
+        "sea_seed": 12345,
+        "reflect_coeff": -1,
+        "tl_limit_db": 0.1,
+        "phase_limit_rad": 0.02,
+        "group_delay_limit_s": 2E-5,
+        "center_l2_limit": 0.01,
+        "use_gpu": true,
+        "resume_cases": true,
+        "weak_ratios": [
+          0.05,
+          0.08,
+          0.1,
+          0.12
+        ],
+        "weak_alphas": [
+          0.005,
+          0.01,
+          0.025,
+          0.05
+        ],
+        "edge_reduction_target_db": 10
+      },
+      "case_names": [
+        "reference_no_sponge",
+        "nominal160_no_sponge",
+        "production_default"
+      ],
+      "summary": [
+        {
+          "case_name": "reference_no_sponge",
+          "width_actual_m": 192.1875,
+          "max_reflect_tl_error_db": 0,
+          "max_reflect_phase_error_rad": 0,
+          "max_internal_group_delay_error_s": 0,
+          "max_total_tl_error_db": 0,
+          "max_total_phase_error_rad": 0,
+          "max_dsp_total_tl_error_db": 0,
+          "max_dsp_total_phase_error_rad": 0,
+          "closure_max_abs": 3.4694469519536142E-18,
+          "passed": true
+        },
+        {
+          "case_name": "nominal160_no_sponge",
+          "width_actual_m": 160.15625,
+          "max_reflect_tl_error_db": 0.019205327946159437,
+          "max_reflect_phase_error_rad": 0.0023816667853903046,
+          "max_internal_group_delay_error_s": 4.0506678978180152E-6,
+          "max_total_tl_error_db": 0.030794500716275135,
+          "max_total_phase_error_rad": 0.00402086860394791,
+          "max_dsp_total_tl_error_db": 0.033475973250397008,
+          "max_dsp_total_phase_error_rad": 0.0040208686039489676,
+          "closure_max_abs": 3.4694469519536142E-18,
+          "passed": true
+        },
+        {
+          "case_name": "production_default",
+          "width_actual_m": 50,
+          "max_reflect_tl_error_db": 1.32034792588072,
+          "max_reflect_phase_error_rad": 0.17782086876071226,
+          "max_internal_group_delay_error_s": 7.094349027809109E-5,
+          "max_total_tl_error_db": 8.41341307181664,
+          "max_total_phase_error_rad": 0.6412018642112,
+          "max_dsp_total_tl_error_db": 8.4134130718182458,
+          "max_dsp_total_phase_error_rad": 0.64120186421239245,
+          "closure_max_abs": 3.8789596144488642E-18,
+          "passed": false
+        }
+      ],
+      "has_code_revision": false,
+      "old_vs_v2_total_relative": 1.7724855985946208
+    },
+    "random": {
+      "config": {
+        "output_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_random_surface_window_robustness",
+        "checkpoint_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_random_surface_window_robustness\\checkpoints_4khz",
+        "report_path": "E:\\MISC\\CARPE3D_matlab\\Explain\\reports\\pe_random_surface_window_robustness_report.md",
+        "frequency_hz": 4000,
+        "c0_mps": 1500,
+        "z_tx_m": 100,
+        "z_rx_m": 3,
+        "sigma_src_m": 0.3,
+        "stepz_lamb": 0.5,
+        "dx_m": 0.1953125,
+        "windows_m": [
+          160,
+          192,
+          256
+        ],
+        "reference_window_m": 256,
+        "seeds": [
+          12345,
+          12346,
+          12347,
+          12348,
+          12349
+        ],
+        "sea_states": [
+          {
+            "name": "weak",
+            "wind_speed_mps": 5,
+            "hs_m": 0.05
+          },
+          {
+            "name": "current",
+            "wind_speed_mps": 5,
+            "hs_m": 0.5
+          },
+          {
+            "name": "strong",
+            "wind_speed_mps": 5,
+            "hs_m": 1
+          }
+        ],
+        "reflect_coeff": -1,
+        "max_z_samples": 33,
+        "center_radius_m": 2,
+        "tl_limit_db": 0.1,
+        "phase_limit_rad": 0.02,
+        "center_l2_limit": 0.01,
+        "boundary_limit_db": -40,
+        "edge5_fraction_limit": 0.0001,
+        "resume_cases": true,
+        "use_gpu": true,
+        "fail_on_invalid_reference": false
+      },
+      "case_count": 45,
+      "pass_rates": [
+        {
+          "sea_state": "weak",
+          "target_hs_m": 0.05,
+          "window_nominal_m": 160,
+          "passed_count": 0,
+          "total_count": 5,
+          "pass_rate": 0,
+          "worst_tl_error_db": 0.0015247944696059612,
+          "worst_phase_error_rad": 0.00012759184831253516,
+          "worst_receiver_center_l2": 9.2198672459855528E-5,
+          "worst_edge5_fraction": 0.00010589841063632595,
+          "worst_boundary_db": -39.45092071356234,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "weak",
+          "target_hs_m": 0.05,
+          "window_nominal_m": 192,
+          "passed_count": 5,
+          "total_count": 5,
+          "pass_rate": 1,
+          "worst_tl_error_db": 0.00030280318259867976,
+          "worst_phase_error_rad": 5.659685959586479E-5,
+          "worst_receiver_center_l2": 3.3172055660989937E-5,
+          "worst_edge5_fraction": 1.2010467996862734E-5,
+          "worst_boundary_db": -50.598276988397132,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "weak",
+          "target_hs_m": 0.05,
+          "window_nominal_m": 256,
+          "passed_count": 5,
+          "total_count": 5,
+          "pass_rate": 1,
+          "worst_tl_error_db": 0,
+          "worst_phase_error_rad": 0,
+          "worst_receiver_center_l2": 0,
+          "worst_edge5_fraction": 3.4289027627698778E-7,
+          "worst_boundary_db": -68.089620949922761,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "current",
+          "target_hs_m": 0.5,
+          "window_nominal_m": 160,
+          "passed_count": 0,
+          "total_count": 5,
+          "pass_rate": 0,
+          "worst_tl_error_db": 0.010575722420482662,
+          "worst_phase_error_rad": 0.00067575389647334561,
+          "worst_receiver_center_l2": 0.000451368854522072,
+          "worst_edge5_fraction": 0.00012071795465610204,
+          "worst_boundary_db": -40.869360143415946,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "current",
+          "target_hs_m": 0.5,
+          "window_nominal_m": 192,
+          "passed_count": 5,
+          "total_count": 5,
+          "pass_rate": 1,
+          "worst_tl_error_db": 0.0081280201573226719,
+          "worst_phase_error_rad": 0.00069894075650629175,
+          "worst_receiver_center_l2": 0.00026093452438882711,
+          "worst_edge5_fraction": 1.7590126860950241E-5,
+          "worst_boundary_db": -50.6572262710818,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "current",
+          "target_hs_m": 0.5,
+          "window_nominal_m": 256,
+          "passed_count": 5,
+          "total_count": 5,
+          "pass_rate": 1,
+          "worst_tl_error_db": 0,
+          "worst_phase_error_rad": 0,
+          "worst_receiver_center_l2": 0,
+          "worst_edge5_fraction": 2.8104534310374505E-6,
+          "worst_boundary_db": -64.74565319106604,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "strong",
+          "target_hs_m": 1,
+          "window_nominal_m": 160,
+          "passed_count": 0,
+          "total_count": 5,
+          "pass_rate": 0,
+          "worst_tl_error_db": 0.020730886655248651,
+          "worst_phase_error_rad": 0.0011784081979863735,
+          "worst_receiver_center_l2": 0.0012418474314597079,
+          "worst_edge5_fraction": 0.00018997027717351249,
+          "worst_boundary_db": -41.141948326521373,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "strong",
+          "target_hs_m": 1,
+          "window_nominal_m": 192,
+          "passed_count": 5,
+          "total_count": 5,
+          "pass_rate": 1,
+          "worst_tl_error_db": 0.018526864283836313,
+          "worst_phase_error_rad": 0.00060478185500401711,
+          "worst_receiver_center_l2": 0.00080206165569098422,
+          "worst_edge5_fraction": 5.9492474269308022E-5,
+          "worst_boundary_db": -51.250751947760243,
+          "all_references_valid": true
+        },
+        {
+          "sea_state": "strong",
+          "target_hs_m": 1,
+          "window_nominal_m": 256,
+          "passed_count": 5,
+          "total_count": 5,
+          "pass_rate": 1,
+          "worst_tl_error_db": 0,
+          "worst_phase_error_rad": 0,
+          "worst_receiver_center_l2": 0,
+          "worst_edge5_fraction": 2.3173911750066877E-5,
+          "worst_boundary_db": -56.818113769279762,
+          "all_references_valid": true
+        }
+      ],
+      "all_references_valid": true,
+      "upward_saved_planes": 33,
+      "has_code_revision": false,
+      "has_run_sha": false
+    },
+    "direct": {
+      "config": {
+        "output_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_gaussian_window_sponge\\extended_window",
+        "frequency_hz": 4000,
+        "c0_mps": 1500,
+        "sigma_src_m": 0.3,
+        "distances_m": [
+          70,
+          97,
+          100
+        ],
+        "widths_m": [
+          80,
+          100,
+          128,
+          160
+        ],
+        "production_width_m": 50,
+        "hard_check_width_m": 160,
+        "dx_target_m": 0.1953125,
+        "center_radii_m": [
+          0.5,
+          1,
+          2
+        ],
+        "stepz_lamb": 0.5,
+        "pe_as_full_l2_limit": 1E-10,
+        "pe_as_center_l2_limit": 1E-10,
+        "pe_as_axis_amplitude_limit_db": 1E-9,
+        "pe_as_axis_phase_limit_rad": 1E-10,
+        "window_complex_l2_limit": 0.001,
+        "window_max_amplitude_limit_db": 0.05,
+        "window_phase_rms_limit_rad": 0.01
+      },
+      "hard_max_complex": 2.5633698477621251E-13,
+      "hard_max_center": 1.4532598338527065E-13,
+      "reference_width_m": 128,
+      "hard_pass": true,
+      "window_converged": true,
+      "has_code_revision": false
+    },
+    "direct_initial_scan": {
+      "config": {
+        "output_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_gaussian_window_sponge",
+        "frequency_hz": 4000,
+        "c0_mps": 1500,
+        "sigma_src_m": 0.3,
+        "distances_m": [
+          20,
+          40,
+          70,
+          97,
+          100
+        ],
+        "widths_m": [
+          16,
+          24,
+          32,
+          48,
+          50,
+          64,
+          80,
+          100
+        ],
+        "production_width_m": 50,
+        "hard_check_width_m": 100,
+        "dx_target_m": 0.1953125,
+        "center_radii_m": [
+          0.5,
+          1,
+          2
+        ],
+        "stepz_lamb": 0.5,
+        "pe_as_full_l2_limit": 1E-10,
+        "pe_as_center_l2_limit": 1E-10,
+        "pe_as_axis_amplitude_limit_db": 1E-9,
+        "pe_as_axis_phase_limit_rad": 1E-10,
+        "window_complex_l2_limit": 0.001,
+        "window_max_amplitude_limit_db": 0.05,
+        "window_phase_rms_limit_rad": 0.01
+      },
+      "hard_max_complex": 1.4913572995118259E-13,
+      "hard_max_center": 1.6086083535878877E-13,
+      "reference_width_m": null,
+      "hard_pass": true,
+      "window_converged": false,
+      "has_code_revision": false,
+      "actual_dx_range_m": [
+        0.19512195121951237,
+        0.19672131147540917
+      ]
+    },
+    "direct_wideband": {
+      "config": {
+        "output_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\pe_gaussian_window_sponge",
+        "f_axis_hz": [
+          3000,
+          3062.5,
+          3125,
+          3187.5,
+          3250,
+          3312.5,
+          3375,
+          3437.5,
+          3500,
+          3562.5,
+          3625,
+          3687.5,
+          3750,
+          3812.5,
+          3875,
+          3937.5,
+          4000,
+          4062.5,
+          4125,
+          4187.5,
+          4250,
+          4312.5,
+          4375,
+          4437.5,
+          4500,
+          4562.5,
+          4625,
+          4687.5,
+          4750,
+          4812.5,
+          4875,
+          4937.5,
+          5000
+        ],
+        "f_ref_hz": 4000,
+        "c0_mps": 1500,
+        "sigma_src_m": 0.3,
+        "distance_m": 97,
+        "dx_target_m": 0.1953125,
+        "stepz_lamb": 0.5,
+        "reference_width_m": 160,
+        "production_width_m": 50,
+        "default_ratio": 0.12,
+        "default_alpha": 0.15
+      },
+      "summary": [
+        {
+          "case_name": "large_no_sponge",
+          "width_m": 160,
+          "sponge_ratio": 0.12,
+          "alpha_max_np_per_m": 0,
+          "max_abs_tl_error_db": 0,
+          "amplitude_error_span_db": 0,
+          "rms_phase_error_rad": 0,
+          "max_abs_phase_error_rad": 0,
+          "rms_group_delay_error_us": 0,
+          "max_abs_group_delay_error_us": 0
+        },
+        {
+          "case_name": "production_default",
+          "width_m": 50,
+          "sponge_ratio": 0.12,
+          "alpha_max_np_per_m": 0.15,
+          "max_abs_tl_error_db": 0.84222486198907764,
+          "amplitude_error_span_db": 1.3463651005215733,
+          "rms_phase_error_rad": 0.1318663226437175,
+          "max_abs_phase_error_rad": 0.28595159726313563,
+          "rms_group_delay_error_us": 232.64932666329042,
+          "max_abs_group_delay_error_us": 1326.8142934322857
+        },
+        {
+          "case_name": "recommended_no_sponge",
+          "width_m": 128,
+          "sponge_ratio": 0.12,
+          "alpha_max_np_per_m": 0,
+          "max_abs_tl_error_db": 0.10029261189772479,
+          "amplitude_error_span_db": 0.16894640885184403,
+          "rms_phase_error_rad": 0.0032863811484274016,
+          "max_abs_phase_error_rad": 0.011962456345615739,
+          "rms_group_delay_error_us": 8.635876677613366,
+          "max_abs_group_delay_error_us": 33.557701041592864
+        }
+      ],
+      "has_code_revision": false
+    },
+    "provenance_limitations": [
+      "Historical MAT structs have configuration but no bound run-time Git revision/source SHA.",
+      "Git history identifies recoverable script versions, not exact dirty run source.",
+      "Native physical fields remain interpretable; old carrier-only DSP/timing claims require reconstruction.",
+      "Edge traces cover saved z planes (65/33), not every marching step.",
+      "The root Gaussian MAT is the initial failed <=100m scan; the accepted gate is under extended_window, as bound by the sponge MAT.",
+      "No historical CPU wall-time fields: M1 runtime forecasts must be labelled estimates."
+    ]
+  },
+  "elapsed_s": 2.207844
+}

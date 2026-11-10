@@ -9,6 +9,13 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-10）
 
+### M0已提交封存；M1预审设计完成（2026-11-10；本轮无新传播）
+
+- 任务开始compare为干净的`969127f`，M0生产修复/测试/文档已提交；本轮补轻量回执、失败证据及白名单，不重复提交生成源码快照，不改写M0原检查点的历史未提交字段。原181项产物及48项代码/文档SHA在本轮开始全匹配。未合并main、强制操作或推送。
+- [M0封存与M1预审](reports/m0_seal_m1_preflight_2026-11-10.md)取代早期50/80/100m重扫建议：优先采用已有192.1875m/984²、dx=50/256、无吸收层窗口证据。50m/256²只是M0制造控制。4kHz随机面192为15/15通过，160为0/15；3–5kHz固定实例旁证不认证平面4–8kHz。
+- 37项直接相关输入做本轮SHA绑定，原MAT/CSV与主海面严格裁剪17项只读门通过；旧MAT无当次Git/SHA绑定，旧边缘轨迹仅33/65个深度平面。Gaussian根目录MAT是初次失败扫描，合格门位于extended_window。原生/物理场可保留原范围，旧carrier-only DSP不能直接沿用；详见新审计与源码差异记录。
+- M1设计为5次984²生产PE与10组独立AS，分离窗口、横向网格、步长和实现误差；4/6/8kHz，半步长测4/8kHz，逐传播步边缘检查。CPU保守规划上限10800s、单作业3600s，至少30%可用RAM余量、细网格AS估计追加1GiB。这是待下一次授权的范围，不是本轮获准运行的预算。
+- 状态为`M0_SEALED / M1_DESIGN_READY_NOT_EXECUTED`；本轮仅现有MATLAB读取保存数据、代数成本估计及看板刷新，无传播/AS参考求解、SSH或新MATLAB进程。原正式S5/S6暂停保持。
 ### M0 原生 PE／物理相量／DSP 合同修复（2026-11-10；限定准入 M1）
 
 - 在 `compare`、基线 `3f7071d` 上完成 M0 修复与最小独立控制；当前状态和完整门证据见 [M0 验收报告](reports/m0_phase_contract_closeout_2026-11-10.md) 及 `results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/`。本轮用户随后明确要求停止 main 合并，已撤销未完成合并并保留 compare 原提交；未提交或推送本轮修复。

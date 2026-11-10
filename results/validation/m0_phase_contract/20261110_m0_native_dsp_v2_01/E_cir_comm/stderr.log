@@ -1,0 +1,6 @@
+错误使用 assert
+M0 stage checks failed.
+
+出错 run_m0_phase_job_vertical (第 31 行)
+    assert(payload.pass,'M0 stage checks failed.');
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

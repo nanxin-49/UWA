@@ -1,0 +1,237 @@
+{
+  "run_id": "20261110_m0_native_dsp_v2_01",
+  "job_id": "independent_audit",
+  "status": "FAILED",
+  "elapsed_s": 0.9653843,
+  "failed_checks": 1,
+  "result_dir": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit",
+  "execution_mode": "existing_local_matlab_mcp",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "exit_code": 1,
+  "exit_code_kind": "MATLAB exception status; shared process is not exited",
+  "stdout_log": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\stdout.log",
+  "stderr_log": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\stderr.log",
+  "checkpoint_path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\checkpoint.json",
+  "threads": 1,
+  "available_physical_before_bytes": 1.949626368E+9,
+  "estimated_peak_additional_bytes": 2.097152E+8,
+  "error_identifier": "",
+  "error_message": "M0 stage checks failed.",
+  "completed_steps": [
+    "independent_audit"
+  ],
+  "config": {
+    "phase_contract_version": "2.0.0",
+    "serial": true,
+    "single_job_limit_s": 180,
+    "total_budget_s": 600,
+    "reserved_available_RAM_fraction": 0.3
+  },
+  "code_versions_sha256": [
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\examples\\comm_main_vertical_psk_demo.m",
+      "sha256": "8a39f7d773cace88823b61a50b776f0331a938eb29b63f8e0d062d29db359c74"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\reporting\\plot_pe_propagation_atlas_vertical.m",
+      "sha256": "08c26958dd749d25cb6bc124afa7a38d5344c90abcd00f58fcd182cc7695c034"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\reporting\\visualize_surface_reflection_wavefield_vertical.m",
+      "sha256": "11243302d5c46f9eb3dbd200904f13c95a45aa33b8674fcdd920f0f191f96481"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\run_m0_phase_job_vertical.m",
+      "sha256": "1c9b281e8351669bc57181edff08c6a46fd4b57ca8468b522bf61549d403ac46"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\support\\assert_pe_phase_release_artifact_vertical.m",
+      "sha256": "936267a9a60153d288ae5f0ffa3be6f5e66e737ebc1c4b17bb69a8e8eec89baa"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\support\\assert_spectral_fast_kirchhoff_multifrequency_artifacts.m",
+      "sha256": "99556ba58bd26865dbb24ccdb6daf344101f4e089b84439207e98ec83a7dc2e7"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\test_spectral_fast_kirchhoff_multifrequency_phase.m",
+      "sha256": "8d23fcd9817f5d30dce4eaeab4e436179659d35f926bee947d300e1d614f7001"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_m0_static_phase_vertical.m",
+      "sha256": "4377ae9e4718ef4c8c50d8d0c8a23bba6fb7bf34031ab82cc251db47702860b3"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_pe_channel_phase_reference_vertical.m",
+      "sha256": "b51a7b752e9d0b1fa19ca4d6fa8cc8696dfb400259406975d156842d95106c81"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_spectral_fast_kirchhoff_multifrequency_consistency.m",
+      "sha256": "e71beeaaf104c7bf5a9dda9a31d8a22bdd4000cb6f79b6476a8fbb8ab15b795f"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_streaming_joint_builder_u5_vertical.m",
+      "sha256": "908ab2ab8b6d86feed81e6d10b4451f2c956981767a5775792e4277f583b16a0"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_two_node_communication_vertical.m",
+      "sha256": "5337806fffc0cd287be0abafa592af6af4f27d1e72cb5cd164f5d6e070fef999"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_u5_conditional_channel_generator_vertical.m",
+      "sha256": "c57c13e455cf51fbc1ddc48622f7601fa0ef4e0acbc3b4adc701c497f93bd6ff"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\scripts\\validation\\validate_u8_conditional_channel_generator_vertical.m",
+      "sha256": "a1c84f8c660560fa2f3deef4584dbaf3245e785a0a46b697ffcdffe464c927c5"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\setup_vertical_project.m",
+      "sha256": "e0843ea16fa87b35da6378c7c04e8377277c39273fdb3119c9b6991725914ea9"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\channel\\apply_pe_channel_phase_reference_vertical.m",
+      "sha256": "757df86e76eabe67adc7b02693dd611e4b430636f5c6214f0ba609cc59a4e65a"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\channel\\assert_channel_dsp_metadata_vertical.m",
+      "sha256": "4ceb0ee2bdab3ead5e4c8605d6880882677f5e300c95468afdfd7f2cb980a4b3"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\channel\\build_channel_cir_vertical.m",
+      "sha256": "6bd618a6d093400473ac328af665bc1c2ab7f3b5b7aa4294b1edb18f7844673c"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\communication\\build_communication_taps_vertical.m",
+      "sha256": "636f2a55116db96498be43ab44171866ed529c0c6f5878f6d83eba73ec4e419a"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\communication\\evaluate_mpsk_channel_ensemble_vertical.m",
+      "sha256": "e3b5fa09725dd8a6d9fb2d80572c4886a6469e7f3a4bcd8225677c6a2783deee"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\propagation\\gaussian_source_initial_field_vertical.m",
+      "sha256": "e4414cd42fe246088cbeadebaa314daf604465f4cb9ebd3e5eefacf05f13a407"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\propagation\\vertical_wape_propagator.m",
+      "sha256": "f1db24d9e7191c1826a7546ca08672c17dfe1db7b6f104bc0c91ce4aabb27727"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\receiver\\build_adjoint_receiver_projection_vertical.m",
+      "sha256": "0cd25bf0b09aa0582a4d68622b8716539c7f0d3e06c3a0d57a09c9d32e56cd3f"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\receiver\\build_cached_joint_kstat_pe_executor_vertical.m",
+      "sha256": "e4556ef977135cd6b0460fb03910115219e0bdf0bfd31271e2c4d78865dfaa71"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\receiver\\contract_kstat_receiver_stats_vertical.m",
+      "sha256": "ba5d12fc0ea00a5a04435d47207f720228324469de425f20065bf488c8166c10"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\receiver\\run_adjoint_receiver_projection_vertical.m",
+      "sha256": "30820ec395b83011070c8238a12372af86ce49b5b00fc69c2d7e4e0cecf81f6e"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\receiver\\run_cached_joint_kstat_pe_executor_vertical.m",
+      "sha256": "861218aee06b2a29b3a47df84cf1b6124b816c71f6b15343d90c56116e4b4b9f"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\statistics\\build_conditional_channel_library_vertical.m",
+      "sha256": "ff7aa1f6672be6162bb81b202f56cd269024a5adb13c489ea44c397840f1332f"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\statistics\\estimate_conditional_channel_stats_vertical.m",
+      "sha256": "366c3fbdc013971405f94386c7f1976620a03a29aa365b72011829f54975b3a9"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\statistics\\upgrade_conditional_channel_phase_vertical.m",
+      "sha256": "31b8c8f0426ecdfa304bddbc02a385ff9ac189212cb6f207ba210830daa3b46e"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\src\\surface\\pm_surface_boundary_model.m",
+      "sha256": "236ad99cc35e46a31b9b7bcab76831ab563c850803cc01d6bc30da1b0db6a584"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\vertical_channel_model.m",
+      "sha256": "0a86ce528a41d67692a51eb3ba9ec16acc3d6ce4a004e0e890768d9a0e69deb6"
+    }
+  ],
+  "input_versions_sha256": {
+    "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\checkpoint_initial.json",
+    "sha256": "255b741eec14cb4f164d2a162a94d002f0b3e3fea6fa8124ab88b4b0635e5d97"
+  },
+  "cumulative_elapsed_s": 109.37316329999999,
+  "available_physical_after_bytes": 1.9191808E+9,
+  "resource_gate_pass": true,
+  "next_allowed_step": "Next authorized M0 job only; no M1 solve.",
+  "audit_status_and_path": "Independent audit required before M0 closure.",
+  "failed_or_unrun_checks": [
+    {
+      "name": "A_algebra_MAT_CSV",
+      "value": 1.0097419586828951E-28,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "B_zero_MAT_CSV",
+      "value": 5.0487097934144756E-29,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "B_positive_MAT_CSV",
+      "value": 2.5243548967072378E-29,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "B_negative_MAT_CSV",
+      "value": 2.5243548967072378E-29,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "C_receipt_recovery_MAT_CSV",
+      "value": 4.543838814073028E-28,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "C_direct_only_MAT_CSV",
+      "value": 3.5340968553901329E-28,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "D_statistics_MAT_CSV",
+      "value": 4.543838814073028E-28,
+      "limit": 0,
+      "pass": false
+    },
+    {
+      "name": "E_cir_comm_boundary_fixed_MAT_CSV",
+      "value": 1.3805065841367707E-30,
+      "limit": 0,
+      "pass": false
+    }
+  ],
+  "artifacts_sha256": [
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\metrics.csv",
+      "sha256": "58f6a9d6ed948cf1a237a8aa160b359c9153e93bc15cdaf3042ba131e24505f2"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\payload.mat",
+      "sha256": "86f7c8e3a3e7df3c9517fe02bd338831a22500e04f4c9135d41ebc048e7aade6"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\stderr.log",
+      "sha256": "2a3c5a20e4f802b3a75fe4f1c65b42e053fc3c525565b3cce0e7159dc0dbcb46"
+    },
+    {
+      "path": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\validation\\m0_phase_contract\\20261110_m0_native_dsp_v2_01\\independent_audit\\stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

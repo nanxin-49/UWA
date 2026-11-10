@@ -1,0 +1,15 @@
+{
+  "inspected_head": "969127fb2861a5d3b423f63bd7c3c34232284d71",
+  "m0_parent": "3f7071dbfb8e7bc7cf7ff22c1962506bd3a7388d",
+  "legacy_recoverable_source": "8946b8e",
+  "legacy_source_is_exact_run_binding": false,
+  "unchanged_source_blob_current": "78d7e7f77863d9f83254eae36c0ba7a68b7c30e8",
+  "unchanged_source_blob_legacy": "78d7e7f77863d9f83254eae36c0ba7a68b7c30e8",
+  "operator_diff": "production march unchanged; M0 receiver/SSA diagnostics and carrier metadata changed",
+  "code_reviewed_without_execution": [
+    "src/propagation/vertical_wape_propagator.m",
+    "src/surface/pm_surface_boundary_model.m",
+    "scripts/validation/support/exact_angular_spectrum_one_step_vertical.m"
+  ],
+  "audit_entrypoint_sha256": "12C1D1013541D79CAAFAB5DF4F3C0AD9D933203A965D3C4E759652DFF1ABF27A"
+}

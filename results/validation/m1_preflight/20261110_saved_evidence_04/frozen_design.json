@@ -1,0 +1,75 @@
+{
+  "status": "DESIGN_ONLY_NOT_AUTHORIZED_FOR_EXECUTION",
+  "source_commit": "969127fb2861a5d3b423f63bd7c3c34232284d71",
+  "geometry": {
+    "tx_m": [
+      0,
+      0,
+      100
+    ],
+    "rx_m": [
+      0,
+      0,
+      3
+    ],
+    "c_mps": 1500
+  },
+  "source": {
+    "mode": "gaussian",
+    "sigma_m": 0.3,
+    "continuous_peak": 1,
+    "frequency_independent": true
+  },
+  "surface": {
+    "elevation_m": 0,
+    "reflect_coeff": -1,
+    "boundary": "kirchhoff_spatial"
+  },
+  "numerics": {
+    "sample_support_radii_m": [
+      0.5,
+      1,
+      2
+    ],
+    "validation_allow_extended_sponge_ratio": true,
+    "save_mode": "slice",
+    "energy_trace": "every marching step, actual step count+1",
+    "nout": 1,
+    "fine_grid_compare": "exact nested coordinate selection; no interpolation",
+    "parallel": false,
+    "cpu_double": true,
+    "validation_allow_extended_window": true,
+    "alpha_np_per_m": 0,
+    "use_gpu": false,
+    "sponge_ratio": 0,
+    "show_figures": false
+  },
+  "thresholds": {
+    "phase_rms_rad": 0.01,
+    "amplitude_db": 0.05,
+    "spatial_complex_L2": 0.001,
+    "boundary_db": -40,
+    "PE_AS_complex_relative": 1E-10,
+    "closure": 1E-12,
+    "edge5_fraction_strictly_less": 0.0001
+  },
+  "proposed_resources": {
+    "total_MATLAB_s": 10800,
+    "disk_reserve_GiB": 2,
+    "single_job_s": 3600,
+    "reserve_available_RAM_fraction": 0.3,
+    "threads": 1,
+    "pilot_P4_stop_s": 900,
+    "required_available_GiB_for_1GiB_job": 1.5
+  },
+  "production_PE_calls": 5,
+  "AS_configuration_count": 10,
+  "not_claimed": [
+    "continuous band convergence",
+    "6kHz half-step measurement",
+    "fine-grid PE marching execution",
+    "rough surface convergence",
+    "M2 CIR",
+    "formal S5/S6"
+  ]
+}

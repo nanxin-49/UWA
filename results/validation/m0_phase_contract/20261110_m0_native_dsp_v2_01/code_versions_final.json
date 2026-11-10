@@ -1,0 +1,242 @@
+[
+  {
+    "path": "AGENTS.md",
+    "sha256": "CE4BD5835ED0FEDF8DD5416CB0E7DBCB5849C44EE8761CEB450FC457DDA6AFA7",
+    "snapshot": "code_snapshot\\AGENTS.md"
+  },
+  {
+    "path": "examples\\comm_main_vertical_psk_demo.m",
+    "sha256": "8A39F7D773CACE88823B61A50B776F0331A938EB29B63F8E0D062D29DB359C74",
+    "snapshot": "code_snapshot\\examples\\comm_main_vertical_psk_demo.m"
+  },
+  {
+    "path": "PROJECT_CONTEXT.md",
+    "sha256": "038C67DF7952CC86CC644DE30A31BAE0A9F6CFFA894BC0CC71194EE8F23B4909",
+    "snapshot": "code_snapshot\\PROJECT_CONTEXT.md"
+  },
+  {
+    "path": "README.md",
+    "sha256": "D89266D331A4CC81E06186A2D767BABD0B5DB9E27D9407538949C7E60F9D6056",
+    "snapshot": "code_snapshot\\README.md"
+  },
+  {
+    "path": "reports\\m0_phase_contract_closeout_2026-11-10.md",
+    "sha256": "ACDE1578675FF3935FC4107B7AD4B98A30C8F347CDFFC12871D7E4BB69ADC0EE",
+    "snapshot": "code_snapshot\\reports\\m0_phase_contract_closeout_2026-11-10.md"
+  },
+  {
+    "path": "reports\\project_progress.json",
+    "sha256": "E4F768FE6A0E02681EBC3680D0829EB634985C0B6AE2BCB315B6A44C55E96627",
+    "snapshot": "code_snapshot\\reports\\project_progress.json"
+  },
+  {
+    "path": "reports\\project_progress.md",
+    "sha256": "999AA87BB8ED758864CD1777C57DAE5729DD3AFAF033B7F5DF0244830636637D",
+    "snapshot": "code_snapshot\\reports\\project_progress.md"
+  },
+  {
+    "path": "scripts\\experiments\\monte_carlo_surface_channel_vertical.m",
+    "sha256": "322122019FB1554B873369640ACC4299B394771F64A3AA46BCF30F761939DF54",
+    "snapshot": "code_snapshot\\scripts\\experiments\\monte_carlo_surface_channel_vertical.m"
+  },
+  {
+    "path": "scripts\\experiments\\sweep_monte_carlo_surface_channel_vertical.m",
+    "sha256": "C4C6832F40C5988F14D03B84C3B8C38989844B9A24ED389CC459731C03460396",
+    "snapshot": "code_snapshot\\scripts\\experiments\\sweep_monte_carlo_surface_channel_vertical.m"
+  },
+  {
+    "path": "scripts\\README.md",
+    "sha256": "F18567646BE428DDEAFC64DCBC9C31B767D7322D4E25616C83D680FCD7AF1E83",
+    "snapshot": "code_snapshot\\scripts\\README.md"
+  },
+  {
+    "path": "scripts\\reporting\\plot_pe_propagation_atlas_vertical.m",
+    "sha256": "08C26958DD749D25CB6BC124AFA7A38D5344C90ABCD00F58FCD182CC7695C034",
+    "snapshot": "code_snapshot\\scripts\\reporting\\plot_pe_propagation_atlas_vertical.m"
+  },
+  {
+    "path": "scripts\\reporting\\visualize_surface_reflection_wavefield_vertical.m",
+    "sha256": "11243302D5C46F9EB3DBD200904F13C95A45AA33B8674FCDD920F0F191F96481",
+    "snapshot": "code_snapshot\\scripts\\reporting\\visualize_surface_reflection_wavefield_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\audit_m0_static_phase_vertical.m",
+    "sha256": "D5AF618F9810A04DB87D7013EC39C182BB68181011833568A3078F89812073A6",
+    "snapshot": "code_snapshot\\scripts\\validation\\audit_m0_static_phase_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\finalize_pe_phase_reference_release_candidate_vertical.m",
+    "sha256": "B170D63838E9A2F0F1DB5D244C11D718A41AD90C809731707808CD833AFB734F",
+    "snapshot": "code_snapshot\\scripts\\validation\\finalize_pe_phase_reference_release_candidate_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\run_m0_phase_job_vertical.m",
+    "sha256": "CC3D42A510413862BAB93573FA7A7FF04A68298804C9A86C9976BA9E7035F988",
+    "snapshot": "code_snapshot\\scripts\\validation\\run_m0_phase_job_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\support\\assert_pe_phase_release_artifact_vertical.m",
+    "sha256": "936267A9A60153D288AE5F0FFA3BE6F5E66E737EBC1C4B17BB69A8E8EEC89BAA",
+    "snapshot": "code_snapshot\\scripts\\validation\\support\\assert_pe_phase_release_artifact_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\support\\assert_spectral_fast_kirchhoff_multifrequency_artifacts.m",
+    "sha256": "99556BA58BD26865DBB24CCDB6DAF344101F4E089B84439207E98EC83A7DC2E7",
+    "snapshot": "code_snapshot\\scripts\\validation\\support\\assert_spectral_fast_kirchhoff_multifrequency_artifacts.m"
+  },
+  {
+    "path": "scripts\\validation\\support\\pe_phase_release_run_meta_vertical.m",
+    "sha256": "36DFF2D2CD664591135D0A288B3CFF9D7752B9D7FF0E894A9E5E9BB36888A47E",
+    "snapshot": "code_snapshot\\scripts\\validation\\support\\pe_phase_release_run_meta_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\test_spectral_fast_kirchhoff_multifrequency_phase.m",
+    "sha256": "8D23FCD9817F5D30DCE4EAEAB4E436179659D35F926BEE947D300E1D614F7001",
+    "snapshot": "code_snapshot\\scripts\\validation\\test_spectral_fast_kirchhoff_multifrequency_phase.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_m0_static_phase_vertical.m",
+    "sha256": "3C79341AD5C2186200AF1799CF5E80A6E1912F64EC8B23BAC7EAE36FE6945179",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_m0_static_phase_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_pe_channel_phase_reference_vertical.m",
+    "sha256": "B51A7B752E9D0B1FA19CA4D6FA8CC8696DFB400259406975D156842D95106C81",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_pe_channel_phase_reference_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_spectral_fast_kirchhoff_multifrequency_consistency.m",
+    "sha256": "A309195BE8F271F3A278A40FB402BE2E38603CA4C044D6839061DF88E21A8CEB",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_spectral_fast_kirchhoff_multifrequency_consistency.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_streaming_joint_builder_u5_vertical.m",
+    "sha256": "908AB2AB8B6D86FEED81E6D10B4451F2C956981767A5775792E4277F583B16A0",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_streaming_joint_builder_u5_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_two_node_communication_vertical.m",
+    "sha256": "5337806FFFC0CD287BE0ABAFA592AF6AF4F27D1E72CB5CD164F5D6E070FEF999",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_two_node_communication_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_u5_conditional_channel_generator_vertical.m",
+    "sha256": "C57C13E455CF51FBC1DDC48622F7601FA0EF4E0ACBC3B4ADC701C497F93BD6FF",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_u5_conditional_channel_generator_vertical.m"
+  },
+  {
+    "path": "scripts\\validation\\validate_u8_conditional_channel_generator_vertical.m",
+    "sha256": "A1C84F8C660560FA2F3DEEF4584DBAF3245E785A0A46B697FFCDFFE464C927C5",
+    "snapshot": "code_snapshot\\scripts\\validation\\validate_u8_conditional_channel_generator_vertical.m"
+  },
+  {
+    "path": "setup_vertical_project.m",
+    "sha256": "E0843EA16FA87B35DA6378C7C04E8377277C39273FDB3119C9B6991725914EA9",
+    "snapshot": "code_snapshot\\setup_vertical_project.m"
+  },
+  {
+    "path": "src\\channel\\apply_pe_channel_phase_reference_vertical.m",
+    "sha256": "DEC2B2612E87A40B53F52B809B55F31DE08BAAA89339149552A925EB311FAF7B",
+    "snapshot": "code_snapshot\\src\\channel\\apply_pe_channel_phase_reference_vertical.m"
+  },
+  {
+    "path": "src\\channel\\assert_channel_dsp_metadata_vertical.m",
+    "sha256": "4CEB0EE2BDAB3EAD5E4C8605D6880882677F5E300C95468AFDFD7F2CB980A4B3",
+    "snapshot": "code_snapshot\\src\\channel\\assert_channel_dsp_metadata_vertical.m"
+  },
+  {
+    "path": "src\\channel\\build_channel_cir_vertical.m",
+    "sha256": "6BD618A6D093400473AC328AF665BC1C2AB7F3B5B7AA4294B1EDB18F7844673C",
+    "snapshot": "code_snapshot\\src\\channel\\build_channel_cir_vertical.m"
+  },
+  {
+    "path": "src\\communication\\build_communication_taps_vertical.m",
+    "sha256": "636F2A55116DB96498BE43AB44171866ED529C0C6F5878F6D83EBA73EC4E419A",
+    "snapshot": "code_snapshot\\src\\communication\\build_communication_taps_vertical.m"
+  },
+  {
+    "path": "src\\communication\\evaluate_mpsk_channel_ensemble_vertical.m",
+    "sha256": "50E9908E2CC0FA852AF4A039CF390C49AEECCEC7B5B3F43550430F367D12F5DA",
+    "snapshot": "code_snapshot\\src\\communication\\evaluate_mpsk_channel_ensemble_vertical.m"
+  },
+  {
+    "path": "src\\propagation\\gaussian_source_initial_field_vertical.m",
+    "sha256": "E4414CD42FE246088CBEADEBAA314DAF604465F4CB9EBD3E5EEFACF05F13A407",
+    "snapshot": "code_snapshot\\src\\propagation\\gaussian_source_initial_field_vertical.m"
+  },
+  {
+    "path": "src\\propagation\\vertical_wape_propagator.m",
+    "sha256": "F1DB24D9E7191C1826A7546CA08672C17DFE1DB7B6F104BC0C91CE4AABB27727",
+    "snapshot": "code_snapshot\\src\\propagation\\vertical_wape_propagator.m"
+  },
+  {
+    "path": "src\\README.md",
+    "sha256": "C2B5C1D2ECE2740FA5C1D6E9DD75E9B4DE57848D2912EC73D33B426F4B4D9DC6",
+    "snapshot": "code_snapshot\\src\\README.md"
+  },
+  {
+    "path": "src\\receiver\\build_adjoint_receiver_projection_vertical.m",
+    "sha256": "0CD25BF0B09AA0582A4D68622B8716539C7F0D3E06C3A0D57A09C9D32E56CD3F",
+    "snapshot": "code_snapshot\\src\\receiver\\build_adjoint_receiver_projection_vertical.m"
+  },
+  {
+    "path": "src\\receiver\\build_cached_joint_kstat_pe_executor_vertical.m",
+    "sha256": "E4556EF977135CD6B0460FB03910115219E0BDF0BFD31271E2C4D78865DFAA71",
+    "snapshot": "code_snapshot\\src\\receiver\\build_cached_joint_kstat_pe_executor_vertical.m"
+  },
+  {
+    "path": "src\\receiver\\contract_kstat_receiver_stats_vertical.m",
+    "sha256": "BA5D12FC0EA00A5A04435D47207F720228324469DE425F20065BF488C8166C10",
+    "snapshot": "code_snapshot\\src\\receiver\\contract_kstat_receiver_stats_vertical.m"
+  },
+  {
+    "path": "src\\receiver\\run_adjoint_receiver_projection_vertical.m",
+    "sha256": "30820EC395B83011070C8238A12372AF86CE49B5B00FC69C2D7E4E0CECF81F6E",
+    "snapshot": "code_snapshot\\src\\receiver\\run_adjoint_receiver_projection_vertical.m"
+  },
+  {
+    "path": "src\\receiver\\run_cached_joint_kstat_pe_executor_vertical.m",
+    "sha256": "861218AEE06B2A29B3A47DF84CF1B6124B816C71F6B15343D90C56116E4B4B9F",
+    "snapshot": "code_snapshot\\src\\receiver\\run_cached_joint_kstat_pe_executor_vertical.m"
+  },
+  {
+    "path": "src\\statistics\\build_conditional_channel_library_vertical.m",
+    "sha256": "FF7AA1F6672BE6162BB81B202F56CD269024A5ADB13C489EA44C397840F1332F",
+    "snapshot": "code_snapshot\\src\\statistics\\build_conditional_channel_library_vertical.m"
+  },
+  {
+    "path": "src\\statistics\\build_surface_empirical_channel_model_vertical.m",
+    "sha256": "9CB73C0DA3D2944688145C0EE952F7768C256887B7FFC5134F659C2DCD59539D",
+    "snapshot": "code_snapshot\\src\\statistics\\build_surface_empirical_channel_model_vertical.m"
+  },
+  {
+    "path": "src\\statistics\\estimate_conditional_channel_stats_vertical.m",
+    "sha256": "366C3FBDC013971405F94386C7F1976620A03A29AA365B72011829F54975B3A9",
+    "snapshot": "code_snapshot\\src\\statistics\\estimate_conditional_channel_stats_vertical.m"
+  },
+  {
+    "path": "src\\statistics\\sample_surface_empirical_channel_vertical.m",
+    "sha256": "EF97046501AF78F2DEAF1AC633C0575DFC5CCEF2A2E1C34A4505877FB217A8A6",
+    "snapshot": "code_snapshot\\src\\statistics\\sample_surface_empirical_channel_vertical.m"
+  },
+  {
+    "path": "src\\statistics\\upgrade_conditional_channel_phase_vertical.m",
+    "sha256": "31B8C8F0426ECDFA304BDDBC02A385FF9AC189212CB6F207BA210830DAA3B46E",
+    "snapshot": "code_snapshot\\src\\statistics\\upgrade_conditional_channel_phase_vertical.m"
+  },
+  {
+    "path": "src\\surface\\pm_surface_boundary_model.m",
+    "sha256": "236AD99CC35E46A31B9B7BCAB76831AB563C850803CC01D6BC30DA1B0DB6A584",
+    "snapshot": "code_snapshot\\src\\surface\\pm_surface_boundary_model.m"
+  },
+  {
+    "path": "vertical_channel_model.m",
+    "sha256": "0A86CE528A41D67692A51EB3BA9EC16ACC3D6CE4A004E0E890768D9A0E69DEB6",
+    "snapshot": "code_snapshot\\vertical_channel_model.m"
+  },
+  {
+    "path": "vertical_comm_guide.md",
+    "sha256": "D15BDB88F11A12C3F2C7AA4AC969F593F73EF006281286A4C6B32005437655BF",
+    "snapshot": "code_snapshot\\vertical_comm_guide.md"
+  }
+]

@@ -1,0 +1,4 @@
+name,value,limit,pass
+native_four_argument_contract,0,1e-12,1
+reject_metadata_DSP_reconversion,0,0,1
+reject_physical_as_native,0,0,1

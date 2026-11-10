@@ -123,6 +123,40 @@
 !/reports/project_progress.json
 !/scripts/reporting/templates/project_progress.html
 
+
+# M0 seal and M1 preflight: small, explicitly selected receipts only.
+/results/validation/m0_phase_contract/**/code_snapshot/
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/checkpoint_final.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/completion_requirements.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/artifacts_sha256.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/code_versions_final.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/job_receipts.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/A_algebra/metrics.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/D_statistics/metrics.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/E_cir_comm/metrics.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/E_cir_comm_boundary_fixed/metrics.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/metrics.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/H_metadata_guards/metrics.csv
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/C_gaussian/checkpoint_failed.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/C_gaussian/receipt_failure_tool_transcription.txt
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/E_cir_comm/checkpoint.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/E_cir_comm/stderr.log
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit/checkpoint.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit/stderr.log
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_lossless/checkpoint.json
+!/results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_lossless/stderr.log
+!/results/validation/m1_preflight/20261110_saved_evidence_01/audit.json
+!/results/validation/m1_preflight/20261110_saved_evidence_01/stderr.log
+!/results/validation/m1_preflight/20261110_saved_evidence_04/audit.json
+!/results/validation/m1_preflight/20261110_saved_evidence_04/checks.csv
+!/results/validation/m1_preflight/20261110_saved_evidence_04/evidence_manifest.csv
+!/results/validation/m1_preflight/20261110_saved_evidence_04/source_history.json
+!/results/validation/m1_preflight/20261110_saved_evidence_04/proposed_matrix.csv
+!/results/validation/m1_preflight/20261110_saved_evidence_04/cost_estimates.csv
+!/results/validation/m1_preflight/20261110_saved_evidence_04/frozen_design.json
+!/results/validation/m1_preflight/20261110_saved_evidence_04/m0_seal_receipt.json
+!/results/validation/m1_preflight/20261110_saved_evidence_04/code_analyzer.json
+
 # Retired local quarantine stays excluded after every source allow-rule.
 /cash/
 

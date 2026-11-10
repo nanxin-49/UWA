@@ -1,0 +1,116 @@
+{
+  "status": "M0_COMPLETE_M1_READY",
+  "run_id": "20261110_m0_native_dsp_v2_01",
+  "task_date": "2026-11-10",
+  "base_head": "3f7071dbfb8e7bc7cf7ff22c1962506bd3a7388d",
+  "branch": "compare",
+  "code_committed": false,
+  "code_pushed": false,
+  "main_sync": "merge aborted per explicit user instruction; compare original HEAD preserved",
+  "phase_contract_version": "2.0.0",
+  "conditional_model_schema": "3.0.0",
+  "completed_steps": [
+    "A_algebra",
+    "B_zero",
+    "B_positive",
+    "B_negative",
+    "C_receipt_recovery",
+    "C_direct_only",
+    "D_statistics",
+    "E_cir_comm_boundary_fixed",
+    "F_external_empirical",
+    "G_contract_edges",
+    "H_metadata_guards",
+    "static_analysis_final",
+    "independent_audit_final",
+    "dashboard_final"
+  ],
+  "required_metric_rows_passed": 194,
+  "failed_or_unrun_required_checks": [],
+  "requirements": "completion_requirements.json",
+  "numerical_independent_audit": "independent_audit_final/checkpoint.json",
+  "source_versions": "code_versions_final.json",
+  "artifact_manifest": "artifacts_sha256.csv",
+  "artifact_manifest_sha256": "8E938BDFDBB732FCA44E7A64DC2B63DA1CF5E165BD538B77035A105E0C6C9F02",
+  "artifacts_sha_independently_verified": 181,
+  "historical_failures_retained": [
+    {
+      "job_id": "E_cir_comm",
+      "status": "FAILED",
+      "elapsed_s": 0.6871983,
+      "failed_checks": 1,
+      "threads": 1,
+      "resource_gate_pass": true,
+      "checkpoint": "E_cir_comm\\checkpoint.json"
+    },
+    {
+      "job_id": "independent_audit",
+      "status": "FAILED",
+      "elapsed_s": 0.9653843,
+      "failed_checks": 1,
+      "threads": 1,
+      "resource_gate_pass": true,
+      "checkpoint": "independent_audit\\checkpoint.json"
+    },
+    {
+      "job_id": "independent_audit_lossless",
+      "status": "FAILED",
+      "elapsed_s": 0.3873169,
+      "failed_checks": 1,
+      "threads": 1,
+      "resource_gate_pass": true,
+      "checkpoint": "independent_audit_lossless\\checkpoint.json"
+    },
+    {
+      "job_id": "C_gaussian",
+      "status": "FAILED_RECEIPT_PACKAGING_NUMERICS_RETAINED",
+      "elapsed_s": 22,
+      "failed_checks": 1,
+      "threads": 1,
+      "resource_gate_pass": true,
+      "checkpoint": "C_gaussian/checkpoint_failed.json"
+    }
+  ],
+  "resolved_failures": {
+    "E_cir_comm": "E_cir_comm_boundary_fixed, identical H and full observation",
+    "independent_audit": "IEEE754 lossless export",
+    "independent_audit_lossless": "explicit string import, independent_audit_lossless_v2 and final",
+    "C_gaussian": "C_receipt_recovery, no propagation retry"
+  },
+  "resource_usage": {
+    "serial": true,
+    "unmetered_packaging_margin_s": 5.6632489000000135,
+    "longest_job_conservative_s": 22,
+    "per_job_limit_s": 180,
+    "matlab_recorded_s": 114.33675109999999,
+    "ram_reserve_available_fraction": 0.3,
+    "budget_s": 600,
+    "threads": 1,
+    "matlab_conservative_charged_s": 120
+  },
+  "execution_mode": "existing_local_matlab_mcp",
+  "matlab_release": "R2025b Update 6",
+  "os_process_exit": "not applicable: existing shared MATLAB remains running",
+  "documentation": [
+    "AGENTS.md",
+    "PROJECT_CONTEXT.md",
+    "vertical_comm_guide.md",
+    "README.md",
+    "src/README.md",
+    "scripts/README.md",
+    "reports/project_progress.json",
+    "reports/project_progress.md",
+    "reports/m0_phase_contract_closeout_2026-11-10.md"
+  ],
+  "dashboard_render_receipt": "E:\\MISC\\CARPE3D_matlab\\Explain\\results\\visualization\\project_progress\\render_receipt.json",
+  "dashboard_reference_count": 39,
+  "dashboard_failed_checks": 0,
+  "history_policy": "old MAT/CSV/checkpoints/reports unchanged; all new numerical work under this unique run",
+  "next_allowed_step": "M0 complete. Stop. A new scoped M1 task may use 50m/256^2, sigma=.3m, stepz_lamb=.5 as starting candidate; no convergence claim.",
+  "limitations": [
+    "periodic-domain same-discrete-source controls, no infinite-domain/sponge qualification",
+    "normal-incidence height screen is approximate off axis",
+    "no formal S5/S6 upgrade",
+    "no M1 scan, broadband physical qualification, new rough-surface qualification or 1500m extension"
+  ]
+}

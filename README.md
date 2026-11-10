@@ -95,7 +95,7 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 
 | 项目 | 当前状态 |
 |---|---|
-| uniform CPU-double PE/WAPE，直达与海面反射 | 默认 `direct_dsp` 已采用完整包络转换的合同v2；[M0最小验收](reports/m0_phase_contract_closeout_2026-11-10.md)通过，M1收敛待验 |
+| uniform CPU-double PE/WAPE，直达与海面反射 | M0合同v2已在969127f提交；[M1预审](reports/m0_seal_m1_preflight_2026-11-10.md)采用192.1875m无吸收层历史起点，新收敛矩阵待执行 |
 | Kirchhoff spatial/k-domain 与 joint-kstat | 可用；公共默认 surface model 未改变 |
 | cached forward、精确离散伴随、PM 周期 FFT `C/P` | 固定环境、单最近网格点接收机原型已验证 |
 | U=5/U=8 条件统计生成器 | 已有 F=64 验证证据；适用于已登记固定条件 |
