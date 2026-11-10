@@ -2,6 +2,8 @@
 
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。
 
+**接下来优先完成建模（2026-11-10）：**按用户优先完成建模、暂缓1500 m的方向，本计划先收尾约100 m静态宽带链路。顺序是生产入口的声源/海面高度/相位核对、窗口与步长收敛、宽带CIR、粗糙海面适用范围及接口接入；下一窗口只执行第一环节。范围、完成标准和停止条件见[100m静态模型收尾计划](reports/static_channel_model_100m_closeout_plan_2026-11-10.md)。该计划不自动恢复正式S5/S6或启用旧预算。
+
 研究生开题报告草稿：[面向深海近垂直水声链路的信道估计与自适应均衡方法研究](reports/graduate_proposal_channel_estimation_equalization.md)。报告以通信算法为研究目标，现有传播仿真作为数据准备与适用范围依据；正文不改变当前数值验证状态。
 
 二维正式 S5/S6 Goal 已按用户要求暂停审阅。A 的解析/代数、冻结源 4/6/8 kHz 平面 P22、129 点同源 Tx/直达子门和原弱正弦 P22 的 6/8 kHz 五层 BIE 单点经验参考已有结果；A 整体仍 PARTIAL，完整频带反射参考/九点未认证，B/C 未进入，该正式流程没有经 A 门认可的 CIR/BER。全带首批预算只有待批 48 h 提案；PM 缺宽带资格，CIR/S6 不含在该请求内。暂停范围见[2026-10-27 中文报告](reports/two_dimensional_s5_s6_2026-10-27.md)。

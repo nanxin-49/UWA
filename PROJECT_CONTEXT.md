@@ -9,6 +9,11 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-10）
 
+### 建模收尾优先级调整（2026-11-10；用户方向与待执行计划）
+
+- 用户要求提交当前成果后按完成建模推进，并暂不考虑1500 m。本轮已提交P22恢复入口和新机最小基线为 `5d2e9f8`；新增[约100m静态模型收尾计划](reports/static_channel_model_100m_closeout_plan_2026-11-10.md)，先以已有Tx100 m/Rx3 m、Gaussian源、均匀水体和直达加一次海面反射闭合频响/CIR与接口。此处未包含有限水深海底边界，不与Bellhop Tx99 m含底展示混用。
+- 下一任务只安排生产入口的声源归一化、海面高度和native/DSP相位合同核对及最小控制；后续依次为数值窗口/步长、宽带CIR、粗糙海面和限定模型封装。统计快生成、时变/多普勒和1500 m扩展留后续。已有二维参考不能自动认证三维PM；三维独立物理参考缺口、旧Q1 STOP及正式S5/S6暂停保持。本文档任务没有新增传播/通信计算，也没有转用旧预算。
+
 ### 新 Ubuntu 最小项目基线已通过（2026-11-10；限定兼容性）
 
 - 在新 Ubuntu 的 `/home/misc/cwx/project_baselines/20261110_121507_new_ubuntu_minimal/project/` 建立不覆盖原文件的 23 文件白名单隔离快照，含当前 HEAD `747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9`、未提交的 P22 独立输出路由补丁与本轮新验证入口。上传及运行后输入 SHA 23/23、回传 92/92 通过；原 `/home/misc/cwx` 仍非完整 Git 工作区，未作完整迁移。
