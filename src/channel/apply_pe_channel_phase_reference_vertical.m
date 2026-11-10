@@ -1,15 +1,21 @@
 function [components,meta] = apply_pe_channel_phase_reference_vertical( ...
-    f_axis_hz,reduced_components,geometry,target_reference)
+    f_axis_hz,reduced_components,geometry,target_reference,options)
 %APPLY_PE_CHANNEL_PHASE_REFERENCE_VERTICAL Align reduced PE path phases.
 %   The PE march stores a reduced envelope for each longitudinal path. This
 %   function restores a common receiver reference after propagation; it does
 %   not modify the PE operator, surface screen, or adjoint weights.
+%   Four-argument calls take NATIVE_PE_REDUCED input. DIRECT_DSP conjugates
+%   that envelope before applying path factors. An external bridge which has
+%   already conjugated its reduced envelope must explicitly declare
+%   options.input_representation='dsp_adapted_reduced'. DSP-ready transfer
+%   functions must bypass this helper. No array-content inference is used.
 
 arguments
     f_axis_hz (:,1) double {mustBeFinite,mustBePositive}
     reduced_components (1,1) struct
     geometry (1,1) struct
     target_reference = 'direct_dsp'
+    options (1,1) struct = struct()
 end
 
 required_geometry = {'z_tx','z_rx','c0'};
@@ -34,6 +40,28 @@ if ~isfield(reduced_components,'direct_f')
 end
 
 target_reference = local_choice(target_reference);
+if ~isfield(options,'input_representation')
+    options.input_representation = 'native_pe_reduced';
+end
+input_representation = char(options.input_representation);
+if isfield(reduced_components,'phase_reference_meta')
+    supplied_meta=reduced_components.phase_reference_meta;
+    if isfield(supplied_meta,'target_reference') && ...
+            ismember(char(supplied_meta.target_reference),{'direct_dsp','absolute_physical'})
+        error('apply_pe_channel_phase_reference_vertical:AlreadyConverted', ...
+            'Components declare a converted output representation; pass DSP-ready arrays directly to consumers.');
+    end
+end
+if ~ismember(input_representation,{'native_pe_reduced','dsp_adapted_reduced'})
+    error('apply_pe_channel_phase_reference_vertical:InputRepresentation', ...
+        'Expected native_pe_reduced or explicitly dsp_adapted_reduced; DSP-ready inputs must bypass conversion.');
+end
+if strcmp(input_representation,'dsp_adapted_reduced') && ~strcmp(target_reference,'direct_dsp')
+    error('apply_pe_channel_phase_reference_vertical:AdaptedPhysicalInput', ...
+        'DSP-adapted envelopes are supported only for the direct_dsp target.');
+end
+conjugate_input = strcmp(target_reference,'direct_dsp') && ...
+    strcmp(input_representation,'native_pe_reduced');
 F = numel(f_axis_hz);
 direct_reduced = local_frequency_array(reduced_components.direct_f,F,'direct_f');
 if size(direct_reduced,2) ~= 1
@@ -63,12 +91,14 @@ switch target_reference
 end
 
 components = struct();
+if conjugate_input, direct_reduced = conj(direct_reduced); end
 components.direct_f = direct_factor.*direct_reduced;
 optional = {'reflect_coh_f','reflect_sca_fm','reflect_fm'};
 for ii = 1:numel(optional)
     name = optional{ii};
     if isfield(reduced_components,name) && ~isempty(reduced_components.(name))
         value = local_frequency_array(reduced_components.(name),F,name);
+        if conjugate_input, value = conj(value); end
         components.(name) = reflect_factor.*value;
     end
 end
@@ -86,7 +116,12 @@ end
 components.total_fm = components.direct_f+components.reflect_fm;
 
 meta = struct( ...
-    'schema_version','1.0.0', ...
+    'schema_version','2.0.0', ...
+    'phase_contract_version','2.0.0', ...
+    'input_representation',input_representation, ...
+    'output_representation',target_reference, ...
+    'conjugate_input',conjugate_input, ...
+    'native_to_dsp_formula','H_DSP=conj(P_physical)*exp(+1i*2*pi*f*tau_direct)', ...
     'target_reference',target_reference, ...
     'physical_time_convention','p(t)=real(P(f)*exp(-1i*2*pi*f*t))', ...
     'dsp_synthesis_convention','MATLAB ifft; positive relative delay has negative frequency-phase slope', ...

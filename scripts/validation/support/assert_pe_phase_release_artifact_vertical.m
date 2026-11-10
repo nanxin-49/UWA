@@ -13,6 +13,10 @@ if ~strcmp(meta.run_id,expected_run_id)
     error('assert_pe_phase_release_artifact_vertical:RunIdMismatch', ...
         '%s belongs to run_id %s, expected %s.',label,meta.run_id,expected_run_id);
 end
+if isfield(value,'phase_reference_meta') && ...
+        strcmp(value.phase_reference_meta.target_reference,'direct_dsp')
+    assert_channel_dsp_metadata_vertical(value.phase_reference_meta);
+end
 if ~isfield(meta,'phase_reference') || ~strcmp(meta.phase_reference,'direct_dsp')
     error('assert_pe_phase_release_artifact_vertical:PhaseReferenceMismatch', ...
         '%s is not marked direct_dsp.',label);

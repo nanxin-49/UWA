@@ -20,7 +20,8 @@ for a=[s.sparse s.dense]
  assert(abs(a.H_full_dsp-a.H_full_reduced*exp(-1i*k*6))<1e-12);
  assert(abs(a.H_full_native_dsp-conj(a.H_full_physical)*exp(1i*k*97))<1e-14);
  bridge=apply_pe_channel_phase_reference_vertical(a.frequency_hz, ...
-  struct('direct_f',a.H_direct_native_dsp,'reflect_fm',conj(a.H_full_reduced)),s.geometry,'direct_dsp');
+  struct('direct_f',a.H_direct_native_dsp,'reflect_fm',conj(a.H_full_reduced)),s.geometry,'direct_dsp', ...
+  struct('input_representation','dsp_adapted_reduced'));
  assert(abs(bridge.reflect_fm-a.H_full_native_dsp)<1e-12);
  if s.consistency_pass
   assert(abs(a.H_total_full-a.H_direct_native_dsp-a.H_full_native_dsp)<1e-14);

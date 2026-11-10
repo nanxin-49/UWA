@@ -218,8 +218,8 @@ WP0解析门通过，6 kHz最小原型数值门及4/8 kHz网格检查通过。
 公共默认 `paramsV.channel_phase_reference='direct_dsp'`：
 
 \[
-H_{\mathrm{direct}}=H_{\mathrm{direct}}^{\mathrm{red}},\qquad
-H_{\mathrm{reflect}}=e^{-i2\pi f\Delta\tau_0}H_{\mathrm{reflect}}^{\mathrm{red}}.
+H_{\mathrm{direct}}=\operatorname{conj}(H_{\mathrm{direct}}^{\mathrm{red}}),\qquad
+H_{\mathrm{reflect}}=e^{-i2\pi f\Delta\tau_0}\operatorname{conj}(H_{\mathrm{reflect}}^{\mathrm{red}}).
 \]
 
 `legacy_reduced` 仅用于复现旧结果；它把分别约化的两条路径直接相加，不是统一物理相位的总信道。绝对物理相量另外保存为
@@ -229,7 +229,24 @@ H_{\mathrm{dir}}^{\mathrm{phys}}=e^{+i2\pi f\tau_{\mathrm{dir},0}}H_{\mathrm{dir
 H_{\mathrm{ref}}^{\mathrm{phys}}=e^{+i2\pi f\tau_{\mathrm{ref},0}}H_{\mathrm{ref}}^{\mathrm{red}}.
 \]
 
-载波相位只在各传播分量完成后转换，不进入 PE marching、海面边界、`deltaG`、伴随核或 PM 空间协方差。载波相位发布候选已通过，详见 `reports/pe_phase_reference_release_candidate_report.md`。
+2026-11-10 M0 修正：以上 red 指 **原生 PE** `exp(i L(kz-k0))` 包络。
+统一关系是 `H_DSP=conj(P_physical)*exp(+i*2*pi*f*tau_dir0)`，不是只旋转载波。
+转换在各传播分量完成后执行，不改变 PE marching、海面边界、`deltaG`、伴随核或 PM 空间统计。
+2026-07-22 发布候选是历史 carrier-only 合同的限定 PASS，没有验证任意非实原生包络的物理↔DSP关系；不再用于认证当前合同。
+修复、失败记录与验收见 [M0 修复报告](reports/m0_phase_contract_closeout_2026-11-10.md)。
+
+公共 `phase_reference_meta.phase_contract_version='2.0.0'`，包含
+`input_representation`、`output_representation`、`conjugate_input`。四参数 helper
+接口保留，输入合同为 `native_pe_reduced`；已预共轭桥接须传第五参数
+`struct('input_representation','dsp_adapted_reduced')`，且只允许 direct-DSP 目标。
+已经 DSP-ready 的频响直接传给 CIR/通信消费者，禁止再次送入相位 helper。
+消费者收到旧项目 direct-DSP 元数据时拒绝静默接受；裸外部数组仍为调用者声明的 DSP-ready 输入，不作自动旋相或共轭。
+
+海面 `surface_elevation_override_xy=eta` 是向上为正的海面升高，物理深度
+`z_surface_actual=-eta`。原生正常入射屏 `R0*exp(+2i*k0*eta)` 与
+`L_reflect=103+2*eta` 一致；DSP 对完整包络转换后对应负频率相位斜率。
+该屏对非零横向波数的平移平面仍是正常入射近似，不代替 `2*kz*eta` 精确平移。
+Gaussian 是 `exp(-rho^2/(2*sigma^2))`、连续单位峰值，同一物理发射面跨频复用；不是绝对 Pa 或全向点源。
 
 ### 验证专用 Full/Fast FK 原生物理场的输入桥接（2026-10-08）
 
@@ -246,12 +263,11 @@ H_{\mathrm{native,DSP}}(f)
 
 反射路径等价于先构造
 `R_native=P_ref*exp(-i2*pi*f*tau_ref0)`，再把 `conj(R_native)` 送入现有
-helper 的 `direct_dsp` target。直达包络对应
+helper 的 `direct_dsp` target，并指定 `input_representation='dsp_adapted_reduced'`。直达包络对应
 `conj(P_dir*exp(-i2*pi*f*tau_dir0))`。这是一次数学定义的全包络 Fourier
 符号转换，所有频点和分量共享同一个 time origin，不是逐频 phase alignment
 或 complex scalar fitting。原生物理 `P_native` 独立保留；不得用 helper 的
-`absolute_physical` target 从 DSP-adapted envelope 反推它。本轮不改公共
-PE 字段语义或生产 API。
+`absolute_physical` target 从 DSP-adapted envelope 反推它。也可把原生 reduced 直接送入 v2 helper；两条路线须等价且只能转换一次。
 
 固定非零横向波数的解析控制表明，只旋转载波的未转换导入会给出错误的
 原生物理群时延解释，而上述桥接与独立构造的 IFFT transfer 复误差约
@@ -573,13 +589,23 @@ C_H(i,j)=\widetilde a_i^H C_{\delta G,ij}\widetilde a_j,\qquad
 P_H(i,j)=\widetilde a_i^H P_{\delta G,ij}\widetilde a_j^*.
 \]
 
-`dense` 仅在 PM 不超过 32² 时作基准；正式方法逐频率对流式计算 FFT 收缩，不保存空间 `F^2` 协方差块。direct-DSP 统计由 reduced 统计经 `D=diag(exp(-i2*pi*f*Delta tau0))` 转换：`C_dsp=D*C_red*D'`，`P_dsp=D*P_red*D.'`。
+`dense` 仅在 PM 不超过 32² 时作基准；正式方法逐频率对流式计算 FFT 收缩，不保存空间 `F^2` 协方差块。原生接收散射向量 `z_dsp=D*conj(z_red)`，其中 `D=diag(exp(-i2*pi*f*Delta tau0))`。
+因此 `mu_dsp=D*conj(mu_red)`、`C_dsp=D*conj(C_red)*D'`、`P_dsp=D*conj(P_red)*D.'`。
+`conj(C)` 是逐元素共轭，不能用 Hermitian 转置代替。特征向量为 `D*conj(U)`；
+增广实变换为 `[real(D),imag(D);imag(D),-real(D)]`，不修改上游空间统计或伴随权重。
 
 ## 6. 条件统计生成器
 
-条件模型用已验证接收端样本或解析统计估计复均值、协方差 `C`、伪协方差 `P`，支持 full 与低秩采样。schema 2.x 明确记录 `target_reference='direct_dsp'`、几何和频率轴。旧 schema 1.x 只能在有可靠几何时迁移；只有旧总信道或缺少几何时不得猜测拆分或旋转。
+条件模型支持 full 与低秩采样，当前 schema 为 `3.0.0`（离散库 `3.0.0-discrete`），且须带 v2 相位合同。
+旧 1.x/2.x 不靠 schema 猜测表示：迁移时须提供几何和
+`source_representation='native_pe_reduced'` 或 `'legacy_carrier_only_direct_dsp'`。
+前者用 `D*conj(z)`；后者用 `D^2*conj(z_old)`。直达确定性分量单独共轭，不能对旧总场套一个统一因子。
+没有路径分解或可靠来源时拒绝迁移。迁移只返回新对象；调用者须另存新路径，历史结果不覆盖。
+经验模型同样保存并核验来源相位元数据；旧未标记模型不能直接用于宽带或 taps。
 
 U=5/U=8、F=64 条件模型及 two-node 通信验证已纳入 2026-07-22 的 PASS 发布候选。其角色是经物理和统计验证后承担大规模通信 Monte Carlo，不替代 PE 物理回归，也不能插值成未验证风速的连续模型。
+
+上述 2026-07-22 是旧合同的历史结果，须显式迁移后才能作为当前表示的数据使用；不能据此给修复后的频响、CIR 或 BER 标新 PASS。
 
 ## 7. CIR、F=64/F=65、LFM 与通信链
 
@@ -592,6 +618,9 @@ F 表示频率采样点数。当前 F=64 主轴覆盖 4–8 kHz，共 64 个等�
 LFM 是获得 `H(f)` 后的无噪声线性探针：频域输入乘以信道频响，再变换到时域。LFM 输出功率描述信道后扫频脉冲能量随时间的分布；匹配滤波输出功率描述接收 LFM 与已知发射模板相关后的压缩峰和旁瓣。二者可比较 reflected-only 的时延扩展与统计功率，但不构成新的 PE 空间源，也不自动包含同步、均衡或噪声。
 
 通信模块位于 `src/communication/`。外部没有项目 metadata 的 `H(f)` 默认视为已经 DSP-ready，不静默旋转。
+
+`evaluate_mpsk_channel_ensemble_vertical` 默认 `receive_window_mode='full_linear'`，保留线性卷积完整尾部后在相同长度上做已知 CSI FFT 均衡，避免截尾观测与循环逆不匹配。
+原截尾行为由 `receive_window_mode='legacy_head'` 显式复现。M0 使用 `circular_peak_align=false`，没有移峰或路径对齐。
 
 ## 8. 公共输入输出语义
 

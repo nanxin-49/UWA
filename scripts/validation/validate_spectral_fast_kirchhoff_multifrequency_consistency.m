@@ -188,15 +188,18 @@ d.H_fast_reduced=d.H_fast_physical*exp(-1i*k*103);
 src=s.source; src.kz=sqrt(k^2-src.kx.^2);
 direct=local_source(src,0,3); direct_red=direct*exp(-1i*k*97);
 a=apply_pe_channel_phase_reference_vertical(d.frequency_hz, ...
- struct('direct_f',direct_red,'reflect_fm',d.H_full_reduced),s.geometry,'direct_dsp');
+ struct('direct_f',direct_red,'reflect_fm',d.H_full_reduced),s.geometry,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced')); % historical carrier-only negative control
 b=apply_pe_channel_phase_reference_vertical(d.frequency_hz, ...
- struct('direct_f',direct_red,'reflect_fm',d.H_fast_reduced),s.geometry,'direct_dsp');
+ struct('direct_f',direct_red,'reflect_fm',d.H_fast_reduced),s.geometry,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced')); % historical carrier-only negative control
 d.H_full_dsp=a.reflect_fm; d.H_fast_dsp=b.reflect_fm;
 d.H_full_native_dsp=conj(d.H_full_physical)*exp(1i*k*97);
 d.H_fast_native_dsp=conj(d.H_fast_physical)*exp(1i*k*97);
 d.H_direct_native_dsp=conj(direct)*exp(1i*k*97);
 adapted=apply_pe_channel_phase_reference_vertical(d.frequency_hz, ...
- struct('direct_f',conj(direct_red),'reflect_fm',conj(d.H_full_reduced)),s.geometry,'direct_dsp');
+ struct('direct_f',conj(direct_red),'reflect_fm',conj(d.H_full_reduced)),s.geometry,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced'));
 assert(abs(adapted.reflect_fm-d.H_full_native_dsp)<1e-12);
 assert(abs(adapted.direct_f-d.H_direct_native_dsp)<1e-12);
 d.H_direct_dsp=a.direct_f; d.H_total_full=NaN; d.H_total_fast=NaN;
@@ -338,7 +341,8 @@ function c=local_reference_control()
 f=(4000:62.5:8000)'; k=2*pi*f/1500; kx=4; kz=sqrt(k.^2-kx^2);
 physical=-exp(1i*kz*103); red=physical.*exp(-1i*k*103);
 g=struct('z_tx',100,'z_rx',3,'c0',1500,'z_surface',0);
-a=apply_pe_channel_phase_reference_vertical(f,struct('direct_f',ones(65,1),'reflect_fm',red),g,'direct_dsp');
+a=apply_pe_channel_phase_reference_vertical(f,struct('direct_f',ones(65,1),'reflect_fm',red),g,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced')); % intentional carrier-only negative control
 native=conj(physical).*exp(1i*k*97);
 project_delay=-gradient(unwrap(angle(a.reflect_fm)),f)/(2*pi);
 native_delay=-gradient(unwrap(angle(native)),f)/(2*pi);
@@ -351,7 +355,8 @@ c=struct('f_hz',f,'kx_radpm',kx,'physical',physical,'project_dsp',a.reflect_fm, 
  'physical_to_ifft','H_native_dsp=conj(P_native)*exp(+i*omega*tau_direct0)', ...
  'meaning','Global Fourier-sign conversion; no phase fitting or peak alignment');
 adapted=apply_pe_channel_phase_reference_vertical(f, ...
- struct('direct_f',ones(65,1),'reflect_fm',conj(red)),g,'direct_dsp');
+ struct('direct_f',ones(65,1),'reflect_fm',conj(red)),g,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced'));
 c.adapted_dsp=adapted.reflect_fm;
 c.adapter_complex_l2=norm(adapted.reflect_fm-native)/norm(native);
 c.adapted_delay_s=-gradient(unwrap(angle(adapted.reflect_fm)),f)/(2*pi);
@@ -494,7 +499,7 @@ fprintf(fid,'Canonical seed260001; 12 immutable Fourier modes; actual Kmax %.9g 
  max(s.profile.k_rad_per_m),s.profile.coeff_file_sha256,s.height_bound_m);
 fprintf(fid,'Sparse axis4/5/6/7/8 kHz; BIE anchors4/6/8 kHz; selected common rank%d/%d, padding2. Dense follow-up65 samples, delta-f62.5 Hz, window16 ms, bin spacing16/65=.246154 ms; bandwidth4 kHz gives nominal resolution about.25 ms. Sparse delta-f1 kHz has only1 ms window and aliases nominal4 ms relative delay: no sparse CIR or physical group-delay certification. Dense execution requires sparse algorithm, physics, numerical and cold speed gates.\n\n',s.ranks);
 fprintf(fid,'The16 ms window contains the nominal4 ms reflection excess delay, but does not certify all scattering tails as unaliased. A point-source geometric path through x=60 m at the flat integration edge permits excess delay(sqrt(100^2+60^2)+sqrt(3^2+60^2)-97)/1500=53.129 ms. Such contributions may be weak/nonstationary; their absence has not been proved. CIR remains a finite-band periodic diagnostic, not a support-converged final response. Samples are IFFT-ordered as frequency offsets from4 kHz (no ifftshift); a different baseband carrier changes complex modulation, not the compared magnitude/timing.\n\n');
-fprintf(fid,'## Phase reference\n\nPhysical exp(-i omega t) Full/Fast outputs carry exp(+ik*103). Native reduced reflection is P*exp(-ik*103); it is not automatically treated as the public PE reduced field. The common-origin MATLAB IFFT transfer is **H_native_dsp=conj(P)*exp(+ik*97)**. Equivalently, supply conj(native reduced) to the unchanged `apply_pe_channel_phase_reference_vertical` helper for its direct_dsp target, which multiplies by exp(-ik*6). The direct source uses the same saved Gaussian coefficients propagated97 m; its DSP envelope is conj(Pdirect*exp(-ik*97)). This is one deterministic Fourier-sign conversion, not a fitted complex scalar, per-frequency phase zero or peak alignment. Native physical fields remain untouched and are not reconstructed by calling the helper absolute_physical target on a DSP-adapted envelope. Total is formed only after reflected-only consistency gates. Public PE/interface semantics are unchanged.\n\nRaw physical phase is saved; blind unwrap is aliased even at62.5 Hz because nominal absolute flight time68.667 ms exceeds16 ms. Carrier-restored physical unwrap is unwrap(native reduced phase)+2*pi*f*103/1500. Its absolute branch is only defined modulo2*pi. Negative -dphi/(2*pi*df) for a positive physical carrier is expected; the IFFT-ready response has the opposite Fourier sign.\n\n');
+fprintf(fid,'## Phase reference\n\nPhysical exp(-i omega t) Full/Fast outputs carry exp(+ik*103). Native reduced reflection is P*exp(-ik*103); it is not automatically treated as the public PE reduced field. The common-origin MATLAB IFFT transfer is **H_native_dsp=conj(P)*exp(+ik*97)**. Equivalently, supply conj(native reduced) to the v2 `apply_pe_channel_phase_reference_vertical` helper with explicit dsp_adapted_reduced input for its direct_dsp target, which multiplies by exp(-ik*6). The direct source uses the same saved Gaussian coefficients propagated97 m; its DSP envelope is conj(Pdirect*exp(-ik*97)). This is one deterministic Fourier-sign conversion, not a fitted complex scalar, per-frequency phase zero or peak alignment. Native physical fields remain untouched and are not reconstructed by calling the helper absolute_physical target on a DSP-adapted envelope. Total is formed only after reflected-only consistency gates. Public PE now uses native-to-DSP phase contract v2; the explicit adapted bridge is converted only once.\n\nRaw physical phase is saved; blind unwrap is aliased even at62.5 Hz because nominal absolute flight time68.667 ms exceeds16 ms. Carrier-restored physical unwrap is unwrap(native reduced phase)+2*pi*f*103/1500. Its absolute branch is only defined modulo2*pi. Negative -dphi/(2*pi*df) for a positive physical carrier is expected; the IFFT-ready response has the opposite Fourier sign.\n\n');
 fprintf(fid,'### Independent native-physical to IFFT bridge control\n\nThe unadapted candidate exp(-ik*6)*(P*exp(-ik*103)) is retained only as a carrier-only import diagnostic (H_full_dsp/H_fast_dsp in MAT and dense_H.csv). It is not the primary physical transfer. A fixed-kx4 rad/m plane wave P=-exp(i*kz*103) gives native relative delay=(103*k/kz-97)/1500; the unadapted import gives6/1500-103*(k/kz-1)/1500. They agree at kx0 and differ for kx nonzero: maximum sampled delay difference %.7g ms. After the whole-envelope conversion, helper output matches the independently constructed native physical IFFT transfer at relative complex L2 %.7g; bridge pass=%d. This validates the external native FK import, not a production API migration. Primary tables are dense_native_physical_H.csv, phase_group_delay.csv and reflected_cir.csv; phase_reference_meta documents the source/target representation and single time origin.\n\n', ...
  1e3*s.reference_control.delay_difference_max_s,s.reference_control.adapter_complex_l2,s.reference_bridge_pass);
 fprintf(fid,'## Per-frequency algorithm fidelity and descriptors\n\n|Hz|weighted L2|whole L2|magnitude|phase RMS rad|effective in/out|Kmax/k|curvature RMS/k|illuminated curvature/k|out theta99 deg|outside incident99|\n|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|\n');

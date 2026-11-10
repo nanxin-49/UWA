@@ -36,13 +36,9 @@ timer=tic; sample_kirchhoff_kstat_factor_model_vertical(optimized,8,2100001,'joi
 [Hopt,topt,component_error]=generate_cached_kstat_ensemble_vertical(cache,optimized,M,2200000,'joint',batch);
 E=load(fullfile(folder,'f64_full_ensembles.mat'),'ensemble'); Hold=E.ensemble.Hj_train;
 if ~isfield(E.ensemble,'phase_reference_meta')
-    geometry=struct('z_tx',cache.cfg.z_tx,'z_rx',cache.cfg.z_rx, ...
-        'z_surface',0,'c0',cache.cfg.c0);
-    [~,phase_meta]=apply_pe_channel_phase_reference_vertical(cache.f_axis_hz(:), ...
-        struct('direct_f',cache.H_direct_f,'reflect_coh_f',cache.H_ref_coh_f), ...
-        geometry,'direct_dsp');
-    Hold=phase_meta.reflect_dsp_factor_f.*Hold;
+    error('M0:AmbiguousLegacyEnsemble','Explicitly migrate saved samples into a new directory before comparison.');
 end
+assert_channel_dsp_metadata_vertical(E.ensemble.phase_reference_meta);
 S0=local_stats(Hold); S1=local_stats(Hopt);
 t0=local_temporal(Hold,cache.f_axis_hz,0); t1=local_temporal(Hopt,cache.f_axis_hz,0);
 receiver=struct('covariance_relative_error',norm(S1.C-S0.C,'fro')/norm(S0.C,'fro'), ...

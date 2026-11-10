@@ -80,10 +80,9 @@ else
         'validation_run_meta','-v7.3');
 end
 if ~isfield(ensemble,'phase_reference_meta')
-    names={'Hkd_train','Hkd_test','Hj_train','Hj_test','Hi_train','Hi_test'};
-    for kk=1:numel(names), ensemble.(names{kk})=phase_meta.reflect_dsp_factor_f.*ensemble.(names{kk}); end
-    ensemble.phase_reference_meta=phase_meta;
+    error('M0:AmbiguousLegacyEnsemble','Unmarked historical ensemble requires explicit source representation and a new output directory.');
 end
+assert_channel_dsp_metadata_vertical(ensemble.phase_reference_meta);
 Hkd_train=ensemble.Hkd_train; Hkd_test=ensemble.Hkd_test;
 Hj_train=ensemble.Hj_train; Hj_test=ensemble.Hj_test; Hi_train=ensemble.Hi_train; Hi_test=ensemble.Hi_test;
 

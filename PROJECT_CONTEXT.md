@@ -9,6 +9,13 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-10）
 
+### M0 原生 PE／物理相量／DSP 合同修复（2026-11-10；限定准入 M1）
+
+- 在 `compare`、基线 `3f7071d` 上完成 M0 修复与最小独立控制；当前状态和完整门证据见 [M0 验收报告](reports/m0_phase_contract_closeout_2026-11-10.md) 及 `results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/`。本轮用户随后明确要求停止 main 合并，已撤销未完成合并并保留 compare 原提交；未提交或推送本轮修复。
+- 相位合同 v2：原生 `d,r` 转 direct-DSP 为 `conj(d), D*conj(r)`，绝对物理分量仍为正载波恢复。SSA、cached/adjoint、接收 C/P、增广实统计及模型迁移已同步；条件模型 schema 3，旧 1/2 须显式来源表示与几何，不按 schema 猜测。FullFK 已适配 reduced 显式标记，DSP-ready 输入不再转换。海面升高 eta 向上为正，物理深度为 -eta。
+- 4062.5 Hz、P22、256²/50 m、stepz_lamb=.5 的平面波 eta=0/±.01 m 及 Gaussian 同源角谱控制通过；最大物理复相对误差约 3.2e-13，原门1e-10不变。统计、SSA、CIR、外部桥接和新小型已知CSI无噪声通信控制通过；独立 MAT/CSV/DFT/几何审计通过。资源以结果内逐作业预算账为准，累计远低于本轮600 s、单作业180 s，未用SSH或新MATLAB进程。
+- 保留 Gaussian 回执 SHA 打包失败、通信截尾/FFT 边界不匹配导致 BER=.07421875、CSV 文本舍入及 hex 导入失败。回执恢复未重跑传播；通信保留完整线性卷积尾部后，在逐字节相同生产 H 上 BER=0；CSV 改用独立新文件的 IEEE-754 编码，未放宽门。旧 PE、伴随、deltaG/PM 空间统计定义不变。
+- 只关闭 M0，不认证窗口/步长收敛、连续宽带或粗糙海面物理资格，也不升级正式 S5/S6。M1 起点候选为50 m/256²、sigma=.3 m、stepz_lamb=.5、CPU double；吸收与窗口仍需按M1独立验证，本轮未扫描。
 ### 建模收尾优先级调整（2026-11-10；用户方向与待执行计划）
 
 - 用户要求提交当前成果后按完成建模推进，并暂不考虑1500 m。本轮已提交P22恢复入口和新机最小基线为 `5d2e9f8`；新增[约100m静态模型收尾计划](reports/static_channel_model_100m_closeout_plan_2026-11-10.md)，先以已有Tx100 m/Rx3 m、Gaussian源、均匀水体和直达加一次海面反射闭合频响/CIR与接口。此处未包含有限水深海底边界，不与Bellhop Tx99 m含底展示混用。

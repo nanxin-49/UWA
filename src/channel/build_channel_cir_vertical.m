@@ -11,6 +11,14 @@ arguments
     options (1,1) struct = struct()
 end
 options=local_options(options);
+if ~isempty(fieldnames(options.phase_reference_meta))
+    if ~strcmp(char(options.phase_reference_meta.target_reference),options.input_reference)
+        error('build_channel_cir_vertical:MetadataMismatch','Metadata and input_reference disagree.');
+    end
+    if strcmp(options.input_reference,'direct_dsp')
+        assert_channel_dsp_metadata_vertical(options.phase_reference_meta);
+    end
+end
 F=numel(f_axis_hz);
 if size(H_f,1)~=F, error('The first dimension of H_f must match f_axis_hz.'); end
 if F<2, error('At least two frequency samples are required.'); end
@@ -51,7 +59,7 @@ end
 
 function options=local_options(options)
 defaults=struct('input_reference','direct_dsp','time_origin_shift_s',0, ...
-    'window_type','none','zero_padding_factor',1);
+    'window_type','none','zero_padding_factor',1,'phase_reference_meta',struct());
 names=fieldnames(defaults);
 for ii=1:numel(names)
     if ~isfield(options,names{ii}), options.(names{ii})=defaults.(names{ii}); end

@@ -116,6 +116,7 @@ disp(summary_table(:, {'seed', 'abs_h_ref', 'phase_h_ref_rad', ...
     'redistribution_reflect_high_k_fraction', 'tap_rms_delay_symbols', ...
     'invariant_error'}))
 
+mc_stats.phase_reference_meta=channel.phase_reference_meta;
 local_plot_mean_magnitude(mc_stats, figure_prefix);
 local_plot_hist(abs(h_total_samples), '|H(f_ref)|', [figure_prefix 'abs_h_ref_hist.png']);
 local_plot_hist(angle(h_total_samples), 'angle(H(f_ref)) rad', [figure_prefix 'phase_h_ref_hist.png']);

@@ -325,6 +325,8 @@ if surface_realization_used
     end
     Hs_scaled = 4 * std(surface_elevation(:));
 
+    % eta is elevation POSITIVE UPWARD: physical surface depth z=-eta.
+    % Native exp(-i*omega*t) Kirchhoff screen, applied at nominal z=0.
     % Kirchhoff phase screen: delta_phi = k0*(cos_i+cos_r)*eta.
     % In normal incidence phase_factor=2, so delta_phi=2*k0*eta.
     delta_phi = k0 * surface_elevation .* phase_factor;
@@ -478,6 +480,7 @@ meta.surface_realization_generated = surface_realization_generated;
 meta.surface_realization_overridden = surface_realization_overridden;
 meta.surface_realization_source = local_surface_realization_source( ...
     surface_realization_generated, surface_realization_overridden);
+meta.surface_height_convention = 'elevation eta positive upward; physical depth z=-eta';
 meta.surface_override_stats = local_surface_override_stats(surface_override);
 meta.phase_mode_used = phase_mode;
 meta.phase_factor_stats = struct( ...

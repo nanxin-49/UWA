@@ -253,6 +253,7 @@ condition_result.seed_list = seed_list;
 condition_result.f_axis = f_axis_ref;
 condition_result.idx_f_ref = idx_f_ref_ref;
 condition_result.run_rows = rows;
+mc_stats.phase_reference_meta=channel.phase_reference_meta;
 condition_result.mc_stats = mc_stats;
 
 condition_row = local_build_condition_row(spec, mc_stats, mc_count);

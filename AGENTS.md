@@ -147,6 +147,9 @@ Do not rename exported fields in `output` or `results` without updating all entr
 - When reporting tests, include the exact parameter overrides used.
 
 ## Numerical Consistency
+
+- Phase contract v2 (2026-11-10): the four-argument phase helper accepts native PE reduced envelopes. `direct_dsp` is `conj(native)` times the path delay factor; `absolute_physical` restores the positive physical carrier without conjugation. Already conjugated external reduced inputs require explicit `input_representation='dsp_adapted_reduced'`; DSP-ready arrays bypass the helper. Preserve `phase_contract_version='2.0.0'` metadata. Never infer a historical representation from a schema number or array values. Conditional schemas 1/2 require explicit source representation and geometry before migration to schema 3; use new result paths.
+- Surface elevation is positive upward (`z_actual=-eta`), although physical depth is positive downward. Do not change the PE, adjoint, deltaG or spatial C/P definitions to fix receiver Fourier conversion. Receiver statistics for `z_DSP=D*conj(z)` use elementwise-conjugated C/P and the corresponding augmented-real transform. See `reports/m0_phase_contract_closeout_2026-11-10.md`.
 - Keep `H_f = H_direct_f + H_reflect_f` at every frequency bin.
 - Keep `h_total = H_f(idx_f_ref)` and matching definitions for direct and reflected components.
 - Preserve 1/R validation behavior in uniform medium unless intentionally changing the propagation model.

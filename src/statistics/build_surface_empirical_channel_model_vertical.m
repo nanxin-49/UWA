@@ -150,6 +150,7 @@ for ii = 1:numel(condition_ids)
     condition.seed_list = local_optional_column(rows_i, 'seed', NaN(height(rows_i), 1));
     condition.samples = samples;
     condition.wideband = local_extract_wideband_samples(condition_results, cid);
+    condition.phase_reference_meta = condition.wideband.phase_reference_meta;
     condition.has_wideband_hf = condition.wideband.available;
     condition.stats = local_sample_stats(samples);
     conditions = local_append_struct(conditions, condition);
@@ -163,7 +164,7 @@ wideband = struct( ...
     'idx_f_ref', NaN, ...
     'H_f_samples', [], ...
     'H_direct_f_samples', [], ...
-    'H_reflect_f_samples', []);
+    'H_reflect_f_samples', [],'phase_reference_meta',struct());
 if isempty(condition_results)
     return
 end
@@ -186,6 +187,12 @@ if ~isfield(result, 'mc_stats') || ~isfield(result.mc_stats, 'H_f') || ...
 end
 
 wideband.available = true;
+if ~isfield(result.mc_stats,'phase_reference_meta')
+    error('build_surface_empirical_channel_model_vertical:MissingPhaseContract', ...
+        'Historical empirical samples need explicit phase provenance; regenerate or migrate separate components into a new file.');
+end
+assert_channel_dsp_metadata_vertical(result.mc_stats.phase_reference_meta);
+wideband.phase_reference_meta=result.mc_stats.phase_reference_meta;
 if isfield(result.mc_stats.H_f, 'f_axis')
     wideband.f_axis = result.mc_stats.H_f.f_axis(:);
 elseif isfield(result, 'f_axis')

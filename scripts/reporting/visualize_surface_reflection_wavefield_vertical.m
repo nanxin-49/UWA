@@ -201,7 +201,7 @@ try
 
     inc_carrier = exp(1i * meta.k0_rad_per_m * ...
         (paramsV.z_tx - meta.incident_z_m(:).'));
-    ref_carrier = exp(1i * meta.k0_rad_per_m * meta.reflected_z_m(:).');
+    ref_carrier = exp(1i * meta.k0_rad_per_m * (paramsV.z_tx + meta.reflected_z_m(:).'));
     inc_phasor = meta.incident_field_slice .* inc_carrier;
     ref_phasor = meta.reflected_field_slice .* ref_carrier;
     pressure_ref = max([abs(inc_phasor(:)); abs(ref_phasor(:)); eps]);

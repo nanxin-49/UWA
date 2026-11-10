@@ -105,14 +105,14 @@ H_ref_coh_reduced_f = local_projection_field(projection, ...
     projection.f_axis_hz(:),struct('direct_f',H_direct_reduced_f, ...
     'reflect_coh_f',H_ref_coh_reduced_f),geometry,'direct_dsp');
 d = phase_meta.reflect_dsp_factor_f(:);
-C_H = d.*C_H_reduced.*conj(d.');
-P_H = d.*P_H_reduced.*d.';
+C_H = d.*conj(C_H_reduced).*conj(d.');
+P_H = d.*conj(P_H_reduced).*d.';
 augmented = [C_H,P_H;conj(P_H),conj(C_H)];
 augmented = 0.5*(augmented+augmented');
 augmented_eigenvalues = real(eig(augmented));
 
 mu_scatter_reduced_f = complex(zeros(F,1));
-mu_scatter_f = d.*mu_scatter_reduced_f;
+mu_scatter_f = d.*conj(mu_scatter_reduced_f);
 mu_total_reduced_f = H_direct_reduced_f+H_ref_coh_reduced_f+mu_scatter_reduced_f;
 mu_total_f = deterministic_dsp.direct_f+deterministic_dsp.reflect_coh_f+mu_scatter_f;
 stats = struct();

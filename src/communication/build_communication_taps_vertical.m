@@ -12,6 +12,9 @@ end
 o=local_defaults(options);
 if isfield(channel_input,'H_f') && ~isempty(channel_input.H_f)
     [phase_reference,phase_source]=local_phase_reference(channel_input);
+    if isfield(channel_input,'phase_reference_meta') && strcmp(phase_reference,'direct_dsp')
+        assert_channel_dsp_metadata_vertical(channel_input.phase_reference_meta);
+    end
     if strcmp(phase_reference,'legacy_reduced')
         error('build_communication_taps_vertical:LegacyReducedInput', ...
             'Convert project legacy_reduced direct/reflected components to direct_dsp first.');

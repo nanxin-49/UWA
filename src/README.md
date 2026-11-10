@@ -14,6 +14,8 @@
 
 ## 依赖原则
 
+2026-11-10 相位合同：`channel/apply_pe_channel_phase_reference_vertical` 的原生 reduced 输入经完整包络共轭进入 direct-DSP；`channel/assert_channel_dsp_metadata_vertical` 拦截旧项目合同。条件模型 schema 3、经验模型来源元数据及迁移规则见[指南](../vertical_comm_guide.md)和[M0验收](../reports/m0_phase_contract_closeout_2026-11-10.md)。传播/伴随/海面空间统计算子保持原定义。
+
 ```text
 root public wrapper
         |

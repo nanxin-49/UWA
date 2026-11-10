@@ -226,6 +226,9 @@ if isfield(ext,'H_f') && ~isempty(ext.H_f)
     if isfield(ext,'phase_reference_meta') && isstruct(ext.phase_reference_meta) && ...
             isfield(ext.phase_reference_meta,'target_reference')
         phase_reference=lower(char(ext.phase_reference_meta.target_reference));
+        if strcmp(phase_reference,'direct_dsp')
+            assert_channel_dsp_metadata_vertical(ext.phase_reference_meta);
+        end
     elseif isfield(ext,'phase_reference')
         phase_reference=lower(char(ext.phase_reference));
     end

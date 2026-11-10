@@ -29,13 +29,13 @@ if isempty(missing)
         m5=load(paths.model5,'model'); m8=load(paths.model8,'model');
         assert_pe_phase_release_artifact_vertical(m5.model,run_meta.run_id,'U5 model');
         assert_pe_phase_release_artifact_vertical(m8.model,run_meta.run_id,'U8 model');
-        models_ok=startsWith(m5.model.schema_version,'2.') && startsWith(m8.model.schema_version,'2.') && ...
+        models_ok=startsWith(m5.model.schema_version,'3.') && startsWith(m8.model.schema_version,'3.') && ...
             strcmp(m5.model.phase_reference_meta.target_reference,'direct_dsp') && ...
             strcmp(m8.model.phase_reference_meta.target_reference,'direct_dsp') && ...
             m5.model.reference_delay_s==0 && m8.model.reference_delay_s==0;
-        checks(end+1)=local_check('conditional_model_schema',models_ok,double(models_ok),1,'schema 2.x, direct_dsp, zero common shift');
+        checks(end+1)=local_check('conditional_model_schema',models_ok,double(models_ok),1,'schema 3.x, phase contract v2, zero common shift');
         lib=load(paths.library,'library'); assert_pe_phase_release_artifact_vertical(lib.library,run_meta.run_id,'conditional library');
-        checks(end+1)=local_check('conditional_library',strcmp(lib.library.schema_version,'2.0.0-discrete'),double(strcmp(lib.library.schema_version,'2.0.0-discrete')),1,'exact U5/U8 nodes');
+        checks(end+1)=local_check('conditional_library',strcmp(lib.library.schema_version,'3.0.0-discrete'),double(strcmp(lib.library.schema_version,'3.0.0-discrete')),1,'exact U5/U8 nodes');
         pub=load(paths.public,'result'); cp=load(paths.cached_public,'result');
         assert_pe_phase_release_artifact_vertical(pub.result,run_meta.run_id,'public modes');
         assert_pe_phase_release_artifact_vertical(cp.result,run_meta.run_id,'cached/public');

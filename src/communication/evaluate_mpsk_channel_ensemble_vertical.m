@@ -30,7 +30,11 @@ for mm=1:L
     [h,t]=build_communication_taps_vertical(input,struct('symbol_rate_hz',c.symbol_rate_hz, ...
         'n_fft',c.tap_fft_size,'f_ref_hz',c.f_ref_hz,'tap_energy_ratio',c.tap_energy_ratio, ...
         'circular_peak_align',c.circular_peak_align));
-    if c.circular_peak_align
+    if strcmp(c.receive_window_mode,'full_linear')
+        % Keep the complete convolution, including its tail. FFT inversion
+        % then represents this same zero-padded linear observation exactly.
+        h_eq=h(:); rx_clean=conv(tx,h_eq,'full');
+    elseif c.circular_peak_align
         [rx_clean,h_eq]=local_apply_causal_head(tx,h);
     else
         [rx_clean,h_eq]=local_apply_peak_sync(tx,h);
@@ -71,21 +75,30 @@ result=struct('name',local_field(channel_set,'name','external'), ...
         'actual_discard_fraction',prepeak.*double(~c.circular_peak_align), ...
         'ifft_closure_error',closure,'energy_kept',energy_kept), ...
     'elapsed_s',toc(timer),'noise_stored_in_channel',false, ...
-    'equalizer','perfect-known-channel frequency-domain MMSE after peak_sync', ...
-    'synchronization',local_sync_name(c.circular_peak_align));
+    'equalizer','perfect-known-channel frequency-domain MMSE; boundary per receive_window_mode', ...
+    'synchronization',local_sync_name(c.circular_peak_align,c.receive_window_mode), ...
+    'receive_window_mode',c.receive_window_mode);
 end
 
 function c=local_defaults(c)
 d=struct('M',4,'n_sym',8000,'EbN0_dB_list',0:2:20,'symbol_rate_hz',1000, ...
     'tap_fft_size',2048,'f_ref_hz',6000,'tap_energy_ratio',0.999, ...
     'mmse_reg_eps',1e-6,'bits_seed',910001,'noise_seed_base',920000, ...
-    'noise_model','awgn','ebn0_reference','rx_clean','bootstrap_count',2000,'bootstrap_seed',930001);
+    'noise_model','awgn','ebn0_reference','rx_clean','bootstrap_count',2000,'bootstrap_seed',930001, ...
+    'receive_window_mode','full_linear');
 d.circular_peak_align=true;
 n=fieldnames(d); for ii=1:numel(n), if ~isfield(c,n{ii}), c.(n{ii})=d.(n{ii}); end, end
 if abs(round(log2(c.M))-log2(c.M))>1e-12, error('M must be a power of two.'); end
 c.EbN0_dB_list=c.EbN0_dB_list(:).';
+if ~ismember(c.receive_window_mode,{'full_linear','legacy_head'})
+    error('receive_window_mode must be full_linear or explicit legacy_head.');
 end
-function name=local_sync_name(tf)
+end
+function name=local_sync_name(tf,mode)
+if strcmp(mode,'full_linear')
+    name='complete linear observation, no receive-tail truncation; tap alignment recorded separately';
+    return
+end
 if tf, name='shortest circular 99.9% energy window, unwrapped to causal head';
 else, name='legacy unshifted IFFT prefix, then peak_sync'; end
 end

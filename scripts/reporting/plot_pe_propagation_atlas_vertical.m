@@ -228,7 +228,7 @@ function local_animation(a,out_dir)
 m=a.public.wavefield_meta; file=fullfile(out_dir,'14_pe_carrier_reconstruction.mp4');
 writer=VideoWriter(file,'MPEG-4'); writer.FrameRate=12; writer.Quality=95; open(writer);
 inc_carrier=exp(1i*m.k0_rad_per_m*(a.cfg.z_tx-m.incident_z_m(:).'));
-ref_carrier=exp(1i*m.k0_rad_per_m*m.reflected_z_m(:).');
+ref_carrier=exp(1i*m.k0_rad_per_m*(a.cfg.z_tx+m.reflected_z_m(:).'));
 inc=m.incident_field_slice.*inc_carrier; ref=m.reflected_field_slice.*ref_carrier;
 scale=max([abs(inc(:));abs(ref(:));eps]); fig=local_figure([50 50 1400 620]);
 cleanup=onCleanup(@()local_close_video(writer,fig)); %#ok<NASGU>

@@ -177,6 +177,11 @@ for ww=1:numel(winds)
                 ~strcmp(q.phase_reference_meta.target_reference,'direct_dsp')
             passed=false; return
         end
+        try
+            assert_channel_dsp_metadata_vertical(q.phase_reference_meta);
+        catch
+            passed=false; return
+        end
     end
 end
 end

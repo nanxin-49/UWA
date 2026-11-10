@@ -31,12 +31,18 @@ sample_mode = lower(sample_mode);
 n_samples = max(1, round(n_samples));
 
 [condition, condition_distance, condition_position] = local_find_nearest_condition(model, query);
+if ~isfield(condition,'phase_reference_meta')
+    error('sample_surface_empirical_channel_vertical:MissingPhaseContract', ...
+        'Unversioned empirical model must be rebuilt from explicitly migrated inputs.');
+end
+assert_channel_dsp_metadata_vertical(condition.phase_reference_meta);
 rng(rng_seed, 'twister');
 sample_indices = randi(condition.mc_count, n_samples, 1);
 
 samples = local_take_samples(condition.samples, sample_indices);
 sample_table = local_samples_to_table(samples);
 samples.sample_mode = sample_mode;
+samples.phase_reference_meta=condition.phase_reference_meta;
 switch sample_mode
     case 'summary'
         % Summary bootstrap fields are already populated above.

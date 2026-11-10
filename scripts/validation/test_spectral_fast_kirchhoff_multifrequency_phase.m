@@ -31,10 +31,12 @@ f=(5990:.1:6010)'; k=2*pi*f/1500; kz=sqrt(k.^2-4^2);
 p=-exp(1i*kz*103); reduced=p.*exp(-1i*k*103);
 g=struct('z_tx',100,'z_rx',3,'c0',1500);
 a=apply_pe_channel_phase_reference_vertical(f, ...
- struct('direct_f',ones(size(f)),'reflect_fm',reduced),g,'direct_dsp');
+ struct('direct_f',ones(size(f)),'reflect_fm',reduced),g,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced')); % intentional historical negative control
 native=conj(p).*exp(1i*k*97);
 adapted=apply_pe_channel_phase_reference_vertical(f, ...
- struct('direct_f',ones(size(f)),'reflect_fm',conj(reduced)),g,'direct_dsp');
+ struct('direct_f',ones(size(f)),'reflect_fm',conj(reduced)),g,'direct_dsp', ...
+ struct('input_representation','dsp_adapted_reduced'));
 verifyEqual(t,adapted.reflect_fm,native,'AbsTol',1e-12);
 tau_native=-gradient(unwrap(angle(native)),f)/(2*pi);
 tau_project=-gradient(unwrap(angle(a.reflect_fm)),f)/(2*pi);
