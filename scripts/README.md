@@ -1,5 +1,11 @@
 # 脚本与验证运行索引
 
+**Bellhop 最小连通示例：**设置 `BELLHOP_EXE` 为外部 `bellhop.exe` 的完整路径，执行 `setup_vertical_project; smoke_bellhop_connection_vertical()`。该入口在 `validation/`，只运行 4 kHz、9 条声线的自由场小案例，并把 `.env/.ray/.prt` 和标准输出写入 `results/validation/bellhop_connection_smoke/<run_id>/`；仅检查程序能运行及文件是否生成，不代表物理精度验证。
+
+**2026-11-01 RC1 平坦海底一次反射几何补充：**`reporting/render_target_deepsea_dsb_geometry('new_unique_run_id')` 在 `setup_vertical_project` 后按镜像法计算原目标工况的 D/S/B 声程和相对时延，输出 CSV、单张 PNG/FIG 到 `results/visualization/rc1_target_deepsea_dsb_geometry/<run_id>/`。只表示几何到达，不计算反射声压或运行传播求解器；见[说明](../reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md)。
+
+**2026-11-01 RC1 目标深海解析几何：**`reporting/render_target_deepsea_flat_geometry('new_unique_run_id')` 在 `setup_vertical_project` 后计算 1500 m 水深、Tx 1490 m、Rx 3/6/10 m、偏移 0–200 m 的等声速平面海面镜像路径，输出 603 行 CSV 和 F01–F05 PNG/FIG 到 `results/visualization/rc1_target_deepsea_flat_geometry/<run_id>/`。只做解析几何，不运行 PE。孔径资格设计和数值阻塞见[报告](../reports/rc1_target_deepsea_geometry_and_pe_aperture_design_2026-11-01.md)。
+
 **2026-10-30 声源二维方向增益图：**`reporting/render_source_model_2d_beam_maps('new_unique_run_id')` 从已保存的三声源与活塞频率对照配置绘制两张 2×3 解析方向增益图，上排显示宽角域，下排只显示当前 ±7.6756° 接收角锥；输出 `results/visualization/source_model_2d_beams/<run_id>/` 的 FIG/PNG/MAT。颜色仅代表轴向归一化角度权重，已去除距离扩散，不是 PE/BIE/FullFK/Bellhop 场。
 **2026-10-31 P22 双频物理先导完整保存数据审计：**`validation/support/audit_two_dimensional_s5_p22_dualfreq_complete_saved.py RUN_DIR NEW_OUTPUT` 只读重开 4062.5/4031.25 Hz 同源 PE/FullFK 与五层 BIE、冻结预测、4 kHz 锚点 CSV 和新作业资源/时间/SHA，输出双频审计 JSON 及 SHA；配套既有 `audit_two_dimensional_s5_p22_saved.py` 逐频生成层表与复频响 CSV。[结题报告](../reports/two_dimensional_s5_p22_dualfreq_closeout_2026-10-31.md)与[结果/检查点](../results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/)表明两频 BIE 经验参考合格、单点预测误差 `2.7742e-7`，但模型可分辨门未关闭；不执行 MATLAB、CIR 或 BER。
 

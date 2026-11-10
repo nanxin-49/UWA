@@ -7,7 +7,11 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-08-20）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-09）
+
+### 远程 MATLAB 执行目标切换（2026-11-09；流程状态）
+
+- 后续经授权的 **SSH 远程** MATLAB 工作只使用新 Ubuntu 别名 `matlab-ubuntu-new`、用户 `misc` 和 `/home/misc/MATLAB/R2025b/bin/matlab`（已核验 R2025b Update 1）；旧别名 `matlab-ubuntu` 仅保留为历史连接与既有 R2023b 结果的来源，不再用于新作业。Windows 本机轻量 MATLAB 工作仍按 `AGENTS.md` 使用 MATLAB MCP。新机器的 BatchMode SSH、MATLAB 版本及独立 FFT 往返断言已通过，证据与后续步骤见[新机器 SSH/MATLAB 交接](reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md)。新机器 `/home/misc/cwx` 存在但当前不是 Git 工作区；尚未迁移或验证科研项目代码，任何项目远程运行仍须先过工作区、兼容性、资源与数值基线门。历史 R2023b 数值证据不自动转移为新机器验证。
 
 ### 二维 S5 P22 双频物理资格先导：双频数据完整，模型可分辨门未关闭（2026-10-31；最新物理状态）
 
