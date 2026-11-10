@@ -9,6 +9,19 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-10）
 
+### 新 Ubuntu 最小项目基线已通过（2026-11-10；限定兼容性）
+
+- 在新 Ubuntu 的 `/home/misc/cwx/project_baselines/20261110_121507_new_ubuntu_minimal/project/` 建立不覆盖原文件的 23 文件白名单隔离快照，含当前 HEAD `747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9`、未提交的 P22 独立输出路由补丁与本轮新验证入口。上传及运行后输入 SHA 23/23、回传 92/92 通过；原 `/home/misc/cwx` 仍非完整 Git 工作区，未作完整迁移。
+- 本机现有 MATLAB MCP R2025b Update 6 与新机 R2025b Update 1 对照：128×128 CPU double 4 kHz 无反射、4 kHz 有反射、4–8 kHz 九点有反射三例分别比较 14/19/19 个数值分量，最大逐元素绝对差均为 0，原 `1e-12+1e-9|local|` 门通过，公共字段和分量恒等式通过。两项 P22 保存结果共同窗 `1e-3` 与 QPSK `1e-12` 原审计门通过，结果只限保存数据/已知 CSI；没有生成新通信实验。远端七次 MATLAB 进程累计 204.02/600 s，最长 50.70/180 s，均使用单计算线程；逐作业资源门通过。完整来源、配置、日志、对照、SHA 与限制见[新机最小项目基线报告](reports/new_ubuntu_minimal_project_baseline_2026-11-10.md)及[最终检查点](results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json)。状态仅为 `NEW_UBUNTU_MINIMAL_PROJECT_BASELINE_PASS`。
+- 九点频率循环不认证 CIR，短程案例不认证 1/R 或目标深海传播；完整依赖、Linux MEX/外部程序、大网格与长作业未查。正式 S5/S6 仍暂停，两频点旧最终审计代码来源缺口未补。以下 11-09/11-10 早期“新机项目尚未验证”条目是其当时快照，以本节限定结果为当前状态。本轮停止，不自动开展完整迁移或后续科研重计算。
+
+### P22 可复现基线已整理（2026-11-10；保存数据独立复核）
+
+- 从固定提交 `24a05ba72b58042084417e54ca437f03adb988dd` 恢复三个缺失入口和共同窗/QPSK 两个独立审计；审计仅增加可选独立输出路径，数值门/公式不变。共同窗与 QPSK 的 23 条原检查点输入/输出 SHA 在补丁前全匹配；两频点 234+53 条清单匹配。原文、补丁后代码版本、依赖差异和保护性前后 SHA 见[基线报告及对应表](reports/p22_reproducibility_baseline_2026-11-10.md)与 `results/validation/p22_reproducibility_baseline/20261110_115037/`。
+- 本次已有 MATLAB MCP R2025b Update 6 可用，串行、累计 180 s 预算、逐项 30% 可用物理 RAM 预留门下复核保存数据。共同窗 CIR 最大相对差 `8.2248e-6 < 1e-3`；QPSK 原固定噪声重放均衡符号差 0、CSV 指标差 `3.9080e-14`。两频点保存标量/源数组/配置/相位/预测审计通过限定检查；4031.25 Hz PE 独立敏感性仍缺，FullFK/BIE 差仍未分辨。首次回执组装失败已保留并计入预算，随后从未执行审计继续。
+- 当前 BIE 验证 helper 与历史版的差异限于几项输入防御检查，本轮未替换或运行；其余 9 个已核依赖逐字节一致。旧原始 IFFT 失败保留，全部新审计输出与原证据隔离。未访问 SSH/归档、未启动传播或新性能实验，未改变生产接口/方法，未解除正式 S5/S6 暂停或推进新机迁移。下方“入口缺失/MCP 不可连接”是此前整理快照，本节取代其当前条件，不改写历史记录。
+- 最终封存发现两频点检查点所指 `audit_code_sha256=2c95abb6…` 的原文未定位，不能用固定提交中 SHA 为 `bd865b9c…` 的通用 Python 审计脚本顶替。6 个检查点产物绑定及 287 条清单匹配，本轮新 MATLAB 限定重核有效，但完整旧最终审计的代码来源仍缺；已登记事件和限制，不改原记录。
+
 ### 项目接续首页与持续记录（2026-11-10；整理与工具状态）
 
 - 新增[统一进度文字版](reports/project_progress.md)和[本地离线看板](results/visualization/project_progress/index.html)，按七条仿真/验证工作线解释成果、适用边界、缺口和接续步骤。唯一手工源是 `reports/project_progress.json`；`render_project_progress_dashboard` 从同一源生成两种视图，维护规则已写入 `AGENTS.md`，[更新方式](reports/project_progress_maintenance.md)可供后续任务沿用。本次只核对当前入口、保存检查点、历史审计摘要和文件存在性，没有新增声场/通信计算，没有重新执行历史数值或全量 SHA/图件审计，也没有解除任何暂停或参考 STOP。

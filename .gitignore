@@ -125,3 +125,9 @@
 
 # Retired local quarantine stays excluded after every source allow-rule.
 /cash/
+
+# Generated isolated new-Ubuntu baseline snapshot, including copied source.
+/results/validation/new_ubuntu_project_baseline/
+
+# Saved audit runs include historical code copies; keep them local as evidence.
+/results/validation/p22_reproducibility_baseline/

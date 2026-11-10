@@ -2,7 +2,9 @@
 
 **项目进度看板（2026-11-10）：**在已有 MATLAB MCP 会话中执行 `setup_vertical_project; render_project_progress_dashboard();`。入口位于 `reporting/`，从 `reports/project_progress.json` 生成 `reports/project_progress.md` 与 `results/visualization/project_progress/index.html`，并保存引用文件检查回执。只读取 JSON、模板和明确引用的文件存在性，不调用声场求解器、不加载 MAT/FIG、不检查归档；不依赖当前目录。可用 `source_path`、`output_dir`、`markdown_path` 绝对路径字段覆盖默认值，输出仍限定在相应项目目录。首次整理时 MATLAB MCP 无法连接，MATLAB 实跑/Analyzer 未执行，初版以有记录的文本打包方式生成；见[维护说明](../reports/project_progress_maintenance.md)。
 
-**P22 后续结果补记：**10-30 的共同窗 PE CIR/已知 CSI QPSK 控制和 10-31 的两个物理频点参考已有保存结果，但相应关键脚本不在当前工作树；历史提交 `24a05ba72b58042084417e54ca437f03adb988dd` 保留入口。本索引不恢复脚本或授予重跑许可。正式 S5/S6 暂停状态不变，详见[统一进度](../reports/project_progress.md)。
+**P22 可复现基线（2026-11-10）：**`validation/run_pe_screen_p22_qpsk`、`validate_pe_screen_p22_common_window`、`run_two_dimensional_s5_p22_dualfreq_remote` 及前两项原独立审计已从固定提交 `24a05ba` 最小恢复。`audit_pe_screen_p22_common_window(run_id,parent_run_id,refined_run_id,audit_output_dir)` 和 `audit_pe_screen_p22_qpsk(run_id,audit_output_dir)` 新增可选绝对输出目录，须不存在；省略时保留原写入行为，保护原证据时务必显式传独立目录。新 `validation/audit_two_dimensional_s5_p22_saved(output_dir)` 只读保存的 HDF5 标量/源数组，复核两频点配置、相位代数和经验参考，不运行求解器。先 `setup_vertical_project`，再用显式输出路径；本轮独立审计与哈希清单见[基线报告](../reports/p22_reproducibility_baseline_2026-11-10.md)。恢复的远端求解入口仍需要单独任务布局、冻结预测和授权；本轮未运行它。正式 S5/S6 暂停不变。
+
+**新 Ubuntu 最小项目兼容性入口（2026-11-10）：**`validation/run_new_ubuntu_minimal_channel_baseline(output_dir,case_id)` 接受 `direct_4k`、`reflect_4k`、`reflect_9f`，要求不存在的显式绝对输出目录，保存固定 128×128 CPU double 配置、公共信道原生数组和断言回执。先在现有本机 MATLAB MCP 会话执行 `setup_vertical_project`，远端只在获准的隔离快照中以 `matlab-ubuntu-new`、单线程和资源门执行。本轮三个案例与本机逐元素比较通过，两项 P22 保存审计也在独立目录通过；详情及精确快照见[基线报告](../reports/new_ubuntu_minimal_project_baseline_2026-11-10.md)。九点仅检查接口与频率循环，不认证 CIR；本入口不授权完整迁移、较大计算或解除正式 S5/S6 暂停。
 
 **Bellhop 最小连通示例：**设置 `BELLHOP_EXE` 为外部 `bellhop.exe` 的完整路径，执行 `setup_vertical_project; smoke_bellhop_connection_vertical()`。该入口在 `validation/`，只运行 4 kHz、9 条声线的自由场小案例，并把 `.env/.ray/.prt` 和标准输出写入 `results/validation/bellhop_connection_smoke/<run_id>/`；仅检查程序能运行及文件是否生成，不代表物理精度验证。
 
