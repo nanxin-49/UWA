@@ -7,17 +7,28 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-09）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-10）
+
+### 项目接续首页与持续记录（2026-11-10；整理与工具状态）
+
+- 新增[统一进度文字版](reports/project_progress.md)和[本地离线看板](results/visualization/project_progress/index.html)，按七条仿真/验证工作线解释成果、适用边界、缺口和接续步骤。唯一手工源是 `reports/project_progress.json`；`render_project_progress_dashboard` 从同一源生成两种视图，维护规则已写入 `AGENTS.md`，[更新方式](reports/project_progress_maintenance.md)可供后续任务沿用。本次只核对当前入口、保存检查点、历史审计摘要和文件存在性，没有新增声场/通信计算，没有重新执行历史数值或全量 SHA/图件审计，也没有解除任何暂停或参考 STOP。
+- 本次 MATLAB MCP 返回 `failed to attach to MATLAB session`，新生成工具的 MATLAB 实跑与 Code Analyzer 尚未执行。初版页面和文字由同一 JSON/模板有记录地打包，另做离线脚本/内容/链接检查；浏览器安全策略拦截 `file://`，桌面与窄屏实际显示仍未验收。执行限制与验收记录见维护说明。未启动第二个本机 MATLAB、未使用 SSH、未迁移项目、未绕过浏览器限制。
+
+### P22 后续独立专项补记（结果至2026-10-31；本次核查2026-11-10）
+
+- 10-30 的原始 65/129 点 IFFT 比较失败保留；共同 257 点、64 ms 窗口下的分量/时延表示通过原 `1e-3` 门，随后已知 CSI 的 QPSK 控制实验及独立审计通过，最终检查点为 `results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json`。仅支持 P22、PE 相位屏、平面/原弱正弦控制，不是导频估计或正式多模型 S5/S6 验收。
+- 10-31 两频点试点 `results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json` 完成 4062.5/4031.25 Hz 五层 BIE 参考，状态 `DATA_COMPLETE_REFERENCE_PASS_MODEL_RESOLUTION_LIMITED`。完整频带/九点、独立 PE 敏感性等缺口保留，无正式物理 CIR/PDP/BER。两个专项的关键运行入口在当前工作树缺失；已只读确认历史提交 `24a05ba72b58042084417e54ca437f03adb988dd` 保留相关脚本，本次没有恢复。下方10-27状态是原正式流程暂停快照，不能用来否定上述独立控制实验，也不能由上述实验反推正式流程已准入。
 
 ### 远程 MATLAB 执行目标切换（2026-11-09；流程状态）
 
 - 后续经授权的 **SSH 远程** MATLAB 工作只使用新 Ubuntu 别名 `matlab-ubuntu-new`、用户 `misc` 和 `/home/misc/MATLAB/R2025b/bin/matlab`（已核验 R2025b Update 1）；旧别名 `matlab-ubuntu` 仅保留为历史连接与既有 R2023b 结果的来源，不再用于新作业。Windows 本机轻量 MATLAB 工作仍按 `AGENTS.md` 使用 MATLAB MCP。新机器的 BatchMode SSH、MATLAB 版本及独立 FFT 往返断言已通过，证据与后续步骤见[新机器 SSH/MATLAB 交接](reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md)。新机器 `/home/misc/cwx` 存在但当前不是 Git 工作区；尚未迁移或验证科研项目代码，任何项目远程运行仍须先过工作区、兼容性、资源与数值基线门。历史 R2023b 数值证据不自动转移为新机器验证。
+- **11-10 只读转移核查：**用户已手动把若干历史运行目录、MATLAB 脚本和数据文件放入新机 `/home/misc/cwx`。新别名可登录，顶层目录可列出，抽查的 `.m` 源文件与 `.mat` 输入文件可计算 SHA-256；但该目录仍不是 Git 工作区，根目录缺少 `AGENTS.md`、`PROJECT_CONTEXT.md`、`vertical_channel_model.m` 等项目入口。未比较旧机源文件与新机副本的完整性，未执行搬运文件或项目代码，也未改变项目数值验证状态；后续先核实完整工作区和输入身份，再做兼容性与基线验证。
 
 ### 三类声源独立归一化对照（2026-10-30）
 
 - [最小对照报告](reports/source_model_minimal_comparison_report.md)与[结果目录](results/comparisons/source_model_minimal/run_20261030_02/)：4 kHz、均匀自由场、Tx1490 m/Rx6 m、x=0–200 m；Gaussian 初始平面角谱、全向点源及 5 cm 理想圆活塞按轴向归一化比较。最大角 7.6756°，x=200 m 时 Gaussian/全向 `-1.9575 dB`、活塞/全向 `-0.013597 dB`，6项检查通过。仅方向权重与共同 1/R 几何的轻量对照，不是三种源在 PE/BIE/FullFK 的同源资格；生产接口/默认配置未改。
 
-### 二维 S5/S6 Goal 阶段 A 前置门（2026-10-27；最新二维状态）
+### 二维 S5/S6 Goal 阶段 A 前置门（2026-10-27；正式流程暂停快照）
 
 - **用户审阅暂停状态（2026-10-27）：**用户要求先审查报告和既有结果，暂停新增数值工作；Goal 已设为 `PAUSED`。阶段仍为 A=`PARTIAL`、B=`BLOCKED/未进入`、C=`BLOCKED/未进入`；未形成可信二维 CIR 或通信误码结果。48 小时 S5 提案 v2 尚未批准。[中文报告开头](reports/two_dimensional_s5_s6_2026-10-27.md)现有审阅摘要与报告完整性检查；恢复时先遵从用户审查意见，不把暂停或已有单点结果解释为阶段 PASS。
 

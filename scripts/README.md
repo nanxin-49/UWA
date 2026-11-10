@@ -1,5 +1,9 @@
 # 脚本与验证运行索引
 
+**项目进度看板（2026-11-10）：**在已有 MATLAB MCP 会话中执行 `setup_vertical_project; render_project_progress_dashboard();`。入口位于 `reporting/`，从 `reports/project_progress.json` 生成 `reports/project_progress.md` 与 `results/visualization/project_progress/index.html`，并保存引用文件检查回执。只读取 JSON、模板和明确引用的文件存在性，不调用声场求解器、不加载 MAT/FIG、不检查归档；不依赖当前目录。可用 `source_path`、`output_dir`、`markdown_path` 绝对路径字段覆盖默认值，输出仍限定在相应项目目录。首次整理时 MATLAB MCP 无法连接，MATLAB 实跑/Analyzer 未执行，初版以有记录的文本打包方式生成；见[维护说明](../reports/project_progress_maintenance.md)。
+
+**P22 后续结果补记：**10-30 的共同窗 PE CIR/已知 CSI QPSK 控制和 10-31 的两个物理频点参考已有保存结果，但相应关键脚本不在当前工作树；历史提交 `24a05ba72b58042084417e54ca437f03adb988dd` 保留入口。本索引不恢复脚本或授予重跑许可。正式 S5/S6 暂停状态不变，详见[统一进度](../reports/project_progress.md)。
+
 **Bellhop 最小连通示例：**设置 `BELLHOP_EXE` 为外部 `bellhop.exe` 的完整路径，执行 `setup_vertical_project; smoke_bellhop_connection_vertical()`。该入口在 `validation/`，只运行 4 kHz、9 条声线的自由场小案例，并把 `.env/.ray/.prt` 和标准输出写入 `results/validation/bellhop_connection_smoke/<run_id>/`；仅检查程序能运行及文件是否生成，不代表物理精度验证。
 
 **2026-11-01 RC1 平坦海底一次反射几何补充：**`reporting/render_target_deepsea_dsb_geometry('new_unique_run_id')` 在 `setup_vertical_project` 后按镜像法计算原目标工况的 D/S/B 声程和相对时延，输出 CSV、单张 PNG/FIG 到 `results/visualization/rc1_target_deepsea_dsb_geometry/<run_id>/`。只表示几何到达，不计算反射声压或运行传播求解器；见[说明](../reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md)。

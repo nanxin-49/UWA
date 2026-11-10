@@ -118,3 +118,10 @@
 !/.agents/skills/scientific-visualization/**
 !/.agents/skills/literature-review/**
 !/.agents/skills/scientific-writing/**
+
+# Maintained progress source and offline report template (views are generated).
+!/reports/project_progress.json
+!/scripts/reporting/templates/project_progress.html
+
+# Retired local quarantine stays excluded after every source allow-rule.
+/cash/

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>从这里接着做 · 水声项目进度</title>
+<style>
+:root{--ink:#193534;--muted:#526967;--paper:#f5f6f2;--white:#fff;--line:#dbe3dc;--green:#155c49;--soft:#e6f0e8;--amber:#80500c;--amber-bg:#fbf0d9;--purple:#655287;--purple-bg:#eee9f6;--grey-bg:#eaf0ef}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;font-size:16px;line-height:1.8}a{color:var(--green);text-underline-offset:4px;overflow-wrap:anywhere}a:hover{text-decoration-thickness:2px}a:focus-visible,summary:focus-visible{outline:3px solid #287f8a;outline-offset:5px}button,a,summary{-webkit-tap-highlight-color:transparent}code{font-family:Consolas,monospace;font-size:.88em;overflow-wrap:anywhere}p{margin:0 0 14px}h1,h2,h3{line-height:1.4;margin:0}h1{font-size:44px;font-weight:650;letter-spacing:-1px}h2{font-size:27px;font-weight:650}h3{font-size:20px;font-weight:600}small,.muted{color:var(--muted)}.shell{max-width:1220px;margin:auto;display:grid;grid-template-columns:184px minmax(0,1fr);gap:54px;padding:42px 36px 70px}.side{align-self:start;position:sticky;top:30px}.brand{font-size:15px;font-weight:650;margin-bottom:30px}.brand span{display:block;color:var(--muted);font-size:12px;letter-spacing:1px;font-weight:400}nav{display:flex;flex-direction:column;gap:8px}nav a{text-decoration:none;font-size:14px;padding:6px 0}.side-note{font-size:12px;color:var(--muted);margin-top:40px;line-height:1.8}.eyebrow{font-size:12px;letter-spacing:1.2px;color:var(--muted);margin-bottom:14px}.subtitle{margin-top:6px;color:var(--muted)}.lead{font-size:22px;line-height:1.8;margin:26px 0 20px;max-width:790px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.button{display:inline-flex;text-decoration:none;padding:9px 17px;border:1px solid var(--line);border-radius:6px;background:var(--white);font-size:14px;align-items:center}.button.primary{background:var(--green);color:white;border-color:var(--green)}section{margin-top:46px;scroll-margin-top:24px}.section-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px}.section-index{color:var(--muted);font-size:12px;letter-spacing:1px}.overview{border-left:3px solid #9bb5a3;padding-left:22px}.overview p:last-child{margin-bottom:0}.read-note{font-size:14px;color:var(--muted);margin-top:18px}.boundary{background:var(--soft);padding:18px 22px;border-radius:7px;margin-top:24px;font-size:14px}.boundary strong{display:block;margin-bottom:5px}.stream{padding:24px 0;border-top:1px solid var(--line)}.stream:last-child{border-bottom:1px solid var(--line)}.stream-top{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:11px}.badge{font-size:12px;line-height:1.6;padding:4px 9px;border-radius:4px;display:inline-block;white-space:normal;background:var(--grey-bg);color:var(--muted)}.badge.closed{background:var(--soft);color:var(--green)}.badge.partial{background:var(--amber-bg);color:var(--amber)}.badge.paused{background:var(--purple-bg);color:var(--purple)}.stream-summary{font-size:17px;line-height:1.9;margin-bottom:9px}.date{font-size:12px;color:var(--muted)}details{margin-top:12px}summary{font-size:14px;cursor:pointer;color:var(--green);width:fit-content}details[open]>summary{margin-bottom:16px}.answers{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px 18px;margin:16px 0}.answers dt{font-size:13px;color:var(--muted);padding-top:3px}.answers dd{margin:0;min-width:0}.technical{font-size:14px;padding-top:15px;border-top:1px dashed var(--line)}.technical p{margin-bottom:9px}.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:18px 0}.facts strong{display:block;font-size:12px;color:var(--muted);font-weight:400;margin-bottom:4px}.facts div{font-size:13px}.evidence{list-style:none;padding:0;margin:10px 0}.evidence li{margin-bottom:12px;font-size:14px}.evidence small{font-size:12px;display:block;overflow-wrap:anywhere}.missing{color:var(--amber)}.unexpected{padding:12px 15px;background:var(--amber-bg);margin-bottom:18px;font-size:14px}.timeline{margin:0;padding:0;list-style:none}.timeline li{display:grid;grid-template-columns:104px minmax(0,1fr);gap:22px;padding:14px 0;border-top:1px solid var(--line)}.timeline time{font-size:13px;color:var(--muted)}.timeline h3{font-size:17px;margin-bottom:5px}.timeline p{font-size:14px;margin-bottom:0}.next-list{list-style:none;margin:0;padding:0;counter-reset:next}.next-list li{display:grid;grid-template-columns:35px minmax(0,1fr);gap:16px;padding:22px 0;border-top:1px solid var(--line);counter-increment:next}.next-list li:before{content:"0" counter(next);color:var(--green);font-size:20px;font-variant-numeric:tabular-nums}.next-list h3{font-size:19px;margin-bottom:10px}.next-list p{font-size:15px}.completion{color:var(--green)}.gate{font-size:13px!important;color:var(--muted)}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:20px 30px}.glossary dt{font-size:15px;font-weight:600;margin-bottom:4px}.glossary dd{font-size:14px;color:var(--muted);margin:0}.review{font-size:14px}.review details{margin-top:20px}.review pre{white-space:pre-wrap;padding:16px;background:var(--grey-bg);font-size:13px;overflow-wrap:anywhere}.footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}.skip{position:absolute;left:12px;top:-100px}.skip:focus{top:12px;background:white;padding:10px;z-index:2}.error{padding:24px;background:var(--amber-bg)}
+@media(max-width:950px){.shell{grid-template-columns:145px minmax(0,1fr);gap:28px;padding:30px 25px}.facts{grid-template-columns:1fr}.facts div{padding-left:12px;border-left:2px solid var(--line)}}
+@media(max-width:700px){.shell{display:block;padding:20px 22px 50px}.side{position:static;margin-bottom:30px}.brand{margin-bottom:12px}.brand span{display:inline;margin-left:10px}nav{flex-direction:row;flex-wrap:wrap;gap:4px 17px}nav a{font-size:13px;padding:3px 0}.side-note{display:none}h1{font-size:34px}.lead{font-size:19px;margin:20px 0}.section-top{gap:10px}h2{font-size:23px}.section-index{font-size:11px}.stream-top{align-items:start;gap:9px}.stream-top h3{width:100%;font-size:19px}.stream-summary{font-size:16px}.answers{grid-template-columns:1fr;gap:4px}.answers dt{margin-top:10px}.timeline li{grid-template-columns:1fr;gap:2px}.glossary{grid-template-columns:1fr;gap:18px}.overview{padding-left:15px}.boundary{padding:15px 17px}.button{padding:10px 14px;min-height:44px}summary{min-height:44px;padding-top:8px}section{margin-top:34px}.date{line-height:1.7}.actions{gap:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.shell{display:block;padding:0}.side,.actions,summary{display:none}details>*{display:block!important}section{break-inside:avoid-page}.stream{break-inside:avoid-page}body{background:white;font-size:11pt}.lead{font-size:15pt}a{color:inherit}.glossary{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<a class="skip" href="#now">跳到项目现状</a>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">垂直水声研究<span>PROJECT NOTEBOOK</span></div>
+    <nav aria-label="进度目录">
+      <a href="#now">01 现在在哪里</a><a href="#streams">02 七条工作线</a><a href="#timeline">03 最近发生了什么</a><a href="#next">04 重新开始先做什么</a><a href="#glossary">05 术语随手查</a><a href="#review">记录与更新方法</a>
+    </nav>
+    <p class="side-note">保留结果的边界，<br>也保留工作的来路。<br><br>这是一份接续记录，<br>跟随每次项目任务更新。</p>
+  </aside>
+  <main id="main">
+    <header>
+      <div class="eyebrow" id="edition"></div>
+      <h1 id="title">从这里接着做</h1><p class="subtitle" id="subtitle"></p>
+      <p class="lead" id="headline"></p>
+      <div class="actions"><a class="button primary" href="#next">看下一步从哪里开始 ↓</a><a class="button" href="@@MARKDOWN_HREF@@">打开文字版</a><a class="button" href="@@ROOT_HREF@@UWA_2D_research_review_workbench.html">原二维专题工作台 ↗</a></div>
+    </header>
+    <section id="now" aria-labelledby="now-title"><div class="section-top"><h2 id="now-title">现在在哪里</h2><span class="section-index">01 / 先找回主线</span></div><div class="overview" id="overview"></div><p class="read-note" id="reading-note"></p><div class="boundary"><strong>读进度时，记住这三个区别</strong>受控 QPSK 跑通 ≠ 正式 S5/S6 完成；65 点预测 ≠ 65 点独立验证；路径几何算清 ≠ 传播声场算准。</div></section>
+    <section id="streams" aria-labelledby="streams-title"><div class="section-top"><h2 id="streams-title">七条工作线，各自停在哪里</h2><span class="section-index">02 / 按需展开</span></div><div id="evidence-alert"></div><div id="stream-list"></div></section>
+    <section id="timeline" aria-labelledby="timeline-title"><div class="section-top"><h2 id="timeline-title">最近发生了什么</h2><span class="section-index">03 / 关键变化</span></div><ol class="timeline" id="event-list"></ol></section>
+    <section id="next" aria-labelledby="next-title"><div class="section-top"><h2 id="next-title">重新开始，先做这三步</h2><span class="section-index">04 / 接续顺序</span></div><p class="read-note">以下是后续工作的建议顺序。选择具体实验和资源预算，仍在相应任务开始前确定。</p><ol class="next-list" id="next-list"></ol></section>
+    <section id="glossary" aria-labelledby="glossary-title"><div class="section-top"><h2 id="glossary-title">术语随手查</h2><span class="section-index">05 / 不必背缩写</span></div><dl class="glossary" id="glossary-list"></dl></section>
+    <section class="review" id="review" aria-labelledby="review-title"><div class="section-top"><h2 id="review-title">这份记录怎样保持有用</h2></div><p id="maintenance-rule"></p><p id="qualification"></p><details><summary>查看核查范围、来源和更新命令</summary><p id="review-scope"></p><p id="runtime-note"></p><p id="revision"></p><p>以后只维护这一份源记录：</p><p><a id="source-link"></a></p><pre id="command"></pre><p>修改工作线后，给时间线追加一条变化；旧的失败、暂停和停止原因继续保留。生成的 HTML 和 Markdown 不手工改，避免出现两种进度。</p></details></section>
+    <footer class="footer" id="footer"></footer>
+    <noscript><p class="error">此离线页面使用内嵌脚本展示记录。脚本关闭时，请打开上方文字版查看完整内容。</p></noscript>
+  </main>
+</div>
+<script id="progress-data" type="application/json">@@PROGRESS_JSON@@</script>
+<script id="progress-runtime">
+'use strict';
+function progressEscape(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function progressEvidenceState(checks,streamId,path){return checks.find(x=>x.workstream_id===streamId&&x.path===path);}
+function progressMarkdown(record,checks,rootHref){
+  const out=['<!-- GENERATED: edit reports/project_progress.json, then run render_project_progress_dashboard. -->','# '+record.title,'',record.subtitle,'','记录更新：'+record.updated_at+'；本次核查：'+record.checked_at+'。','',record.headline,'','## 现在在哪里','',...record.overview.flatMap(x=>[x,'']),record.reading_note,'','## 各条工作线',''];
+  for(const s of record.workstreams){
+    out.push('### '+s.name,'','状态：'+s.status_label+'；结果日期：'+s.result_date+'；本次核查：'+s.checked_at+'。','',s.summary,'');
+    for(const [key,label] of [['why','为什么做'],['done','做了什么'],['meaning','说明什么'],['gap','还差什么'],['next','下一步'],['details','技术范围'],['saved_results','已有结果'],['historical_audit','历史审计'],['rerun','当前重跑条件']])out.push('**'+label+'：**'+s[key],'');
+    out.push('证据入口：','');
+    for(const e of s.evidence){const c=progressEvidenceState(checks,s.id,e.path);out.push('- '+(c&&c.exists?'['+e.label+']('+rootHref+encodeURI(e.path)+')':'**'+e.label+'：当前缺失**')+' · `'+e.path+'`'+(e.revision?' · 历史版本 `'+e.revision+'`':'')+(c&&c.exists!==e.expected_exists?' · 与记录预期不符，待复核':''));}
+    out.push('');
+  }
+  out.push('## 最近发生了什么','');
+  for(const e of record.events)out.push('### '+e.date+' · '+e.title,'',e.text,'');
+  out.push('## 重新开始先做什么','');
+  record.next_actions.forEach((a,i)=>out.push('### '+(i+1)+'. '+a.title,'',a.text,'','完成标志：'+a.completion,'','执行边界：'+a.gate,''));
+  out.push('## 术语随手查','');for(const g of record.glossary)out.push('**'+g.term+'：**'+g.meaning,'');
+  out.push('## 记录与核查范围','',record.review_scope,'',record.runtime_note,'','本次核查代码基线：`'+record.review_revision+'`。','','唯一维护源：`'+record.maintenance.source+'`。','',record.maintenance.rule,'',record.maintenance.qualification,'','```matlab',record.maintenance.command,'```','');
+  return out.join('\n');
+}
+if(typeof document!=='undefined'){
+  try{
+    const payload=JSON.parse(document.getElementById('progress-data').textContent),d=payload.record,checks=payload.file_checks,h=progressEscape,root=payload.root_href;
+    const text=(id,value)=>{document.getElementById(id).textContent=value;};
+    text('edition',d.updated_at+' / 项目接续记录');text('title',d.title);text('subtitle',d.subtitle);text('headline',d.headline);text('reading-note',d.reading_note);
+    document.getElementById('overview').innerHTML=d.overview.map(x=>'<p>'+h(x)+'</p>').join('');
+    const issues=checks.filter(x=>x.exists!==x.expected_exists);if(issues.length)document.getElementById('evidence-alert').innerHTML='<p class="unexpected">有 '+issues.length+' 个引用与记录预期不一致，需复核。文件存在也不代表数值验证通过。</p>';
+    document.getElementById('stream-list').innerHTML=d.workstreams.map(s=>{
+      const answers=[['why','为什么做'],['done','做了什么'],['meaning','说明什么'],['gap','还差什么'],['next','下一步']].map(([key,label])=>'<dt>'+label+'</dt><dd>'+h(s[key])+'</dd>').join('');
+      const evidence=s.evidence.map(e=>{const c=progressEvidenceState(checks,s.id,e.path),exists=c&&c.exists;return '<li>'+(exists?'<a href="'+h(root+encodeURI(e.path))+'">'+h(e.label)+'</a>':'<span class="missing">'+h(e.label)+' · 当前缺失</span>')+'<small>'+h(e.path)+(e.revision?' · 历史版本 '+h(e.revision):'')+(c&&c.exists!==e.expected_exists?' · 与记录预期不符，待复核':'')+'</small></li>';}).join('');
+      return '<article class="stream" id="'+h(s.id)+'"><div class="stream-top"><h3>'+h(s.name)+'</h3><span class="badge '+h(s.status)+'">'+h(s.status_label)+'</span></div><p class="stream-summary">'+h(s.summary)+'</p><div class="date">结果：'+h(s.result_date)+' · 本次核查：'+h(s.checked_at)+'</div><details><summary>展开：做了什么、还差什么、证据在哪里</summary><dl class="answers">'+answers+'</dl><div class="technical"><p>'+h(s.details)+'</p><div class="facts"><div><strong>已有结果</strong>'+h(s.saved_results)+'</div><div><strong>历史审计</strong>'+h(s.historical_audit)+'</div><div><strong>当前重跑条件</strong>'+h(s.rerun)+'</div></div><ul class="evidence">'+evidence+'</ul></div></details></article>';
+    }).join('');
+    document.getElementById('event-list').innerHTML=d.events.map(e=>'<li><time datetime="'+h(e.date)+'">'+h(e.date)+'</time><div><h3><a href="#'+h(e.workstream_id)+'">'+h(e.title)+'</a></h3><p>'+h(e.text)+'</p></div></li>').join('');
+    document.getElementById('next-list').innerHTML=d.next_actions.map(a=>'<li><div><h3>'+h(a.title)+'</h3><p>'+h(a.text)+'</p><p class="completion">完成标志：'+h(a.completion)+'</p><p class="gate">'+h(a.gate)+'</p></div></li>').join('');
+    document.getElementById('glossary-list').innerHTML=d.glossary.map(g=>'<div><dt>'+h(g.term)+'</dt><dd>'+h(g.meaning)+'</dd></div>').join('');
+    text('maintenance-rule',d.maintenance.rule);text('qualification',d.maintenance.qualification);text('review-scope',d.review_scope);text('runtime-note',d.runtime_note);text('revision','本次核查代码基线：'+d.review_revision);text('command',d.maintenance.command);
+    const source=document.getElementById('source-link');source.href=root+encodeURI(d.maintenance.source);source.textContent=d.maintenance.source;
+    text('footer','记录更新 '+d.updated_at+' · 核查 '+d.checked_at+' · 页面生成 '+payload.generated_at+' · 本地离线记录，随项目任务更新。');
+    window.projectProgress={record:d,file_checks:checks,makeMarkdown:()=>progressMarkdown(d,checks,payload.markdown_root_href)};
+  }catch(error){const message=document.createElement('p');message.className='error';message.textContent='记录未能显示，请打开文字版，并重新生成页面。错误：'+error.message;document.getElementById('main').append(message);console.error(error);}
+}
+</script>
+</body>
+</html>
