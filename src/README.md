@@ -14,6 +14,8 @@
 
 ## 依赖原则
 
+2026-11-11 M1逐步观察接口：公共`paramsV.validation_step_observer`默认`[]`，可选CPU验证回调`observer(psi_xy,state)`；`state`包含`path`（direct/incident/reflect）、`step`、`n_steps`、`z_m`、`frequency_hz`。回调无返回值，观察每段初场及每一传播步，可记录边缘/接收圆盘与资源并抛异常停止作业；不修改传播算子或相位合同。回调运行时间计入作业预算，保存配置前应清除函数句柄。相关M1入口见`scripts/README.md`。
+
 2026-11-10 相位合同：`channel/apply_pe_channel_phase_reference_vertical` 的原生 reduced 输入经完整包络共轭进入 direct-DSP；`channel/assert_channel_dsp_metadata_vertical` 拦截旧项目合同。条件模型 schema 3、经验模型来源元数据及迁移规则见[指南](../vertical_comm_guide.md)和[M0验收](../reports/m0_phase_contract_closeout_2026-11-10.md)。传播/伴随/海面空间统计算子保持原定义。
 
 ```text

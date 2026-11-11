@@ -1,5 +1,11 @@
 # 脚本与验证运行索引
 
+**2026-11-11 M1运行收尾：**[报告](../reports/m1_static_convergence_qualification_2026-11-11.md)与`results/validation/m1_convergence/20261111_m1_execution_03/`是当前入口。P4/P6+10组AS完成；P8在RAM预留门停止，Z4/Z8与SP均未派发，`M1_INCOMPLETE`。`audit_m1_convergence_vertical(run_dir,'partial_closeout_audit')`只重核已保存的完整P4/P6和AS证据，不能关闭第一阶段。`reporting/write_m1_closeout_report_vertical`从保存回执/CSV生成中文报告、18项矩阵和P8部分轨迹摘要，不运行传播；`reporting/update_m1_progress_vertical`只合并本次停止事件并保留其他工作流。有效参考审计封存后可经逐项SHA复核复用；缺失/失配则重验受影响参考。所有数值/日志失败与原执行源码保留，任务在资源门收尾，不自动重跑或启动M2。
+
+**2026-11-11 M1恢复执行入口：**`validation/run_m1_logged_job_vertical(job_id, absolute_run_dir)`在现有MATLAB MCP内串行运行单个作业，显式保存完整stdout、真实PID、资源、全步边缘、MAT/IEEE-754 CSV和SHA；内部调用`run_m1_convergence_job_vertical`，生产案例必须通过`vertical_channel_model`。`run_m1_convergence_stage_vertical(run_dir,stage)`提供references/remaining_pe/sponge_remaining三个受门控的串行分发段；不自动跨阶段。`audit_m1_convergence_vertical(run_dir,mode)`重开保存结果独立检查，模式包括audit_P4、reference_audit、stage1_audit、stage2_audit。`validate_m1_saved_communication_vertical(run_dir)`仅回放已有M0宽带H做消费者回归，不进行新频率求解或正式通信研究。必须使用不存在的job目录；超时先核原PID/state/checkpoint，不重复调用分发段。预算沿用本任务累计14400s，包括首次P4日志失败与重跑。
+
+**2026-11-11 M1执行受阻：**完整M1授权矩阵为5个无吸收层PE、10组AS与阶段门后的3个原吸收层PE，累计14400s。现有MATLAB MCP返回`failed to attach to MATLAB session`，18作业均未派发，状态`M1_INCOMPLETE`；未新增或声称有经过运行验证的M1数值入口。[收尾报告](../reports/m1_static_convergence_closeout_2026-11-11.md)和`results/validation/m1_convergence/20261111_m1_execution_preflight_01/`记录身份审计、冻结配置、未运行矩阵、错误及恢复门。仅文档/回执更新，不改生产接口。看板按维护文档允许的文本包装刷新，MATLAB渲染未运行。
+
 **2026-11-10 M0封存/M1预审：**M0源码已提交`969127f`；本轮只读入口`validation/audit_m1_saved_window_evidence_vertical(absolute_new_output_dir)`读取明确列出的旧窗口MAT/CSV，验证固定主海面裁剪、原生/物理表示与保存门，记录源码身份缺口；不调用传播器/AS参考或外部求解器。结果为`results/validation/m1_preflight/20261110_saved_evidence_04/`。下一次M1的5个PE与10组AS配置、预算和停止条件见[封存与设计报告](../reports/m0_seal_m1_preflight_2026-11-10.md)，本轮未执行。
 
 **2026-11-10 M0 相位合同修复：**`validation/run_m0_phase_job_vertical(stage, absolute_run_dir)` 在已有 MATLAB MCP 会话执行单线程、逐作业资源门与日志/检查点；`validation/validate_m0_static_phase_vertical` 含非实包络、P22 平面波高度、Gaussian 同源角谱、统计/迁移/SSA、CIR/通信与外部桥接控制。`validation/audit_m0_static_phase_vertical` 只重开新结果并独立重建物理场、C/P 和 DFT，不调用传播器。结果目录为 `results/validation/m0_phase_contract/<new_run_id>/`；不得复用已有作业子目录。阶段名和本轮失败/恢复记录见[M0验收报告](../reports/m0_phase_contract_closeout_2026-11-10.md)。这些入口不授权 M1 扫描或大规模 PM/BIE/FullFK。

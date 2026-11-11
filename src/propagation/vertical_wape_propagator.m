@@ -182,6 +182,7 @@ for ifq = 1:Nf
         end
     end
 
+    local_validation_observe(cfg,psi_init_cpu,'direct',0,numstep_f,cfg.z_tx,f_hz);
     for jj = 1:numstep_f
         z_curr = cfg.z_tx + jj * dz_step_f;
         [screen, bubble_step_meta] = local_phase_screen( ...
@@ -191,6 +192,7 @@ for ifq = 1:Nf
         if capture_ref
             bubble_path_meta = local_update_bubble_path_meta(bubble_path_meta, bubble_step_meta);
             psi_step = ifft2(psi_k);
+            local_validation_observe(cfg,psi_step,'direct',jj,numstep_f,z_curr,f_hz);
             if use_gpu
                 center_val = gather(psi_step(iy_tx, ix_tx));
             else
@@ -272,13 +274,13 @@ for ifq = 1:Nf
             cfg, x, y, ix_tx, iy_tx, capture_ref);
         [psi_surface_inc, bubble_surface_meta, incident_slice_meta] = local_march_field( ...
             psi_init_cpu, cfg.z_tx, 0, cfg, x, y, alpha_xy_work, kappa2_work, ...
-            k0, f_hz, use_gpu, wavefield_request);
+            k0, f_hz, use_gpu, wavefield_request,'incident');
         [surface_f, delta_f, psi_ref_f, rough_meta_f] = ...
             pm_surface_boundary_model(psi_surface_inc, KX, KY, x, y, cfg.xw, cfg.yw, lambda_f, pm_cfg);
 
         [psi_ref_at_rx, bubble_rx_meta, reflected_slice_meta] = local_march_field( ...
             psi_ref_f, 0, rx_state_used.z_rx, cfg, x, y, alpha_xy_work, ...
-            kappa2_work, k0, f_hz, use_gpu, wavefield_request);
+            kappa2_work, k0, f_hz, use_gpu, wavefield_request,'reflect');
         h_reflect_fi = psi_ref_at_rx(iy_rx, ix_rx);
 
         if cfg.surface_ssa_component_diagnostics && ...
@@ -784,8 +786,11 @@ pass_flag = (fit_slope >= -1.05) && (fit_slope <= -0.95) && (fit_err_rms <= 0.10
 end
 
 function [psi_end, march_meta, slice_meta] = local_march_field( ...
-    psi_start, z_start, z_end, cfg, x, y, alpha_xy, kappa2, k0, f_hz, use_gpu, slice_request)
+    psi_start, z_start, z_end, cfg, x, y, alpha_xy, kappa2, k0, f_hz, use_gpu, slice_request, observer_path)
 %LOCAL_MARCH_FIELD March one complex field between two depths.
+if nargin<13, observer_path=''; end
+observe = ~isempty(observer_path) && isfield(cfg,'validation_step_observer') && ...
+    ~isempty(cfg.validation_step_observer);
 
 if nargin < 12 || isempty(slice_request)
     slice_request = struct('enabled', false);
@@ -833,14 +838,23 @@ if local_slice_request_enabled(slice_request)
 else
     sample_lookup = [];
 end
+if observe
+    local_validation_observe(cfg,psi_start,observer_path,0,n_step,z_start,f_hz);
+end
 for jj = 1:n_step
     z_curr = z_start + jj * dz_step_local;
     [screen, step_meta] = local_phase_screen( ...
         x, y, z_curr, f_hz, cfg, alpha_xy, k0, ds_local, use_gpu);
     march_path_meta = local_update_bubble_path_meta(march_path_meta, step_meta);
     psi_k = fr_local .* fft2(screen .* ifft2(fr_local .* psi_k));
-    if local_slice_request_enabled(slice_request) && sample_lookup(jj + 1) > 0
+    capture_slice = local_slice_request_enabled(slice_request) && sample_lookup(jj + 1) > 0;
+    if capture_slice || observe
         psi_step = ifft2(psi_k);
+        if observe
+            local_validation_observe(cfg,psi_step,observer_path,jj,n_step,z_curr,f_hz);
+        end
+    end
+    if capture_slice
         sample_index = sample_lookup(jj + 1);
         slice_meta.field_slice(:, sample_index) = ...
             local_extract_requested_slice(psi_step, slice_request, use_gpu);
@@ -857,6 +871,14 @@ if use_gpu
     psi_end = gather(psi_end);
 end
 march_meta = march_path_meta;
+end
+
+function local_validation_observe(cfg,psi_xy,path,step,n_steps,z_m,f_hz)
+% Read-only validation observation; no field return or propagation mutation.
+if isfield(cfg,'validation_step_observer') && ~isempty(cfg.validation_step_observer)
+    cfg.validation_step_observer(psi_xy,struct('path',path,'step',step, ...
+        'n_steps',n_steps,'z_m',z_m,'frequency_hz',f_hz));
+end
 end
 
 function request = local_surface_wavefield_slice_request(cfg, x, y, ix_tx, iy_tx, capture_ref)

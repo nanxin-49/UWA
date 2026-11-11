@@ -2,6 +2,8 @@
 
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。
 
+**活塞单频比较方案（2026-11-11，待实现）：**用户委托选择典型声源后，采用20 cm口径作为工程参照，首轮严格二维使用20 cm宽匀速条带活塞，在4/6/8 kHz沿同一接收线比较PE/BIE/FullFK。先核共源、网格与窗口，再测新Ubuntu成本并安排有限并行；没有启动求解。尺寸依据、二维与圆形源的区别、接收线和资源门见[参数及执行计划](reports/piston_source_2d_single_frequency_plan_2026-11-11.md)。旧Gaussian收尾与其他窗口M1状态分别保留，预算不转用。
+
 **接下来优先完成建模（2026-11-10）：**按用户优先完成建模、暂缓1500 m的方向，本计划先收尾约100 m静态宽带链路。顺序是生产入口的声源/海面高度/相位核对、窗口与步长收敛、宽带CIR、粗糙海面适用范围及接口接入；下一窗口只执行第一环节。范围、完成标准和停止条件见[100m静态模型收尾计划](reports/static_channel_model_100m_closeout_plan_2026-11-10.md)。该计划不自动恢复正式S5/S6或启用旧预算。
 
 研究生开题报告草稿：[面向深海近垂直水声链路的信道估计与自适应均衡方法研究](reports/graduate_proposal_channel_estimation_equalization.md)。报告以通信算法为研究目标，现有传播仿真作为数据准备与适用范围依据；正文不改变当前数值验证状态。

@@ -7,7 +7,29 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-10）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-11）
+
+### M1恢复执行后在P8触发RAM门停止（2026-11-11；当前M1状态）
+
+- 用户打开MATLAB后，现有MCP确认R2025b Update 6、真实PID28836；只使用该会话、CPU double、单线程串行。M0相位合同与传播公式保留；新增默认关闭的单频验证观察回调，逐步记录direct/incident/reflect边缘、接收圆盘、资源与心跳，64²开启/关闭输出差0、direct_only闭合，既有M0宽带H消费者回放BER/SER=0，无新宽带求解。
+- 完成P4、P6及全部10组独立AS；独立收尾审计为0失败，三频AS扩窗/细网格/更大窗口参考及4/6kHz生产PE对同格AS通过。P8在入射第976/1067步时触发RAM门：启动可用2,564,685,824B，要求保留769,405,747B，最低713,232,384B；通过任务回调停止，用时552.6459804s。直达完整1036平面、入射仅977/1068、反射0/33，不作完整资格。
+- **`M0_SEALED / M1_INCOMPLETE`**：Z4/Z8及SP4/SP6/SP8均未派发；未完成步长或吸收层资格，没有生产推荐配置，不建议进入M2。停止原因是资源门，不是预算耗尽或已完成数值对照不合格。保留RAM门，不关闭其他程序、不改执行方式或自动重跑。
+- [当前中文收尾报告](reports/m1_static_convergence_qualification_2026-11-11.md)与`results/validation/m1_convergence/20261111_m1_execution_03/`含18项矩阵、81行已完成对照、完整作业三表示MAT/IEEE-754 CSV、P8部分数据、完整日志、PID、资源/预算与SHA。run02首次P4正常完成但外层MCP300s超时且diary为空，已确认终态后用显式stdout捕获在新run03重跑，圆盘三表示逐元素差0；两次先导及所有失败均计入本任务14400s预算。第一版参考审计的结构赋值/浮点重构失败与执行源码也保留；修正后仅重审已有MAT。
+- 主文档/接口索引、指南与进度JSON同步；看板本次由既有MATLAB正式渲染。原连接失败、M0及历史结果不覆盖，正式S5/S6仍暂停。当前任务在RAM停止门收尾，后续需用户继续指令及当前资源/输入/版本/PID复核后，才可恢复未完成M1作业；不接管另行记录的活塞计划，也不自动推进其他阶段。
+
+### 活塞二维三频方案：代表参数已选，尚未实现或求解（2026-11-11）
+
+- 用户暂无实物参数并委托查阅后自行选择。以厂家4 kHz半波长活塞口径为工程参照，取整为20 cm；首轮严格二维采用20 cm宽、向上、同相匀速条带，4/6/8 kHz固定口径与振速。圆形有限振面与无限条带明确分开，不能把二维结果当圆形源的三维验证。
+- [活塞参数与执行计划](reports/piston_source_2d_single_frequency_plan_2026-11-11.md)安排共源压力/梯度、自由场/平面和4 kHz弱正弦试点、接收线采样、窗口及参考收敛、新Ubuntu隔离快照和成本测量，再定有限并行与正式范围。旧Gaussian资格、接收掩膜及M1预算不转用；其他窗口M1任务保留，不由本计划接管。
+- 本轮只查官方资料、静态核接入点并维护记录；没有实现活塞、启动SSH或新传播。现有MATLAB MCP已能运行看板渲染器，引用存在性检查通过；这仅说明本次报告生成可用，不重写下述M1连接失败的历史，也未核M1版本/PID/资源门或恢复其作业。
+
+### M1执行前置门停止：MCP无法连接（2026-11-11）
+
+- 当前任务已授权完整M1：5次无吸收层PE、10组独立AS及第一阶段全通过后的3次原吸收层PE；累计14400s、单作业3600s，CPU double单线程串行，仅现有本机MATLAB MCP。开始为干净的`compare / c90d0ca`，未合并main、推送或修改生产实现。
+- 首次会话检查返回`failed to attach to MATLAB session`，当前R2025b Update 6、真实计算PID及日志/状态追踪均未取得证明，按用户执行门停止。18项作业全部未派发，无新MAT数据或数值资格；没有启动第二个MATLAB、SSH、GPU或其他研究阶段。状态为 **`M0_SEALED / M1_INCOMPLETE`**。
+- M0原181项产物SHA全部匹配，48项源码/文档42项匹配、6项为已有封存回执列出的导航漂移，所有清单内MATLAB源码一致；本次是身份检查，不是M0数值重演。原吸收层定义已核：每侧厚度`.12*W`，三次吸收、单方向最大`.15 Np/m`，x/y相加；未评估其实际中心影响。
+- [M1执行收尾报告](reports/m1_static_convergence_closeout_2026-11-11.md)与`results/validation/m1_convergence/20261111_m1_execution_preflight_01/`保留配置、矩阵、工具错误、资源、SHA和检查点。窗口/网格/步长/无吸收边界/吸收层均未取得本轮资格，暂无生产推荐配置，不允许建议进入M2。恢复现有MCP连接并核版本、PID、资源、输入后，按本任务矩阵从P4继续；既有任务授权仍在，不因记录停止而要求逐子步骤再批准。
+- 看板依据维护说明以JSON/模板纯文本包装更新；正式MATLAB渲染与数值审计未运行。旧历史PASS及停止记录保留，正式S5/S6不升级。
 
 ### M0已提交封存；M1预审设计完成（2026-11-10；本轮无新传播）
 
