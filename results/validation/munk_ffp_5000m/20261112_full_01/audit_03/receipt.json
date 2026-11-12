@@ -1,0 +1,40 @@
+{
+  "stage": "full_saved_audit",
+  "status": "REQUIRED_NUMERICAL_GATES_PASS",
+  "elapsed_s": 16.235085,
+  "exit_status": 0,
+  "qualification": "CONDITIONAL_MODEL_NUMERICALLY_QUALIFIED",
+  "failed_checks": 0,
+  "failed_or_unrun_checks": [],
+  "gates": {
+    "uniform_actual_5000m_scale": true,
+    "complete_finite_axis": true,
+    "all_non_source_receivers_finite": true,
+    "surface_boundary": true,
+    "left_right_parity": true,
+    "normalization_identity": true,
+    "high_resolution_dz": true,
+    "vertical_onepass_time": true,
+    "uniform_free": true,
+    "uniform_mirror": true,
+    "final_cutoff_quadrature_contour_layer": true,
+    "axis_csv_roundtrip": true
+  },
+  "metrics": {
+    "surface_rel": 0,
+    "complex_parity_rel": 0,
+    "max_patch_dz_m": 0.010000000000218279,
+    "lambda_min_m": 0.15502161668944467,
+    "normalization_max_abs": 0,
+    "axis_csv_max_abs": 5.4113322575687367E-14,
+    "max_onepass_delay_error_s": 8.5220497325622091E-10,
+    "uniform_free_rel": 7.892469652830818E-6,
+    "uniform_mirror_rel": 9.3994044781303826E-6,
+    "uniform_free_max_tl_db": 0.00050333575579815143,
+    "uniform_mirror_max_tl_db": 0.00045051218695958613,
+    "uniform_free_max_phase_rad": 4.034023594434844E-5,
+    "uniform_mirror_max_phase_rad": 6.7162355073585272E-5
+  },
+  "final_job": 7,
+  "audit_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\munk_ffp_20261112\\Explain\\results\\validation\\munk_ffp_5000m\\20261112_full_01\\audit_03"
+}

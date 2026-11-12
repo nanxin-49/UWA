@@ -1,0 +1,24 @@
+{
+  "job_id": "J04",
+  "stage": "full_field",
+  "status": "NUMERICAL_OUTPUT_SAVED_NOT_YET_QUALIFIED",
+  "exit_status": 0,
+  "elapsed_s": 43.6323833,
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "pid": 35640,
+  "execution_mode": "existing local MATLAB MCP",
+  "starting_available_bytes": 1.436135424E+9,
+  "failed_or_unrun_checks": [],
+  "qualification": "UNVERIFIED until complete saved-data audit",
+  "metrics": {
+    "spectral_nodes": 6432,
+    "solve_wall_s": 41.324149,
+    "finite_receiver_count": 2.20718E+6,
+    "source_singular_count": 1,
+    "grid_size": [
+      10981,
+      201
+    ]
+  },
+  "prior_full_job_s": 53.336036899999996
+}

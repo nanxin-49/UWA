@@ -1,0 +1,8 @@
+{
+  "stage": "figure_audit",
+  "status": "FIGURE_AUDIT_FAILED",
+  "elapsed_s": 1.9928859,
+  "exit_status": 1,
+  "failed_checks": 1,
+  "error": "错误使用 assert\nF01 must use actual uniform global rows (1001x201), not combined nonuniform\nrows\n\n出错 audit_munk_ffp_figures (第 22 行)\n            assert(isequal(size(images(j).CData),size(expected)), ...\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}

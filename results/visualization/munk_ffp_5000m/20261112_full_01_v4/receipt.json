@@ -1,0 +1,15 @@
+{
+  "stage": "render",
+  "status": "FIVE_FIGURE_GROUPS_AND_HTML_SAVED",
+  "elapsed_s": 14.5085842,
+  "exit_status": 0,
+  "qualification": "CONDITIONAL_MODEL_NUMERICALLY_QUALIFIED",
+  "figure_stems": [
+    "F01_full_field_vs_paper",
+    "F02_axis_magnitude_phase",
+    "F03_near_bottom_resolution",
+    "F04_uniform_reference_errors",
+    "F05_convergence_qualification"
+  ],
+  "visualization_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\munk_ffp_20261112\\Explain\\results\\visualization\\munk_ffp_5000m\\20261112_full_01_v4"
+}

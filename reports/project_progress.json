@@ -4,8 +4,8 @@
   "subtitle": "垂直水声项目 · 仿真与验证进度",
   "updated_at": "2026-11-12",
   "checked_at": "2026-11-12",
-  "review_revision": "compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot",
-  "headline": "二维高斯单频已收尾；活塞20/10/5 cm三频自由场quicklook完成，P0未执行。既有M1仍为资源门停止，不进入M2。",
+  "review_revision": "experiment/munk-ffp-5000m / 6c53632 + isolated uncommitted reference and audits",
+  "headline": "5000m独立Munk波动参考在列明假设下数值通过；论文中央亮带未支持。M1/活塞及通信状态保持。",
   "overview": [
     "这个项目想回答的是：海底附近发出的声音，经过直达和海面反射到达接收机后，会怎样影响通信？为此，一边需要可信的声场和信道，一边需要能检验信道估计与均衡方法的通信实验。",
     "你离开前，已经完成二维单频比较，做过三维固定海面的独立频点检查，还在一个接收点上跑通了受控的宽带与四相位调制（QPSK，每个符号承载两比特）通信实验。因此，重新开始时有不少结果可以接着用。",
@@ -15,11 +15,12 @@
     "2026-11-11：本轮M1执行在MCP连接前置门停止，未取得窗口、网格、步长或吸收层新资格；没有合格生产推荐配置，不能进入M2。",
     "用户随后希望回到二维单频工作线并改用活塞。当前已查资料、选定20 cm代表尺寸和严格二维条带方案；先核共源与4 kHz试点，再测新Ubuntu成本，最后安排4/6/8 kHz比较。下面接续步骤面向这个新任务，不接管其他窗口的M1。",
     "同日后续M1：既有MCP版本/PID核实后，完成P4/P6和10组独立AS；已完成对照独立审计0失败。P8在RAM跌破启动可用量30%时中止，Z4/Z8和全部吸收层对照未派发，无生产推荐，不进入M2。",
-    "2026-11-11后续活塞图示：旧5 cm经GitHub和本地代码确认是圆形半径，本次以二维总宽10 cm映射半尺寸，并加总宽5 cm控制。20/10/5 cm同振速三频自由场已保存复Pa、图、独立检查；这不关闭P0，后续先共源压力/梯度/相位资格，再平面镜像。"
+    "2026-11-11后续活塞图示：旧5 cm经GitHub和本地代码确认是圆形半径，本次以二维总宽10 cm映射半尺寸，并加总宽5 cm控制。20/10/5 cm同振速三频自由场已保存复Pa、图、独立检查；这不关闭P0，后续先共源压力/梯度/相位资格，再平面镜像。",
+    "2026-11-12独立Munk参考：轴压直接有限，近底0.01m条纹及积分/分层收敛通过；没有支持论文贯通窄亮线。示例底质、全向点源和固定1/R参考仍是模型假设，仅待人工审查。"
   ],
   "reading_note": "先读下面七条工作线的第一句话，再看末尾的三个接续步骤。技术参数和原始证据都可以展开，不必先读懂阶段编号。",
-  "review_scope": "M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。",
-  "runtime_note": "M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。",
+  "review_scope": "本轮只做5000m/4950m/10kHz独立分层Green和J0波数积分；复用已有解析基准，七个完整网格结果、同尺度均匀控制及独立图形审计。不升级生产PE、Bellhop或正式S5/S6。",
+  "runtime_note": "本轮用户批累计900s、单作业90s，现有MCP R2025b Update6/PID35640，完整作业RAM启动1GiB、加密2GiB、运行保留256MiB。RAM不足时未启动作业；J07用时84.183s，门不提高。完整时间含原失败、审计、重绘，见本轮budget_ledger/checkpoint，不与旧M1/活塞预算混用。",
   "workstreams": [
     {
       "id": "two-dimensional",
@@ -403,20 +404,20 @@
     },
     {
       "id": "bellhop",
-      "name": "Bellhop 代表案例与平面对照",
-      "checked_at": "2026-11-10",
+      "name": "Bellhop诊断与5000m独立波动参考",
+      "checked_at": "2026-11-12",
       "status": "partial",
-      "status_label": "图示已完成 · 对照有未过项",
-      "result_date": "100 m 代表案例报告未标日期；连通 smoke 为 2026-11-01",
-      "summary": "当前代表图采用 100 m 水深、发射机离底 1 m；声线展示完成，但不能把画出来的路径当成幅相已经验证。",
+      "status_label": "Bellhop仍NO_GO；独立Munk模型数值通过",
+      "result_date": "2026-11-12独立Munk；原Bellhop各结果保留原日期",
+      "summary": "独立Munk全深度接收网格在明确假设下通过数值检查，轴有限且近底高分辨率，但未支持论文窄中央亮带；Bellhop资格未升级。",
       "why": "借助独立的射线方法理解多途结构，并在可比较的平面条件下检查 PE 与 Bellhop 的差异。",
-      "done": "Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。",
-      "meaning": "已有直观的路径材料，也已经定位出对照尚未闭合的部分。连通 smoke 说明程序能运行；代表图和部分通过项各有自己的用途。",
-      "gap": "未完成角度/宽带扫描，也未认证粗糙面全部幅相。平面对照的空间相位约 0.0612 rad，大于 0.05 rad 门；空间复 L2 约 0.0613，大于 0.02 门。",
-      "next": "若要继续比较，先限定相同路径拓扑、声源和相位约定，解释已有失败项；不要拿含底高阶多途直接对照当前 PE 的直达加一次海面反射。",
-      "details": "当前安装：水深100 m，Tx99 m，Rx3 m；停止零离底 epsilon 扫描。代表案例193条 ARR、199条 E 贡献记录、1001条展示声线；这些数量不代表真实独立到达路径数。旧500 m材料已经退役，本页不引用归档内容。",
+      "done": "Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。 独立Munk新分支完成分层Green/J0、七组完整场、同尺度均匀参考、Munk时延及图件数据/坐标审计，所有失败版本保留。",
+      "meaning": "当前有可复现的固定单频Munk模型参考，不能将其数值通过当成论文原参数恢复、实物海试或通信资格；源点以外轴直接计算。",
+      "gap": "未完成角度/宽带扫描，也未认证粗糙面全部幅相。平面对照的空间相位约 0.0612 rad，大于 0.05 rad 门；空间复 L2 约 0.0613，大于 0.02 门。 论文底质/声源方向图/源级未知，窄中央亮带无独立支持；全球5m概览不解析全部细条纹。模型适用范围与其他工况尚未扩展。",
+      "next": "等待人工审查本轮FFP模型、假设和原始数据；不自动追图、扫底质、改Bellhop或推进M1/CIR/通信。",
+      "details": "当前安装：水深100 m，Tx99 m，Rx3 m；停止零离底 epsilon 扫描。代表案例193条 ARR、199条 E 贡献记录、1001条展示声线；这些数量不代表真实独立到达路径数。旧500 m材料已经退役，本页不引用归档内容。 独立Munk为5000/4950m、10kHz、全向三维点源、示例流体底；最终层厚.625m、K100、面板.0625、数值轮廓.1。元数据明示4πGreen=pressure_1m，不冒充生产H_f。",
       "saved_results": "代表案例报告、图件及平面对照 checks.csv 存在。",
-      "historical_audit": "代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。",
+      "historical_audit": "代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。 独立Munk audit_01粗求积FAIL保留；audit_03必需门全通过；v2图像深度坐标FAIL保留、v4五组FIG/PNG数据/坐标及逐像素一致；当前源码样本重建通过。",
       "rerun": "当前绘图入口存在，仍依赖外部 Bellhop 可执行文件；本次没有重跑。",
       "evidence": [
         {
@@ -444,6 +445,34 @@
           "label": "当前代表图入口",
           "path": "scripts/reporting/generate_bellhop_100m_source1m_visuals_vertical.m",
           "kind": "entrypoint",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "Munk独立波动参考结果",
+          "path": "reports/munk_ffp_5000m_result_2026-11-12.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "Munk最终离线图册",
+          "path": "results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "Munk最终数值审计",
+          "path": "results/validation/munk_ffp_5000m/20261112_full_01/audit_03/receipt.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "Munk图件数据/坐标审计",
+          "path": "results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v4/receipt.json",
+          "kind": "audit",
           "revision": "",
           "expected_exists": true
         }
@@ -680,6 +709,13 @@
       "title": "活塞图件修正版检查并封存",
       "text": "继续完成前一日quicklook交付：保留试绘标题重叠、首版负增益截断和一次exportgraphics多容器异常；改用单布局专用标题行，8张交付PNG逐图查看、FIG重建36幅CData差0，24条接收曲线匹配，0失败。声压数据未重算，数值源码SHA未变。交付绘图加图审计50.688s；报告、MAT/CSV、源码快照、日志和SHA封存。仍缺P0共源压力/梯度/相位与Gaussian回归，之后才做P1平面；本轮停止，不自动推进。",
       "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "munk-ffp-5000m-reference-20261112",
+      "date": "2026-11-12",
+      "title": "独立Munk波动参考通过数值门，论文亮线未支持",
+      "text": "复用Green/镜像/Weyl，构造分层Green和精确J0；七组完整网格与同尺度均匀/时延/收敛通过，轴非源点有限、近底.01m。原粗求积和图件坐标失败保留，v4五图可编辑/像素重绘一致。示例底/全向源/1R参考不冒充论文参数；停止等待审查，不进入CIR或其他场景。",
+      "workstream_id": "bellhop"
     }
   ],
   "next_actions": [

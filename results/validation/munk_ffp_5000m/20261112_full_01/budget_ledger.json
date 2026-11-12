@@ -1,0 +1,180 @@
+{
+  "internal_measured_compute_s": 572.8929027999999,
+  "approved_total_s": 900,
+  "max_full_job_s": 84.1831473,
+  "per_job_limit_s": 90,
+  "rows": [
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\block_control_receipt.json",
+      "stage": "block_control",
+      "elapsed_s": 27.4029682,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\final_static_receipt.json",
+      "stage": "final_static_cleanup_check",
+      "elapsed_s": 0.0736495,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\geometry_receipt.json",
+      "stage": "final_geometry_requirement_check",
+      "elapsed_s": 0.5630818,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J01_receipt.json",
+      "stage": "full_field",
+      "elapsed_s": 12.952002,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J02_receipt.json",
+      "stage": "full_field",
+      "elapsed_s": 18.6718307,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J03_receipt.json",
+      "stage": "full_field",
+      "elapsed_s": 21.7122042,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J04_receipt.json",
+      "stage": "full_field",
+      "elapsed_s": 43.6323833,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J05_receipt.json",
+      "stage": "full_field",
+      "elapsed_s": 40.8628163,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J06_receipt.json",
+      "stage": "full_field",
+      "elapsed_s": 70.1430955,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\J07_receipt.json",
+      "stage": "solve",
+      "elapsed_s": 84.1831473,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\long_uniform_receipt.json",
+      "stage": "long_uniform_limit",
+      "elapsed_s": 7.1487429,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\postflight_receipt.json",
+      "stage": "postflight",
+      "elapsed_s": 5.812168,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\reconstruction_receipt.json",
+      "stage": "saved_field_reconstruction",
+      "elapsed_s": 55.1636237,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\refinement_block_benchmark.json",
+      "stage": "refinement_vector_block_benchmark",
+      "elapsed_s": 3.7400409,
+      "exit_status": null
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\refinement_init_receipt.json",
+      "stage": "refinement_init",
+      "elapsed_s": 0.0,
+      "exit_status": null
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\refinement_matched_benchmark.json",
+      "stage": "matched_refinement_cost_benchmark",
+      "elapsed_s": 1.4846809,
+      "exit_status": null
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\session_cleanup_receipt.json",
+      "stage": "task_owned_session_cleanup",
+      "elapsed_s": 0.2258199,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\audit_01\\receipt.json",
+      "stage": "full_saved_audit",
+      "elapsed_s": 12.860518,
+      "exit_status": 1
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\audit_02\\receipt.json",
+      "stage": "full_saved_audit",
+      "elapsed_s": 16.2277202,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\audit_03\\receipt.json",
+      "stage": "full_saved_audit",
+      "elapsed_s": 16.235085,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\figure_audit_v2\\receipt.json",
+      "stage": "figure_audit",
+      "elapsed_s": 1.9928859,
+      "exit_status": 1
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\figure_audit_v3\\receipt.json",
+      "stage": "figure_audit",
+      "elapsed_s": 26.2607186,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_full_01\\figure_audit_v4\\receipt.json",
+      "stage": "figure_audit",
+      "elapsed_s": 30.0054073,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\validation\\munk_ffp_5000m\\20261112_preflight_01\\preflight_receipt.json",
+      "stage": null,
+      "elapsed_s": 7.8519024,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\visualization\\munk_ffp_5000m\\20261112_full_01\\receipt.json",
+      "stage": "render",
+      "elapsed_s": 19.8056634,
+      "exit_status": 1
+    },
+    {
+      "path": "results\\visualization\\munk_ffp_5000m\\20261112_full_01_v2\\receipt.json",
+      "stage": "render",
+      "elapsed_s": 17.3529396,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\visualization\\munk_ffp_5000m\\20261112_full_01_v3\\receipt.json",
+      "stage": "render",
+      "elapsed_s": 16.0192231,
+      "exit_status": 0
+    },
+    {
+      "path": "results\\visualization\\munk_ffp_5000m\\20261112_full_01_v4\\receipt.json",
+      "stage": "render",
+      "elapsed_s": 14.5085842,
+      "exit_status": 0
+    }
+  ],
+  "unmeasured": "Pre-execution parser/bootstrap attachment overhead unavailable; excludes reading/coding/MCP transport and shell copying/hashing",
+  "new_frequencies": 0,
+  "new_bellhop_calls": 0,
+  "remote_calls": 0
+}

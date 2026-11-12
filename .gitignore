@@ -165,3 +165,41 @@
 
 # Saved audit runs include historical code copies; keep them local as evidence.
 /results/validation/p22_reproducibility_baseline/
+
+# Munk 5000m reviewed publication evidence and final PNG/HTML atlas.
+# Full complex MAT, editable FIG, logs and failed image versions remain local.
+!/results/validation/munk_ffp_5000m/20261112_full_01/checkpoint.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/completion_audit.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/budget_ledger.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/code_document_sha256.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/artifacts_sha256.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/authorization.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/geometry_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/long_uniform_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/long_uniform_checks.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/reconstruction_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/audit_01/receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/audit_01/convergence.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/audit_03/receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/audit_03/convergence.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/audit_03/axis_complex.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v2/receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v4/receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v4/figure_roundtrip.csv
+!/results/validation/munk_ffp_5000m/20261112_full_01/visualization_coordinate_failure.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J01_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J02_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J03_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J04_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J05_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J06_receipt.json
+!/results/validation/munk_ffp_5000m/20261112_full_01/J07_receipt.json
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/F01_full_field_vs_paper.png
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/F02_axis_magnitude_phase.png
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/F03_near_bottom_resolution.png
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/F04_uniform_reference_errors.png
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/F05_convergence_qualification.png
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/paper_supplied_original.png
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/receipt.json
+!/results/visualization/munk_ffp_5000m/20261112_full_01_v4/structure_metrics.csv

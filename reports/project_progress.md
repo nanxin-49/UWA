@@ -5,7 +5,7 @@
 
 记录更新：2026-11-12；本次核查：2026-11-12。
 
-二维高斯单频已收尾；活塞20/10/5 cm三频自由场quicklook完成，P0未执行。既有M1仍为资源门停止，不进入M2。
+5000m独立Munk波动参考在列明假设下数值通过；论文中央亮带未支持。M1/活塞及通信状态保持。
 
 ## 现在在哪里
 
@@ -26,6 +26,8 @@ P22 保存结果与新 Ubuntu 最小项目基线已经复核通过。现在优�
 同日后续M1：既有MCP版本/PID核实后，完成P4/P6和10组独立AS；已完成对照独立审计0失败。P8在RAM跌破启动可用量30%时中止，Z4/Z8和全部吸收层对照未派发，无生产推荐，不进入M2。
 
 2026-11-11后续活塞图示：旧5 cm经GitHub和本地代码确认是圆形半径，本次以二维总宽10 cm映射半尺寸，并加总宽5 cm控制。20/10/5 cm同振速三频自由场已保存复Pa、图、独立检查；这不关闭P0，后续先共源压力/梯度/相位资格，再平面镜像。
+
+2026-11-12独立Munk参考：轴压直接有限，近底0.01m条纹及积分/分层收敛通过；没有支持论文贯通窄亮线。示例底质、全向点源和固定1/R参考仍是模型假设，仅待人工审查。
 
 先读下面七条工作线的第一句话，再看末尾的三个接续步骤。技术参数和原始证据都可以展开，不必先读懂阶段编号。
 
@@ -63,7 +65,7 @@ P22 保存结果与新 Ubuntu 最小项目基线已经复核通过。现在优�
 - [保存证据审计摘要](../results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json) · `results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json`
 - [原二维研究工作台](../UWA_2D_research_review_workbench.html) · `UWA_2D_research_review_workbench.html`
 - [二维活塞自由场图示与历史尺寸溯源](../reports/piston_source_quicklook_2026-11-11.md) · `reports/piston_source_quicklook_2026-11-11.md` · 历史版本 `a37fd75 + source snapshots`
-- [活塞quicklook最终检查点（非P0资格）](../results/validation/piston_source_quicklook/20261111_2d_strip_01/checkpoint_final.json) · `results/validation/piston_source_quicklook/20261111_2d_strip_01/checkpoint_final.json`
+- **活塞quicklook最终检查点（非P0资格）：当前缺失** · `results/validation/piston_source_quicklook/20261111_2d_strip_01/checkpoint_final.json` · 与记录预期不符，待复核
 
 ### 二维宽带与多模型参考
 
@@ -92,22 +94,22 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 证据入口：
 
 - [正式流程暂停与门槛](../reports/two_dimensional_s5_s6_2026-10-27.md) · `reports/two_dimensional_s5_s6_2026-10-27.md`
-- [10-31 两频点检查点](../results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json) · `results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd`
-- [两频点独立审计摘要](../results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json) · `results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json`
+- **10-31 两频点检查点：当前缺失** · `results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd` · 与记录预期不符，待复核
+- **两频点独立审计摘要：当前缺失** · `results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json` · 与记录预期不符，待复核
 - [两频点运行入口（已恢复）](../scripts/validation/run_two_dimensional_s5_p22_dualfreq_remote.m) · `scripts/validation/run_two_dimensional_s5_p22_dualfreq_remote.m` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd`
 - [P22 可复现基线与对应表](../reports/p22_reproducibility_baseline_2026-11-10.md) · `reports/p22_reproducibility_baseline_2026-11-10.md` · 历史版本 `747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9`
 - [约100m静态模型收尾计划](../reports/static_channel_model_100m_closeout_plan_2026-11-10.md) · `reports/static_channel_model_100m_closeout_plan_2026-11-10.md`
 - [M0合同修复与验收报告](../reports/m0_phase_contract_closeout_2026-11-10.md) · `reports/m0_phase_contract_closeout_2026-11-10.md` · 历史版本 `3f7071d + working tree`
-- [M0独立数值与MAT/CSV审计](../results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/checkpoint.json) · `results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/checkpoint.json`
+- **M0独立数值与MAT/CSV审计：当前缺失** · `results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/checkpoint.json` · 与记录预期不符，待复核
 - [M0封存与M1窗口/网格/步长预审设计](../reports/m0_seal_m1_preflight_2026-11-10.md) · `reports/m0_seal_m1_preflight_2026-11-10.md` · 历史版本 `M0 source 969127f`
 - [M1历史原始数据只读审计](../results/validation/m1_preflight/20261110_saved_evidence_04/audit.json) · `results/validation/m1_preflight/20261110_saved_evidence_04/audit.json`
 - [M1执行收尾：连接门停止](../reports/m1_static_convergence_closeout_2026-11-11.md) · `reports/m1_static_convergence_closeout_2026-11-11.md`
-- [M1前置检查点](../results/validation/m1_convergence/20261111_m1_execution_preflight_01/checkpoint_preflight.json) · `results/validation/m1_convergence/20261111_m1_execution_preflight_01/checkpoint_preflight.json`
+- **M1前置检查点：当前缺失** · `results/validation/m1_convergence/20261111_m1_execution_preflight_01/checkpoint_preflight.json` · 与记录预期不符，待复核
 - [M1数值执行收尾与RAM停止](../reports/m1_static_convergence_qualification_2026-11-11.md) · `reports/m1_static_convergence_qualification_2026-11-11.md`
-- [已完成对照独立审计](../results/validation/m1_convergence/20261111_m1_execution_03/partial_closeout_audit/checkpoint.json) · `results/validation/m1_convergence/20261111_m1_execution_03/partial_closeout_audit/checkpoint.json`
-- [18项矩阵实际状态](../results/validation/m1_convergence/20261111_m1_execution_03/matrix_status.csv) · `results/validation/m1_convergence/20261111_m1_execution_03/matrix_status.csv`
+- **已完成对照独立审计：当前缺失** · `results/validation/m1_convergence/20261111_m1_execution_03/partial_closeout_audit/checkpoint.json` · 与记录预期不符，待复核
+- **18项矩阵实际状态：当前缺失** · `results/validation/m1_convergence/20261111_m1_execution_03/matrix_status.csv` · 与记录预期不符，待复核
 - [P8内存诊断与无物理改动优化方案](../reports/m1_p8_memory_diagnosis_2026-11-11.md) · `reports/m1_p8_memory_diagnosis_2026-11-11.md`
-- [P8只读内存诊断回执](../results/validation/m1_p8_memory_diagnosis/20261111_01/checkpoint.json) · `results/validation/m1_p8_memory_diagnosis/20261111_01/checkpoint.json`
+- **P8只读内存诊断回执：当前缺失** · `results/validation/m1_p8_memory_diagnosis/20261111_01/checkpoint.json` · 与记录预期不符，待复核
 
 ### P22 宽带与通信控制实验
 
@@ -135,11 +137,11 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 
 证据入口：
 
-- [最初 CIR 失败检查点](../results/validation/pe_screen_p22_comm/20261030_01/checkpoint.json) · `results/validation/pe_screen_p22_comm/20261030_01/checkpoint.json`
-- [共同窗通过检查点](../results/validation/pe_screen_p22_common_window/20261030_01/checkpoint.json) · `results/validation/pe_screen_p22_common_window/20261030_01/checkpoint.json`
-- [共同窗独立审计](../results/validation/pe_screen_p22_common_window/20261030_01/audit.json) · `results/validation/pe_screen_p22_common_window/20261030_01/audit.json`
-- [最终 QPSK 检查点](../results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json) · `results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd`
-- [QPSK 独立审计](../results/communication/pe_screen_p22_qpsk/20261030_03/audit.json) · `results/communication/pe_screen_p22_qpsk/20261030_03/audit.json`
+- **最初 CIR 失败检查点：当前缺失** · `results/validation/pe_screen_p22_comm/20261030_01/checkpoint.json` · 与记录预期不符，待复核
+- **共同窗通过检查点：当前缺失** · `results/validation/pe_screen_p22_common_window/20261030_01/checkpoint.json` · 与记录预期不符，待复核
+- **共同窗独立审计：当前缺失** · `results/validation/pe_screen_p22_common_window/20261030_01/audit.json` · 与记录预期不符，待复核
+- **最终 QPSK 检查点：当前缺失** · `results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd` · 与记录预期不符，待复核
+- **QPSK 独立审计：当前缺失** · `results/communication/pe_screen_p22_qpsk/20261030_03/audit.json` · 与记录预期不符，待复核
 - [QPSK 运行入口（已恢复）](../scripts/validation/run_pe_screen_p22_qpsk.m) · `scripts/validation/run_pe_screen_p22_qpsk.m` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd`
 - [共同窗验证入口（已恢复）](../scripts/validation/validate_pe_screen_p22_common_window.m) · `scripts/validation/validate_pe_screen_p22_common_window.m` · 历史版本 `24a05ba72b58042084417e54ca437f03adb988dd`
 - [P22 可复现基线与对应表](../reports/p22_reproducibility_baseline_2026-11-10.md) · `reports/p22_reproducibility_baseline_2026-11-10.md` · 历史版本 `747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9`
@@ -206,27 +208,27 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 - [海底一次反射几何补充](../reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md) · `reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md`
 - [D/S/B 几何入口](../scripts/reporting/render_target_deepsea_dsb_geometry.m) · `scripts/reporting/render_target_deepsea_dsb_geometry.m`
 
-### Bellhop 代表案例与平面对照
+### Bellhop诊断与5000m独立波动参考
 
-状态：图示已完成 · 对照有未过项；结果日期：100 m 代表案例报告未标日期；连通 smoke 为 2026-11-01；本次核查：2026-11-10。
+状态：Bellhop仍NO_GO；独立Munk模型数值通过；结果日期：2026-11-12独立Munk；原Bellhop各结果保留原日期；本次核查：2026-11-12。
 
-当前代表图采用 100 m 水深、发射机离底 1 m；声线展示完成，但不能把画出来的路径当成幅相已经验证。
+独立Munk全深度接收网格在明确假设下通过数值检查，轴有限且近底高分辨率，但未支持论文窄中央亮带；Bellhop资格未升级。
 
 **为什么做：**借助独立的射线方法理解多途结构，并在可比较的平面条件下检查 PE 与 Bellhop 的差异。
 
-**做了什么：**Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。
+**做了什么：**Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。 独立Munk新分支完成分层Green/J0、七组完整场、同尺度均匀参考、Munk时延及图件数据/坐标审计，所有失败版本保留。
 
-**说明什么：**已有直观的路径材料，也已经定位出对照尚未闭合的部分。连通 smoke 说明程序能运行；代表图和部分通过项各有自己的用途。
+**说明什么：**当前有可复现的固定单频Munk模型参考，不能将其数值通过当成论文原参数恢复、实物海试或通信资格；源点以外轴直接计算。
 
-**还差什么：**未完成角度/宽带扫描，也未认证粗糙面全部幅相。平面对照的空间相位约 0.0612 rad，大于 0.05 rad 门；空间复 L2 约 0.0613，大于 0.02 门。
+**还差什么：**未完成角度/宽带扫描，也未认证粗糙面全部幅相。平面对照的空间相位约 0.0612 rad，大于 0.05 rad 门；空间复 L2 约 0.0613，大于 0.02 门。 论文底质/声源方向图/源级未知，窄中央亮带无独立支持；全球5m概览不解析全部细条纹。模型适用范围与其他工况尚未扩展。
 
-**下一步：**若要继续比较，先限定相同路径拓扑、声源和相位约定，解释已有失败项；不要拿含底高阶多途直接对照当前 PE 的直达加一次海面反射。
+**下一步：**等待人工审查本轮FFP模型、假设和原始数据；不自动追图、扫底质、改Bellhop或推进M1/CIR/通信。
 
-**技术范围：**当前安装：水深100 m，Tx99 m，Rx3 m；停止零离底 epsilon 扫描。代表案例193条 ARR、199条 E 贡献记录、1001条展示声线；这些数量不代表真实独立到达路径数。旧500 m材料已经退役，本页不引用归档内容。
+**技术范围：**当前安装：水深100 m，Tx99 m，Rx3 m；停止零离底 epsilon 扫描。代表案例193条 ARR、199条 E 贡献记录、1001条展示声线；这些数量不代表真实独立到达路径数。旧500 m材料已经退役，本页不引用归档内容。 独立Munk为5000/4950m、10kHz、全向三维点源、示例流体底；最终层厚.625m、K100、面板.0625、数值轮廓.1。元数据明示4πGreen=pressure_1m，不冒充生产H_f。
 
 **已有结果：**代表案例报告、图件及平面对照 checks.csv 存在。
 
-**历史审计：**代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。
+**历史审计：**代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。 独立Munk audit_01粗求积FAIL保留；audit_03必需门全通过；v2图像深度坐标FAIL保留、v4五组FIG/PNG数据/坐标及逐像素一致；当前源码样本重建通过。
 
 **当前重跑条件：**当前绘图入口存在，仍依赖外部 Bellhop 可执行文件；本次没有重跑。
 
@@ -234,8 +236,12 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 
 - [当前安装与代表图报告](../reports/bellhop_100m_source1m_visuals_report.md) · `reports/bellhop_100m_source1m_visuals_report.md`
 - [当前重建计划顶部修订](../reports/bellhop_100m_rebaseline_plan.md) · `reports/bellhop_100m_rebaseline_plan.md`
-- [平面展开逐项检查表](../results/validation/pe_bellhop_unfolded_flat_gaussian/checks.csv) · `results/validation/pe_bellhop_unfolded_flat_gaussian/checks.csv`
+- **平面展开逐项检查表：当前缺失** · `results/validation/pe_bellhop_unfolded_flat_gaussian/checks.csv` · 与记录预期不符，待复核
 - [当前代表图入口](../scripts/reporting/generate_bellhop_100m_source1m_visuals_vertical.m) · `scripts/reporting/generate_bellhop_100m_source1m_visuals_vertical.m`
+- [Munk独立波动参考结果](../reports/munk_ffp_5000m_result_2026-11-12.md) · `reports/munk_ffp_5000m_result_2026-11-12.md`
+- [Munk最终离线图册](../results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html) · `results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html`
+- [Munk最终数值审计](../results/validation/munk_ffp_5000m/20261112_full_01/audit_03/receipt.json) · `results/validation/munk_ffp_5000m/20261112_full_01/audit_03/receipt.json`
+- [Munk图件数据/坐标审计](../results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v4/receipt.json) · `results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v4/receipt.json`
 
 ### 运行环境与重跑条件
 
@@ -264,11 +270,11 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 证据入口：
 
 - [新机交接与边界](../reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md) · `reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md`
-- [新机基础 smoke 检查点](../results/validation/new_ubuntu_matlab_smoke/20261109_232540_new_ubuntu/checkpoint.json) · `results/validation/new_ubuntu_matlab_smoke/20261109_232540_new_ubuntu/checkpoint.json`
+- **新机基础 smoke 检查点：当前缺失** · `results/validation/new_ubuntu_matlab_smoke/20261109_232540_new_ubuntu/checkpoint.json` · 与记录预期不符，待复核
 - [现行公共信道入口](../vertical_channel_model.m) · `vertical_channel_model.m`
 - [P22 可复现基线与对应表](../reports/p22_reproducibility_baseline_2026-11-10.md) · `reports/p22_reproducibility_baseline_2026-11-10.md` · 历史版本 `747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9`
 - [新机最小项目基线报告](../reports/new_ubuntu_minimal_project_baseline_2026-11-10.md) · `reports/new_ubuntu_minimal_project_baseline_2026-11-10.md`
-- [新机最小项目基线最终检查点](../results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json) · `results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json`
+- **新机最小项目基线最终检查点：当前缺失** · `results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json` · 与记录预期不符，待复核
 - [M0合同修复与验收报告](../reports/m0_phase_contract_closeout_2026-11-10.md) · `reports/m0_phase_contract_closeout_2026-11-10.md` · 历史版本 `3f7071d + working tree`
 - [M0封存与M1窗口/网格/步长预审设计](../reports/m0_seal_m1_preflight_2026-11-10.md) · `reports/m0_seal_m1_preflight_2026-11-10.md` · 历史版本 `M0 source 969127f`
 
@@ -362,6 +368,10 @@ P22恢复入口与新机最小基线已提交为5d2e9f8。按用户要求暂缓1
 
 继续完成前一日quicklook交付：保留试绘标题重叠、首版负增益截断和一次exportgraphics多容器异常；改用单布局专用标题行，8张交付PNG逐图查看、FIG重建36幅CData差0，24条接收曲线匹配，0失败。声压数据未重算，数值源码SHA未变。交付绘图加图审计50.688s；报告、MAT/CSV、源码快照、日志和SHA封存。仍缺P0共源压力/梯度/相位与Gaussian回归，之后才做P1平面；本轮停止，不自动推进。
 
+### 2026-11-12 · 独立Munk波动参考通过数值门，论文亮线未支持
+
+复用Green/镜像/Weyl，构造分层Green和精确J0；七组完整网格与同尺度均匀/时延/收敛通过，轴非源点有限、近底.01m。原粗求积和图件坐标失败保留，v4五图可编辑/像素重绘一致。示例底/全向源/1R参考不冒充论文参数；停止等待审查，不进入CIR或其他场景。
+
 ## 重新开始先做什么
 
 ### 1. 下一任务先做P0声源资格
@@ -418,11 +428,11 @@ P4/P6及全部AS已通过限定审计，P8部分轨迹保留；步长与吸收�
 
 ## 记录与核查范围
 
-M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。
+本轮只做5000m/4950m/10kHz独立分层Green和J0波数积分；复用已有解析基准，七个完整网格结果、同尺度均匀控制及独立图形审计。不升级生产PE、Bellhop或正式S5/S6。
 
-M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。
+本轮用户批累计900s、单作业90s，现有MCP R2025b Update6/PID35640，完整作业RAM启动1GiB、加密2GiB、运行保留256MiB。RAM不足时未启动作业；J07用时84.183s，门不提高。完整时间含原失败、审计、重绘，见本轮budget_ledger/checkpoint，不与旧M1/活塞预算混用。
 
-本次核查代码基线：`compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot`。
+本次核查代码基线：`experiment/munk-ffp-5000m / 6c53632 + isolated uncommitted reference and audits`。
 
 唯一维护源：`reports/project_progress.json`。
 

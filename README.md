@@ -177,3 +177,7 @@ Rx仍为3 m。当前独立绘图入口为 `generate_bellhop_100m_source1m_visual
 103 m 的镜像接收端并乘以 `-1`。该入口使用现有生产 Gaussian 源的角谱
 指向性生成 `.sbp`，不修改 PE 核心或生产默认窗口；正式输出位于
 `results/validation/pe_bellhop_unfolded_flat_gaussian/`。
+
+### 5000 m Munk独立波动参考（2026-11-12）
+
+[中文结果报告](reports/munk_ffp_5000m_result_2026-11-12.md)与[最终离线图册v4](results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html)：独立分层Green/精确J0波数积分在固定10kHz、全向点源、示例流体底假设下通过全部必需数值检查；原始复场与配置在`results/validation/munk_ffp_5000m/20261112_full_01/J07.mat`。轴上非源点有限，近底0.01m采样，但不支持论文贯穿水柱的窄中央亮带。全局5m图仅概览，不能解析全深度细驻波。该结果不升级Bellhop/生产PE或通信资格；停止供人工审查。

@@ -1,0 +1,25 @@
+{
+  "stage": "long_uniform_limit",
+  "status": "ACTUAL_DEPTH_SCALE_UNIFORM_LIMIT_PASS",
+  "elapsed_s": 7.1487429,
+  "exit_status": 0,
+  "failed_checks": 0,
+  "all_depths_pass": true,
+  "metrics": {
+    "max_per_depth_complex_rel": 2.2179233705796738E-11,
+    "max_tl_error_db": 8.2647685521342674E-11,
+    "max_phase_error_rad": 3.0139335302956524E-11,
+    "receiver_depths_m": [
+      0,
+      1000,
+      3000,
+      4900,
+      4948,
+      4952,
+      4999,
+      5000
+    ],
+    "source_depth_m": 4950,
+    "analytic_subtraction_used": false
+  }
+}

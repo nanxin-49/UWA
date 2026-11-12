@@ -1,0 +1,104 @@
+{
+  "scope": "Full original single-frequency objective; successful model reference, not forced paper image matching",
+  "status": "ALL_REQUESTED_REQUIREMENTS_AUDITED",
+  "requirements": [
+    {
+      "id": "R01",
+      "requirement": "Independent branch and original protection",
+      "evidence": "Git branch experiment/munk-ffp-5000m; production diff empty; exact new run paths",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R02",
+      "requirement": "Inspect and reuse existing implementations",
+      "evidence": "Design/reuse table; direct calls to deepsea3d_point_field, deepsea3d_flat, Weyl, deepsea_bie_gauss; no archived recovery",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R03",
+      "requirement": "Requested single physical case",
+      "evidence": "geometry_receipt.json and J07.cfg: 5000/4950m,10000Hz,x±5,z0..5000,pressure-release/fluid halfspace",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R04",
+      "requirement": "Independent wavenumber/J0 method and direct axis",
+      "evidence": "layered_fluid_green_kernel and solve_layered_fluid_ffp; uniform kernel/jump tests and no r0 replacement",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R05",
+      "requirement": "Uniform Green and image limits",
+      "evidence": "long_uniform_checks.csv, source4950/H5000, each depth PASS, subtraction disabled",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R06",
+      "requirement": "Munk vertical delay reference",
+      "evidence": "audit_03 max onepass error8.522e-10s; new independent integral explicitly authorized after search",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R07",
+      "requirement": "Finite axis, surface, symmetry",
+      "evidence": "audit_03 respective gates true; exactly one true-source singularity",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R08",
+      "requirement": "Truncation, step, contour and layer convergence",
+      "evidence": "audit_03/convergence.csv; original coarse quadrature FAIL retained, finer J06->J07 PASS",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R09",
+      "requirement": "Global and near-bottom resolution",
+      "evidence": "Actual combined10981x201 grid; global5m overview with declared fringe limitation; patch.01m<lambda/10",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R10",
+      "requirement": "Five requested visualization groups",
+      "evidence": "v4 F01-F05 PNG/FIG; figure_audit_v4 exact data/coordinates/pixels PASS",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R11",
+      "requirement": "Raw complex MAT and full configuration",
+      "evidence": "J07.mat green/pressure_1m/cfg/mask/kappa/weights; frozen plans and all prior cases retained",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R12",
+      "requirement": "Offline HTML and provenance",
+      "evidence": "v4/index.html:30 local links valid; input/code/output SHA manifests and checkpoints",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R13",
+      "requirement": "Budget and execution limits",
+      "evidence": "User authorization.json; budget_ledger below900s; every full job below90s; no Bellhop/PE/SSH/CIR/communication",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R14",
+      "requirement": "Five final scientific answers",
+      "evidence": "Result report section1, structure_metrics.csv; no claim of paper physical reproduction or narrow central column",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    },
+    {
+      "id": "R15",
+      "requirement": "Stop for human review",
+      "evidence": "checkpoint next_allowed_step human review only; no queued jobs or next stage",
+      "status": "PROVEN_WITH_DECLARED_MODEL_AND_SAMPLING_LIMITS"
+    }
+  ],
+  "material_limits": [
+    "Unknown original paper source/bottom/normalization",
+    "Global5m map is an overview; only near-bottom fine fringes claimed resolved",
+    "No calibrated Pa or real transducer validation"
+  ],
+  "inspected_final_numeric": "audit_03/receipt.json",
+  "inspected_final_figure": "figure_audit_v4/receipt.json",
+  "human_review_pending": true
+}

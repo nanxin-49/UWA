@@ -1,0 +1,12 @@
+{
+  "approved_by": "user",
+  "approved_at": "2026-11-12T11:21:37.9799231+08:00",
+  "approved_total_budget_s": 900,
+  "per_job_budget_s": 90,
+  "prior_preflight_s": 7.8519024,
+  "execution_mode": "existing MATLAB MCP serial",
+  "start_available_ram_bytes": 1073741824,
+  "runtime_min_available_ram_bytes": 268435456,
+  "source": "User reply: 批准≤900秒，RAM门满足后执行",
+  "scope": "Frozen six 10kHz Munk full-field jobs plus required audits and figures; no remote, Bellhop or PE"
+}

@@ -9,6 +9,13 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### 独立5000m Munk波动参考数值通过；论文中央亮带未支持（2026-11-12）
+
+- 独立`experiment/munk-ffp-5000m`工作树固定6c53632，复用已有三维Green、镜像、Weyl与Gauss；新增验证专用分层Green/精确J0积分。10kHz、深5000m、源4950m、示例流体底假设；未改Bellhop/生产PE、未调用其求解器，M1及活塞任务状态/预算不变。
+- 初始六项完整场及一次更细积分J07保存10981×201复场（唯一真源点NaN），非源轴点有限、海面/左右对称残差0。同尺度均匀Green/镜像逐深度复差≤2.218e-11；最终求积加密四区复差≤9.033e-9，层厚≤9.501e-5；Munk直达积分时延差8.522e-10s。近底maxdz=.01m<lambda/10，全球5m仅概览、不认证全深度细驻波。
+- 原粗求积FAIL（上部复差.0015045）、绘图变量冲突、非均匀深度imagesc坐标FAIL及解析失败均保留；最终数值audit_03与图形figure_audit_v4通过，五组1600×1000 PNG/FIG数据/坐标、重开、逐像素差0。当前源码重建50个指定样本最大逐深度复差1.551e-15。
+- [中文报告](reports/munk_ffp_5000m_result_2026-11-12.md)、[设计](reports/munk_ffp_5000m_design_2026-11-12.md)、[900秒授权预算](reports/munk_ffp_5000m_resource_budget_2026-11-12.md)、[最终离线v4](results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html)。仅给定假设的模型数值资格，不是论文复现：没有支持贯穿水柱窄中央亮带；底质/源/归一化原参数未知。停止供人工审查，不启动宽带/CIR/通信/其他场景。
+
 ### 活塞自由场 quicklook 完成；P0 尚未执行（2026-11-11计算，11-12图件封存）
 
 - 已查本地/GitHub 固定提交 `f3314fd`：旧“5 cm”实际为圆活塞半径；本次严格二维以总宽 10 cm 映射其半尺寸，同时保留总宽 5 cm 字面对照。20/10/5 cm、4/6/8 kHz、同峰值振速 1 mm/s、Tx100 m/Rx3 m，使用二维 Hankel 速度孔径积分，不沿用圆形方向图或旧 1/R 场。

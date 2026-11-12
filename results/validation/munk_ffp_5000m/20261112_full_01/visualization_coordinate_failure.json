@@ -1,0 +1,12 @@
+{
+  "checked_at": "2026-11-12T11:45:52.9719872+08:00",
+  "status": "VISUAL_COORDINATE_MAPPING_FAILED_PRESERVED",
+  "affected_versions": [
+    "20261112_full_01",
+    "20261112_full_01_v2"
+  ],
+  "problem": "imagesc treats nonuniform combined receiver depths as uniform image rows; near-bottom rows incorrectly stretched in F01 overview",
+  "numeric_fields_affected": false,
+  "fix": "Select actual uniform 0:5:5000m rows for global overview; retain .01m local data. No interpolation or physical recomputation.",
+  "other_issue": "Exact zero convergence errors were invisible on log plots; display floor1e-12 explicitly labelled, raw CSV unchanged"
+}

@@ -1,0 +1,6 @@
+figure,reopened,width,height,pixel_max_difference,changed_pixels
+F01_full_field_vs_paper,1,1600,1000,0,0
+F02_axis_magnitude_phase,1,1600,1000,0,0
+F03_near_bottom_resolution,1,1600,1000,0,0
+F04_uniform_reference_errors,1,1600,1000,0,0
+F05_convergence_qualification,1,1600,1000,0,0

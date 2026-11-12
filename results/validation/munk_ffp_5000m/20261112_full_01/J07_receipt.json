@@ -1,0 +1,16 @@
+{
+  "stage": "solve",
+  "job_id": "J07",
+  "status": "SAVED_NOT_YET_QUALIFIED",
+  "exit_status": 0,
+  "elapsed_s": 84.1831473,
+  "failed_or_unrun_checks": [],
+  "metrics": {
+    "spectral_nodes": 12832,
+    "solve_wall_s": 81.9364225,
+    "grid_size": [
+      10981,
+      201
+    ]
+  }
+}

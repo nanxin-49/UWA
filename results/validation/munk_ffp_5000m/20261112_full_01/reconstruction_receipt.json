@@ -1,0 +1,12 @@
+{
+  "stage": "saved_field_reconstruction",
+  "status": "CURRENT_SOURCE_RECONSTRUCTION_PASS",
+  "elapsed_s": 55.1636237,
+  "exit_status": 0,
+  "metrics": {
+    "sample_count": 50,
+    "relative_l2": 6.1466134088156582E-19,
+    "max_absolute": 1.0185154709677554E-18,
+    "max_per_depth_relative": 1.5508904673633669E-15
+  }
+}

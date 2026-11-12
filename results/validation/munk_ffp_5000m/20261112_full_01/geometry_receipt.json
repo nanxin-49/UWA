@@ -1,0 +1,28 @@
+{
+  "stage": "final_geometry_requirement_check",
+  "elapsed_s": 0.5630818,
+  "exit_status": 0,
+  "frequency_hz": 10000,
+  "water_depth_m": 5000,
+  "source_depth_m": 4950,
+  "range_m": [
+    -5,
+    5
+  ],
+  "depth_m": [
+    0,
+    5000
+  ],
+  "grid_size": [
+    10981,
+    201
+  ],
+  "source_singular_count": 1,
+  "finite_non_source_count": 2.20718E+6,
+  "munk_parameters": {
+    "c0_mps": 1500,
+    "axis_depth_m": 1300,
+    "scale_m": 1300,
+    "epsilon": 0.00737
+  }
+}

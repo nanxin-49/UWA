@@ -1,0 +1,17 @@
+{
+  "stage": "figure_audit",
+  "status": "FIGURE_DATA_COORDINATES_AND_EDITABILITY_PASS",
+  "elapsed_s": 30.0054073,
+  "exit_status": 0,
+  "failed_checks": 0,
+  "required_checks": {
+    "full_map_actual_uniform_depths": true,
+    "full_map_saved_tl_identical": true,
+    "axis_original_data_identical": true,
+    "near_bottom_original_data_identical": true,
+    "png_dimensions": true,
+    "figures_reopened": 5
+  },
+  "pixel_roundtrip_all_exact": true,
+  "pixel_note": "Strict pixel results recorded separately; scientific data and physical coordinate identity are required. No pixel threshold was relaxed."
+}
