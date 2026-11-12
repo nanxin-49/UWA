@@ -1,5 +1,11 @@
 # `src/` 模块索引
 
+### 2026-11-12 活塞P0/P1最终状态
+
+2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [数据与报告](../results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)。
+
+`baffled_strip_piston_field_vertical`返回同一速度孔径的复压力及解析x/z梯度。验证调度入口为 `run_piston_p0p1_remote_job`，连续PE实现与独立审计位于 `scripts/validation/`，保存数据图件入口为 `render_piston_p0p1_remote`。新增FullFK入射回调保留原Fourier分支并已回归。源定义、偏移载波、相屏表达式、离散矩阵、失败门、资源及局限见最终报告。Gaussian默认和公开WAPE核心沿用原实现。
+
 `src/` 只保存可复用实现，不放演示入口、一次性验证脚本或生成结果。公共调用仍从仓库根目录的兼容包装文件进入。
 
 | 模块 | 责任 | 主要依赖方向 |
@@ -13,6 +19,8 @@
 | `bubble/` | 气泡谱、环境和有效介质 | 由 propagation 相位屏调用 |
 
 ## 依赖原则
+
+2026-11-12 活塞独立源API：`propagation/baffled_strip_piston_field_vertical(x_m,z_m,source,nquad)`返回峰值Pa及物理x/z梯度Pa/m，严格二维速度孔径/Hankel积分，`source`明确频率、c/rho/v0、总宽与真实源深度。它尚未作为生产默认模式接入；Gaussian生产路径与公共配置未改。当前P0部分通过但PE有限初场表示未过门、远端新进程等待许可，完整资格见[执行记录](../reports/piston_p0p1_remote_execution_2026-11-12.md)。
 
 2026-11-11 M1逐步观察接口：公共`paramsV.validation_step_observer`默认`[]`，可选CPU验证回调`observer(psi_xy,state)`；`state`包含`path`（direct/incident/reflect）、`step`、`n_steps`、`z_m`、`frequency_hz`。回调无返回值，观察每段初场及每一传播步，可记录边缘/接收圆盘与资源并抛异常停止作业；不修改传播算子或相位合同。回调运行时间计入作业预算，保存配置前应清除函数句柄。相关M1入口见`scripts/README.md`。
 

@@ -1,5 +1,15 @@
 # 垂直水声 PE/WAPE 信道技术指南
 
+### 2026-11-12 活塞P0/P1最终状态
+
+2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [数据与报告](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)。
+
+`baffled_strip_piston_field_vertical`返回同一速度孔径的复压力及解析x/z梯度。验证调度入口为 `run_piston_p0p1_remote_job`，连续PE实现与独立审计位于 `scripts/validation/`，保存数据图件入口为 `render_piston_p0p1_remote`。新增FullFK入射回调保留原Fourier分支并已回归。源定义、偏移载波、相屏表达式、离散矩阵、失败门、资源及局限见最终报告。Gaussian默认和公开WAPE核心沿用原实现。
+
+### 2026-11-12 活塞压力/梯度与远端P0状态
+
+独立源API使用`p=C∫H0^(1)(kR)dξ`，`p_x=-Ck∫H1^(1)(kR)(x-ξ)/R dξ`、`p_z=+Ck∫H1^(1)(kR)(z_source-z)/R dξ`，`C=ρωv0/2`，z向下、`exp(-iωt)`，故`v=grad(p)/(iρω)`、振面向上速度对应v_z=-v0。源深度100m与数值初场99/98m分开，初场去除`exp(ik*offset)`，按真实路径恢复carrier后进入phase contract v2；sigma兼容字段只是PE验证桥占位，实际使用孔径覆盖场。压力、梯度、单位/相位的限定检查已运行，PE有限窗口隐含梯度仍未取得完整资格，扩大窗口作业停在远端账号许可提示。P1尚未运行，不将输入截断差当反射模型误差。Gaussian生产默认不变；[配置、冻结门、已算/未算及接续](reports/piston_p0p1_remote_execution_2026-11-12.md)。
+
 ### 二维活塞自由场图示（2026-11-11；非生产资格）
 
 新增独立quicklook以`exp(-iωt)`、出射`H0^(1)`和速度Neumann孔径积分计算总宽20/10/5 cm条带的绝对峰值Pa；严格二维远场为`sinc((kW/2)sinθ)/√r`，不使用圆活塞`2J1/u`或3D的`1/r`。历史“5 cm”经GitHub/本地代码确认是圆形半径，二维总宽10 cm仅作半尺寸映射。图示保持同峰值振速1 mm/s，绝对Pa与轴向归一化分别保存；完整公式、采样、相量、独立检查与局限见[quicklook报告](reports/piston_source_quicklook_2026-11-11.md)。生产Gaussian与公共H_f接口未改，尚缺梯度、共源适配及P0资格；之后才考虑P1平面反射。本轮未推进。

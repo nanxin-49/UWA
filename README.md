@@ -1,5 +1,7 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+**活塞远端P0/P1已完成。** 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [最终报告](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)、[最终图件](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/figures_final/)与[独立审计](results/validation/piston_source/20261112_remote_p0p1_01/independent_audit_02/receipt.json)。
+
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。
 
 **活塞自由场图示（2026-11-11，quicklook完成、P0未执行）：**已用严格二维Hankel速度孔径积分计算总宽20/10/5 cm、4/6/8 kHz、同峰值振速1 mm/s的自由场，保存绝对Pa、归一化接收线和方向图。历史“5 cm”经本地/GitHub代码确认是圆形半径，故二维半尺寸映射为总宽10 cm；另保留总宽5 cm。见[图示、结论与复现](reports/piston_source_quicklook_2026-11-11.md)。20 cm波束随三频由约112°收窄至49°；这不是生产活塞资格或正式PE/BIE/FullFK比较。下一步先P0共源/梯度/相位，再P1平面；[原计划与资源门](reports/piston_source_2d_single_frequency_plan_2026-11-11.md)保持，当前不自动推进，不改Gaussian路径或转用M1预算。

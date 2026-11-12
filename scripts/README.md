@@ -1,5 +1,13 @@
 # 脚本与验证运行索引
 
+### 2026-11-12 活塞P0/P1最终状态
+
+2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [数据与报告](../results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)。
+
+`baffled_strip_piston_field_vertical`返回同一速度孔径的复压力及解析x/z梯度。验证调度入口为 `run_piston_p0p1_remote_job`，连续PE实现与独立审计位于 `scripts/validation/`，保存数据图件入口为 `render_piston_p0p1_remote`。新增FullFK入射回调保留原Fourier分支并已回归。源定义、偏移载波、相屏表达式、离散矩阵、失败门、资源及局限见最终报告。Gaussian默认和公开WAPE核心沿用原实现。
+
+**2026-11-12 活塞远端P0/P1（许可等待）：**`validation/run_piston_p0p1_remote_job(job_id,absolute_run_root)`在不可覆盖job目录写MAT/CSV/JSON；`validation/audit_piston_p0p1_remote(task_root)`为尚未执行的独立保存数据审计，`reporting/render_piston_p0p1_remote(task_root)`为尚未运行的保存数据PNG/FIG入口，两者代码编写完成不等于资格。绘图显式区分绝对Pa、物理参考误差及BIE参考相位，未过阶段门时标INCONCLUSIVE；P1尚未建目录时仅写P0图目录，不干扰待续控制器。SSH任务专用启动器/控制器位于`validation/support/*piston*p0p1*remote.sh`，实际版本与SHA另保存在`results/validation/piston_source/20261112_remote_p0p1_01/`；源与初场使用隔离快照，最多两进程，无parpool。当前PE512m初场梯度门失败，8192m原作业停在账户提示，P0收尾与P1未执行。许可修复后先核原PID和日志，不重新运行已有job ID；见[执行报告](../reports/piston_p0p1_remote_execution_2026-11-12.md)。FullFK入射辅助新增显式回调，原Fourier分支保留；Gaussian生产默认未改。
+
 **2026-11-11 二维活塞自由场 quicklook：**`validation/run_piston_source_quicklook('unique_run_id')`用二维Hankel速度孔径积分计算总宽20/10/5 cm、4/6/8 kHz、Tx100 m/Rx3 m、同峰值振速1 mm/s，输出`results/validation/piston_source_quicklook/<run_id>/`的复Pa MAT与接收线CSV。独立`validation/audit_piston_source_quicklook(run_dir)`核角谱/自适应积分/加密求积/MAT-CSV；`reporting/render_piston_source_quicklook(run_dir)`只读MAT重建`figures_delivered/`的8张PNG/FIG（可用第二参数指定不存在的独立图目录）；`validation/audit_piston_source_quicklook_figures(run_dir)`独立核FIG数据与色标。验证专用核位于`validation/support/piston_strip_pressure_quicklook.m`，尚未作为生产活塞实现。先`setup_vertical_project`，不依赖当前目录、不改Gaussian/API、不运行PE/BIE/FullFK或SSH；P0和P1未执行。[结果与尺寸溯源](../reports/piston_source_quicklook_2026-11-11.md)明确历史5 cm是圆形半径，对应二维总宽10 cm的尺寸映射。
 
 **2026-11-11 P8内存诊断（无传播）：**`validation/audit_m1_p8_memory_vertical(absolute_new_output_dir)`读取明确的P8回执/OS采样、核源码和封存产物SHA，并对数组载荷作静态算术估计；当前会话仅查memory/whos元数据，不清用户变量、不运行传播或实施优化。输出放在`results/validation/m1_p8_memory_diagnosis/`；[诊断与方案](../reports/m1_p8_memory_diagnosis_2026-11-11.md)明确未证实泄漏、节省量待实测和不可从部分轨迹直接续算。M1停止状态不变。

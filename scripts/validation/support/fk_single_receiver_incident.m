@@ -1,6 +1,11 @@
 function [u,ux,uz] = fk_single_receiver_incident(src,x,z)
 %FK_SINGLE_RECEIVER_INCIDENT Exact frozen angular spectrum, physical gradients.
 % Same block summation and normalization as the existing FullFK timing audit.
+if isfield(src,'incident_field_fn')
+    assert(isa(src.incident_field_fn,'function_handle'));
+    [u,ux,uz]=src.incident_field_fn(x,z);
+    return;
+end
 x=x(:); z=z(:)+zeros(size(x)); u=complex(zeros(size(x))); ux=u; uz=u;
 for first=1:128:numel(x)
     jj=first:min(first+127,numel(x));

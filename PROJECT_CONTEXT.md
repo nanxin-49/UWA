@@ -9,6 +9,26 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### 活塞P0/P1完成并独立审计（2026-11-12，当前状态）
+
+2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。
+
+[最终报告](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)；[验证与回传审计](results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_final.json)。旧许可、窗口失败和历史阶段记录继续保留。
+
+
+### 活塞P0阶段门通过，自由场完成，平面参考收敛中（2026-11-12）
+
+- 用户修复远端许可并授权清理旧等待进程后，32768m窗口下六组20/10cm、4/6/8kHz输入梯度满足原1e-4门，最大3.67070e-5。P0收尾的初场相位、求积阶数、旧Fourier默认分支及quicklook复压力对照通过。完整保存数据独立审计将随最终交付执行。
+- P1直接周期截窗初场在4096m仍有8.15%扩窗差、1.01%偏移差，失败完整保留。相同平方根PE算子改用完整连续角谱的入射外部场，1024/2048模式、步长与偏移相对差约1e-13，自由场独立孔径对照最大分段误差1.60e-13。Model0反射采用精确平面背景加紧支撑相位屏扰动，正在执行平面BIE/FullFK与网格/窗口参考收敛。
+- 当前`P0_STAGE_PASS / P1_FREE_PASS / P1_FLAT_RUNNING`，弱正弦需平面阶段门通过后派发。已测BIE峰值RSS约1GiB量级，两个孔径共用矩阵，远端最多两个单线程进程。源码、全部旧失败与实际job回执见[执行报告](reports/piston_p0p1_remote_execution_2026-11-12.md)及`results/validation/piston_source/20261112_remote_p0p1_01/`。后续按原门继续P1及独立审计。
+
+### 活塞P0部分完成，远端新进程等待许可；P1未启动（2026-11-12）
+
+- 用户已授权远端P0→P1连续执行，最多两个独立单线程R2025b进程，无本机MCP、P2、6/8 kHz正式传播、PM或通信。本地基线`6c53632`，远端隔离根`/home/misc/cwx/piston_p0p1_20261112_01`，三份56文件白名单SHA匹配，原快照不改写，不提交/推送。
+- 远端R2025b Update1、基本许可及实际双进程先导通过。P0源4/6/8 kHz×20/10 cm的压力/解析梯度、独立角谱/差分/速度/相位断言通过；BIE/FullFK输入一致，Gaussian标量默认对照差0。PE512m窗口压力差约1e-13，但隐含梯度1.23e-4至1.88e-3超原1e-4门，原失败保留。
+- 8192m加密输入job `p0_pe_refined`尚未执行MATLAB代码，stdout停在MathWorks账户邮件提示。已请用户修复远端非交互许可，不代填账号、不启动替代或重复作业。原PID/日志与等待控制器保留；P0收尾与独立审计未运行，**`P0_INCOMPLETE / P1_NOT_STARTED`**，不能把源输入误差当反射模型差。
+- [当前执行报告](reports/piston_p0p1_remote_execution_2026-11-12.md)及`results/validation/piston_source/20261112_remote_p0p1_01/`保存源代码/配置、已完成MAT/CSV、123项回传SHA及许可等待证据。恢复后先核原作业状态，再按原门接续；不因进程存活或代码写完宣称完成。旧Gaussian M1与正式S5/S6状态和预算不变。
+
 ### 活塞自由场 quicklook 完成；P0 尚未执行（2026-11-11计算，11-12图件封存）
 
 - 已查本地/GitHub 固定提交 `f3314fd`：旧“5 cm”实际为圆活塞半径；本次严格二维以总宽 10 cm 映射其半尺寸，同时保留总宽 5 cm 字面对照。20/10/5 cm、4/6/8 kHz、同峰值振速 1 mm/s、Tx100 m/Rx3 m，使用二维 Hankel 速度孔径积分，不沿用圆形方向图或旧 1/R 场。

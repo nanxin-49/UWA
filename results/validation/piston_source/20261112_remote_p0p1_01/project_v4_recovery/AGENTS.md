@@ -1,0 +1,189 @@
+﻿# AGENTS.md
+
+## Scope
+This repository is a MATLAB vertical underwater acoustic channel and MPSK communication project.
+Work from code first. Do not assume external documents are authoritative unless explicitly requested.
+See `PROJECT_CONTEXT.md` for project background and current status.
+
+## Retired Local Artifacts: cash/
+- The repository-root `cash/` directory is a recoverable quarantine for obsolete or superseded experiments, data, figures and reports. The name is deliberately `cash`, not `cache`.
+- Its contents are NOT current project context, validation evidence for the active environment, source dependencies, or a result cache to reuse automatically.
+- Do not read, search, enumerate, index, summarize, execute or restore anything inside `cash/` unless the user explicitly requests that archive operation. During an explicitly authorized archive move, path/existence checks for the exact target are allowed; do not subsequently inspect archived contents.
+- Normal repository searches, recursive listings and automatic result discovery must exclude `cash/`. When bypassing Git ignore rules, explicitly use an exclusion such as `rg -g '!cash/**'` or an equivalent scoped search.
+- `.gitignore` excludes `/cash/` after all MATLAB/Markdown allow-rules. Never stage or commit its contents, including with `git add -f`, without an explicit user request to reverse this policy.
+- Keep only a small archive manifest and supersession notice OUTSIDE `cash/` when needed for navigation. Do not recover old results to fill missing active results.
+- The 500 m rough-surface Bellhop audit and its figures are retired. The user subsequently approved a physical source clearance of 1 m: water depth 100 m, Tx depth 99 m, Rx depth 3 m. Use `generate_bellhop_100m_source1m_visuals_vertical` for the current representative figures. The earlier zero-clearance epsilon studies remain historical diagnostics, not a gate for the newly approved installation. Read `reports/bellhop_100m_rebaseline_plan.md`, not the archive. Old 500 m runners/plotters remain reference code only and must not be run with their historical defaults.
+
+## Repository Layout and New File Placement
+- Classify new files by responsibility and workflow stage, not merely by file extension or algorithm name. Inspect the existing neighboring files and the relevant `README.md` before choosing a location.
+- Keep the repository root small. Place a new file at the root only when it is a stable public API wrapper, a required compatibility entrypoint, project setup/navigation, or a top-level authoritative document. Do not put ordinary implementations, validation scripts, figures, logs, MAT files, or convenience experiments at the root.
+- `vertical_channel_model.m`, `main_vertical.m`, `explain_main_vertical.m`, and `comm_main_vertical_psk.m` are stable root-level compatibility/public entrypoints. Their reusable or substantive implementations belong under `src/` or `examples/` as described below.
+
+### Reusable implementation: `src/`
+- `src/` contains reusable production implementation only. Do not place demos, one-off validation scripts, report builders, or generated results there.
+- Place new reusable code in the module matching its primary responsibility:
+  - `src/channel/`: public channel implementation, channel-component assembly, carrier-phase reference, and CIR representation conversion.
+  - `src/propagation/`: PE/WAPE marching, propagation operators, and source initial fields.
+  - `src/surface/`: sea-surface spectra, realizations, boundary/reflection/scattering models, and surface-specific operators.
+  - `src/receiver/`: forward/cached receiver propagation, adjoint projection, receiver contraction, and receiver-side execution.
+  - `src/statistics/`: statistical model construction, estimation, conditional/empirical models, and sampling.
+  - `src/communication/`: communication taps, modulation/demodulation, noise, and communication-ensemble evaluation.
+  - `src/bubble/`: bubble spectra, bubble environments, and effective-medium models.
+- When a reusable feature spans modules, place the implementation in the module that owns its output/abstraction and keep dependencies consistent with `src/README.md`; do not duplicate it across script folders.
+- If a genuinely new `src/` module is added, update `src/README.md` and `setup_vertical_project.m` so the module and dependency direction remain explicit. Do not solve path problems by changing the MATLAB current working directory.
+
+### Demos and workflow scripts
+- Put the substantive content of user-facing demonstrations in `examples/`. Preserve an existing root compatibility wrapper when its public name must remain stable.
+- `scripts/` contains runnable research, validation, and reporting workflow entrypoints. Classify a new script by what the run is intended to do:
+  - `scripts/validation/`: smoke tests, invariants, regressions, diagnostics, audits, acceptance checks, and communication-chain validation.
+  - `scripts/validation/support/`: helpers used only by validation workflows, including external-tool readers/writers/runners, independent references, artifact assertions, and validation metadata. These helpers are not public APIs.
+  - `scripts/comparisons/`: controlled comparisons between models, methods, approximations, or coherent/incoherent alternatives.
+  - `scripts/experiments/`: Monte Carlo studies, parameter sweeps, sensitivity studies, and calibration runs.
+  - `scripts/reporting/`: figure generation, plotting from saved results, visualization, summary-table generation, and report builders.
+- Choose the folder by the primary purpose of the entrypoint. For example, a script that runs an acceptance test and happens to plot diagnostics belongs in `validation/`; a script that only renders accepted saved data belongs in `reporting/`.
+- New script entrypoints must be runnable from any MATLAB current directory after `setup_vertical_project`. Resolve an explicit project root and output directory; do not rely on `cd`, the caller's current directory, or outputting beside the script.
+- Reusable computational logic discovered while writing a workflow script belongs under the appropriate `src/` module. Keep only orchestration, case configuration, assertions, and workflow-specific presentation in `scripts/`.
+
+### Documents, results, and temporary files
+- Put current one-off validation reports, experiment reports, audit conclusions, and project-status reports in `reports/`.
+- Keep the current authoritative technical and project navigation documents at their established locations: `README.md`, `PROJECT_CONTEXT.md`, `vertical_comm_guide.md`, `AGENTS.md`, `src/README.md`, and `scripts/README.md`.
+- Put non-authoritative historical specifications and superseded explanatory documents in `docs/history/`; do not use them as the sole basis for current APIs, defaults, or validation status.
+- Put generated artifacts under a case-specific subdirectory of `results/`, rather than at the repository root or beside source code:
+  - `results/validation/<case>/` for validation data, checkpoints, tables, and validation figures.
+  - `results/visualization/<case>/` for standalone visualization products and atlases.
+  - `results/experiments/<case>/` for experiment, sweep, Monte Carlo, sensitivity, and calibration outputs.
+  - `results/comparisons/<case>/` for comparison-study outputs.
+  - `results/communication/<case>/` and `results/channel_demo/<case>/` for communication and channel-demo runs when those categories apply.
+- Use `results/archive/` only for an explicitly defined, recoverable workflow archive. It is distinct from the retired local quarantine `cash/` and must not be used as an unstructured dumping ground.
+- `old/` and `tmp/` are not approved destinations for new persistent project files. Use `tmp/` only for disposable intermediate work when a task explicitly needs it, and move any retained artifact to its proper documented location before completing the task. Do not place new files in `old/` without an explicit repository policy or user instruction.
+- Do not create logs, generated MAT/CSV/media files, downloaded references, or ad hoc notes at the repository root. Use the appropriate `results/<category>/<case>/`, `reports/`, or temporary location.
+- When adding a new entrypoint, reusable module, report family, or result category, update the relevant navigation document (`README.md`, `src/README.md`, or `scripts/README.md`) so future work can discover its location and invocation.
+
+## Development Standards
+
+### MATLAB style
+- Use MATLAB for programming tasks unless the user explicitly requests another language or an existing project integration requires a different language or tool.
+- Keep functions deterministic for the same input parameters and RNG seeds.
+- Preserve current naming style: `paramsV` for user input, `cfg` for validated runtime config, `output/results/meta` for structured outputs.
+- Prefer explicit struct fields over positional arguments for new physics options.
+- Keep complex arrays and frequency-domain variables clearly named with `_f`, time/baseband taps with `_bb` or `_taps`.
+- Use clear suffixes when helpful: `_xy` for transverse spatial fields and `_k` for transverse wavenumber-domain fields.
+- Do not silently change units. Depth is meters, frequency is Hz, sound speed is m/s, z is positive downward.
+- Avoid introducing new toolbox dependencies beyond standard MATLAB unless explicitly approved.
+
+### MATLAB execution
+- Use the MATLAB MCP server as the default interface for executing, checking, and testing MATLAB code in this repository.
+- Use the existing shared MATLAB session through MATLAB MCP.
+- Do not launch local MATLAB through PowerShell, CMD, `matlab.exe`, or `matlab.exe -batch` unless the user explicitly requests it. Authorized SSH execution on the remote Ubuntu host is the separate exception specified below.
+- Prefer the MATLAB MCP tools for their intended purposes, including `evaluate_matlab_code`, `run_matlab_file`, `run_matlab_test_file`, and `check_matlab_code`.
+- The normal project working directory is the repository checkout. Do not rely on the current working directory for production code; project entrypoints must still follow the path-handling rules below.
+- When necessary, verify the connected MATLAB version and working directory before running a validation or workflow.
+- If the MATLAB MCP existing session is unavailable, report the condition instead of silently falling back to a local MATLAB process or remote SSH execution.
+- PowerShell may still be used for repository management, Git, file inspection, and other non-MATLAB shell tasks.
+- Do not use PowerShell to launch local MATLAB as a fallback without explicit user approval. PowerShell may invoke SSH for an authorized remote MATLAB task under the policy below.
+
+### Context and execution receipts
+
+- At task start, read only the current-state index at the top of `PROJECT_CONTEXT.md`, the top current-status block and applicable stage/resource/stop clauses of the active plan, and the necessary entrypoint or navigation lines. Search for exact dependencies before reading historical reports, code, or long logs. Record the paths and versions already checked; do not reread unchanged material without a concrete dependency or a changed hash/mtime. The current-state index is navigation, not numerical evidence.
+- Use the task-authorized MATLAB MCP or SSH mode only; a short receipt does not authorize switching modes, starting a solve, or advancing a stage. Preserve all existing RAM, time, reference, retry, and stop gates. On a timeout, inspect the existing job/checkpoint before any retry.
+- For an authorized job, save full stdout/stderr or MATLAB diary and the real exit status in its unique result directory. Return a bounded receipt to the model: run/job ID, status, elapsed time, key named metrics and units, failed-check count, result path, log paths, and audit/checkpoint paths. On failure, read the relevant error lines with a small context window first; expand only for a stated diagnostic need. Never infer PASS from a process exit code alone.
+- At each job or stage boundary, save a small checkpoint with completed steps, exact configuration, input/code versions and SHA-256, outputs and their SHA-256, failed gates, resource/time accounting, audit status, and next allowed step. Resume from the checkpoint after revalidating its inputs and evidence; invalid or missing numerical evidence requires the affected checks to run again. Independently execute required numerical, MAT/CSV, SHA, and figure reconstruction audits; their concise summaries may be returned while full evidence remains on disk.
+- The concrete receipt/checkpoint schema and before/after measurement method are in `reports/codex_token_execution_protocol.md`. This protocol changes output and reading discipline only; it does not relax numerical tolerances, assertions, physical claims, or stage authorization.
+
+### Remote MATLAB execution (Windows Codex -> Ubuntu SSH)
+- **Execution choice:** Keep MATLAB MCP and the existing local MATLAB session as the default for lightweight, interactive development, code checking, and regression tests. For a task explicitly designated for remote execution or whose memory/compute needs require the approved remote workflow, use local Codex to orchestrate SSH and run MATLAB on the **new** Ubuntu machine. Remote SSH is **not** an automatic fallback when MATLAB MCP fails. Never launch a second local MATLAB instance as a substitute.
+- **Current remote target:** For all future SSH-based MATLAB work, use the Windows SSH alias **`matlab-ubuntu-new`** with non-interactive key authentication (`ssh -o BatchMode=yes matlab-ubuntu-new ...`). The login is the shared Ubuntu account `misc`; the designated project working root is **`/home/misc/cwx`**. Invoke **`/home/misc/MATLAB/R2025b/bin/matlab`** explicitly (verified R2025b Update 1 on 2026-11-09). The dedicated encrypted key is configured in Windows `~/.ssh/config` and was loaded into Windows `ssh-agent` for the verified session; check that `BatchMode=yes` works before each remote task. Do not hard-code the campus-network IP address or include SSH secrets in repository files.
+- **Retired remote target:** `matlab-ubuntu` is the old Ubuntu connection and is historical only. Do not use it for new SSH runs, fallback, project sync, or validation unless the user explicitly reauthorizes that machine. Preserve its Windows SSH alias, key, and historical result provenance; do not rewrite old R2023b evidence as if it came from the new machine.
+- **New-machine readiness boundary (checked 2026-11-10):** SSH login and a standalone base-MATLAB FFT round-trip assertion passed on `matlab-ubuntu-new`; see `reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md`. The user has manually copied several historical run directories, MATLAB scripts, and data files into `/home/misc/cwx`; representative `.m` and `.mat` files were read and hashed. The directory is still **not a Git checkout**, and repository entrypoints such as `AGENTS.md`, `PROJECT_CONTEXT.md`, and `vertical_channel_model.m` were absent at the root. This is the historical pre-baseline snapshot; file presence and the standalone smoke test alone do not establish project readiness.
+- **Minimal project baseline (2026-11-10):** A 23-file allowlisted snapshot under `/home/misc/cwx/project_baselines/20261110_121507_new_ubuntu_minimal/project/` passed three small CPU-double public-channel cross-platform comparisons and two saved P22 audits; see `reports/new_ubuntu_minimal_project_baseline_2026-11-10.md`. This establishes only the listed real-project cases. The root `/home/misc/cwx` is still not a full Git checkout. Nine bins do not qualify CIR; full-project dependencies, larger workloads, and formal S5/S6 remain unchecked or paused. Preserve the isolated snapshot and use new unique directories for later authorized work.
+- **Scope of access:** Ubuntu is shared by multiple lab members under the same `misc` account. Separate directories are an operational convention, **not** a security boundary. Work only within the explicitly approved remote project root and its task-specific output directories. Do not read, search, index, modify, rename, or delete other people's projects, files, processes, or sessions. Do not modify `/home/misc/.ssh`, `/home/misc/.codex`, global shell startup files, MATLAB installation files, firewall settings, or SSH server configuration. Do not run `sudo`, install or update packages, or access/reuse remote Codex authentication unless separately authorized.
+- **Validate before touching the project:** Verify SSH connectivity, the canonical remote directory, the intended project/code revision, MATLAB version, and required inputs before sync or execution. If `/home/misc/cwx` is missing, is not the intended checkout, or contains unknown work that a sync might overwrite, stop and ask; do not initialize, replace, clean, or bulk-sync it automatically. The previously used smoke-test directory `/home/misc/codex_matlab_jobs` is not this project's working root.
+- **Code and data transfer:** Transfer only the files needed for the authorized task, preferably from a known local Git revision. Exclude `cash/` from searches and transfers in accordance with the retired-artifact policy; also exclude local caches, credentials, unrelated results, and temporary files. Never use destructive sync options such as `rsync --delete` or overwrite remote working files without checking their identity and obtaining approval. Treat local source changes and remote changes separately; do not silently overwrite one with the other.
+- **Reproducible run layout:** Create a unique run ID for every remote execution. Save logs, exit status, run parameters, metadata, and generated outputs under the existing repository result convention, e.g. `/home/misc/cwx/results/validation/<case>/<run_id>/` or the relevant `results/<category>/<case>/<run_id>/`. Do not write generated files beside source scripts or at `/home/misc/cwx` root; do not overwrite or reuse a previous run directory. Persist report summaries under `reports/` only when required by the documentation rules.
+- **MATLAB invocation:** Run the remote executable explicitly with `-batch`, without a graphical desktop, and use project setup plus explicit input/output paths. Passing through SSH from Windows PowerShell is allowed **only for this authorized remote workflow**, not as a general exception to the local MATLAB MCP policy. Do not rely on the remote login shell's `PATH`, interactive shell startup, or MATLAB current directory. Use non-interactive SSH and propagate MATLAB's real process exit code; capture `stdout`, `stderr`, and exit status for each run.
+- **Compatibility gate:** Before running project code on the new machine, establish the intended checkout and code revision without overwriting unknown contents, then check Linux/R2025b compatibility, available toolboxes, platform-specific dependencies (including Linux MEX binaries and external executables), path separators, case-sensitive filenames, and result formats. First run a minimal, deterministic real-project case, then compare against an accepted baseline using explicit numerical tolerances and fixed random seeds. A successful SSH/synthetic smoke test does not establish full-project compatibility, and old-machine R2023b results do not by themselves qualify the new installation.
+- **Resource gate on shared hardware:** Before each substantial run, inspect available RAM, CPU/load, free disk space, and relevant running MATLAB jobs. Estimate peak memory and runtime conservatively and leave headroom for other users. Use reduced grids and disabled figures for smoke/regression work. Start expensive, long-running, memory-intensive, or parallel jobs only after user approval of the scope and resource budget. Do not create a `parpool` or increase thread/worker counts automatically; use conservative CPU settings when suitable. Lower CPU priority does not cap RAM usage.
+- **Long-running jobs and reconnection:** For an explicitly approved long job, use a detached, job-specific launcher (such as `nohup` or `tmux` where available), with durable logs, recorded PID/start time, parameters, and state. A foreground SSH command is acceptable only for short tests. If SSH disconnects or a command times out, inspect the existing job status and output **before** deciding whether to retry; never launch duplicate heavy work blindly. Do not terminate another user's processes or use broad process-kill commands (`pkill matlab`, `killall matlab`). Stop only a positively identified task-owned process with explicit authorization.
+- **Result verification and reporting:** Check the MATLAB exit code, error logs, numerical assertions, expected output files, and remote-to-local transfer integrity (e.g. SHA-256 for retained files). Report the remote MATLAB release, code revision, exact entrypoint and overrides, run ID, input/output paths, runtime/resource observations, numerical comparisons, and any limitations. If transfer, compatibility, resource, or permissions checks fail, stop and report the blocker rather than presenting the run as successful.
+
+### Development workflow
+- Prefer small, reviewable changes.
+- For new physics, first add disabled-by-default configuration and regression checks.
+- Then add the minimal model.
+- Then add advanced models only after the disabled/default path is confirmed unchanged.
+- After each stage, summarize changed files, changed interfaces, validation results, and documentation updates.
+- Before closing the task, verify that any required updates to `PROJECT_CONTEXT.md`, `vertical_comm_guide.md`, README files, and validation reports have been made.
+
+## Coordinate Convention
+- Sea surface is `z=0`.
+- Positive `z` points downward.
+- Upward propagation means marching from larger `z_tx` to smaller `z_rx`.
+- Receiver depth must satisfy `0 <= z_rx < z_tx`.
+
+## Files That Require Extra Caution
+- `vertical_channel_model.m`: public compatibility API wrapper; validated implementation is `src/channel/vertical_channel_model_impl.m`.
+- `src/propagation/vertical_wape_propagator.m`: propagation core and frequency loop.
+- `src/surface/pm_surface_boundary_model.m`: rough-surface reflection model.
+- `comm_main_vertical_psk.m`: communication-chain reference consumer of `H_f`.
+- Markdown method notes or research-summary documents that describe the implemented physics.
+
+Do not rename exported fields in `output` or `results` without updating all entry scripts and downstream consumers.
+
+## Run Entrypoints
+- Channel-only demo: `explain_main_vertical`
+- End-to-end communication demo: `comm_main_vertical_psk`
+- Reusable channel API: `vertical_channel_model(paramsV)`
+
+## Regression Requirements
+- Run at least one scalar-frequency channel case and one wideband communication case after nontrivial edits.
+- Confirm `direct_only` and `direct_plus_reflect` scenarios both execute when relevant.
+- Confirm no interface regression in `output.h_direct`, `output.h_reflect`, `output.h_total`, `output.H_f`, `output.f_axis`, `output.idx_f_ref`.
+- For disabled-by-default features, confirm the disabled path matches the previous behavior within documented numerical tolerance.
+- For new mathematically equivalent implementations, compare against the previous implementation and report the numerical difference.
+
+## Testing Cost Control
+- For quick validation, prefer reduced grids such as `nx=128` or `nx=256`, `ny=128` or `ny=256`, and `show_figures=false`.
+- Do not run expensive `1024 x 1024` or large wideband tests repeatedly unless necessary.
+- When reporting tests, include the exact parameter overrides used.
+
+## Numerical Consistency
+
+- Phase contract v2 (2026-11-10): the four-argument phase helper accepts native PE reduced envelopes. `direct_dsp` is `conj(native)` times the path delay factor; `absolute_physical` restores the positive physical carrier without conjugation. Already conjugated external reduced inputs require explicit `input_representation='dsp_adapted_reduced'`; DSP-ready arrays bypass the helper. Preserve `phase_contract_version='2.0.0'` metadata. Never infer a historical representation from a schema number or array values. Conditional schemas 1/2 require explicit source representation and geometry before migration to schema 3; use new result paths.
+- Surface elevation is positive upward (`z_actual=-eta`), although physical depth is positive downward. Do not change the PE, adjoint, deltaG or spatial C/P definitions to fix receiver Fourier conversion. Receiver statistics for `z_DSP=D*conj(z)` use elementwise-conjugated C/P and the corresponding augmented-real transform. See `reports/m0_phase_contract_closeout_2026-11-10.md`.
+- Keep `H_f = H_direct_f + H_reflect_f` at every frequency bin.
+- Keep `h_total = H_f(idx_f_ref)` and matching definitions for direct and reflected components.
+- Preserve 1/R validation behavior in uniform medium unless intentionally changing the propagation model.
+- Preserve deterministic sea surface and noise behavior for fixed seeds.
+- Do not mix GPU/CPU or single/double paths in a way that changes results without documenting the expected tolerance.
+
+## Output Compatibility
+- Existing output fields must remain present even if a new feature is disabled.
+- New fields should be added under `output.<feature>_meta`, `output.roughness_meta`, or `output.config`, not by replacing existing fields.
+- Existing `results(ss).channel` structure in `comm_main_vertical_psk.m` must remain usable.
+
+## Feature Integration Rules
+- New physical parameters should enter through `paramsV` and be validated in `local_prepare_config`.
+- If a new effect changes propagation physics, update both the direct-path loop and `local_march_field`, or refactor them together.
+- If a new effect changes time variation or Doppler, define how it maps to both `fd_hz_used` and `H_f/H_baseband`.
+- If a new reflection model is added, preserve compatibility with `enable_surface_reflection`, `surface_reflect_coeff`, and existing result fields where possible.
+- Prefer additive extensions over breaking output-field changes.
+
+## Documentation Discipline
+- Maintain `reports/project_progress.json` as the single hand-edited source for the project progress dashboard. After a task changes project progress (including a completed/failed/stopped validation, a material code/interface change, or an execution/reproducibility blocker), update the affected workstream and append an event explaining in plain Chinese: what was done, what it establishes, what is still missing, and the next allowed step. Preserve earlier failures and stop reasons; do not invent progress for tasks with no status change.
+- Keep result dates, evidence-check dates, historical audit status, and current rerun availability distinct. A present file is not numerical PASS; a controlled PE/known-CSI experiment does not upgrade formal S5/S6, a prediction grid is not an independent reference grid, and analytic geometry is not propagation validation. Do not inspect `cash/` to complete a progress record.
+- After updating the progress source, use the existing MATLAB MCP session to run `setup_vertical_project; render_project_progress_dashboard();` and refresh the generated `reports/project_progress.md` and `results/visualization/project_progress/index.html`. Check the render receipt for unexpected missing references. Do not hand-edit generated views. If MCP is unavailable, record the unrun MATLAB checks and preserve the execution-mode boundary; an explicitly documented text-only artifact packaging step may refresh the views without invoking MATLAB or any physics. See `reports/project_progress_maintenance.md` for this narrowly scoped procedure. Progress updates never authorize a solve, restore, remote migration, budget increase, or advancement of a paused stage.
+- Every nontrivial physics or interface change must update the corresponding Markdown method note or research-summary document.
+- Documentation updates must include: changed files, changed interfaces, formulas implemented or affected, assumptions, limitations, validation settings, validation results, and remaining issues.
+- At the end of each completed implementation or validation task, check whether the main documentation must be updated before the final response.
+- Keep `PROJECT_CONTEXT.md` aligned with the current project state, active models, public interfaces, validation status, and known limitations.
+- Keep `vertical_comm_guide.md` aligned with the implemented physical/communication methods, equations, configuration semantics, validation interpretation, and result-reading guidance.
+- If a task only changes generated outputs or runs an existing script without changing project behavior, documentation may be left unchanged, but the final response should say why no documentation update was needed.
+- Do not claim a new physical model when the code only rewrites an existing model in an equivalent mathematical form.
+- Do not claim fast statistical channel generation unless the code actually estimates or uses statistical parameters such as means, variances, covariances, distributions, or a stochastic generator.
+
+## Do Not Do
+- Do not rewrite the whole project unless explicitly asked.
+- Do not convert scripts into classes or packages unless explicitly asked.
+- Do not change public script names or function signatures unless required by the task.
+- Do not remove existing plotting or saving behavior unless explicitly asked.
+- Do not replace the current WAPE implementation with a different propagation method.
