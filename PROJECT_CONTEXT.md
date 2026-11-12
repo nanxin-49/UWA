@@ -7,9 +7,18 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-11）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
+
+### 活塞自由场 quicklook 完成；P0 尚未执行（2026-11-11计算，11-12图件封存）
+
+- 已查本地/GitHub 固定提交 `f3314fd`：旧“5 cm”实际为圆活塞半径；本次严格二维以总宽 10 cm 映射其半尺寸，同时保留总宽 5 cm 字面对照。20/10/5 cm、4/6/8 kHz、同峰值振速 1 mm/s、Tx100 m/Rx3 m，使用二维 Hankel 速度孔径积分，不沿用圆形方向图或旧 1/R 场。
+- 结果 `results/validation/piston_source_quicklook/20261111_2d_strip_01/` 保存复 Pa MAT、接收线 CSV、六张整体/近场对比图与接收线/方向图（交付版在 `figures_delivered/`）、FIG、日志、SHA/检查点及独立审计。[报告](reports/piston_source_quicklook_2026-11-11.md)给出相量、绝对幅度/归一化、网格与局限。积分/角谱最大复相对差约1.01e-14；本次图示检查不等于声源数值资格。
+- 20 cm 比总宽5 cm轴向约+12.04 dB，比历史映射10 cm约+6.02 dB，同时离轴下降更快；三频−3 dB全宽约112/67/49°。8 kHz宽角域第一sinc零点约±69.64°，大离轴绝对Pa可低于小孔径。20 cm适合作待资格主候选，保留小孔径控制。
+- 仅现有本机MATLAB MCP R2025b Update6/PID28836，串行小积分；没有生产模型/默认/API变更、PE/BIE/FullFK比较、SSH或反射计算。下一步应先P0共源压力/梯度、单位/相位与Gaussian回归，之后才做P1平面镜像；本轮停止，不自动执行。旧Gaussian M1与正式S5/S6状态及预算不变。
 
 ### M1恢复执行后在P8触发RAM门停止（2026-11-11；当前M1状态）
+
+- 后续[内存诊断与优化方案](reports/m1_p8_memory_diagnosis_2026-11-11.md)只读核对41项运行源码及run03内部209项产物SHA，均匹配，未重跑或修改生产代码。P8系统可用RAM下降1.724GiB，而运行中采样工作集为1.149–1.281GiB、生涯峰值不增长；因此已确认资源门触发，但没有泄漏证据，也无法指认系统占用来源。建议先缩短无用算子/临时数组寿命，再缓存均匀关闭bubble的固定环境屏，保留原运算链、输出及逐步边缘门；候选节省尚未实测。P8部分数据没有中途psi_k，不能从第976步直接恢复。M1状态仍为INCOMPLETE。
 
 - 用户打开MATLAB后，现有MCP确认R2025b Update 6、真实PID28836；只使用该会话、CPU double、单线程串行。M0相位合同与传播公式保留；新增默认关闭的单频验证观察回调，逐步记录direct/incident/reflect边缘、接收圆盘、资源与心跳，64²开启/关闭输出差0、direct_only闭合，既有M0宽带H消费者回放BER/SER=0，无新宽带求解。
 - 完成P4、P6及全部10组独立AS；独立收尾审计为0失败，三频AS扩窗/细网格/更大窗口参考及4/6kHz生产PE对同格AS通过。P8在入射第976/1067步时触发RAM门：启动可用2,564,685,824B，要求保留769,405,747B，最低713,232,384B；通过任务回调停止，用时552.6459804s。直达完整1036平面、入射仅977/1068、反射0/33，不作完整资格。
