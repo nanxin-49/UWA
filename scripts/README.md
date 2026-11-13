@@ -1241,3 +1241,6 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
   receiver space and kx space. It reuses the receiver-depth MAT and writes
   `results/validation/pe_bie_incident_reflection_covariance/`; report:
   `reports/pe_bie_incident_reflection_covariance_report.md`.
+# P1 活塞二维空间场后处理
+
+`reporting/render_piston_p1_spatial_from_saved(prior_run,output_dir)`在远程 MATLAB R2025b 中读取已接受的4 kHz弱C2海面P1保存数据，复用PE相屏、BIE密度及FullFK源/求积配置，评价20 cm条带活塞的二维复反射场并保存MAT、PNG、FIG。接收线回代必须与原P1复场一致。结果及局限见[空间图报告](../results/comparisons/piston_2d_single_frequency/20261112_p1_spatial_01/report.md)。
