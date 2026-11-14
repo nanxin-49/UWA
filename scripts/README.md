@@ -1,5 +1,7 @@
 # 脚本与验证运行索引
 
+**当前执行导航（2026-11-14）：**先读 [AGENTS.md](../AGENTS.md) 和[任务表](../reports/active_task_tracker.md)。后续二维主源总宽10 cm，先4 kHz固定PM配对比较，再按授权门考虑反射模型决策、4–8 kHz/CIR和通信；R1未授权，Bellhop独立并行。下方20 cm及Gaussian入口、报告和运行回执保留原历史范围，不自动重跑、扩频或推进。仅用户授权的远程操作启用[SSH Skill](../.agents/skills/remote-matlab-ssh/SKILL.md)。
+
 ### 2026-11-12 活塞P0/P1最终状态
 
 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [数据与报告](../results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)。

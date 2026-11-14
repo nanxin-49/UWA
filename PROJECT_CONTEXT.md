@@ -7,7 +7,15 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-14）
+
+### 后续二维主线统一为10 cm条带（2026-11-14，仅配置与导航同步）
+
+按 [AGENTS.md](AGENTS.md) 和[当前任务表](reports/active_task_tracker.md)，后续名义主声源为理想二维无限匀速条带，总宽 W=0.10 m、半宽 a=0.05 m；不代表已测实物三维换能器的有效口径。本条取代下方历史条目中面向后续的“20 cm主源”与三频优先顺序，历史20 cm P0/P1和Gaussian结果、失败及原始源条件保持原样。旧P0/P1中的10 cm控制仅可按既有证据范围复用；其验证专用连续角谱PE不等于生产WAPE已接入活塞。
+
+下一候选阶段为R1：10 cm、4 kHz、固定PM seed260001的配对PE Model-0/BIE/FullFK比较，当前仍为 **NEXT - NOT AUTHORIZED**。之后仅在阶段审查和另获明确范围、参考/资源门后，才考虑R2额外种子、R3反射模型决策、W1相干4–8 kHz频响/CIR、C1受控通信。Bellhop为独立并行线，不是PM主线的前置条件；M1及正式S5/S6原有停止状态与预算不变，不自动替换相屏模型。
+
+实质任务收尾按任务表更新受影响行与最后行动，不能把计划或表格当运行许可。远程Skill位于[remote-matlab-ssh](.agents/skills/remote-matlab-ssh/SKILL.md)，仅在用户授权的远程操作中启用；本次仅本地配置维护，未运行MATLAB、连接SSH、启动实验或提交Git。进度JSON及生成视图按[维护说明](reports/project_progress_maintenance.md)同步为纯文本产物；这不构成新的数值资格或当前MCP连接状态证明。[本次修复记录](reports/agents_configuration_alignment_2026-11-14.md)。
 
 ### 活塞P0/P1完成并独立审计（2026-11-12，当前状态）
 

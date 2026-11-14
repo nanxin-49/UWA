@@ -2,9 +2,11 @@
 
 先读[进度文字版](project_progress.md)，或双击本机的[离线看板](../results/visualization/project_progress/index.html)。七条工作线的第一句话是快速回顾，展开后才是详细过程与证据。[原二维工作台](../UWA_2D_research_review_workbench.html)继续保留为专题页。
 
+当前执行顺序先核 [AGENTS.md](../AGENTS.md) 与[任务表](active_task_tracker.md)：后续主声源为总宽10 cm的二维条带，20 cm和Gaussian结果保留历史源条件；4 kHz PM比较 → 反射模型决策 → 相干4–8 kHz/CIR → 通信。看板只反映状态，不授予下一阶段、SSH或计算预算；Bellhop保持独立并行。
+
 ## 每次项目任务结束时做什么
 
-1. 只编辑 `reports/project_progress.json`。修改受影响的工作线，说明“为什么做、做了什么、说明什么、还差什么、下一步是什么”。结果时间写在该工作线的 `result_date`；实际检查过的工作线才更新其 `checked_at`。顶层 `checked_at` 记录最近一次整理日期，不能用它给未重查的其他工作线盖新日期。`updated_at` 是记录更新时间，页面页脚另有生成时间。
+1. 每次实质任务结束先更新任务表中受影响行和最后行动；仅当项目进度、接口、阻塞或当前研究导航实际改变时，同步本看板。看板唯一手工源为 `reports/project_progress.json`。修改受影响的工作线，说明“为什么做、做了什么、说明什么、还差什么、下一步是什么”。结果时间写在该工作线的 `result_date`；实际检查过的工作线才更新其 `checked_at`，仅静态导航核对需明确标注，不得当作重做数值审计。顶层 `checked_at` 记录最近一次整理日期，不能用它给未重查的其他工作线盖新日期。`updated_at` 是记录更新时间，页面页脚另有生成时间。
 2. 给 `events` 追加一条有唯一 ID 的事件。失败、暂停和停止也要记，旧事件不删除、不改成通过。`workstream_id` 指向已有工作线；事件保持日期顺序。同日可以有多条。
 3. 已有 MATLAB MCP 会话可用时，执行以下命令。它会刷新两种视图和 `render_receipt.json`，不会运行声场计算、加载 MAT/FIG、读取归档、恢复脚本或接触远程机器。
 
@@ -16,6 +18,12 @@ output = render_project_progress_dashboard();
 4. 检查回执中的 `failed_checks` 和 `unexpected_references`。缺失入口若已明确登记，`expected_exists=false`；若原本应存在的引用消失，或缺失入口后来恢复，应提示复核并更新记录。文件存在不等于内容正确或数值通过。
 
 维护源和 MATLAB 入口、HTML 模板纳入 Git。生成的 `reports/project_progress.md` 是方便仓库阅读的快照，也纳入 Git；`results/visualization/project_progress/` 的 HTML 和回执是本地生成物，不需要提交整个结果树。Git checkout 后可重新生成 HTML。不要手工修改生成视图，也不要为保存这个看板恢复其他历史脚本。
+
+## 用户明确禁止MATLAB时的纯文本同步（2026-11-14）
+
+本次用户限定为配置维护、不运行MATLAB、不连接SSH、不启动实验或提交Git。因此不探测MCP，也不推断其当前可用性；按AGENTS的文本产物打包例外，使用同一JSON、HTML模板及模板内既有 `progressMarkdown` 函数刷新HTML/Markdown，不手改生成视图。该步骤只校验JSON、相对路径、明确文件存在性及文本/嵌入数据一致性，禁止调用MATLAB、Git历史数值复查、网络或读取 `cash/`。SSH Skill不因配置维护或MCP故障启用。
+
+每次这种同步须使用独立 `results/validation/project_progress_dashboard/<run_id>/` 留存输入/代码/输出SHA、实际stdout/stderr与退出状态、文本检查及检查点，并明确MATLAB渲染、Code Analyzer和浏览器视觉/交互检查未运行。引用缺失须原样报告，不能移入 `cash/` 查找或将缺失改成数值通过；新配置链接必须存在。当前生成回执标明纯文本模式，不覆盖历史run回执。恢复普通维护后仍按上方MATLAB正式入口执行。[本次修复与回执](agents_configuration_alignment_2026-11-14.md)。
 
 ## 最小数据约定
 

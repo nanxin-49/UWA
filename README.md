@@ -1,5 +1,7 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+**当前二维研究主线（2026-11-14）：**按 [AGENTS.md](AGENTS.md) 和[当前任务表](reports/active_task_tracker.md)，后续主声源为总宽 **10 cm**（半宽5 cm）的理想二维无限条带；20 cm P0/P1及Gaussian结果保留为历史对照。顺序为4 kHz配对PM比较 → 反射模型决策 → 相干4–8 kHz频响/CIR → 受控通信；R1 seed260001尚未授权，Bellhop独立并行。下方带日期的20 cm主源选择和旧接续步骤仅描述当时范围，不作为当前运行许可。远程操作才启用[SSH Skill](.agents/skills/remote-matlab-ssh/SKILL.md)；本次[配置同步](reports/agents_configuration_alignment_2026-11-14.md)不改变生产默认或数值资格。
+
 **活塞远端P0/P1已完成。** 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [最终报告](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)、[最终图件](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/figures_final/)与[独立审计](results/validation/piston_source/20261112_remote_p0p1_01/independent_audit_02/receipt.json)。
 
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。
@@ -122,7 +124,7 @@ FK 优化汇报图集（仅重绘已有验证数据）：
 | [Deep-sea research handoff](reports/deep_sea_channel_research_background_for_new_ai.md) | 新的研究评估者 | 英文自包含需求、历史证据、单点计时转向和待论证计划 |
 | [External-reply reassessment](reports/deep_sea_channel_external_reply_reassessment.md) | 研究路线讨论者 | 英文外部建议核查、公开深海部署案例与建议测试范围；未改变生产模型 |
 | [Official deep-sea research plan](reports/deep_sea_channel_research_plan.md) | 后续研究执行者 | 唯一正式研究计划；2026-10-15决策B：固定dual仅4/6/8kHz离散交付，停止参考连续修补，G1 OPEN/WP2=false；备份和v3仅版本记录 |
-| [二维点阵对比收尾计划](two_dimensional_channel_closeout_plan.md) | Codex与二维研究执行者 | S4核心已完成；S3A 3/3、S3B预算限制未运行、S5未准入，均以顶部当前状态为准 |
+| [当前二维研究任务表](reports/active_task_tracker.md) | Codex与二维研究执行者 | 10 cm主线、当前阶段与收尾记录；任务导航不授予计算许可，历史S0–S4证据见下方正式收尾报告 |
 | [二维计划审查与首轮Goal提示词](reports/two_dimensional_channel_closeout_plan_review.md) | 历史首轮追溯 | S0–S1的完成契约与提示词；该轮已完成，当前状态见唯一主报告 |
 | [二维同源反射复场唯一正式收尾报告：S0–S4](reports/two_dimensional_channel_closeout_report.md) | 研究审阅者与下一阶段执行者 | 统一设置、正弦/K_HIGH/PHI/三个PM的限定结论、方法证据、S3B预算与S5准入；原MAT/CSV/SHA/审计见S4结果索引 |
 | [固定dual物理决策](reports/deepsea_dual_broadband_decision_2026-10-15.md) / [宽带成本](reports/deepsea_dual_broadband_cost_2026-10-15.md) | 研究评估者 | 反射幅度约降6.43%，总场干涉变化清楚；稀疏候选未获新独立频点认证，5/7kHz被资源门拒绝，未进行宽带扫描 |

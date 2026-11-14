@@ -2,45 +2,45 @@
   "schema_version": 1,
   "title": "从这里接着做",
   "subtitle": "垂直水声项目 · 仿真与验证进度",
-  "updated_at": "2026-11-12",
-  "checked_at": "2026-11-12",
-  "review_revision": "compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot; piston P0/P1 remote 20261112_remote_p0p1_01 audited",
-  "headline": "活塞P0与4 kHz P1三环境通过，独立数值及FIG审计无失败，结果已回传；M1及其他工作线沿用既有边界。",
+  "updated_at": "2026-11-14",
+  "checked_at": "2026-11-14",
+  "review_revision": "compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot; piston P0/P1 remote 20261112_remote_p0p1_01 audited; 2026-11-14 AGENTS navigation alignment only; no numerical re-audit",
+  "headline": "后续二维主源为总宽10 cm条带；先4 kHz固定PM，再反射模型决策、相干4–8 kHz/CIR和通信。历史20 cm及Gaussian结果保留；R1未授权。",
   "overview": [
     "这个项目想回答的是：海底附近发出的声音，经过直达和海面反射到达接收机后，会怎样影响通信？为此，一边需要可信的声场和信道，一边需要能检验信道估计与均衡方法的通信实验。",
     "你离开前，已经完成二维单频比较，做过三维固定海面的独立频点检查，还在一个接收点上跑通了受控的宽带与四相位调制（QPSK，每个符号承载两比特）通信实验。因此，重新开始时有不少结果可以接着用。",
-    "P22 保存结果与新 Ubuntu 最小项目基线已经复核通过。现在优先补齐约 100 m 场景下的生产模型约定、窗口与步长收敛、宽带/CIR转换和粗糙海面适用范围；统计快速生成、时变海面、多普勒及1500 m扩展留到后续。",
+    "P22保存结果与新Ubuntu最小项目基线保留其历史复核范围；M1仍停在RAM门，正式S5/S6仍暂停。当前前向研究顺序以AGENTS.md和reports/active_task_tracker.md为准：10 cm条带4 kHz PM → 反射模型决策 → 相干4–8 kHz频响/CIR → 受控通信；统计、时变、多普勒及1500 m扩展留待另定范围。",
     "2026-11-10 M0：生产原生PE到DSP改为完整包络共轭，统计/迁移/外部桥接同步。P22平面波高度、Gaussian同源角谱、C/P、SSA、CIR及小型已知CSI无噪声通信通过；旧失败和历史结果保留。",
     " 本轮追溯原始窗口证据并冻结M1：不重扫失败小窗口，采用192.1875m起点、独立AS参考及逐步边缘检查。",
     "2026-11-11：本轮M1执行在MCP连接前置门停止，未取得窗口、网格、步长或吸收层新资格；没有合格生产推荐配置，不能进入M2。",
-    "用户随后希望回到二维单频工作线并改用活塞。当前已查资料、选定20 cm代表尺寸和严格二维条带方案；先核共源与4 kHz试点，再测新Ubuntu成本，最后安排4/6/8 kHz比较。下面接续步骤面向这个新任务，不接管其他窗口的M1。",
+    "历史方案（2026-11-11）曾选20 cm代表尺寸，安排共源、4 kHz试点及三频比较；这些原始源条件和结果继续保留。2026-11-14起后续主源总宽改为10 cm（半宽5 cm）的理想二维无限条带，不能当作已测实物三维有效口径；不重标20 cm结果，也不接管M1预算。",
     "同日后续M1：既有MCP版本/PID核实后，完成P4/P6和10组独立AS；已完成对照独立审计0失败。P8在RAM跌破启动可用量30%时中止，Z4/Z8和全部吸收层对照未派发，无生产推荐，不进入M2。",
     "2026-11-11后续活塞图示：旧5 cm经GitHub和本地代码确认是圆形半径，本次以二维总宽10 cm映射半尺寸，并加总宽5 cm控制。20/10/5 cm同振速三频自由场已保存复Pa、图、独立检查；这不关闭P0，后续先共源压力/梯度/相位资格，再平面镜像。"
   ],
-  "reading_note": "先读下面七条工作线的第一句话，再看末尾的三个接续步骤。技术参数和原始证据都可以展开，不必先读懂阶段编号。",
-  "review_scope": "M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。",
-  "runtime_note": "M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。 本轮数值仅远端SSH，未调用本机MATLAB MCP。P0加密进程许可等待与真实计算分开记录；首次SHA监控cwd/CR换行错误已修正，无数值重派。进度视图按维护文档做纯文本包装，不将其当MATLAB运行或物理证据。",
+  "reading_note": "先读当前任务表和下面七条工作线的第一句话，再看末尾的接续步骤。2026-11-14仅核对配置与导航，没有重做历史数值审计；各结果日期、历史失败和阶段授权分别保留。技术参数和原始证据可展开。",
+  "review_scope": "M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。 2026-11-14本次仅静态修复AGENTS、任务表、当前上下文与进度导航的一致性；二维工作线checked_at指配置核对日期，不是旧P0/P1、PM或其他工作线的数值复查日期。",
+  "runtime_note": "M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。 本轮数值仅远端SSH，未调用本机MATLAB MCP。P0加密进程许可等待与真实计算分开记录；首次SHA监控cwd/CR换行错误已修正，无数值重派。进度视图按维护文档做纯文本包装，不将其当MATLAB运行或物理证据。 2026-11-14配置同步：用户明确禁止MATLAB与SSH，本轮未探测MCP、未调用MATLAB或远程主机；用同一JSON/HTML模板和既有progressMarkdown函数纯文本刷新两种视图，检查点见results/validation/project_progress_dashboard/20261114_agents_alignment_01/checkpoint.json。MATLAB渲染、Code Analyzer、浏览器视觉/交互和历史数值审计均未运行；不据此判断当前MCP可用性。",
   "workstreams": [
     {
       "id": "two-dimensional",
       "name": "二维单频比较",
-      "checked_at": "2026-11-12",
+      "checked_at": "2026-11-14",
       "status": "complete",
-      "status_label": "活塞P0/P1已完成 · 4 kHz限定范围",
+      "status_label": "历史P0/P1限定完成 · 10 cm PM未授权",
       "result_date": "2026-11-12（活塞P0/P1与独立审计）",
-      "summary": "2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。",
+      "summary": "历史P0/P1于2026-11-12封存，4 kHz自由场、平面、弱C2正弦及当次独立审计通过；弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，源条件与失败原样保留。2026-11-14仅将后续主源与导航统一为总宽10 cm条带；R1固定4 kHz PM seed260001尚未授权，未新增PM或生产WAPE活塞资格。",
       "why": "先在较容易控制的二维问题里，确认不同方法比较的是同一声源、同一海面、同一接收位置，再看它们算出的反射波差多少。",
-      "done": "PE、边界积分方程（BIE，独立数值参考）和完整 Kirchhoff 积分近似（FullFK）的同源比较已完成。平面和三档正弦海面的九点结果齐全，三个预定 PM 海面实现也完成了比较；相关表格、图和历史审计均有保存。 新增严格二维速度孔径积分三频自由场，保存同振速绝对复Pa、接收线、近场/整体场和方向图；独立积分/角谱与保存数据检查无失败。 远端R2025b Update1及实际双进程已验证，源解析梯度对独立角谱/差分/速度/相位通过；BIE/FullFK输入差0，Gaussian标量默认差0；123项部分产物回传SHA匹配。 许可恢复后P0六组、P1自由/平面/弱C2正弦实际完成；最终独立审计0失败，PNG/FIG/MAT/CSV/日志/SHA回传。",
-      "meaning": "三个模型采用同一二维速度孔径。弱面20 cm的PE差约0.4893%，FullFK差2.095e-6，经验数值门已能分辨；20 cm适合冻结为本轮范围主源。",
-      "gap": "生产活塞公共入口、更广频率和海面范围仍需专门验证。周期截窗PE失败保留，接受结果采用连续角谱和解析平面背景的验证实现。",
-      "next": "本轮P1结束。后续阶段须另获授权，其他暂停研究的状态与预算沿用各自记录。",
+      "done": "以下模型比较分别保留其Gaussian或20/10 cm原始声源条件，不能合并当作10 cm PM资格。PE、边界积分方程（BIE，独立数值参考）和完整 Kirchhoff 积分近似（FullFK）的同源比较已完成。平面和三档正弦海面的九点结果齐全，三个预定 PM 海面实现也完成了比较；相关表格、图和历史审计均有保存。 新增严格二维速度孔径积分三频自由场，保存同振速绝对复Pa、接收线、近场/整体场和方向图；独立积分/角谱与保存数据检查无失败。 远端R2025b Update1及实际双进程已验证，源解析梯度对独立角谱/差分/速度/相位通过；BIE/FullFK输入差0，Gaussian标量默认差0；123项部分产物回传SHA匹配。 许可恢复后P0六组、P1自由/平面/弱C2正弦实际完成；最终独立审计0失败，PNG/FIG/MAT/CSV/日志/SHA回传。",
+      "meaning": "历史弱面20 cm的PE差约0.4893%，FullFK差2.095e-6，经验数值门在该范围可分辨；保留为20 cm历史对照。旧P0及4 kHz P1另含有限10 cm控制，仅可复用其实际证据；这些结果不认证10 cm PM或生产WAPE活塞接入。",
+      "gap": "10 cm PM配对参考、数值收敛与成本门尚待授权验证；生产活塞公共入口、相干4–8 kHz/CIR及通信仍未取得本轮资格。周期截窗PE失败保留，已接受PE采用验证专用连续角谱和解析平面背景，不是生产WAPE接入证明。",
+      "next": "R1：仅在明确授权范围、预算和独立参考门后，复用冻结PM seed260001做10 cm、4 kHz配对PE Model-0/BIE/FullFK比较。R2额外种子、R3模型决策、W1相干频响/CIR和C1通信各有阶段门；Bellhop独立并行，均不自动启动。",
       "details": "固定二维、4 kHz、984 项 Gaussian 发射场；原九点与 411 点接收线分别统计。S4=CORE_COMPLETE，S3A=3/3，S3B 因预算未运行；PHI_PLUS90 的混合平台 BIE 求解差未直接定界。 活塞quicklook：c1500 m/s、rho1025 kg/m³、Tx100 m/Rx3 m、峰值振速1 mm/s，W20/10/5 cm；20 cm三频-3 dB全宽112/67/49°。",
       "saved_results": "正式结果、表格和图件入口存在。 活塞run 20261111_2d_strip_01：MAT、CSV、8张交付PNG/FIG、日志、SHA和检查点。 本轮20261112_remote_p0p1_01保存复MAT、逐点与粗细接收线CSV、五组最终PNG/FIG、日志、资源和SHA。",
-      "historical_audit": "S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。",
-      "rerun": "专题入口和保存结果可查；重新求解仍要按原阶段、参考和资源门审批。",
+      "historical_audit": "S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。 2026-11-14本次仅核配置与导航，未重做MAT/CSV、SHA数值链或FIG审计；result_date及历史审计结论不变。",
+      "rerun": "专题入口和保存结果可查；重新求解仍要按原阶段、参考和资源门审批。 当前顺序以任务表R1为准；运行前仍须明确范围、参考和资源门。远程操作仅在用户授权后启用remote-matlab-ssh Skill；MCP故障不自动切换执行模式。",
       "evidence": [
         {
-          "label": "活塞代表参数及三频执行计划（待实现）",
+          "label": "历史20 cm代表参数及三频计划（后续顺序以当前任务表为准）",
           "path": "reports/piston_source_2d_single_frequency_plan_2026-11-11.md",
           "kind": "report",
           "revision": "",
@@ -114,6 +114,27 @@
           "path": "results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_final.json",
           "kind": "audit",
           "revision": "20261112_remote_p0p1_01",
+          "expected_exists": true
+        },
+        {
+          "label": "当前二维任务表（导航，不授予运行许可）",
+          "path": "reports/active_task_tracker.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "AGENTS执行与源宽规则",
+          "path": "AGENTS.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "10 cm配置与导航同步记录",
+          "path": "reports/agents_configuration_alignment_2026-11-14.md",
+          "kind": "report",
+          "revision": "",
           "expected_exists": true
         }
       ]
@@ -722,26 +743,39 @@
       "title": "远端P0/P1完成并回传独立审计",
       "text": "2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 许可等待、512/8192m梯度失败、周期传播失败、native启动崩溃和首次审计pi变量错误均保留，恢复时使用新job且先检查原进程。",
       "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "agents-10cm-navigation-alignment-20261114",
+      "date": "2026-11-14",
+      "title": "10 cm后续主线与AGENTS配置导航统一（无求解）",
+      "text": "仅修复配置与当前导航：后续主源总宽10 cm，20 cm及Gaussian结果和所有历史失败保持原条件；顺序统一为4 kHz固定PM、反射模型决策、相干4–8 kHz/CIR及受控通信。R1仍未授权，额外种子和各后续阶段保留独立范围/资源/参考门，Bellhop独立并行。仅静态检查并按维护说明纯文本打包看板，无MATLAB、SSH、实验或Git提交，未重做历史数值审计。记录见reports/agents_configuration_alignment_2026-11-14.md；下一步仅可讨论或明确授权有界R1范围，不自动执行。",
+      "workstream_id": "two-dimensional"
     }
   ],
   "next_actions": [
     {
-      "title": "活塞P1交付已封存",
-      "text": "先阅读最终报告及适用范围，后续研究需另定范围。",
-      "completion": "P0与P1三阶段、独立审计、传输校验与图件检查完成。",
-      "gate": "本轮止于P1，其他工作线保留原阶段与资源边界。"
+      "title": "R1候选：10 cm、4 kHz固定PM配对比较（未授权）",
+      "text": "先读AGENTS.md与reports/active_task_tracker.md；仅复用旧P0/P1实际覆盖的10 cm控制。候选试点使用冻结PM seed260001，比较PE Model-0/BIE/完整双项FullFK的同源反射复场。",
+      "completion": "配对输入与源/相位元数据明确，独立参考与数值收敛门、复L2和空间残差、实际资源及审计证据齐备后，才可审查R1结论。",
+      "gate": "R1仍为NEXT - NOT AUTHORIZED；须用户明确计算范围、预算及参考/资源门。不得自动重采PM、增加种子、频点、BIE或FullFK扫参；表格和看板不授权SSH或并行。"
     },
     {
-      "title": "再核新Ubuntu依赖并测实际成本",
-      "text": "白名单隔离快照先与本机已接受的小基线对照，再测代表性8 kHz作业内存和耗时。先评估两个独立单线程进程，不直接开全矩阵。",
-      "completion": "版本和输入SHA明确，跨平台差异有数值门，内存、耗时及许可足以支持具体调度方案。",
-      "gate": "仅matlab-ubuntu-new与新任务目录；不得覆盖已有快照。并发总峰值至少保留当时可用RAM的30%；重任务预算须明确，断线先查原作业。"
+      "title": "R2/R3候选：按门扩展种子并决定反射模型",
+      "text": "R1有可用独立参考和成本证据后，才另定seed260002/260003范围；随后区分PE Model-0基线、FullFK物理近似和FastFK算法误差/成本，作反射模型决策。",
+      "completion": "冻结同一海面的比较证据、适用范围和未分辨差异明确，新增物理简化另经独立验证。",
+      "gate": "R2为PLANNED、R3为WAITING；阶段审查不等于下一阶段授权。不自动淘汰PE，不将相屏基线静默换为Kirchhoff或约化公式。"
     },
     {
-      "title": "最后安排三频单接收线比较",
-      "text": "试点合格后，先比较4/6/8 kHz下平面与弱正弦的PE/BIE/FullFK，沿同一物理接收区间解释模型误差，再决定是否扩展到中强正弦及固定PM。",
-      "completion": "六个环境—频率组合具有可信参考、沿线复场误差、成本和独立审计；未分辨差异按未分辨报告。",
-      "gate": "不预设速度提升或模型胜负；三个单频不是宽带/CIR资格。圆形源三维辐射、正式S5/S6、统计、动态和1500m均另列后续。"
+      "title": "W1/C1候选：模型决策后才进入相干频响、CIR和通信",
+      "text": "反射模型决策后，再另定10 cm相干4–8 kHz直达/反射/总H(f)及频率网格、相位/群延迟和留出频点控制；通过CIR/线性卷积检查后，才做固定种子的受控QPSK与CSI比较。",
+      "completion": "同一源激励、功率/噪声及接收设置下，频响相干性、CIR和通信链各有独立验证与范围限定。",
+      "gate": "W1和C1仍为WAITING；每阶段单独明确范围、预算及参考门。三个离散单频不等于宽带/CIR资格，正式S5/S6不升级。"
+    },
+    {
+      "title": "BH1候选：Bellhop独立并行（未授权）",
+      "text": "沿既有水深100 m、Tx99 m、Rx3 m及1 m物理安装净空，先资格化X线源映射、平面直达/首次反射，再考虑粗糙PM；不依赖也不阻塞R1–R3。",
+      "completion": "源映射、相位和绝对幅度资格在各自明确范围成立后，才可讨论绝对Pa模型排序。",
+      "gate": "BH1仍为PARALLEL - NOT AUTHORIZED；不运行旧500 m默认入口、不读取cash/，不自动扩大Bellhop范围。"
     },
     {
       "title": "窗口M1停在RAM门，保留已完成证据",
