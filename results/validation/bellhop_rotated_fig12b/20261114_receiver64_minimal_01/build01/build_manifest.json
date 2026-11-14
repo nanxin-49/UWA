@@ -1,0 +1,12 @@
+{
+  "purpose": "Bellhop 2020 validation-only direct and one-flat-wall rotated Q; 3D spreading remains diagnostic",
+  "official_toolbox_root": "E:\\MISC\\BELLHOP\\AcousticsToolbox_2020",
+  "official_bellhop_sha256": "A5B58C10B573EC2CB39FE6BC304F12DA08F516EA89CF621F18A6B13A193C968E",
+  "official_step_sha256": "C569C37F50ADAFD4D881D4817034DF8760FB8FB29DB17F127D8933920A62D23C",
+  "overlay_bellhop_sha256": "B5DB24A7F82918894AAA0660B90F66BFA7EC15DBDC692D867C54B33DD699BBED",
+  "overlay_step_sha256": "CDDE8E9BD81B772D7A55D46628A0233D33D96E3E23CAB7279ADAE8D566858CF3",
+  "validation_executable": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\build01\\bin\\bellhop_rotated_receiver64_2020.exe",
+  "validation_executable_sha256": "B30ECEC9F6960E024D612320406A2114EE8A9A0995DE4C61B2BDAB02C46881B3",
+  "compiler_root": "C:\\Users\\ASUS\\.codex\\tools\\msys2-ucrt-bellhop-20261114\\installation\\ucrt64",
+  "compiler_version": "GNU Fortran (Rev6, Built by MSYS2 project) 16.2.0"
+}

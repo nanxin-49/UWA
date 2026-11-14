@@ -1,0 +1,32 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "checks_count": 31,
+  "elapsed_s": 9.1773136,
+  "bellhop_processes_launched": 1,
+  "case_root": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\case02\\case",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\audit01",
+  "preflight_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\case02\\preflight.mat",
+  "baseline_root": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_range_metadata_validation_01\\labels1\\case",
+  "executable_sha256": "b30ecec9f6960e024d612320406a2114ee8a9a0995de4c61b2bdab02c46881b3",
+  "complex_relative_l2": 0,
+  "available_before_bytes": 3.00812288E+9,
+  "available_after_bytes": 2.926272512E+9,
+  "protected_files_count": 35,
+  "process": {
+    "pid": 35640,
+    "exit_code": 0,
+    "elapsed_s": 2.5999938,
+    "stdout": "",
+    "stderr": "",
+    "case_root": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\case02\\case",
+    "peak_working_set_bytes": 2.3171072E+7,
+    "cpu_time_s": 2.328125,
+    "memory_counter_scope": "20ms live-process peak counter samples; final unobserved tail excluded",
+    "abort_reason": "",
+    "minimum_observed_available_bytes": 2.968170496E+9
+  },
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "scope": "Only up_order13,101beams,3original columns,10981original ranges; full A/order14-16/B/C/D remain paused",
+  "next_allowed_step": "Manual review; no new native solve authorized"
+}

@@ -9,6 +9,11 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop接收距离REAL8最小验证通过，完整计算继续暂停（2026-11-14）
+
+- 独立validation overlay改ENV REAL8/1000d0读取，原10981点/文本/顺序不变。有效ReceiverRange64到真实影响函数和扩散缩放均逐位审计；第13阶101束3原列唯一新求解2.5999938s，25+31+60检查通过，复声压与已有同坐标基准位模式一致。原25分量与旧FATAL SHA保留。
+- [中文对照与数值审计](reports/bellhop_rotated_receiver64_minimal_2026-11-14.md)。SHD头仍float32标签，不参与有效求值；不是全压力双精度或独立FFP资格。完整A、第14–16阶、B/C/D均暂停，等待人工审查。以下旧“资源满足后接续”条款为历史记录，不能自动执行。
+
 ### Bellhop旋转预算已批准，A组部分分量因资源门停止（2026-11-14）
 
 - 冻结03获批共享3600s/子作业120s和仅任务PID停止范围。A组25/39作业完成至上下9阶，随后RAM门停止，累计262.9679051s；无新活跃数值子进程。resume_anchor_01合并最新预算与已完成检查点，原始数据不动。两幅稀疏诊断和57门保真审计已完成，尚无完整场/全域FFP资格。见[执行记录](reports/bellhop_rotated_fig12b_execution_2026-11-14.md)。

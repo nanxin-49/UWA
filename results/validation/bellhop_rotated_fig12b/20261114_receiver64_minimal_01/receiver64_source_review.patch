@@ -1,0 +1,235 @@
+diff --git "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_multifield_03\\build\\AcousticsToolbox_2020\\misc\\SourceReceiverPositions.f90" "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\SourceReceiverPositions.f90"
+index baf302a..68f5739 100644
+--- "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_multifield_03\\build\\AcousticsToolbox_2020\\misc\\SourceReceiverPositions.f90"
++++ "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\SourceReceiverPositions.f90"
+@@ -1,6 +1,7 @@
+ MODULE SourceReceiverPositions
+   ! Reads in source depths, receiver depths, receiver ranges, and receiver bearings
+ 
++  USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
+   USE monotonicMod
+   USE SortMod
+   USE SubTabulate
+@@ -22,6 +23,7 @@ MODULE SourceReceiverPositions
+      REAL,    ALLOCATABLE :: theta( : )                         ! Receiver bearings
+   END TYPE Position
+ 
++  REAL(KIND=8), ALLOCATABLE :: ReceiverRangeInput64(:) ! exact ENV input, meters
+   TYPE ( Position ) :: Pos   ! structure containing source and receiver positions
+ 
+ CONTAINS
+@@ -143,9 +145,35 @@ CONTAINS
+ 
+   !********************************************************************!
+ 
+-  SUBROUTINE ReadRcvrRanges
+-
+-    CALL ReadVector( Pos%NRr, Pos%Rr, 'Receiver ranges, Rr', 'km' )
++  SUBROUTINE ReadRcvrRanges( ValidationExactInput )
++
++    LOGICAL, OPTIONAL, INTENT(IN) :: ValidationExactInput
++    LOGICAL :: exactInput
++    INTEGER :: ix
++    REAL(KIND=8), ALLOCATABLE :: rangesKm64(:)
++    exactInput=.FALSE.
++    IF(PRESENT(ValidationExactInput)) exactInput=ValidationExactInput
++    IF(ALLOCATED(ReceiverRangeInput64)) DEALLOCATE(ReceiverRangeInput64)
++    IF(exactInput) THEN
++       READ(ENVFile,*) Pos%NRr
++       IF(Pos%NRr<=0) CALL ERROUT('ReadRcvrRanges-R64','Invalid count')
++       ALLOCATE(rangesKm64(Pos%NRr),ReceiverRangeInput64(Pos%NRr))
++       READ(ENVFile,*) rangesKm64
++       IF(ANY(.NOT.ieee_is_finite(rangesKm64))) CALL ERROUT('ReadRcvrRanges-R64','Nonfinite input')
++       IF(ANY(rangesKm64(2:)<=rangesKm64(:Pos%NRr-1))) CALL ERROUT('ReadRcvrRanges-R64','Input must strictly increase; no sorting')
++       ReceiverRangeInput64=1000d0*rangesKm64
++       IF(ANY(.NOT.ieee_is_finite(ReceiverRangeInput64))) CALL ERROUT('ReadRcvrRanges-R64','Nonfinite meter input')
++       IF(ANY(ReceiverRangeInput64(2:)<=ReceiverRangeInput64(:Pos%NRr-1))) CALL ERROUT('ReadRcvrRanges-R64','Meter input must strictly increase')
++       IF(ALLOCATED(Pos%Rr)) DEALLOCATE(Pos%Rr)
++       ALLOCATE(Pos%Rr(MAX(3,Pos%NRr)))
++       Pos%Rr=0.0
++       Pos%Rr(1:Pos%NRr)=REAL(ReceiverRangeInput64,KIND=4) ! metadata only, once
++       WRITE(PRTFile,*) 'Validation R64 ENV input: REAL(KIND=8),1000d0; count=',Pos%NRr
++       WRITE(PRTFile,'(5ES25.16E3)') (ReceiverRangeInput64(ix),ix=1,MIN(Pos%NRr,Number_to_Echo))
++       DEALLOCATE(rangesKm64)
++    ELSE
++       CALL ReadVector( Pos%NRr, Pos%Rr, 'Receiver ranges, Rr', 'km' )
++    END IF
+ 
+     ! calculate range spacing
+     Pos%delta_r = 0.0
+diff --git "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_multifield_03\\build\\AcousticsToolbox_2020\\Bellhop\\ReadEnvironmentBell.f90" "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\ReadEnvironmentBell.f90"
+index f9f98d9..b97e475 100644
+--- "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_multifield_03\\build\\AcousticsToolbox_2020\\Bellhop\\ReadEnvironmentBell.f90"
++++ "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\ReadEnvironmentBell.f90"
+@@ -23,6 +23,7 @@ CONTAINS
+     LOGICAL,            INTENT(IN ) :: ThreeD
+     CHARACTER (LEN=80), INTENT(IN ) :: FileRoot
+     INTEGER            :: NPts, NMedia, iostat
++    LOGICAL :: ValidationExactRanges
+     REAL               :: ZMin, ZMax
+     REAL      (KIND=8) :: x( 2 ), c, cimag, gradc( 2 ), crr, crz, czz, rho, sigma, Depth
+     CHARACTER (LEN= 2) :: AttenUnit
+@@ -110,7 +111,8 @@ CONTAINS
+     ZMax = SNGL( Bdry%Bot%HS%Depth )
+     ! CALL ReadSzRz( ZMin + 100 * SPACING( ZMin ), ZMax - 100 * SPACING( ZMax ) )   ! not sure why I had this
+     CALL ReadSzRz( ZMin, ZMax )
+-    CALL ReadRcvrRanges
++    INQUIRE(FILE=TRIM(FileRoot)//'.r25d',EXIST=ValidationExactRanges)
++    CALL ReadRcvrRanges(ValidationExactRanges)
+     IF ( ThreeD ) CALL ReadRcvrBearings
+     CALL ReadfreqVec( freq,  Bdry%Top%HS%Opt( 6:6 ) )
+     CALL ReadRunType( Beam%RunType, PlotType )
+diff --git "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_04\\RotatedFieldState.f90" "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\RotatedFieldState.f90"
+index 7046948..8a605e7 100644
+--- "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_04\\RotatedFieldState.f90"
++++ "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\RotatedFieldState.f90"
+@@ -2,12 +2,15 @@
+ ! Original Bellhop sources/installations are not overwritten.
+ MODULE RotatedFieldState
+   USE bellhopMod, ONLY: Beam
+-  USE SourceReceiverPositions, ONLY: Pos
++  USE SourceReceiverPositions, ONLY: Pos, ReceiverRangeInput64
+   USE sspMod, ONLY: FastQSearch
+   USE FatalError
+   IMPLICIT NONE
+   LOGICAL :: Point3DEnabled = .FALSE., ExactCoordinatesEnabled = .FALSE.
+   REAL(KIND=8), ALLOCATABLE :: ReceiverRange64(:), ReceiverDepth64(:)
++  LOGICAL, ALLOCATABLE, PRIVATE :: EvaluationSeen(:,:), ScaleSeen(:)
++  INTEGER, PRIVATE :: EvaluationUnit, ScaleUnit
++  LOGICAL, PRIVATE :: ReceiverAuditOpen=.FALSE.
+ CONTAINS
+   SUBROUTINE ConfigureRotatedField(FileRoot)
+     CHARACTER(LEN=*), INTENT(IN) :: FileRoot
+@@ -15,13 +18,18 @@ CONTAINS
+     LOGICAL :: exists
+     IF(ALLOCATED(ReceiverRange64)) DEALLOCATE(ReceiverRange64,ReceiverDepth64)
+     ALLOCATE(ReceiverRange64(Pos%NRr),ReceiverDepth64(Pos%NRz))
+-    ReceiverRange64=REAL(Pos%Rr(1:Pos%NRr),KIND=8)
++    IF(ALLOCATED(ReceiverRangeInput64)) THEN
++       ReceiverRange64=ReceiverRangeInput64
++    ELSE
++       ReceiverRange64=REAL(Pos%Rr(1:Pos%NRr),KIND=8) ! legacy no-sidecar only
++    END IF
+     ReceiverDepth64=REAL(Pos%Rz(1:Pos%NRz),KIND=8)
+     Point3DEnabled=.FALSE.
+     ExactCoordinatesEnabled=.FALSE.
+     FastQSearch=.FALSE.
+     INQUIRE(FILE=TRIM(FileRoot)//'.r25d',EXIST=exists)
+     IF(.NOT.exists) RETURN
++    IF(.NOT.ALLOCATED(ReceiverRangeInput64)) CALL ERROUT('BELLHOP-R64','Exact path cannot use float32 fallback')
+     OPEN(NEWUNIT=unit,FILE=TRIM(FileRoot)//'.r25d',STATUS='OLD',ACTION='READ',IOSTAT=ios)
+     IF(ios/=0) CALL ERROUT('BELLHOP-R25D','Cannot open options/coordinate sidecar')
+     READ(unit,*,IOSTAT=ios) pointFlag,fastFlag
+@@ -46,9 +54,57 @@ CONTAINS
+        MAX(1d-9,2d0*ABS(REAL(SPACING(Pos%Rz(1:nz)),KIND=8))))) CALL ERROUT('BELLHOP-R25D','Depth metadata mismatch')
+     Point3DEnabled=pointFlag==1
+     ExactCoordinatesEnabled=.TRUE.
++    IF(STORAGE_SIZE(ReceiverRange64(1))/=64) CALL ERROUT('BELLHOP-R64','Receiver precision is not64bit')
++    IF(ANY(ABS(ReceiverRangeInput64-ReceiverRange64)>2d0*SPACING(ReceiverRangeInput64))) &
++       CALL ERROUT('BELLHOP-R64','ENV64 and exact sidecar mismatch beyond unit-conversion rounding')
++    CALL OpenExactReceiverAudit(FileRoot)
+     FastQSearch=fastFlag==1
+     IF(Point3DEnabled.AND.Beam%RunType(4:4)/='R') CALL ERROUT('BELLHOP-R25D','3D correction requires point geometry R')
+     IF(Point3DEnabled.AND.Beam%Type(1:1)/='G') CALL ERROUT('BELLHOP-R25D','3D pilot requires Cartesian geometric hat beams')
+     WRITE(6,*) 'Validation: point3D/exact-coordinates/fast-Q = ',Point3DEnabled,ExactCoordinatesEnabled,FastQSearch
+   END SUBROUTINE ConfigureRotatedField
++  SUBROUTINE OpenExactReceiverAudit(FileRoot)
++    CHARACTER(LEN=*), INTENT(IN) :: FileRoot
++    INTEGER :: u
++    IF(ALLOCATED(EvaluationSeen)) DEALLOCATE(EvaluationSeen,ScaleSeen)
++    ALLOCATE(EvaluationSeen(Pos%NRz,Pos%NRr),ScaleSeen(Pos%NRr))
++    EvaluationSeen=.FALSE.; ScaleSeen=.FALSE.
++    OPEN(NEWUNIT=u,FILE=TRIM(FileRoot)//'.rr64input',ACCESS='STREAM',FORM='UNFORMATTED',STATUS='REPLACE')
++    WRITE(u) Pos%NRr,Pos%NRz,KIND(ReceiverRangeInput64),KIND(ReceiverRange64)
++    WRITE(u) ReceiverRangeInput64,ReceiverRange64,ReceiverDepth64,Pos%Rr(1:Pos%NRr)
++    CLOSE(u)
++    OPEN(NEWUNIT=EvaluationUnit,FILE=TRIM(FileRoot)//'.rr64eval',ACCESS='STREAM',FORM='UNFORMATTED',STATUS='REPLACE')
++    WRITE(EvaluationUnit) Pos%NRr,Pos%NRz
++    OPEN(NEWUNIT=ScaleUnit,FILE=TRIM(FileRoot)//'.rr64scale',ACCESS='STREAM',FORM='UNFORMATTED',STATUS='REPLACE')
++    WRITE(ScaleUnit) Pos%NRr
++    ReceiverAuditOpen=.TRUE.
++  END SUBROUTINE OpenExactReceiverAudit
++  SUBROUTINE RecordExactReceiverEvaluation(ir,iz,actual)
++    INTEGER, INTENT(IN) :: ir,iz
++    REAL(KIND=8), INTENT(IN) :: actual(2)
++    IF(.NOT.ExactCoordinatesEnabled) RETURN
++    IF(TRANSFER(actual(1),0_8)/=TRANSFER(ReceiverRange64(ir),0_8).OR. &
++       TRANSFER(actual(2),0_8)/=TRANSFER(ReceiverDepth64(iz),0_8)) &
++         CALL ERROUT('BELLHOP-R64','Actual field coordinate lost exact bits')
++    IF(.NOT.EvaluationSeen(iz,ir)) THEN
++       WRITE(EvaluationUnit) ir,iz,actual
++       EvaluationSeen(iz,ir)=.TRUE.
++    END IF
++  END SUBROUTINE RecordExactReceiverEvaluation
++  SUBROUTINE RecordExactReceiverScale(ir,actual)
++    INTEGER, INTENT(IN) :: ir
++    REAL(KIND=8), INTENT(IN) :: actual
++    IF(.NOT.ExactCoordinatesEnabled) RETURN
++    IF(TRANSFER(actual,0_8)/=TRANSFER(ReceiverRange64(ir),0_8)) CALL ERROUT('BELLHOP-R64','Scale coordinate lost exact bits')
++    IF(.NOT.ScaleSeen(ir)) THEN
++       WRITE(ScaleUnit) ir,actual
++       ScaleSeen(ir)=.TRUE.
++    END IF
++  END SUBROUTINE RecordExactReceiverScale
++  SUBROUTINE CloseExactReceiverAudit()
++    IF(ReceiverAuditOpen) THEN
++       CLOSE(EvaluationUnit); CLOSE(ScaleUnit); ReceiverAuditOpen=.FALSE.
++       WRITE(6,*) 'R64 audit recorded field points=',COUNT(EvaluationSeen),' scale ranges=',COUNT(ScaleSeen)
++    END IF
++  END SUBROUTINE CloseExactReceiverAudit
+ END MODULE RotatedFieldState
+\ No newline at end of file
+diff --git "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_04\\influence.f90" "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\influence.f90"
+index 0d9ef83..7aa42ce 100644
+--- "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_04\\influence.f90"
++++ "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\influence.f90"
+@@ -472,6 +472,7 @@ CONTAINS
+              RcvrDepths: DO iz = 1, NRz_per_range
+                 IF ( x_rcvr( 2, iz ) < zmin .OR. x_rcvr( 2, iz ) > zmax ) CYCLE RcvrDepths
+ 
++                CALL RecordExactReceiverEvaluation(ir,iz,x_rcvr(:,iz))
+                 s         =      DOT_PRODUCT( x_rcvr( :, iz ) - x_ray, rayt ) / rlen ! proportional distance along ray
+                 n         = ABS( DOT_PRODUCT( x_rcvr( :, iz ) - x_ray, rayn ) )      ! normal distance to ray
+                 q         = ray2D( iS - 1 )%q( 1 ) + s * dqds               ! interpolated amplitude
+@@ -798,11 +799,14 @@ CONTAINS
+        IF ( RunType( 4 : 4 ) == 'X' ) THEN   ! line source
+           factor = -4.0 * SQRT( pi ) * const
+        ELSE                                  ! point source
+-          IF ( r ( ir ) == 0 ) THEN
++          IF(ExactCoordinatesEnabled) THEN
++             CALL RecordExactReceiverScale(ir,ReceiverRange64(ir))
++             factor=const/SQRT(ReceiverRange64(ir))
++          ELSE IF ( r ( ir ) == 0 ) THEN
+              factor = 0.0D0                  ! avoid /0 at origin, return pressure = 0
+           ELSE
+              factor = const / SQRT( ABS( r( ir ) ) )
+-             IF(ExactCoordinatesEnabled) factor=const/SQRT(ReceiverRange64(ir))
++
+           END IF
+        END IF
+        U( :, ir ) = SNGL( factor ) * U( :, ir )
+diff --git "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_04\\bellhop.f90" "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\bellhop.f90"
+index 882d5e5..856889a 100644
+--- "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_04\\bellhop.f90"
++++ "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\bellhop.f90"
+@@ -177,6 +177,7 @@ PROGRAM BELLHOP
+   OPEN(UNIT=94,FILE=TRIM(FileRoot)//'.mwstep',STATUS='REPLACE',ACTION='WRITE')
+   WRITE(94,'(A)') '# wall_r r0 q0 r2 q2 h hw0 hw1 residual'
+   CALL BellhopCore
++  CALL CloseExactReceiverAudit()
+   CLOSE(94)
+   CLOSE(95)
+   CLOSE(96)
+@@ -411,7 +412,11 @@ SUBROUTINE BellhopCore
+      RadMax = 5 * c / freq  ! 5 wavelength max radius
+ 
+      ! Are there enough beams?
+-     DalphaOpt = SQRT( c / ( 6.0 * freq * Pos%Rr( Pos%NRr ) ) )
++     IF(ExactCoordinatesEnabled) THEN
++        DalphaOpt=SQRT(c/(6d0*freq*ReceiverRange64(Pos%NRr)))
++     ELSE
++        DalphaOpt = SQRT( c / ( 6.0 * freq * Pos%Rr( Pos%NRr ) ) )
++     END IF
+      NalphaOpt = 2 + INT( ( Angles%alpha( Angles%Nalpha ) - Angles%alpha( 1 ) ) / DalphaOpt )
+ 
+      IF ( Beam%RunType( 1 : 1 ) == 'C' .AND. Angles%Nalpha < NalphaOpt ) THEN

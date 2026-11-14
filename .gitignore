@@ -248,3 +248,13 @@
 !/results/visualization/bellhop_rotated_fig12b/20261114_sparse_diagnostic_02/receipt.json
 # Quarantine exclusion remains last.
 /cash/
+# Receiver64 reviewed minimal validation: concise audit and source diff only.
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/**/preflight_checks.csv
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/sha256_manifest.csv
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/sha256_manifest.json
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/receiver64_source_review.patch
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/build01/build_manifest.json
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/saved_audit01/ray_comparison.json
+!/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/dashboard_render_receipt.json
+# Quarantine exclusion remains last.
+/cash/

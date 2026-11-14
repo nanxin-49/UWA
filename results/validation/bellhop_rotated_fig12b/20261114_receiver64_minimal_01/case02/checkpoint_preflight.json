@@ -1,0 +1,32 @@
+{
+  "status": "NO_SOLVER_PREFLIGHT_COMPLETE",
+  "failed_checks": 0,
+  "checks_count": 25,
+  "elapsed_s": 0.5799115,
+  "case_root": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\case02\\case",
+  "executable": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\build01\\bin\\bellhop_rotated_receiver64_2020.exe",
+  "executable_sha256": "b30ecec9f6960e024d612320406a2114ee8a9a0995de4c61b2bdab02c46881b3",
+  "plan_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_suite_plan_03\\A_Q125_h1_B401.mat",
+  "plan_sha256": "d3566fc6d4e2bc163826ea74eebe61d7a806a2ebe6598ed1db31b97c6742558e",
+  "original_failed_root": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_03\\A_Q125_h1_B401\\up_order13\\case",
+  "original_range_count": 10981,
+  "beam_count": 101,
+  "column_count": 3,
+  "q_columns_m": [
+    -1,
+    0,
+    1
+  ],
+  "physical_x_columns_m": [
+    1,
+    -0,
+    -1
+  ],
+  "ENV_range_text_unchanged": true,
+  "original_coordinate_bits_preserved": true,
+  "native_old_duplicates": 166,
+  "native_new_duplicates": 0,
+  "maximum_ENV64_unit_roundtrip_m": 7.2759576141834259E-12,
+  "bellhop_processes_launched": 0,
+  "scope": "Gate before the single authorized13th-order101-beam3-column solve; no full A/B/C/D or other order"
+}

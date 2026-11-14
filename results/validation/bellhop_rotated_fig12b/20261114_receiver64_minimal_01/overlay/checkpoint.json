@@ -1,0 +1,45 @@
+{
+  "status": "SOURCE_PREPARED_NOT_EXECUTED",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay",
+  "source_versions": [
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\SourceReceiverPositions.f90",
+      "sha256": "311e2d82c777afdb70b7cd1ec216a93b338f5d9b379b70fe0afef98abdf21dde"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\ReadEnvironmentBell.f90",
+      "sha256": "5d80b86a893a8611b5c08eaaca31ed2c1a95868c78e2478239ab56577014cfc3"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\RotatedFieldState.f90",
+      "sha256": "f89c000372acdf1b54f9385e73fb483d4a82940ccd567f37b0fb283c883937e5"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\bellhop.f90",
+      "sha256": "cd0003474fe97b4cc3f38042f4261cf9d5a409e7afbc1a63d897e204cd24ac4e"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\influence.f90",
+      "sha256": "1b9f2f1973772f4bc8a554f972d60682e141b1ece6bc0f227d6a1d70f6ecdb52"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\Step.f90",
+      "sha256": "cdde8e9bd81b772d7a55d46628a0233d33d96e3e23cab7279adae8d566858cf3"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\sspMod.f90",
+      "sha256": "e353ee0d5aae8a19dcf9b821c07d6c3f49283d7e07b5336c3d72c92f46b127d7"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay\\bellhopMod.f90",
+      "sha256": "ca8442523a60afab5a76bb13a8da4031b6bbf70978c00e4617cffa10a8d1ecae"
+    }
+  ],
+  "scope": "REAL8 ENV input/1000d0; R64 exact field and scale paths; original strict gates/physics retained; runtime audit instrumentation",
+  "unrun_checks": [
+    "compile",
+    "no-solver bitwise preflight",
+    "single authorized13th order101beams3columns",
+    "runtime coordinate and pressure audit"
+  ]
+}

@@ -1,5 +1,7 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+**2026-11-14 Bellhop REAL8接收距离最小验证：**[中文报告](reports/bellhop_rotated_receiver64_minimal_2026-11-14.md)。10981原坐标逐位保留，第13阶101束3列唯一新求解及保存数据审计通过；原25分量保留。完整A、第14–16阶和B/C/D仍暂停等待人工审查。
+
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。
 
 **活塞自由场图示（2026-11-11，quicklook完成、P0未执行）：**已用严格二维Hankel速度孔径积分计算总宽20/10/5 cm、4/6/8 kHz、同峰值振速1 mm/s的自由场，保存绝对Pa、归一化接收线和方向图。历史“5 cm”经本地/GitHub代码确认是圆形半径，故二维半尺寸映射为总宽10 cm；另保留总宽5 cm。见[图示、结论与复现](reports/piston_source_quicklook_2026-11-11.md)。20 cm波束随三频由约112°收窄至49°；这不是生产活塞资格或正式PE/BIE/FullFK比较。下一步先P0共源/梯度/相位，再P1平面；[原计划与资源门](reports/piston_source_2d_single_frequency_plan_2026-11-11.md)保持，当前不自动推进，不改Gaussian路径或转用M1预算。

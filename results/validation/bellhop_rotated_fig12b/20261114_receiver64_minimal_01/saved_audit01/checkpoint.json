@@ -1,0 +1,19 @@
+{
+  "status": "SAVED_DATA_AUDIT_COMPLETE",
+  "failed_checks": 0,
+  "checks_count": 60,
+  "elapsed_s": 6.2230517,
+  "bellhop_processes_launched": 0,
+  "original25_preserved": true,
+  "max_complex_difference": 0,
+  "max_phase_difference_rad": 0,
+  "min_ENV64_gap_m": 0.00999999999476131,
+  "min_actual64_gap_m": 0.00999999999476131,
+  "max_ENV64_unit_roundtrip_m": 7.2759576141834259E-12,
+  "max_SHD_metadata_quantization_m": 0.0037500000034924597,
+  "pressure_min_magnitude": 1.0575421691600425E-8,
+  "pressure_max_magnitude": 1.1377109571072535E-8,
+  "run_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\saved_audit01",
+  "next_allowed_step": "Manual review only; no full A,order14-16,B/C/D"
+}

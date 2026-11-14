@@ -1,0 +1,96 @@
+{
+  "status": "MINIMAL_VALIDATION_PASS_STOPPED_FOR_REVIEW",
+  "date": "2026-11-14",
+  "completed_steps": [
+    "isolated_REAL8_input_and_1000d0_overlay",
+    "isolated_compile_exit0",
+    "no_solver_bitwise_coordinate_gate25",
+    "single_up_order13_101beam_3column_run31",
+    "independent_saved_byte_and_original25_SHA_audit60"
+  ],
+  "config": {
+    "frequency_hz": 10000,
+    "order": 13,
+    "coordinate_tolerance": "bitwise equality, no relaxation",
+    "step_m": 1,
+    "physical_x_m": [
+      1,
+      0,
+      -1
+    ],
+    "water_depth_m": 5000,
+    "metadata_tolerance": "original2float32ULP retained",
+    "source_width": "not applicable, omni3D point",
+    "ssp_spacing_m": 1.25,
+    "ranges": 10981,
+    "beams": 101,
+    "pressure_baseline_tolerance": 0,
+    "native_q_m": [
+      -1,
+      0,
+      1
+    ]
+  },
+  "input_versions_sha256": {
+    "frozen_plan": "d3566fc6d4e2bc163826ea74eebe61d7a806a2ebe6598ed1db31b97c6742558e",
+    "old_failed_ENV": "e4746cb9b98c2d5b72df02fb1faac70bf0fa4a8d9408dad49e0f954d23d12527",
+    "old_failed_r25d": "1845078c5423b885cc0f3f19fe642bda86deac459050ba71fcb04685851bc6f0"
+  },
+  "code_versions_sha256": {
+    "manifest": "sha256_manifest.csv",
+    "binary": "b30ecec9f6960e024d612320406a2114ee8a9a0995de4c61b2bdab02c46881b3"
+  },
+  "artifacts_sha256": "sha256_manifest.csv",
+  "failed_or_unrun_checks": {
+    "current_failed": 0,
+    "checks_passed": 116,
+    "unrun": [
+      "fullA",
+      "orders14-16",
+      "B/C/D",
+      "complete_coherent_field",
+      "convergence",
+      "FFP_comparison"
+    ],
+    "preserved_preparation_failures": [
+      "overlay initial newline generation, not compiled",
+      "case01 static scanner false failure, no solve"
+    ]
+  },
+  "resource_usage": {
+    "compile_elapsed_s": "unknown, not timed",
+    "sampled_peak_working_set_bytes": 23171072.0,
+    "native_elapsed_s": 2.5999938,
+    "launch_RAM_gate_bytes": 1610612736.0,
+    "saved_audit_s": 6.2230517,
+    "run_and_audit_s": 9.1773136,
+    "native_cpu_sample_s": 2.328125,
+    "new_Bellhop_processes": 1,
+    "compile_stdout": "not separately retained; compile tool returned exit0",
+    "runtime_RAM_gate_bytes": 268435456,
+    "current_output_bytes": 121406573.0,
+    "preflight_s": 0.5799115
+  },
+  "audit_status_and_path": {
+    "path": "saved_audit01/checkpoint.json",
+    "status": "PASS_LIMITED_SCOPE"
+  },
+  "next_allowed_step": "Manual review only; no new Bellhop/native solve or complete A/B/C/D authorized",
+  "execution_mode": "existing shared MATLAB MCP, local serial task-owned native process",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "stdout_log": "case02/stdout.log",
+  "stderr_log": "case02/stderr.log",
+  "real_exit_code": 0,
+  "original25_components": "SHA256 verified unchanged against original checkpoints",
+  "old_failure_records": "preserved",
+  "delivery_verification": {
+    "manifest_entries": 72,
+    "manifest_SHA256": "e113a1dd55d9b30a62241123b53addf73fa7f09b084049b26f05d64c37009fe2",
+    "csv_rows": 116,
+    "csv_failed": 0,
+    "previous69_artifact_hash_mismatches": 0,
+    "dashboard_known_reference_warnings": 16,
+    "new_solver_jobs_after_single_case": 0,
+    "git_commit": "User requested local source/evidence snapshot after validation; see git history. No push or new solve."
+  }
+}
