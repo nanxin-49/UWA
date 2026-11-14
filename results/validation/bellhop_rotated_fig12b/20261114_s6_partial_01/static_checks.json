@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\analyze_bellhop_rotated_field_ffp.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\reporting\\render_bellhop_rotated_sparse_diagnostic.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\audit_bellhop_rotated_sparse_postprocess.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\execute_bellhop_rotated_approved_suite.m",
+      "code_issues": []
+    }
+  ]
+}

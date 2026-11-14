@@ -817,3 +817,5 @@ reference implementations were not edited. Run the audit after
 validation mode5将第j墙设为R_first+(j-1)D，逐次native反射加proper半转；折叠Q与q=q0-sg*(-1)^N*x一致，固定-conj及排列恢复物理复场。原生累计Amp<.005门仅在mode5取消，逐反射门保留，容量只在副本增至600000。墙限步不再被最小步长放大，1e-8m根门未变；稀疏1–3/10/12阶和112门独立审计通过，不代表完整相干总场、连续Munk收敛或通信资格。见[S4记录](reports/bellhop_rotated_fig12b_stage4_2026-11-14.md)。
 
 旋转场分块覆盖上下|dz|>=|x|和左右|dz|<|x|，各图表直接求解并以精确排列写回；只掩膜真实源点。逐阶复数叠加同时保存E=Σ|p_component|，用于干涉零点附近的误差归一，phase只在|p|>=.05E处检查。84点两阶先导原始重建通过但仍未收敛；完整四组Q/步长/束数计划只准备未执行，见[预算](reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md)。这些验证数据不输出生产H_f/CIR/BER，也不自动启动1500m工况。
+
+保存场对FFP另列等权复L2、单元加权采样范数、最大delta/E及相位（两场均>=.05E）；均非论文容差。近底同网格四阶单侧导数只能作保存数据比较；有限±5m孔径不提供严格流体DtN闭合，正入射阻抗残差只作近似诊断。N2稀疏海面/采样未过门，完整模式尚未执行，见[执行记录](reports/bellhop_rotated_fig12b_execution_2026-11-14.md)。

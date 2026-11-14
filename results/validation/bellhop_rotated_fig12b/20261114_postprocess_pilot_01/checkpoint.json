@@ -1,0 +1,34 @@
+{
+  "status": "SPARSE_DIAGNOSTIC_NOT_COMPLETE_FIELD",
+  "scope": "pilot",
+  "elapsed_s": 1.6074976,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_postprocess_pilot_01",
+  "field_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_audit_02\\reconstructed_field.mat",
+  "field_sha256": "7417b99de1bad99970c9f6efabe205f542b4382acd656119481101e9b99aad1d",
+  "ffp_file": "C:\\Users\\ASUS\\.codex\\worktrees\\munk_ffp_20261112\\Explain\\results\\validation\\munk_ffp_5000m\\20261112_full_01\\J07.mat",
+  "ffp_sha256": "8e123af0beff9904289a5419fdb82f74473beda075792b7b2f9819bd133ce3be",
+  "coordinate_max_difference_m": 1.8041124150158794E-16,
+  "FFP_4pi_Green_max_error": 0,
+  "reference_failed_regions": 3,
+  "region_count": 5,
+  "reflection_order": 2,
+  "boundary": {
+    "top_status": "SAMPLED_PRESSURE_RELEASE_RESIDUAL",
+    "bottom_status": "NOT_EVALUABLE_SPARSE_POINTS",
+    "bottom_operator_scope": "Same saved-grid one-sided derivative comparison; not full fluid DtN closure on finite x aperture",
+    "top_bellhop_max_envelope": 0.037640280918897935,
+    "top_ffp_max_pressure": 0,
+    "top_tolerance": 0.001,
+    "top_sampled_criterion_met": false
+  },
+  "resolution": {
+    "near_bottom_depth_count": 10,
+    "maximum_spacing_m": 45,
+    "point01m_requirement_met": false,
+    "minimum_water_wavelength_m": 0.15000000012774165,
+    "minimum_samples_per_two_way_period": 0.0016666666680860184,
+    "full_depth_note": "Global 5m samples are overview only and do not resolve all wavelength-scale fringes"
+  },
+  "criteria_note": "Engineering comparison at saved samples: complex L2 and max delta/E .02; phase .05rad where both |p|>=.05E. Not paper-derived tolerances or physical model certification",
+  "weights_note": "Unweighted receiving-point norm and trapezoidal cell-weighted sampled norm both saved; neither resolves uncomputed inter-sample oscillations"
+}

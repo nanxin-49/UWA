@@ -1,0 +1,11 @@
+{
+  "status": "COMPLETE_SPARSE_POSTPROCESS_AUDIT_ONLY",
+  "failed_checks": 0,
+  "checks_count": 57,
+  "elapsed_s": 11.2112889,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_postprocess_audit_01",
+  "reference_mode": "FROZEN_INDEPENDENT_SUBSET_REPLAY_NO_LARGE_REFERENCE_LOAD",
+  "minimum_available_bytes": 5.36870912E+8,
+  "scope": "Raw FFP/field/metric/CSV, editable FIG and PNG replay; no complete-field/physics qualification",
+  "comparison_sha256": "68c7b1288d5e8430acbdbf45a8185c8602dabcfa11150f8bf44f8a0e13a99e14"
+}

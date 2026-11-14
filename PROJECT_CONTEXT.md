@@ -9,6 +9,10 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop旋转预算已批准，A组部分分量因资源门停止（2026-11-14）
+
+- 冻结03获批共享3600s/子作业120s和仅任务PID停止范围。A组25/39作业完成至上下9阶，随后RAM门停止，累计262.9679051s；无新活跃数值子进程。resume_anchor_01合并最新预算与已完成检查点，原始数据不动。两幅稀疏诊断和57门保真审计已完成，尚无完整场/全域FFP资格。见[执行记录](reports/bellhop_rotated_fig12b_execution_2026-11-14.md)。
+
 ### Bellhop旋转完整场预算已准备、未执行（2026-11-14）
 
 - 84点/11作业15.82s，18门原始重建通过；16阶四个小型成本先导22.46s。两阶FFP局部差3.76%分量包络，不能用全局L2小差冒充完整通过。四组精确10981×201计划冻结为03，共享3600s/单作业120s、RAM1.5GiB启动/256MiB运行门及15GiB输出上限，见[预算](reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md)。仍待用户批准，无完整场/收敛/最终图册或GO结论。

@@ -1,0 +1,19 @@
+{
+  "status": "SPARSE_DIAGNOSTIC_RENDERED_NOT_FINAL_ATLAS",
+  "elapsed_s": 9.3870191,
+  "source_comparison_sha256": "68c7b1288d5e8430acbdbf45a8185c8602dabcfa11150f8bf44f8a0e13a99e14",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\visualization\\bellhop_rotated_fig12b\\20261114_sparse_diagnostic_02",
+  "figure_count": 2,
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "exports": [
+    "PNG",
+    "editable FIG",
+    "raw MAT",
+    "CSV",
+    "offline HTML"
+  ],
+  "unrun_checks": [
+    "visual inspection",
+    "independent FIG/data/pixel audit"
+  ]
+}

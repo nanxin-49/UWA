@@ -1,0 +1,9 @@
+{
+  "status": "NOT_STARTED_RESOURCE_GATE",
+  "available_bytes": 8.16029696E+8,
+  "required_bytes": 1.610612736E+9,
+  "authorization_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_authorization_01\\authorization.json",
+  "authorization_sha256": "9af0465945b514ecc06bfa16a925f887394d9b8d7451d7413ae5134106dc5660",
+  "solver_launched": false,
+  "checked_utc": "2026-11-14 09:52:12"
+}

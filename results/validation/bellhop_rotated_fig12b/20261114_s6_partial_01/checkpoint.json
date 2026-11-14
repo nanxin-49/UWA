@@ -1,0 +1,73 @@
+{
+  "run_id": "20261114_s6_partial_01",
+  "status": "APPROVED_FULL_SUITE_PARTIAL_RESOURCE_STOP",
+  "branch": "experiment/bellhop-rotated-fig12b",
+  "base_commit": "edd12db",
+  "execution_mode": "Existing local MATLAB MCP, serial isolated Bellhop",
+  "matlab_release": "R2025b Update6",
+  "completed_steps": [
+    "Full suite03 explicitly authorized",
+    "A exact full receiving grid:7 direct charts plus up/down orders1..9 saved with basic per-component gates",
+    "All task native processes terminal at stopped run",
+    "Second attempt stopped before new native PID",
+    "Metadata-only resume anchor combines latest time and immutable partial component checkpoints",
+    "Sparse FFP postprocessing current-source data replay exact",
+    "Two sparse diagnostic FIG/PNG/HTML products visually inspected",
+    "57 independent arithmetic/data/CSV/FIG/PNG/link checks passed"
+  ],
+  "authorization_file": "20261114_full_authorization_01/authorization.json",
+  "authorization_sha256": "9af0465945b514ecc06bfa16a925f887394d9b8d7451d7413ae5134106dc5660",
+  "frozen_suite": "20261114_full_suite_plan_03/suite.mat",
+  "frozen_suite_sha256": "e77c30416d96f5f3dcf708d497d7e47d912299bbd221ca5db8b1346b3aba776c",
+  "config": {
+    "full_grid": [
+      10981,
+      201
+    ],
+    "control_count": 4,
+    "jobs_per_control": 39,
+    "completed_A_jobs": 25,
+    "phase_bridge": "-conj(native)",
+    "max_order": 16,
+    "max_wall_s": 3600,
+    "max_job_s": 120,
+    "minimum_start_bytes": 1610612736,
+    "minimum_runtime_bytes": 268435456,
+    "max_output_bytes": 16106127360,
+    "remote": false,
+    "parallel_workers": 0
+  },
+  "resource_usage": {
+    "full01_cumulative_solver_audit_s": 261.2596756,
+    "full02_increment_s": 1.7082295,
+    "latest_cumulative_solver_audit_s": 262.9679051,
+    "remaining_authorized_s": 3337.0320949,
+    "full02_new_native_processes": 0,
+    "final_previous_pid": 38884,
+    "final_previous_process_terminal_verified": true,
+    "peak_complete_suite_bytes": "unknown",
+    "resource_watch03": "Read-only monitor, not a numerical run"
+  },
+  "audit_status_and_path": {
+    "partial_native": "full_01 component checkpoints bind input/output SHA; full raw independent replay pending",
+    "sparse_postprocess": "20261114_postprocess_audit_01/checkpoint.json,57 passed",
+    "sparse_source_equivalence": "20261114_postprocess_pilot_02/prior_data_equivalence.json",
+    "sparse_atlas": "results/visualization/bellhop_rotated_fig12b/20261114_sparse_diagnostic_02/index.html",
+    "static": "static_checks.json",
+    "resume_anchor": "20261114_resume_anchor_01/checkpoint.json",
+    "dashboard": "62 references,16 pre-existing absent results retained"
+  },
+  "failed_or_unrun_checks": [
+    "Full01 startup RAM gate after25 jobs: retained, not physical PASS or physical failure",
+    "Full02 assembly RAM gate, no new Bellhop PID, retained",
+    "A order12-to16 and group raw reconstruction not run",
+    "B/C/D not run",
+    "All full-grid control convergence and full FFP/bottom derivative comparison pending",
+    "N2 sparse top residual .0376403>.001; near-bottom spacing45m>.01m;3 reference diagnostic regions fail",
+    "Final5000m TL/component/near-bottom/FFP atlas and six-question conclusion pending",
+    "Forced task-process abort branch not exercised"
+  ],
+  "code_versions_sha256_path": "code_versions_sha256.json",
+  "artifacts_sha256_path": "artifacts_sha256.json",
+  "next_allowed_step": "No new budget consent needed. Revalidate frozen17 source/plan SHA and RAM/disk. Resume from anchor01 into unique full03/controller03; keep cumulative262.9679051s and output disk roots, verify/copy no raw old result changes; compute only missing contributions. Do not lower approved gates or restart a live task."
+}

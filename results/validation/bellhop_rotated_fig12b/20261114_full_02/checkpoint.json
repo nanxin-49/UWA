@@ -1,0 +1,17 @@
+{
+  "status": "FAILED",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_02",
+  "suite_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_suite_plan_03\\suite.mat",
+  "suite_sha256": "e77c30416d96f5f3dcf708d497d7e47d912299bbd221ca5db8b1346b3aba776c",
+  "used_before_s": 261.2596756,
+  "approval_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_authorization_01\\authorization.json",
+  "approval_sha256": "9af0465945b514ecc06bfa16a925f887394d9b8d7451d7413ae5134106dc5660",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "cumulative_elapsed_s": 262.9679051,
+  "disk_roots": [
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_01",
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_02"
+  ],
+  "elapsed_s": 1.7078695,
+  "error": "错误使用 assert\nRAM gate.\n\n出错 run_bellhop_rotated_field_assembly (第 29 行)\n[~,mem]=memory; assert(mem.PhysicalMemory.Available>=options.minimum_available_bytes,'RAM gate.');\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_rotated_field_suite (第 58 行)\n            results{k}=run_bellhop_rotated_field_assembly(suite.plan_files{k},executable,out, ...\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 execute_bellhop_rotated_approved_suite>@()run_bellhop_rotated_field_suite(suite_file,executable,output_dir,authorization_file,reuse_dir=options.reuse_dir) (第 34 行)\ninvoke=@()run_bellhop_rotated_field_suite(suite_file,executable,output_dir,authorization_file,reuse_dir=options.reuse_dir); %#ok<NASGU> Called by fixed evalc expression.\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 execute_bellhop_rotated_approved_suite (第 35 行)\nstdout=evalc('try; suite_result=invoke(); catch exception; failure=getReport(exception,\"extended\",\"hyperlinks\",\"off\"); fprintf(\"%s\\n\",failure); end');\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}

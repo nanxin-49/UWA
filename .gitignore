@@ -230,3 +230,21 @@
 !/results/validation/bellhop_rotated_fig12b/20261114_full_suite_plan_03/code_versions_sha256.json
 # Quarantine exclusion remains last.
 /cash/
+
+# Full component exact-grid checkpoints stay local, bound by SHA manifests.
+/results/validation/bellhop_rotated_fig12b/20261114_full_*/**/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_full_*/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_full_[0-9]*/[ABCD]_Q*/checkpoint.json
+/results/validation/bellhop_rotated_fig12b/20261114_resume_anchor_*/**/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_resume_anchor_*/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_resume_anchor_*/input_checkpoint_sha256.json
+!/results/validation/bellhop_rotated_fig12b/20261114_full_authorization_01/authorization.json
+!/results/validation/bellhop_rotated_fig12b/20261114_full_authorization_01/preflight*.json
+!/results/validation/bellhop_rotated_fig12b/20261114_postprocess_pilot_*/reference_metrics.csv
+!/results/validation/bellhop_rotated_fig12b/20261114_postprocess_pilot_*/prior_data_equivalence.json
+!/results/validation/bellhop_rotated_fig12b/20261114_s6_partial_01/*.json
+!/results/visualization/bellhop_rotated_fig12b/20261114_sparse_diagnostic_02/*.png
+!/results/visualization/bellhop_rotated_fig12b/20261114_sparse_diagnostic_02/index.html
+!/results/visualization/bellhop_rotated_fig12b/20261114_sparse_diagnostic_02/receipt.json
+# Quarantine exclusion remains last.
+/cash/

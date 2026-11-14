@@ -1,0 +1,25 @@
+{
+  "user_approved": true,
+  "scope": "rotated_fig12b_full_local",
+  "approved_at_utc": "2026-11-14T09:49:37.3446929Z",
+  "user_answer": "批准上述完整场预算及任务进程停止范围",
+  "question_item": "call_0c2cfd28fcbc4860a5001f94cc52406d",
+  "suite_sha256": "e77c30416d96f5f3dcf708d497d7e47d912299bbd221ca5db8b1346b3aba776c",
+  "allowed_plan_sha256": [
+    "d3566fc6d4e2bc163826ea74eebe61d7a806a2ebe6598ed1db31b97c6742558e",
+    "899a9b805c95646f43264584de14512b4d2017cec51517578625f590720625e6",
+    "cce53c33f09104675eed7ef6131b6b9d6154259b25baaeffa83570d331947e97",
+    "6d468c2f4b375fb149faa92f9dfdfd4f76269e88c4bfbb8ff68edbc54a150f51"
+  ],
+  "max_wall_s": 3600,
+  "max_job_s": 120,
+  "minimum_available_bytes": 1610612736,
+  "minimum_runtime_available_bytes": 268435456,
+  "minimum_free_disk_bytes": 21474836480,
+  "max_output_bytes": 16106127360,
+  "allow_task_termination": true,
+  "remote": false,
+  "parallel_workers": 0,
+  "existing_MATLAB_only": true,
+  "scope_note": "Four frozen suite03 controls, exact FFP receiving grids. Runtime/time abort only task-held Bellhop Process/PID. No SSH, second MATLAB, global changes, budget increase, fetch/pull/push or merge."
+}

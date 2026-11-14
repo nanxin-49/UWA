@@ -187,3 +187,5 @@ Rx仍为3 m。当前独立绘图入口为 `generate_bellhop_100m_source1m_visual
 旋转Fig12b显式多反射当前仅获稀疏分量资格，完整场/FFP仍待预算先导，见[S4阶段记录](reports/bellhop_rotated_fig12b_stage4_2026-11-14.md)。
 
 旋转Fig12b完整四组网格计划已冻结但未执行；见[本地完整场预算与审批边界](reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md)。
+
+旋转完整预算03已获批，A组部分运行被RAM门停止；接续与后处理证据见[执行记录](reports/bellhop_rotated_fig12b_execution_2026-11-14.md)。
