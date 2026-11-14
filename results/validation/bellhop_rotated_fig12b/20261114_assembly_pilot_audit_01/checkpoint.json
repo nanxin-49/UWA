@@ -1,0 +1,15 @@
+{
+  "status": "COMPLETE_RAW_RECONSTRUCTION_ONLY",
+  "failed_checks": 0,
+  "checks_count": 18,
+  "elapsed_s": 2.4729364,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_audit_01",
+  "comparison": {
+    "status": "DIAGNOSTIC_ONLY_PENDING_CONVERGENCE",
+    "ffp_sha256": "8e123af0beff9904289a5419fdb82f74473beda075792b7b2f9819bd133ce3be",
+    "coordinate_max_difference_m": 1.8041124150158794E-16,
+    "complex_relative_L2": 8.8389017845334087E-6,
+    "maximum_envelope_normalized_difference": 0.037640280918897935,
+    "reflection_order": 2
+  }
+}

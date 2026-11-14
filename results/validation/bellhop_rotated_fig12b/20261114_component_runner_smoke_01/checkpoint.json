@@ -1,0 +1,89 @@
+{
+  "status": "FAILED",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_component_runner_smoke_01",
+  "cfg": {
+    "frequency_hz": 10000,
+    "source_z_m": 4950,
+    "water_depth_m": 5000,
+    "munk_parameters": {
+      "c0_mps": 1500,
+      "axis_depth_m": 1300,
+      "scale_m": 1300,
+      "epsilon": 0.00737
+    },
+    "bottom_cp_mps": 1600,
+    "bottom_rho_gcm3": 1.8,
+    "bottom_atten_db_wavelength": 0.8,
+    "direction": "up",
+    "transverse_origin_m": 0,
+    "artificial_halfwidth_m": 1000,
+    "ssp_spacing_m": 0.625,
+    "step_m": 0.5,
+    "beam_count": 101,
+    "angle_limits_deg": [
+      -0.04,
+      0.04
+    ],
+    "receiver_x_m": [
+      -1,
+      0,
+      1
+    ],
+    "run_type": "C",
+    "source_geometry": "R",
+    "uniform_control": false,
+    "uniform_c_mps": 1500,
+    "receiver_range_m": [
+      9950,
+      10050,
+      11950,
+      13950,
+      14950
+    ],
+    "range_limit_m": 14950,
+    "source_model_note": "Omni 3D point with validation geometric outplane transport; full FFP qualification pending.",
+    "phase_note": "Native Bellhop phasor preserved; conversion to exp(-i omega t) FFP must be independently verified.",
+    "reflection_order": 2,
+    "reflection_wall": "surface",
+    "wall_range_m": 4950,
+    "expected_surface_bounces": 1,
+    "expected_bottom_bounces": 1,
+    "last_wall_range_m": 9950,
+    "last_wall_surface": false,
+    "receiver_depth_order": [
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "receiver_depths_m": [
+      5000,
+      4900,
+      3000,
+      1000,
+      0
+    ],
+    "receiver_x_order": [
+      1,
+      2,
+      3
+    ],
+    "nominal_receiver_x_m": [
+      -1,
+      0,
+      1
+    ],
+    "nominal_receiver_depths_m": [
+      0,
+      1000,
+      3000,
+      4900,
+      5000
+    ]
+  },
+  "executable_sha256": "93ab5754e45525ab0bff0e5490035c74ffedac83472e9c298b3690eb9928c107",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "elapsed_s": 3.3680791,
+  "error": "错误使用 run_bellhop_rotated_local_case (第 29 行)\n消息: 进程已退出，因此无法获得所请求的信息。\n源: System\n帮助链接: None\n\n出错 run_bellhop_rotated_field_component (第 28 行)\n    process=run_bellhop_rotated_local_case(executable,stem,options.max_seconds);\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}

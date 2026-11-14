@@ -1,0 +1,49 @@
+{
+  "scope": "MATLAB MCP Code Analyzer final files",
+  "files": [
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_bellhop_rotated_direct_field_config.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\run_bellhop_rotated_field_component.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_bellhop_rotated_field_plan.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\assess_bellhop_rotated_field_change.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\run_bellhop_rotated_local_case.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\write_bellhop_rotated_horizontal_q.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\run_bellhop_rotated_field_assembly.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\run_bellhop_rotated_field_suite.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\prepare_bellhop_rotated_full_suite.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\audit_bellhop_rotated_field_assembly.m",
+      "code_issues": []
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\validate_bellhop_rotated_cost_pilot.m",
+      "code_issues": []
+    }
+  ]
+}

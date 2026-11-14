@@ -1,0 +1,48 @@
+{
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "labels": [
+    "A_Q125_h1_B401",
+    "B_Q625_h1_B401",
+    "C_Q625_h05_B401",
+    "D_Q625_h05_B801"
+  ],
+  "plan_sha256": [
+    "d9127463096c2ae48126a41d7e1f3ec85f2951e266de1f5f989baa94dde695fc",
+    "e04526a1875d5e9b0ba0dec100f869355f152d465fa5fac7fb214d61161e1202",
+    "c6c63012e8e0895ffe3246954903161686a19a46eba4cbf79bbb7da24a32df3f",
+    "259bbb7cc5706c77225e5c5fc634cd23deb98779655874fbc0679d1b47c2e832"
+  ],
+  "executable_sha256": "93ab5754e45525ab0bff0e5490035c74ffedac83472e9c298b3690eb9928c107",
+  "control_labels": [
+    "Q_1p25_to_p625",
+    "h_1_to_p5",
+    "beams_double"
+  ],
+  "reference_metadata_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_multifield_audit_02\\ffp_reference_metadata.mat",
+  "reference_metadata_sha256": "ccce3ad660ed23763e39e9f02c0a33e293fc2fc06542af5e4550aa7d8d2bc958",
+  "max_order": 16,
+  "depth_count": 10981,
+  "x_count": 201,
+  "job_counts": [
+    39,
+    39,
+    39,
+    39
+  ],
+  "proposed_budget": {
+    "max_wall_s": 3600,
+    "max_job_s": 120,
+    "minimum_available_bytes": 1.610612736E+9,
+    "minimum_runtime_available_bytes": 2.68435456E+8,
+    "minimum_free_disk_bytes": 2.147483648E+10,
+    "max_output_bytes": 1.610612736E+10,
+    "allow_task_termination": true,
+    "remote": false,
+    "parallel_workers": 0
+  },
+  "scope": "Four exact original-FFP grids, streaming finite reflection order; independent FFP and final figures still require postchecks",
+  "suite_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_suite_plan_02\\suite.mat",
+  "suite_sha256": "fc77f967c4e5678fcf83c05ac047f4e22827fce254e9ef898a9ebee2328f2dce",
+  "elapsed_s": 5.2310944,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_suite_plan_02"
+}

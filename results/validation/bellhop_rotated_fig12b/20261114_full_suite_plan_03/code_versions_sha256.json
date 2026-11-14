@@ -1,0 +1,70 @@
+[
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\run_bellhop_rotated_field_suite.m",
+    "sha256": "dc8a73a204210f2a9b62502b7f6ffee977fe1ec880fb84bd337e559d4d7ab701"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\run_bellhop_rotated_field_assembly.m",
+    "sha256": "d483e92d744222b4c09f552c8b4ba233b009ee0eadb31d0ce8994cea18f790d4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\audit_bellhop_rotated_field_assembly.m",
+    "sha256": "19c07635f02de2da4504d63f589f5d81cc1497dced09b1249ed0b5c7eb371e82"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\assess_bellhop_rotated_field_change.m",
+    "sha256": "2be4b0874e15de3405bc1e0cd5414141219b0f8365d328c8ae4eda2ae3eaaa7d"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_bellhop_rotated_field_plan.m",
+    "sha256": "27b83f9fd5b1cb92c6a61df60db96ac4cb83608ea9c671a45df5768ed8c73346"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_bellhop_rotated_direct_field_config.m",
+    "sha256": "87dd1af4cb3e52aa88189e3c5543550595e1fbc2181c8d1a7f5769b92069aadf"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_bellhop_rotated_multifield_config.m",
+    "sha256": "a3aba61fdec1ec60afdb32678707afbb605d44463f37d2f16eba6135311ea5bb"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\run_bellhop_rotated_field_component.m",
+    "sha256": "10e534ec3bbac833defc8c3f0ece2609f4b4a7af3c2c126f926426a74e797c17"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\run_bellhop_rotated_local_case.m",
+    "sha256": "824b4955a1dd785b3aa04a691e0803a4137cb59e3c78795ce070f469ea2cfd56"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\write_bellhop_rotated_multifield_q.m",
+    "sha256": "4df4e3aabc32fe174d4c01996b9bf55e9dac7f0e871a9d5810f46d132f76c9fd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\write_bellhop_rotated_munk_q.m",
+    "sha256": "2368afa58ad10ffeb708ebc58eac85729e73e063eddc45af5d6ecec320c5e706"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\write_bellhop_rotated_horizontal_q.m",
+    "sha256": "bee489267fa56fb9900d3956ba0412f9dc2b361eff252039371c5e0506f2cba5"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\write_bellhop_rotated_field_options.m",
+    "sha256": "b53bb303eaa4c3c88ebe0abbf41e2cecbc3639a4c7ea631f62d27cacdfb5be2a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\read_bellhop_rotated_field.m",
+    "sha256": "0edda7e23213c4ff082c48547c5d6f104bba7425a706befbe16724393f541e3e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_bellhop_rotated_munk_config.m",
+    "sha256": "06ea28d8b97c5a598296e230dd574179c6bdba05e19a064e33d28965f79d8b95"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\make_munk_5000m_ffp_config.m",
+    "sha256": "8e9dab62b2d749869194934f675ae80ca2afbdbcceb54cdbcf3eae0c9e99d203"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\support\\munk_profile_sound_speed.m",
+    "sha256": "098f91bcc1dbd3c25e8c2c57a6a1f561de8e47f7bedf8671bae777722e103323"
+  }
+]

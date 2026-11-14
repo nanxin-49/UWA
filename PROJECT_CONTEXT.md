@@ -9,6 +9,10 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop旋转完整场预算已准备、未执行（2026-11-14）
+
+- 84点/11作业15.82s，18门原始重建通过；16阶四个小型成本先导22.46s。两阶FFP局部差3.76%分量包络，不能用全局L2小差冒充完整通过。四组精确10981×201计划冻结为03，共享3600s/单作业120s、RAM1.5GiB启动/256MiB运行门及15GiB输出上限，见[预算](reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md)。仍待用户批准，无完整场/收敛/最终图册或GO结论。
+
 ### Bellhop旋转显式多反射稀疏资格（2026-11-14）
 
 - 1–3阶及上10/下12阶局部复分量、112门原始逐墙/线性Q独立审计和关闭回归通过。漏墙限步与粗步长相位失败保留；高阶Q20m控制不代替连续Munk收敛。FFP J07 SHA只读复核一致，尚无共点比较。详见[阶段S4记录](reports/bellhop_rotated_fig12b_stage4_2026-11-14.md)。完整场/收敛/最终图册待执行，先做小型实测预算并等待大型运行授权。

@@ -224,3 +224,9 @@
 !/results/validation/bellhop_rotated_fig12b/20261114_s4_stage_01/*.json
 # Quarantine exclusion remains last.
 /cash/
+
+!/results/validation/bellhop_rotated_fig12b/20261114_s5_prepare_01/*.json
+!/results/validation/bellhop_rotated_fig12b/20261114_cost_pilot_01/timings.csv
+!/results/validation/bellhop_rotated_fig12b/20261114_full_suite_plan_03/code_versions_sha256.json
+# Quarantine exclusion remains last.
+/cash/

@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETE_RAW_RECONSTRUCTION_ONLY",
+  "failed_checks": 0,
+  "checks_count": 18,
+  "elapsed_s": 0.5454729,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_audit_02",
+  "comparison": {
+    "status": "NOT_REQUESTED"
+  }
+}

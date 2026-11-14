@@ -8,7 +8,8 @@ arguments
 end
 assert(~isfile([case_root '.env'])); folder=fileparts(case_root);
 if ~isfolder(folder), mkdir(folder); end
-q=(-20:.25:20).'; z=cfg.source_z_m+side*q;
+spacing=.25; if isfield(cfg,'horizontal_ssp_spacing_m'), spacing=cfg.horizontal_ssp_spacing_m; end
+q=unique([-20:spacing:20,0,20]).'; z=cfg.source_z_m+side*q;
 c=munk_profile_sound_speed(z,cfg.munk_parameters);
 if cfg.uniform_control, c(:)=cfg.uniform_c_mps; end
 r=[0;cfg.range_limit_m+1];

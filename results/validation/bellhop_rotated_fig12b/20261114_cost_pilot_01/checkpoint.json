@@ -1,0 +1,58 @@
+{
+  "status": "COMPLETE_COST_PILOT_ONLY",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_cost_pilot_01",
+  "max_wall_s": 60,
+  "max_job_s": 20,
+  "scope": "Four sparse cost/capacity components only; no complete-grid field or convergence qualification",
+  "elapsed_s": 22.4641662,
+  "rows": [
+    {
+      "tag": "long_Q625",
+      "points": 3003,
+      "beams": 51,
+      "Q_spacing_m": 0.625,
+      "max_steps": 276046,
+      "wall_s": 4.9003899,
+      "process_s": 3.845099,
+      "sampled_peak_bytes": 4.3446272E+7,
+      "range_count": 1001,
+      "q_count": 3
+    },
+    {
+      "tag": "long_Q3125",
+      "points": 3003,
+      "beams": 51,
+      "Q_spacing_m": 0.3125,
+      "max_steps": 327894,
+      "wall_s": 7.1968611,
+      "process_s": 5.7200579,
+      "sampled_peak_bytes": 5.410816E+7,
+      "range_count": 1001,
+      "q_count": 3
+    },
+    {
+      "tag": "near_q11",
+      "points": 4411,
+      "beams": 51,
+      "Q_spacing_m": 0.625,
+      "max_steps": 260366,
+      "wall_s": 4.7420357,
+      "process_s": 3.7370697,
+      "sampled_peak_bytes": 4.2369024E+7,
+      "range_count": 401,
+      "q_count": 11
+    },
+    {
+      "tag": "near_q201",
+      "points": 80601,
+      "beams": 51,
+      "Q_spacing_m": 0.625,
+      "max_steps": 260366,
+      "wall_s": 4.5961902,
+      "process_s": 3.6617387,
+      "sampled_peak_bytes": 4.2295296E+7,
+      "range_count": 401,
+      "q_count": 201
+    }
+  ]
+}

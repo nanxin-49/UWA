@@ -1,0 +1,102 @@
+{
+  "status": "COMPLETE_FINITE_ORDER_FIELD_NOT_QUALIFIED",
+  "scope": "lightweight_assembly_pilot",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01",
+  "plan_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_plan_01\\plan.mat",
+  "plan_sha256": "8ba2eaf5faac895deb4699817a3c162f2d5248df195778207c8c769f65686abf",
+  "executable_sha256": "93ab5754e45525ab0bff0e5490035c74ffedac83472e9c298b3690eb9928c107",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "options": {
+    "scope": "lightweight_assembly_pilot",
+    "approval_file": "",
+    "max_wall_s": 60,
+    "max_job_s": 20,
+    "minimum_available_bytes": 5.36870912E+8
+  },
+  "completed_jobs": 11,
+  "elapsed_s": 15.8219769,
+  "runs": [
+    {
+      "tag": "direct_up_part1",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_up_part1",
+      "elapsed_s": 0.7898888,
+      "order": 0
+    },
+    {
+      "tag": "direct_up_part2",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_up_part2",
+      "elapsed_s": 0.731289,
+      "order": 0
+    },
+    {
+      "tag": "direct_up_part3",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_up_part3",
+      "elapsed_s": 2.6937544,
+      "order": 0
+    },
+    {
+      "tag": "direct_down_part1",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_down_part1",
+      "elapsed_s": 0.8545107,
+      "order": 0
+    },
+    {
+      "tag": "direct_down_part2",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_down_part2",
+      "elapsed_s": 0.7194257,
+      "order": 0
+    },
+    {
+      "tag": "direct_left",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_left",
+      "elapsed_s": 0.7041771,
+      "order": 0
+    },
+    {
+      "tag": "direct_right",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\direct_right",
+      "elapsed_s": 0.6763558,
+      "order": 0
+    },
+    {
+      "tag": "up_order1",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\up_order1",
+      "elapsed_s": 1.5215587,
+      "order": 1
+    },
+    {
+      "tag": "down_order1",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\down_order1",
+      "elapsed_s": 1.1304603,
+      "order": 1
+    },
+    {
+      "tag": "up_order2",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\up_order2",
+      "elapsed_s": 2.0956875,
+      "order": 2
+    },
+    {
+      "tag": "down_order2",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\down_order2",
+      "elapsed_s": 1.6254394,
+      "order": 2
+    }
+  ],
+  "failed_checks": 0,
+  "order_fields": [
+    {
+      "order": 1,
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\sum_through_order1.mat"
+    },
+    {
+      "order": 2,
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_assembly_pilot_01\\sum_through_order2.mat"
+    }
+  ],
+  "unrun_checks": [
+    "independent field convergence",
+    "FFP comparison",
+    "raw-data/figure reconstruction audits"
+  ]
+}

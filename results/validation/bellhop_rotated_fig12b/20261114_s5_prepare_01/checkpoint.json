@@ -1,0 +1,81 @@
+{
+  "run_id": "20261114_s5_prepare_01",
+  "status": "PREPARED_WAITING_EXPLICIT_FULL_BUDGET_APPROVAL",
+  "branch": "experiment/bellhop-rotated-fig12b",
+  "base_commit": "a0a5a8b",
+  "execution_mode": "Existing local MATLAB MCP; isolated Bellhop; no full grid authorized",
+  "matlab_release": "R2025b Update6",
+  "completed_steps": [
+    "84 point two-order exact chart assembly",
+    "18 raw reconstruction gates",
+    "FFP subset diagnostic without interpolation",
+    "Four sparse N16 cost/capacity pilots",
+    "Terminal component SHA/config/code reuse, complex difference0",
+    "Four full-grid plans frozen version03",
+    "11 MATLAB Code Analyzer files zero issues",
+    "Unapproved full execution rejected before output creation"
+  ],
+  "frozen_suite_file": "results/validation/bellhop_rotated_fig12b/20261114_full_suite_plan_03/suite.mat",
+  "frozen_suite_sha256": "e77c30416d96f5f3dcf708d497d7e47d912299bbd221ca5db8b1346b3aba776c",
+  "proposed_budget": {
+    "user_approved": false,
+    "max_wall_s": 3600,
+    "max_job_s": 120,
+    "minimum_available_bytes": 1610612736,
+    "minimum_runtime_available_bytes": 268435456,
+    "max_output_bytes": 16106127360,
+    "remote": false,
+    "parallel_workers": 0,
+    "termination_scope": "Only task-held Bellhop Process/PID after explicit budget consent"
+  },
+  "config": {
+    "physical_grid": [
+      10981,
+      201
+    ],
+    "max_reflection_order": 16,
+    "control_jobs": [
+      39,
+      39,
+      39,
+      39
+    ],
+    "bridge": "-conj(native)",
+    "reference": "J07 read only, SHA matched",
+    "order_relative_and_envelope_tolerance": 0.001,
+    "order_phase_tolerance_rad": 0.01,
+    "control_relative_and_envelope_tolerance": 0.02,
+    "control_phase_tolerance_rad": 0.05
+  },
+  "resource_usage": {
+    "assembly_pilot_s": 15.8219769,
+    "cost_pilot_s": 22.4641662,
+    "raw_assembly_audit_s": 2.4729364,
+    "coarse16_steps": 276046,
+    "fine16_steps": 327894,
+    "largest_sampled_process_peak_bytes": 54108160,
+    "complete_grid_peak_bytes": "unknown",
+    "last_available_ram_gib": 0.52,
+    "disk_available_bytes": 140614692864
+  },
+  "audit_status_and_path": {
+    "raw_assembly": "20261114_assembly_pilot_audit_01/checkpoint.json",
+    "cost": "20261114_cost_pilot_01/checkpoint.json",
+    "reuse": "20261114_component_runner_reuse_01/checkpoint.json",
+    "static": "static_checks.json",
+    "full_authorization_gate": "authorization_gate.json",
+    "dashboard": "61 refs,16 pre-existing absent result refs retained"
+  },
+  "failed_or_unrun_checks": [
+    "N1-to-N2 truncation FAIL in3 regions retained, max envelope .11886698",
+    "N2 vs FFP max envelope diagnostic .03764028 is not complete field qualification",
+    "Initial smoke post-exit resource query failure retained",
+    "Four complete grids and convergence UNRUN, NOT AUTHORIZED",
+    "Full FFP/boundary/near-bottom comparison UNRUN",
+    "Final HTML/FIG/PNG and figure audits UNRUN",
+    "Task termination branch UNEXERCISED pending consent"
+  ],
+  "code_versions_sha256_path": "code_versions_sha256.json",
+  "artifacts_sha256_path": "artifacts_sha256.json",
+  "next_allowed_step": "Wait for explicit approval of report budget, bind receipt to suite03/plan hashes; dispatch only when RAM>=1.5GiB and disk gates meet. No implicit approval, remote, live-task retry, threshold relaxation or budget increase."
+}

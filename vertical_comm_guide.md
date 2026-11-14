@@ -815,3 +815,5 @@ reference implementations were not edited. Run the audit after
 旋转Q的单墙扩展现已核对一次native Reflect2D、入射单侧Munk梯度、p/q和流体复反射率，修复Q墙缝重复kick与nm几何缝隙；底cp_native=conj(omega/k_FFP)确保两种相量下同一损耗波数。仅局部反射资格，没有完整点源/高阶总场或生产通信接口，详见[S2记录](reports/bellhop_rotated_fig12b_stage2_2026-11-14.md)。
 旋转验证的点源几何输运采用独立面外积分I=integral(c ds)，相对原生R的因子sqrt(c_source*r/(abs(cos(alpha))*I))；同时让幅度c与q/tau取同一束状态。可选.r25d在影响函数中以double真实坐标求值，SHD单精度头仅作metadata；源平面用第二组proper水平图表直接计算，不补轴。固定先导通过不等于波动/高阶总场资格，见[S3记录](reports/bellhop_rotated_fig12b_stage3_2026-11-14.md)。公共生产接口和相位合同未改。
 validation mode5将第j墙设为R_first+(j-1)D，逐次native反射加proper半转；折叠Q与q=q0-sg*(-1)^N*x一致，固定-conj及排列恢复物理复场。原生累计Amp<.005门仅在mode5取消，逐反射门保留，容量只在副本增至600000。墙限步不再被最小步长放大，1e-8m根门未变；稀疏1–3/10/12阶和112门独立审计通过，不代表完整相干总场、连续Munk收敛或通信资格。见[S4记录](reports/bellhop_rotated_fig12b_stage4_2026-11-14.md)。
+
+旋转场分块覆盖上下|dz|>=|x|和左右|dz|<|x|，各图表直接求解并以精确排列写回；只掩膜真实源点。逐阶复数叠加同时保存E=Σ|p_component|，用于干涉零点附近的误差归一，phase只在|p|>=.05E处检查。84点两阶先导原始重建通过但仍未收敛；完整四组Q/步长/束数计划只准备未执行，见[预算](reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md)。这些验证数据不输出生产H_f/CIR/BER，也不自动启动1500m工况。
