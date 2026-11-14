@@ -1,0 +1,9 @@
+check,pass,value,limit
+uniform_right_artificial_bounce_count,1,0,0
+uniform_right_natural_chart_outplane_relative,1,9.4760538263365e-15,1e-09
+munk_right_native_artificial_bounce_count,1,0,0
+munk_right_native_natural_chart_outplane_relative,1,4.1771851063987e-15,1e-09
+munk_right_point_artificial_bounce_count,1,0,0
+munk_right_point_natural_chart_outplane_relative,1,4.1771851063987e-15,1e-09
+munk_left_point_artificial_bounce_count,1,0,0
+munk_left_point_natural_chart_outplane_relative,1,4.1771851063987e-15,1e-09

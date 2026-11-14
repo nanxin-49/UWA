@@ -1,0 +1,5 @@
+check,pass,value,limit
+long_range_uniform_Green,1,7.15262054777329e-08,1e-06
+long_range_phase_rad,1,9.56716120634425e-08,1e-06
+one_cm_phase_increment_rad,1,2.22199128541156e-08,1e-06
+all_actual_ranges_distinct,1,0,0

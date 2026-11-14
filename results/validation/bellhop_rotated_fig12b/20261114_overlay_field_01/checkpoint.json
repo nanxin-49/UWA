@@ -1,0 +1,39 @@
+{
+  "status": "SOURCE_PREPARED_NOT_COMPILED",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01",
+  "source_sha256": [
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01\\bellhop.f90",
+      "sha256": "b7e04f882fe0a2bff4cbe8d6b7734410bcfed73f2d83fc0b4a2c6a3f067d6ee1"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01\\bellhopMod.f90",
+      "sha256": "389b59a14b1853a8764b567528d1164f7277b14d80ed2e4b795d4747cd202fb0"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01\\Step.f90",
+      "sha256": "6385f67fbe6e5a6079a2c308a4d5e954efa3f6498a34fda2450f96134f2b79a4"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01\\sspMod.f90",
+      "sha256": "e353ee0d5aae8a19dcf9b821c07d6c3f49283d7e07b5336c3d72c92f46b127d7"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01\\influence.f90",
+      "sha256": "91f7e645a4f51f3b73af2b5e87becef1d530886b3b74ce68181bdfc54fa5ca06"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_field_01\\RotatedFieldState.f90",
+      "sha256": "0060e2515888d3e255fb9e6790c38148f5da4387e259fb081e977336e3d49059"
+    }
+  ],
+  "scope": "2.5D geometric point transport, exact receiver coordinates, equivalent Q search; still one wall only",
+  "unrun_checks": [
+    "compile",
+    "disabled regression",
+    "fast-search equivalence",
+    "uniform/rotated Munk 3D amplitude",
+    "exact-coordinate quantization test",
+    "source-plane secondary charts"
+  ]
+}

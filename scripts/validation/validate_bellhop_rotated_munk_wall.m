@@ -5,6 +5,8 @@ function receipt = validate_bellhop_rotated_munk_wall(options)
 arguments
     options.overlay_exe (1,:) char
     options.output_dir (1,:) char
+    options.point3d (1,1) logical = false
+    options.fast_q (1,1) logical = false
     options.reuse_dir (1,:) char = ''
     options.max_elapsed_s (1,1) double {mustBePositive} = 40
 end
@@ -37,6 +39,10 @@ for id=1:2
             % Same folded medium, no reflector, no branch isolation: independent
             % geometric continuation reference, not a second physical solver.
             fid=fopen([stem '.iwcov'],'w'); assert(fid>=0); fprintf(fid,'2\n0\n0\n0\n0\n'); fclose(fid);
+        end
+        if options.point3d || options.fast_q
+            write_bellhop_rotated_field_options(stem,cfg.receiver_range_m,metas{ib}.q_receiver_m, ...
+                point3d=options.point3d,fast_q=options.fast_q);
         end
         reuse=false;
         if ~isempty(options.reuse_dir)

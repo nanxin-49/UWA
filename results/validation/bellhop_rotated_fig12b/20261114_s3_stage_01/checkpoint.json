@@ -1,0 +1,77 @@
+{
+  "run_id": "20261114_s3_stage_01",
+  "status": "S3_FIELD_PRIMITIVES_LIMITED_EVIDENCE",
+  "base_commit": "3ac0b36a318a7da4b82a903c1ba40e329f073755",
+  "branch": "experiment/bellhop-rotated-fig12b",
+  "execution_mode": "existing local MATLAB MCP plus isolated compiler/executable",
+  "matlab_release": "R2025b Update6",
+  "completed_steps": [
+    "independent out-of-plane integral",
+    "derived 3D point transport and consistent receiver c",
+    "exact double evaluation coordinates",
+    "equivalent optional Q binary search",
+    "bound SHD r/q record reader",
+    "independent left/right source-plane and up/down overlap",
+    "27 transport gates",
+    "18 chart gates",
+    "31 raw-data/Q gates",
+    "point-single-wall 26 plus independent13",
+    "disabled regression",
+    "four long-coordinate precision gates"
+  ],
+  "config": {
+    "chart_pilot_budget_s": 40,
+    "transport_pilot_budget_s": 60,
+    "transport_amplitude_tolerance": 2E-06,
+    "exact_Q_phase_tolerance_rad": 0.0001,
+    "remote_authorized": false,
+    "minimum_available_bytes": 536870912,
+    "chart_overlap_tolerance": 0.001,
+    "full_field_authorized": false,
+    "point_bridge": "-conj(native pressure)"
+  },
+  "code_versions_sha256_path": "code_versions_sha256.json",
+  "artifacts_sha256_path": "artifacts_sha256.json",
+  "failed_or_unrun_checks": [
+    "Endpoint-c amplitude FAIL retained and physically corrected",
+    "Old F-only expected ratio FAIL retained; complete state-derived ratio audited without new solve",
+    "Monotonic-only SHD reader record ambiguity caught; dual-coordinate reader fixed and raw data replayed",
+    "High-order reflection implementation pending",
+    "Full receiver-grid total field not run",
+    "Independent FFP common-point comparison not run",
+    "Final TL/near-bottom/component/convergence atlas pending",
+    "16 unrelated historical result references absent in isolated checkout"
+  ],
+  "resource_usage": {
+    "point_wall_audit_s": 0.2195878,
+    "transport_runs_and_replay_s": [
+      15.2297107,
+      15.0850608,
+      4.0445209
+    ],
+    "long_coordinates_s": 0.297663,
+    "parallel_workers": 0,
+    "point_wall_s": 2.7842212,
+    "primitive_audit_s": 0.6813503,
+    "disabled_s": 3.871901,
+    "build_elapsed_s": [
+      18.9431043,
+      19.1166621
+    ],
+    "remote": false,
+    "peak_memory_bytes": "unknown",
+    "source_chart_runs_and_replay_s": [
+      2.7174345,
+      4.775301
+    ]
+  },
+  "audit_status_and_path": {
+    "disabled": "20261114_field_disabled_01/checkpoint.json",
+    "long_coordinates": "20261114_long_coordinates_01/checkpoint.json",
+    "point_wall": "20261114_wall_point_audit_01/checkpoint.json",
+    "source_charts": "20261114_source_charts_02/checkpoint.json",
+    "transport": "20261114_field_transport_03/checkpoint.json",
+    "raw": "20261114_field_primitive_audit_01/checkpoint.json"
+  },
+  "next_allowed_step": "Implement explicit reflection orders and bounded ray capacity in validation overlay; small multi-wall and timing pilot before a concrete full-field budget approval."
+}

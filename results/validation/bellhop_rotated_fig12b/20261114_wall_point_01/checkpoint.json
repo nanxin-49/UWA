@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "elapsed_s": 2.7842212,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_point_01",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "overlay_exe_sha256": "7bbbd51a5f169bf3a4a66726ded2102c4e40b38c3864ff9ccc58388253b2fd58",
+  "scope": "One physical flat wall; folded-Q internal consistency and plane-wave reflection. No complete total field or 3D spreading qualification."
+}

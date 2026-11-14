@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 1,
+  "elapsed_s": 15.0850608,
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_field_transport_02",
+  "scope": "Fixed direct-axis 3D transport, exact-coordinate and equivalent-search pilot; no complete field",
+  "overlay_exe_sha256": "7bbbd51a5f169bf3a4a66726ded2102c4e40b38c3864ff9ccc58388253b2fd58"
+}

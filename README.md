@@ -183,4 +183,4 @@ Rx仍为3 m。当前独立绘图入口为 `generate_bellhop_100m_source1m_visual
 [中文结果报告](reports/munk_ffp_5000m_result_2026-11-12.md)与[最终离线图册v4](results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html)：独立分层Green/精确J0波数积分在固定10kHz、全向点源、示例流体底假设下通过全部必需数值检查；原始复场与配置在`results/validation/munk_ffp_5000m/20261112_full_01/J07.mat`。轴上非源点有限，近底0.01m采样，但不支持论文贯穿水柱的窄中央亮带。全局5m图仅概览，不能解析全深度细驻波。该结果不升级Bellhop/生产PE或通信资格；停止供人工审查。
 
 ## Bellhop旋转5000m Munk独立实验
-当前仅直接Q先导、源相量桥和隔离binary对照完成，反射/总场未认证。见[阶段报告](reports/bellhop_rotated_fig12b_stage1_2026-11-14.md)与[分阶段计划](reports/bellhop_rotated_fig12b_plan.md)。不替代生产PE或既有FFP资格。
+当前S1–S3直接/单墙Q、点源输运、精确坐标和源平面图表的固定先导通过；完整高阶总场和FFP共点尚未认证。见[最新阶段报告](reports/bellhop_rotated_fig12b_stage3_2026-11-14.md)与[分阶段计划](reports/bellhop_rotated_fig12b_plan.md)。不替代生产PE或既有FFP资格。
