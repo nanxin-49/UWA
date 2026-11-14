@@ -1,0 +1,25 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "elapsed_s": 2.3627241,
+  "scope": "Raw per-wall complex coefficients, reflection geometry, exact linear-Q time/integral and physical permutation; no complete-field or FFP qualification",
+  "input_dirs": [
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_multifield_sparse_02",
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_multifield_sparse_03"
+  ],
+  "case_indices": [
+    [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    [
+      7,
+      8
+    ]
+  ],
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_multifield_audit_02"
+}

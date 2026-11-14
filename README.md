@@ -184,3 +184,4 @@ Rx仍为3 m。当前独立绘图入口为 `generate_bellhop_100m_source1m_visual
 
 ## Bellhop旋转5000m Munk独立实验
 当前S1–S3直接/单墙Q、点源输运、精确坐标和源平面图表的固定先导通过；完整高阶总场和FFP共点尚未认证。见[最新阶段报告](reports/bellhop_rotated_fig12b_stage3_2026-11-14.md)与[分阶段计划](reports/bellhop_rotated_fig12b_plan.md)。不替代生产PE或既有FFP资格。
+旋转Fig12b显式多反射当前仅获稀疏分量资格，完整场/FFP仍待预算先导，见[S4阶段记录](reports/bellhop_rotated_fig12b_stage4_2026-11-14.md)。

@@ -1,0 +1,39 @@
+{
+  "status": "SOURCE_PREPARED_NOT_COMPILED",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02",
+  "source_sha256": [
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02\\bellhop.f90",
+      "sha256": "a44efaf0ed5479d8fc376542f4077428c701993ac06f8d7ecea574dca0d4e062"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02\\bellhopMod.f90",
+      "sha256": "ca8442523a60afab5a76bb13a8da4031b6bbf70978c00e4617cffa10a8d1ecae"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02\\Step.f90",
+      "sha256": "6385f67fbe6e5a6079a2c308a4d5e954efa3f6498a34fda2450f96134f2b79a4"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02\\sspMod.f90",
+      "sha256": "e353ee0d5aae8a19dcf9b821c07d6c3f49283d7e07b5336c3d72c92f46b127d7"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02\\influence.f90",
+      "sha256": "57df787f4a304db7c60c2e5eed4b76a73d3450c97dbbc9850136abb25e76701b"
+    },
+    {
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_multifield_02\\RotatedFieldState.f90",
+      "sha256": "0060e2515888d3e255fb9e6790c38148f5da4387e259fb081e977336e3d49059"
+    }
+  ],
+  "max_ray_nodes": 600000,
+  "scope": "Explicit requested reflection order; no complete field qualification yet",
+  "unrun_checks": [
+    "compile",
+    "disabled regression",
+    "multi-reflection coefficients/counts/field consistency",
+    "resource pilot",
+    "full field/FFP"
+  ]
+}

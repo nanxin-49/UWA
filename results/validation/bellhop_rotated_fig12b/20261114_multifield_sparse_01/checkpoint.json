@@ -1,0 +1,9 @@
+{
+  "status": "FAILED",
+  "failed_checks": 1,
+  "elapsed_s": 11.6778871,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_multifield_sparse_01",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "scope": "Sparse explicit reflection count/carry/coefficient controls; no complete field",
+  "overlay_exe_sha256": "6ce12e6e2b45721233720ad504f76d7da862d5fb90d8e6cd5503a8fe0707e20a"
+}

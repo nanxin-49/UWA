@@ -1,0 +1,67 @@
+{
+  "run_id": "20261114_s4_stage_01",
+  "status": "EXPLICIT_MULTI_REFLECTION_SPARSE_EVIDENCE_ONLY",
+  "branch": "experiment/bellhop-rotated-fig12b",
+  "base_commit": "a310203f4d9f7d5297e14a49b9e0f2c9efe52a13",
+  "completed_steps": [
+    "mode5 alternating physical walls",
+    "wall-clipped min-step bug diagnosed and fixed without tolerance relaxation",
+    "up/down orders1..3 sparse component comparison",
+    "up10/down12 sparse count and low-Amp control at step2m/Q20m",
+    "112 independent raw/linear-Q/per-wall gates",
+    "default ENV/SSP and official direct-Q disabled regression",
+    "8 MATLAB Code Analyzer files zero issues",
+    "local J07 SHA read-only match and metadata inspected"
+  ],
+  "config": {
+    "pilot_cumulative_gate_s": 60,
+    "long_Q_spacing_m": 20,
+    "long_step_m": 2,
+    "source_phasor_bridge": "-conj(native pressure)",
+    "minimum_available_bytes": 536870912,
+    "frequency_hz": 10000,
+    "full_field_authorized": false,
+    "remote_authorized": false,
+    "water_depth_m": 5000,
+    "ray_capacity": 600000,
+    "source_depth_m": 4950
+  },
+  "execution_mode": "existing local MATLAB MCP, serial; isolated local gfortran and executable",
+  "matlab_release": "R2025b Update6",
+  "code_versions_sha256_path": "code_versions_sha256.json",
+  "artifacts_sha256_path": "artifacts_sha256.json",
+  "resource_usage": {
+    "task_peak_memory_bytes": "unknown",
+    "sparse_elapsed_s": [
+      11.6778871,
+      9.9516839,
+      3.7946519
+    ],
+    "available_after_task_variable_cleanup_bytes": 1109397504,
+    "audit_elapsed_s": [
+      2.430083,
+      2.3627241
+    ],
+    "parallel_workers": 0,
+    "available_ram_low_observation_bytes": 250978304,
+    "build_total_s": "unknown",
+    "disabled02_s": 3.343898
+  },
+  "audit_status_and_path": {
+    "raw_independent": "20261114_multifield_audit_02/checkpoint.json",
+    "disabled": "20261114_multifield_disabled_02/checkpoint.json",
+    "dashboard": "16 pre-existing missing result references retained",
+    "sparse_qualified_cases": "sparse02 cases1..6 plus sparse03 cases7..8"
+  },
+  "failed_or_unrun_checks": [
+    "sparse01 missing second wall retained",
+    "sparse02 long h10 phase FAIL retained",
+    "audit01 includes failed coarse long cases and records 4 failures",
+    "disabled01 wrong source container stopped before solve",
+    "complete-grid field and order/beam/step/Q convergence UNRUN",
+    "independent FFP common-point comparison UNRUN",
+    "final atlas and six-question conclusion UNRUN"
+  ],
+  "ffp_J07_sha256": "8e123af0beff9904289a5419fdb82f74473beda075792b7b2f9819bd133ce3be",
+  "next_allowed_step": "Prepare complete-field engine and small capacity/timing pilot; report concrete large local budget and await explicit user approval; no remote or full-grid solve authorized"
+}

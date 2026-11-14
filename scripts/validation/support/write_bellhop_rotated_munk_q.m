@@ -1,7 +1,7 @@
 function meta = write_bellhop_rotated_munk_q(case_root,cfg)
-%WRITE_BELLHOP_ROTATED_MUNK_Q Write a direct-only proper-rotation Q SSP case.
+%WRITE_BELLHOP_ROTATED_MUNK_Q Write direct or explicit folded proper-rotation Q.
 % Physical (x,z) maps to (r,q)=(zs-z,q0+x) up and (z-zs,q0-x) down.
-% Both maps have determinant +1. No physical surface/bottom is present here.
+% Both maps have determinant +1; explicit wall sidecars are written separately.
 arguments
     case_root (1,:) char
     cfg (1,1) struct
@@ -11,16 +11,28 @@ assert(ismember(cfg.run_type,{'A','C','R'}),'Unsupported run type.');
 assert(ismember(cfg.source_geometry,{'R','X'}),'Invalid source geometry.');
 assert(mod(cfg.beam_count,2)==1 && cfg.beam_count>=3,'Use an odd beam fan including the axis.');
 d=cfg.artificial_halfwidth_m; q0=cfg.transverse_origin_m;
-assert(d>max(abs(cfg.receiver_x_m)) && q0>=d,'Invalid artificial domain.');
+assert(d>max(abs(cfg.receiver_x_m)),'Invalid artificial domain.');
 r=unique([0:cfg.ssp_spacing_m:cfg.range_limit_m,cfg.range_limit_m]).';
 has_wall=isfield(cfg,'reflection_wall');
-if has_wall, r=unique([r;cfg.wall_range_m]); end
+order=0;
+if has_wall
+    order=1; if isfield(cfg,'reflection_order'), order=cfg.reflection_order; end
+    assert(order>=1 && order==fix(order));
+    walls=cfg.wall_range_m+(0:order)*cfg.water_depth_m;
+    r=unique([r;walls(walls<=cfg.range_limit_m).']);
+end
 sgn=1; if strcmp(cfg.direction,'up'), sgn=-1; end
 z=cfg.source_z_m+sgn*r;
 if has_wall
-    if strcmp(cfg.reflection_wall,'surface'), z=abs(z);
-    elseif strcmp(cfg.reflection_wall,'bottom'), z=cfg.water_depth_m-abs(cfg.water_depth_m-z);
-    else, error('Unknown reflection wall.'); end
+    if order>1
+        z=cfg.water_depth_m-abs(mod(z,2*cfg.water_depth_m)-cfg.water_depth_m);
+    elseif strcmp(cfg.reflection_wall,'surface')
+        z=abs(z);
+    elseif strcmp(cfg.reflection_wall,'bottom')
+        z=cfg.water_depth_m-abs(cfg.water_depth_m-z);
+    else
+        error('Unknown reflection wall.');
+    end
 end
 assert(all(z>=0 & z<=cfg.water_depth_m),'Q SSP extends outside physical water.');
 c=munk_profile_sound_speed(z,cfg.munk_parameters);
@@ -29,7 +41,7 @@ physical_sample_count=numel(r);
 % Numeric guard lies beyond Beam.Box.r; no receiver/physical result uses it.
 r=[r;cfg.range_limit_m+max(4*cfg.step_m,1)];
 z=[z;z(end)]; c=[c;c(end)];
-assert(all(cfg.receiver_range_m>0 & cfg.receiver_range_m<cfg.range_limit_m));
+assert(all(cfg.receiver_range_m>0 & cfg.receiver_range_m<=cfg.range_limit_m));
 out_dir=fileparts(case_root); if ~isfolder(out_dir), mkdir(out_dir); end
 fid=fopen([case_root '.ssp'],'w'); assert(fid>=0); closer=onCleanup(@()fclose(fid));
 fprintf(fid,'%d\n',numel(r)); fprintf(fid,'%.17g ',r/1000); fprintf(fid,'\n');
@@ -38,7 +50,7 @@ fprintf(fid,'%.17g ',c); fprintf(fid,'\n'); fprintf(fid,'%.17g ',c); fprintf(fid
 clear closer
 fid=fopen([case_root '.env'],'w'); assert(fid>=0); closer=onCleanup(@()fclose(fid));
 case_title='Rotated Munk direct Q diagnostic; no physical reflections';
-if has_wall, case_title=['Rotated Munk single-' cfg.reflection_wall '-reflection Q diagnostic']; end
+if has_wall, case_title=sprintf('Rotated Munk %s launch, %d-wall Q component',cfg.direction,order); end
 fprintf(fid,'''%s''\n',case_title);
 fprintf(fid,'%.17g\n1\n''QVW''\n2 0 %.17g\n',cfg.frequency_hz,q0+d);
 fprintf(fid,'%.17g %.17g 0 1 0 0 /\n',q0-d,c(1));
@@ -46,7 +58,7 @@ fprintf(fid,'%.17g %.17g 0 1 0 0 /\n',q0+d,c(1));
 fprintf(fid,'''R'' 0\n1\n%.17g /\n%d\n',q0,numel(cfg.receiver_x_m));
 % q=q0-sgn*x is the transverse coordinate in the proper rotation.
 q=q0-sgn*cfg.receiver_x_m;
-if has_wall, q=q0+sgn*cfg.receiver_x_m; end
+if has_wall, q=q0-sgn*(-1)^order*cfg.receiver_x_m; end
 assert(all(diff(q)>=0),'Receiver transverse coordinates must increase in Bellhop chart.');
 fprintf(fid,'%.17g ',q); fprintf(fid,'/\n%d\n',numel(cfg.receiver_range_m));
 fprintf(fid,'%.17g ',cfg.receiver_range_m/1000); fprintf(fid,'/\n');
@@ -60,7 +72,7 @@ meta=struct('range_m',r,'physical_depth_m',z,'c_mps',c,'q_receiver_m',q, ...
     'components','direct-only; no total field','ssp_file',[case_root '.ssp'], ...
     'env_file',[case_root '.env'],'source_geometry',cfg.source_geometry);
 if has_wall
-    meta.physical_to_chart_matrix=-meta.physical_to_chart_matrix;
-    meta.components='single-reflected branch only; no total field';
+    if mod(order,2)==1, meta.physical_to_chart_matrix=-meta.physical_to_chart_matrix; end
+    meta.components=sprintf('Exactly %d reflected branch; no total field',order);
 end
 end

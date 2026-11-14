@@ -9,6 +9,10 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop旋转显式多反射稀疏资格（2026-11-14）
+
+- 1–3阶及上10/下12阶局部复分量、112门原始逐墙/线性Q独立审计和关闭回归通过。漏墙限步与粗步长相位失败保留；高阶Q20m控制不代替连续Munk收敛。FFP J07 SHA只读复核一致，尚无共点比较。详见[阶段S4记录](reports/bellhop_rotated_fig12b_stage4_2026-11-14.md)。完整场/收敛/最终图册待执行，先做小型实测预算并等待大型运行授权。
+
 ### Bellhop旋转S3点源输运/精确坐标/源平面图表先导通过（2026-11-14）
 
 - 在独立验证binary加入面外integral(c ds)与物理推导的3D点源因子，修复步内声速一致性；均匀Green复差4.62e-8，Munk几何输运幅度误差8.94e-8，实际线性Q相位差6.19e-6rad。是几何输运先导，不是独立FFP通过。
