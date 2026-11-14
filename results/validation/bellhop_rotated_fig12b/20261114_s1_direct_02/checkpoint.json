@@ -1,0 +1,31 @@
+{
+  "run_id": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_s1_direct_02",
+  "status": "COMPLETE",
+  "elapsed_s": 2.0877682,
+  "failed_checks": 0,
+  "unrun_checks": [
+    "off-axis ray/path audit",
+    "beam-density and complex-field convergence",
+    "rotated 3D spreading",
+    "surface/bottom/high-order reflections",
+    "independent FFP comparison",
+    "figures and figure audits"
+  ],
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_s1_direct_02",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "execution_mode": "existing MATLAB MCP + local official Bellhop",
+  "available_bytes_before": 1.73791232E+9,
+  "available_bytes_after": 1.716461568E+9,
+  "maximum_elapsed_s": 120,
+  "minimum_available_bytes": 5.36870912E+8,
+  "completed_steps": [
+    "up_refine1",
+    "up_refine2",
+    "up_refine3",
+    "down_refine1",
+    "down_refine2",
+    "down_refine3"
+  ],
+  "next_allowed_step": "Independent direct audit; then Q overlay reflection development. No large/remote run authorized.",
+  "audit_status": "pending independent replay; not physical qualification"
+}

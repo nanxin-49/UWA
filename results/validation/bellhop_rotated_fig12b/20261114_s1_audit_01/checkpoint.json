@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "elapsed_s": 5.8342348,
+  "failed_checks": 0,
+  "execution_mode": "existing MATLAB MCP; saved data only",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "qualification": "Direct axis Q/Munk time and serialization only; no total-field qualification",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_s1_audit_01"
+}

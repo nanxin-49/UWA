@@ -809,3 +809,6 @@ reference implementations were not edited. Run the audit after
 [结果报告](reports/munk_ffp_5000m_result_2026-11-12.md)采用三维全向点源的轴对称分层Helmholtz Green：`G=(1/(2π))*integral g(kappa,z)*J0(kappa*r)*kappa d kappa`。相量exp(-iωt)，原始`green`按exp(ikR)/(4πR)；`pressure_1m=4πgreen`用于1/R源参考TL，并非校准Pa或生产H_f/DSP数据。真实源点单独NaN，其他轴点直接J0积分。分片常速层内精确传播，层厚收敛与接收深度0.01m分辨率分开验证。波数截断、求积、轮廓、层厚、同尺度均匀Green/镜像、Munk直达时延及图件数据/坐标通过；早期积分和图件失败保留。
 
 该参考仅在固定10kHz、5000/4950m和示例cp1600/rho1.8/.8dB每波长流体底、零水体吸收假设下通过数值门。全局5m概览不解析整条水柱细条纹，近底4900–5000m的0.01m满足lambda/10。没有独立支持论文窄中央贯通亮带，未知论文源/底质/归一化仍未核实。未改生产相位合同、公共API、PE或Bellhop核心；不把该场接入CIR/QPSK或升级其他工况。最终图册位于`results/visualization/munk_ffp_5000m/20261112_full_01_v4/`，人工审查前不进入下一阶段。
+
+### 旋转Munk验证专用相量合同（2026-11-14；不接入通信）
+独立 Bellhop 几何点源在 ScalePressure 中 const=-1，直接均匀输出为 -exp(-ikR)/R；与正Green、exp(-iωt) FFP比较使用固定 -conj(p_Bellhop)。该合同由源码和均匀解析控制确定，不由Munk幅相拟合。旋转后的native R仍含1/sqrt(r)扩散假设，尚未获得平面分层三维点源/反射场资格；不能输出生产H_f、CIR或BER。阶段公式、假设与检查见[阶段报告](reports/bellhop_rotated_fig12b_stage1_2026-11-14.md)。生产phase contract v2未修改。

@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETE",
+  "elapsed_s": 15.6161968,
+  "failed_checks": 2,
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_validation_01",
+  "official_exe_sha256": "7e7809a64c3bf734aff6d28d0d4d52b1b4bd203d81676e3241ffd3189941b505",
+  "overlay_exe_sha256": "925302d94c50ce6c5a9710f1cd7bd372cec197109e32e246fd0a33fe135d79c5",
+  "scope": "Direct Q overlay only. Rotated point spreading, physical reflections and total field remain unqualified."
+}

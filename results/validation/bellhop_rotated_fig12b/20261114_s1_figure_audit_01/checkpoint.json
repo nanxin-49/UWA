@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "elapsed_s": 8.3912231,
+  "source_data_sha256": "02d6f537fbac05adec3a3353a47a7443058165364f8bf6802dbf7ae2326e707b",
+  "scope": "Reopened FIG data vs saved raw rays/times, and PNG re-export; not acoustic field qualification",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_s1_figure_audit_01",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6"
+}

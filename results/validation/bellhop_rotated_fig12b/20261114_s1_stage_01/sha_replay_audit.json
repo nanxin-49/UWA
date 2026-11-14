@@ -1,0 +1,6 @@
+{
+  "status": "SHA_REPLAY_PASS",
+  "failed_checks": 0,
+  "failures": [],
+  "scope": "Post-run source/artifact byte binding; numerical scope is covered by separate MATLAB audits."
+}

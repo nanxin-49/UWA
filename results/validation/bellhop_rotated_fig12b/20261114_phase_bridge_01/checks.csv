@@ -1,0 +1,6 @@
+check,pass,value,limit
+field1_fixed_bridge_phase_rad,1,5.16811057157366e-08,0.05
+field1_native_transport_amplitude,1,3.69036570191383e-08,0.002
+uniform_positive_Green_complex_relative,1,3.55277245809998e-08,0.002
+field2_fixed_bridge_phase_rad,1,0.00175381198482789,0.05
+field2_native_transport_amplitude,1,5.19581293545457e-08,0.002

@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_PREPARED_NOT_COMPILED",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_direct_02",
+  "base_bellhop_sha256": "986010216f03d1ef2156730f076fcec27ad8a39cc1a5eb44096726ee33e0e251",
+  "base_step_sha256": "1f54c01f35ac9682c80d374abc7cfc83ec9ebf72bd4928feded5e19323c757de",
+  "overlay_bellhop_sha256": "ad535ddf8fc01590387a5ce57e571fe9f7005bcdc523cb7fc6f3e6dba951699b",
+  "overlay_step_sha256": "1f54c01f35ac9682c80d374abc7cfc83ec9ebf72bd4928feded5e19323c757de",
+  "generator_sha256": "017a65fb16140d28b12484e6d53af3387c8de6922c1155d451309058459bc428",
+  "mode2": "direct Q only; use .iwcov mode=2, R0=0, receiver=0, seed=0, nprofile=0",
+  "unrun_checks": [
+    "Fortran compilation",
+    "overlay/official numerical comparison",
+    "reflected Q mapping"
+  ]
+}

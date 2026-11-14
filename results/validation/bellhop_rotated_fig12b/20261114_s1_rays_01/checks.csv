@@ -1,0 +1,13 @@
+check,pass,value,limit
+up_three_rays,1,0,0
+up_path_error_m,1,3.69012926881851e-08,0.002
+up_transverse_slowness_error_s_per_m,1,5.48835435454183e-14,2e-06
+up_artificial_boundary_fraction,1,0.00423220580294867,0.1
+up_range_reversal_count,1,0,0
+up_inverse_map_error_m,1,4.54747350886464e-13,1e-11
+down_three_rays,1,0,0
+down_path_error_m,1,1.68044245185683e-10,0.002
+down_transverse_slowness_error_s_per_m,1,3.16175715166581e-15,2e-06
+down_artificial_boundary_fraction,1,0.00437563723226378,0.1
+down_range_reversal_count,1,0,0
+down_inverse_map_error_m,1,4.49418280368263e-13,1e-11

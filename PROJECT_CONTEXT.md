@@ -9,6 +9,12 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop旋转Fig.12(b)独立分支：直接Q先导完成，反射/总场未认证（2026-11-14）
+
+- experiment/bellhop-rotated-fig12b 从本地834d4a3隔离创建；原FFP未提交改动保留。上下行proper rotation与Q SSP的轴时延、三条非轴路径、单因素先导及98项保存数据审计通过；首次末端越界和RAM未派发保留。
+- 用户单独授权安装本地gfortran；22个MSYS2官方包SHA通过。直接Q overlay已编译，对官方所测复场/射线/时延一致；未支持的反射Q仍拒绝。固定源相量桥为 -conj(p_Bellhop)，由源码负缩放和均匀Green导出，原约π失败保留。
+- 原生R在旋转Munk下仍有约1%轴向三维扩散解释差；没有强行拟合，没有反射场/总场/FFP比较或最终GO。两张阶段PNG/FIG原始数据重核与像素重导通过。详见[阶段记录](reports/bellhop_rotated_fig12b_stage1_2026-11-14.md)及[计划](reports/bellhop_rotated_fig12b_plan.md)。目标active；大型计算/SSH须先预算授权，M1/生产PE/正式S5S6不变。
+
 ### 独立5000m Munk波动参考数值通过；论文中央亮带未支持（2026-11-12）
 
 - 独立`experiment/munk-ffp-5000m`工作树固定6c53632，复用已有三维Green、镜像、Weyl与Gauss；新增验证专用分层Green/精确J0积分。10kHz、深5000m、源4950m、示例流体底假设；未改Bellhop/生产PE、未调用其求解器，M1及活塞任务状态/预算不变。

@@ -1237,3 +1237,13 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
 **2026-11-12 Munk 5000m独立波动参考：**先读[结果报告](../reports/munk_ffp_5000m_result_2026-11-12.md)、[事前设计](../reports/munk_ffp_5000m_design_2026-11-12.md)和[预算记录](../reports/munk_ffp_5000m_resource_budget_2026-11-12.md)。`validation/run_munk_ffp_preflight`复用既有Green/镜像/Weyl；`validation/run_munk_ffp_full(stage,run_id)`固定六作业并强制用户预算和RAM门；`validation/run_munk_ffp_refinement`只处理本轮一次更细积分。`audit_munk_ffp_full`、`validate_munk_ffp_long_uniform`、`audit_munk_ffp_reconstruction`、`audit_munk_ffp_figures`分别保留独立数值、同尺度基准、当前源码重建与图件坐标核验。`reporting/render_munk_ffp_5000m(run_id,audit_id,version_suffix)`只从保存数据绘图，旧版本拒绝覆盖。新分层核及精确J0辅助函数位于`validation/support/`，不是生产API。
 
 本轮固定run=`20261112_full_01`，最终场J07、数值audit_03、图形figure_audit_v4、图册`../results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html`。跨工作树使用时，显式将本工作树`validation`、`validation/support`、`reporting`绝对路径置于MATLAB路径前方；入口自身解析root，不改变共享当前目录。不要让另一个checkout的setup遮蔽路径，也不要重新执行已完成计划。所有既存run/审计/图件都有保护；状态检查不代表物理PASS，以最终独立审计为准。当前任务已停止，无新CIR/通信或后续阶段授权。
+
+### Bellhop rotated Munk Fig.12(b) validation
+- Plan and current scope: ../reports/bellhop_rotated_fig12b_plan.md and ../reports/bellhop_rotated_fig12b_stage1_2026-11-14.md.
+- validation/validate_bellhop_rotated_munk_direct.m: native Q axis time pilots, explicit executable/output paths and RAM/time gates.
+- validation/validate_bellhop_rotated_munk_rays.m: three saved rays per chart vs continuous Snell/Munk quadrature.
+- validation/audit_bellhop_rotated_munk_direct.m: raw Q analytical integration, independent continuous time, ARR/CSV/MAT and SHA binding.
+- validation/support/prepare_bellhop_rotated_q_overlay.m: hash-guarded direct-Q overlay/build source generation only; compilation is separate. Reflected Q remains rejected.
+- validation/validate_bellhop_rotated_q_overlay.m and validation/audit_bellhop_rotated_phase_bridge.m: new/official direct Q comparison, uniform 1/R source convention and fixed -conj bridge; variable-Q point spreading remains diagnostic.
+- reporting/render_bellhop_rotated_munk_preflight.m and validation/audit_bellhop_rotated_preflight_figures.m: saved-data PNG/FIG/HTML and independent FIG/raw-data/pixel checks. Stage images contain no reflected or total field.
+- Outputs: results/validation/bellhop_rotated_fig12b/<unique_run>/ and results/visualization/bellhop_rotated_fig12b/<unique_run>/.

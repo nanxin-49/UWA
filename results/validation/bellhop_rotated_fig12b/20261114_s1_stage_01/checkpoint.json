@@ -1,0 +1,58 @@
+{
+  "run_id": "20261114_s1_stage_01",
+  "status": "S1_DIRECT_LIMITED_EVIDENCE",
+  "execution_mode": "existing MATLAB MCP + local isolated Bellhop compilation/execution",
+  "matlab_release": "R2025b Update6",
+  "base_commit": "834d4a3375f64b2a8024dcd7c61bb2796d9e8c26",
+  "branch": "experiment/bellhop-rotated-fig12b",
+  "completed_steps": [
+    "coordinate/Q setup",
+    "direct axis time pilots",
+    "independent Q/step pilots",
+    "off-axis Snell paths",
+    "98-check saved direct audit",
+    "direct-Q overlay compiled and compared",
+    "fixed source phasor bridge",
+    "35-check FIG/raw-data/pixel audit"
+  ],
+  "config": {
+    "water_depth_m": 5000,
+    "source_depth_m": 4950,
+    "frequency_hz": 10000,
+    "RAM_minimum_bytes": 536870912,
+    "axis_time_tolerance_s": 7.957747154594767E-07,
+    "source_bridge": "-conj(native geometric-point pressure)",
+    "direct_pilot_budget_s": 120
+  },
+  "input_versions_sha256": {
+    "base_overlay_step": "1f54c01f35ac9682c80d374abc7cfc83ec9ebf72bd4928feded5e19323c757de",
+    "base_overlay_bellhop": "986010216f03d1ef2156730f076fcec27ad8a39cc1a5eb44096726ee33e0e251"
+  },
+  "code_versions_sha256_path": "code_versions_sha256.json",
+  "artifacts_sha256_path": "artifacts_sha256.json",
+  "failed_or_unrun_checks": [
+    "Historical terminal Q overstep fatal retained; numeric guard fixed in new run",
+    "RAM gate stopped independent_01; no job dispatched; new run after recovery",
+    "Two original expected-phase checks failed by pi; fixed bridge independently audited without rewriting failures",
+    "Rotated 3D source spreading not qualified",
+    "Surface/bottom/high-order reflections not executed",
+    "Complete field/FFP comparison/final atlas not delivered",
+    "16 unrelated old result references absent in isolated worktree"
+  ],
+  "resource_usage": {
+    "render_v2_elapsed_s": 8.865068,
+    "first_plot_and_early_setup_error_elapsed_s": "unknown",
+    "direct_pilots_and_rays_and_saved_numerical_audit_known_elapsed_s": 32.593,
+    "remote_execution": false,
+    "build_elapsed_s": 14.2917617,
+    "peak_memory_bytes": "unknown",
+    "parallel_workers": 0,
+    "figure_audit_elapsed_s": 8.3912231
+  },
+  "audit_status_and_path": {
+    "source_bridge": "20261114_phase_bridge_01/checkpoint.json",
+    "direct": "20261114_s1_audit_01/checkpoint.json",
+    "figures": "20261114_s1_figure_audit_01/checkpoint.json"
+  },
+  "next_allowed_step": "Small local Q-reflection medium/state validation; full-field or remote execution requires concrete resource budget and user authorization."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "COMPLETE",
+  "elapsed_s": 0.0407311,
+  "failed_checks": 0,
+  "fixed_bridge": "pressure_ffp_convention = -conj(pressure_Bellhop_geometric_point)",
+  "source_sha256": "8188087f79548c4b640dd4c2c1ad547a5dc46dba729fd42154a491039f544c1c",
+  "input_sha256": "7a14a7942c932ff8a407b7c9d357c59e6e8a6e749f02c985bfe528711129c277",
+  "scope": "Source phasor bridge only. Munk native R amplitude still lacks rotated 3D spreading qualification.",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_phase_bridge_01"
+}

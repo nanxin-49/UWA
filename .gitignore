@@ -203,3 +203,14 @@
 !/results/visualization/munk_ffp_5000m/20261112_full_01_v4/paper_supplied_original.png
 !/results/visualization/munk_ffp_5000m/20261112_full_01_v4/receipt.json
 !/results/visualization/munk_ffp_5000m/20261112_full_01_v4/structure_metrics.csv
+
+# Rotated Fig12b: concise evidence and stage previews only; raw data stay local.
+!/results/validation/bellhop_rotated_fig12b/**/checks.csv
+!/results/validation/bellhop_rotated_fig12b/**/checkpoint*.json
+!/results/validation/bellhop_rotated_fig12b/**/input_sha256.json
+!/results/validation/bellhop_rotated_fig12b/20261114_s1_stage_01/*.json
+!/results/visualization/bellhop_rotated_fig12b/20261114_s1_02/*.png
+!/results/visualization/bellhop_rotated_fig12b/20261114_s1_02/index.html
+
+# Keep quarantine excluded after every allow-rule.
+/cash/
