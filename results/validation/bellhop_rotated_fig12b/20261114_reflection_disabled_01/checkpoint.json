@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "elapsed_s": 3.604328,
+  "overlay_exe_sha256": "538536f5aafba3f177988fccc2ee680d2c534edfa6d71e6a5890dd449137eb06",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01",
+  "scope": "Current writer default ENV/SSP byte-identical; direct-Q complex pressure vs official frozen case",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6"
+}

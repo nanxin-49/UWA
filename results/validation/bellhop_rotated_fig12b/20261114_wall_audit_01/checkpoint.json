@@ -1,0 +1,8 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "elapsed_s": 0.3126378,
+  "scope": "Raw SHD/MAT, exact linear-Q Snell reflection consistency, root closure; not independent FFP or total-field qualification",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_audit_01"
+}

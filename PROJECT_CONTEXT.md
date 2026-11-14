@@ -9,6 +9,12 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop旋转Munk单墙Q局部反射通过；完整点源/高阶总场待开发（2026-11-14）
+
+- 独立分支单海面/流体底反射26项与保存数据独立13项通过，反射/展开复差3.85e-5/8.09e-6；底复波数与FFP严格同一假设。关闭反射后默认ENV/SSP字节与直接Q复场回归通过。
+- 修复并保留墙节点拒绝、审计列名错误及墙列零场失败：源于nm几何交点缝隙，最终只在1e-8m容差内闭合到精确平面，记录原残差，没有补轴/插值声压。原生Reflect2D单次物理反射保留，避免重复Q墙缝kick。
+- [S2记录及下步设计](reports/bellhop_rotated_fig12b_stage2_2026-11-14.md)。仍缺旋转3D面外扩散、长路径精确接收坐标、r=0源平面第二图表、高阶总场与FFP共点验证。最终GO未授予，目标active；大型/远程另需预算授权，其他工作线状态不变。
+
 ### Bellhop旋转Fig.12(b)独立分支：直接Q先导完成，反射/总场未认证（2026-11-14）
 
 - experiment/bellhop-rotated-fig12b 从本地834d4a3隔离创建；原FFP未提交改动保留。上下行proper rotation与Q SSP的轴时延、三条非轴路径、单因素先导及98项保存数据审计通过；首次末端越界和RAM未派发保留。

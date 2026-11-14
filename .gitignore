@@ -214,3 +214,6 @@
 
 # Keep quarantine excluded after every allow-rule.
 /cash/
+!/results/validation/bellhop_rotated_fig12b/20261114_s2_stage_01/*.json
+# Quarantine exclusion remains last.
+/cash/

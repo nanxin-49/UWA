@@ -1,0 +1,8 @@
+check,pass,value,limit
+surface_wall_residual_m,1,1.64436642080545e-09,1e-07
+surface_specular_error,1,3.33067542661652e-16,1e-12
+surface_proper_rotation_error,1,0,1e-12
+surface_p_rotation_error,1,0,1e-12
+surface_q_rotation_error,1,0,1e-12
+surface_native_RN_incident_gradient,1,2.52031592887251e-25,1e-16
+surface_native_p_kick_error,1,1.1113368729508e-16,1e-12

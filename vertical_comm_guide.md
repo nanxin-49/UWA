@@ -812,3 +812,4 @@ reference implementations were not edited. Run the audit after
 
 ### 旋转Munk验证专用相量合同（2026-11-14；不接入通信）
 独立 Bellhop 几何点源在 ScalePressure 中 const=-1，直接均匀输出为 -exp(-ikR)/R；与正Green、exp(-iωt) FFP比较使用固定 -conj(p_Bellhop)。该合同由源码和均匀解析控制确定，不由Munk幅相拟合。旋转后的native R仍含1/sqrt(r)扩散假设，尚未获得平面分层三维点源/反射场资格；不能输出生产H_f、CIR或BER。阶段公式、假设与检查见[阶段报告](reports/bellhop_rotated_fig12b_stage1_2026-11-14.md)。生产phase contract v2未修改。
+旋转Q的单墙扩展现已核对一次native Reflect2D、入射单侧Munk梯度、p/q和流体复反射率，修复Q墙缝重复kick与nm几何缝隙；底cp_native=conj(omega/k_FFP)确保两种相量下同一损耗波数。仅局部反射资格，没有完整点源/高阶总场或生产通信接口，详见[S2记录](reports/bellhop_rotated_fig12b_stage2_2026-11-14.md)。

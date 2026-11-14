@@ -1,0 +1,16 @@
+{
+  "status": "SOURCE_PREPARED_NOT_COMPILED",
+  "scope": "Single flat wall Q; source spreading still diagnostic",
+  "direct_overlay_sha256": "ad535ddf8fc01590387a5ce57e571fe9f7005bcdc523cb7fc6f3e6dba951699b",
+  "official_influence_sha256": "8188087f79548c4b640dd4c2c1ad547a5dc46dba729fd42154a491039f544c1c",
+  "bellhop_sha256": "83a27e41642accbb33ab1db2b2ea1e0ad475d4257d8c8e5116a5819c264698b7",
+  "step_sha256": "5ee01df26d520e633dba09a9cb396fb00f841aa80467fe0508be5ee0532df3c8",
+  "influence_sha256": "50860102d759ad94d1d7e0f559ba730d2a3ca9e1fedee6a71403a5e9cad89e33",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_06",
+  "unrun_checks": [
+    "compilation",
+    "disabled mode regression",
+    "one-sided gradient/pq audit",
+    "reflection coefficient/time/field audit"
+  ]
+}

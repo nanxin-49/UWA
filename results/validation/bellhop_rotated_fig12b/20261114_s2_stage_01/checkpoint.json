@@ -1,0 +1,65 @@
+{
+  "run_id": "20261114_s2_stage_01",
+  "status": "S2_SINGLE_WALL_LIMITED_EVIDENCE",
+  "base_commit": "6b2a6063dfb733c20334b2f48a3a777a55ce10c0",
+  "branch": "experiment/bellhop-rotated-fig12b",
+  "execution_mode": "existing local MATLAB MCP plus isolated gfortran build",
+  "matlab_release": "R2025b Update6",
+  "completed_steps": [
+    "one flat surface Q reflection",
+    "one fluid-bottom Q reflection with exact FFP bottom complex wavenumber",
+    "incident one-sided gradient and native p/q audit",
+    "wall root closure with pre-closure residual preserved",
+    "26 local checks",
+    "13 independent raw-data/linear-Q-Snell checks",
+    "disabled direct-mode ENV/SSP byte and pressure regression"
+  ],
+  "config": {
+    "ssp_spacing_m": 5,
+    "beams": 301,
+    "frequency_hz": 10000,
+    "wall_root_closure_tolerance_m": 1E-08,
+    "water_depth_m": 5000,
+    "source_depth_m": 4950,
+    "step_m": 2,
+    "minimum_available_bytes": 536870912,
+    "reflection_field_tolerance": 0.0003,
+    "per_wall_validation_budget_s": 40
+  },
+  "code_versions_sha256_path": "code_versions_sha256.json",
+  "artifacts_sha256_path": "artifacts_sha256.json",
+  "failed_or_unrun_checks": [
+    "Early post-wall receiver gate failure retained",
+    "Audit column-name failure retained; outputs reused only after input/binary SHA and terminal checks",
+    "Zero-wall receiver column FAIL retained before geometric closure",
+    "Full rotated 3D point spreading not implemented",
+    "High-order reflections/full total field not implemented",
+    "Independent FFP common-point field comparison not run",
+    "Exact long-range receiver evaluation coordinates and source-plane secondary charts pending",
+    "58 dashboard refs include 16 pre-existing absent local result refs"
+  ],
+  "resource_usage": {
+    "wall_pilot_elapsed_s": [
+      0.6092753,
+      3.4188911,
+      4.6219376,
+      3.623465
+    ],
+    "remote": false,
+    "build_elapsed_s": [
+      13.0195452,
+      13.2040637,
+      19.494422
+    ],
+    "raw_audit_elapsed_s": 0.3126378,
+    "disabled_regression_elapsed_s": 3.604328,
+    "peak_memory_bytes": "unknown",
+    "parallel_workers": 0
+  },
+  "audit_status_and_path": {
+    "local": "20261114_wall_qualification_04/checkpoint.json",
+    "disabled": "20261114_reflection_disabled_01/checkpoint.json",
+    "independent": "20261114_wall_audit_01/checkpoint.json"
+  },
+  "next_allowed_step": "Necessary local development/qualification of 3D Jacobi spreading, exact coordinates, equivalent Q search and source-plane charts. Before full field or any remote execution, measure a pilot and obtain concrete resource-budget authorization."
+}

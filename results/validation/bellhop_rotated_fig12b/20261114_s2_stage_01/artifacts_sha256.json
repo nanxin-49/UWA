@@ -1,0 +1,1117 @@
+[
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_01\\build_manifest.json",
+    "sha256": "89FE8E30B5A6DF50121A21B0270AAFF832FB42D60348790A7F92BA263AB1CFF3",
+    "bytes": 1076
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_01\\checkpoint_build.json",
+    "sha256": "2593CA61A0AA6ED20A49C980675BC2730704A8FD0CD3023099A0E975AB26FBA0",
+    "bytes": 260
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_01\\exit_code.txt",
+    "sha256": "13BF7B3039C63BF5A50491FA3CFD8EB4E699D1BA1436315AEF9CBE5711530354",
+    "bytes": 3
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_01\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_01\\stdout.log",
+    "sha256": "BC0822C2300DD00B274CB7C483D9353961A4AAD7534DB8AF43EE417128525FBC",
+    "bytes": 175
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_01\\bin\\bellhop_rotated_reflected_q_2020.exe",
+    "sha256": "39B569B9AC85784AFFF00407410406FD7CEC0733C080B888DC8E2453E9E62876",
+    "bytes": 28125124
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_02\\build_manifest.json",
+    "sha256": "3042A9C9D0326B44879F5A449846C733F3812E8AB52DD7D271C37042101B0008",
+    "bytes": 1076
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_02\\checkpoint_build.json",
+    "sha256": "E5401E49AA8D536E4CB453FC7F36A85BC81960179DC62B56DE073B2FEB67F2ED",
+    "bytes": 260
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_02\\exit_code.txt",
+    "sha256": "13BF7B3039C63BF5A50491FA3CFD8EB4E699D1BA1436315AEF9CBE5711530354",
+    "bytes": 3
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_02\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_02\\stdout.log",
+    "sha256": "0115C1A035A64B3F31C8154FEA3C558B597F92E0A2FBA482C2E37932576DDB76",
+    "bytes": 175
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_02\\bin\\bellhop_rotated_reflected_q_2020.exe",
+    "sha256": "9A8876C76C4CC7FD1F2D27D356EFC5B7101993C9583A84D8FD325BD074499063",
+    "bytes": 28125636
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_03\\build_manifest.json",
+    "sha256": "958A41A15A0D72CBA399507C2E4575180CD3B30E354100CE6FDCF33F22360171",
+    "bytes": 1076
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_03\\checkpoint_build.json",
+    "sha256": "827653B0F17D638B96934E1A442BB119B80AFE1BC99C50B5C17ED9E22469F448",
+    "bytes": 259
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_03\\exit_code.txt",
+    "sha256": "13BF7B3039C63BF5A50491FA3CFD8EB4E699D1BA1436315AEF9CBE5711530354",
+    "bytes": 3
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_03\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_03\\stdout.log",
+    "sha256": "C08866DA90AA12BF951964FDF361477683861B767099F808281ADB5C68B41DC9",
+    "bytes": 175
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_build_reflection_03\\bin\\bellhop_rotated_reflected_q_2020.exe",
+    "sha256": "538536F5AAFBA3F177988FCCC2EE680D2C534EDFA6D71E6A5890DD449137EB06",
+    "bytes": 28126186
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_01\\bellhop.f90",
+    "sha256": "A2139B556653D7181239864B0A83D9F117A6243688C4A5B25963E3F305722CF7",
+    "bytes": 51219
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_01\\Step.f90",
+    "sha256": "55274F2FEDBB7F412070C8D042EAF3DA402DAE06F6237176E5FD656F89AA6B00",
+    "bytes": 10245
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_03\\bellhop.f90",
+    "sha256": "D8E02ADED900C83C07E9A267027C0418BFDBE5BBEE273928AE5CED3D7FB9D9A8",
+    "bytes": 51221
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_03\\build_rotated_reflected_q.ps1",
+    "sha256": "1180422842A6E17123348237E951A76B3BEDCC8D57442D5BF87CD6FF53B7D1DD",
+    "bytes": 6523
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_03\\checkpoint.json",
+    "sha256": "B1B5EBD9CC3D4617B2C9331E7733461BB027566BADC2BC02C0C5D4A67D27C060",
+    "bytes": 892
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_03\\influence.f90",
+    "sha256": "50860102D759AD94D1D7E0F559BA730D2A3CA9E1FEDEE6A71403A5E9CAD89E33",
+    "bytes": 36373
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_03\\Step.f90",
+    "sha256": "5EE01DF26D520E633DBA09A9CB396FB00F841AA80467FE0508BE5EE0532DF3C8",
+    "bytes": 10249
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_04\\bellhop.f90",
+    "sha256": "55EFF972283D69B4765D0C476907B72D1D71B2B90CC79B0A9C7E741E3CF09355",
+    "bytes": 51309
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_04\\build_rotated_reflected_q.ps1",
+    "sha256": "1180422842A6E17123348237E951A76B3BEDCC8D57442D5BF87CD6FF53B7D1DD",
+    "bytes": 6523
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_04\\checkpoint.json",
+    "sha256": "AE77922C8321734A6F77044F7D22EAA7651251CD58537C8F48BDB3EA1B9A9EA9",
+    "bytes": 892
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_04\\influence.f90",
+    "sha256": "50860102D759AD94D1D7E0F559BA730D2A3CA9E1FEDEE6A71403A5E9CAD89E33",
+    "bytes": 36373
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_04\\Step.f90",
+    "sha256": "5EE01DF26D520E633DBA09A9CB396FB00F841AA80467FE0508BE5EE0532DF3C8",
+    "bytes": 10249
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_05\\bellhop.f90",
+    "sha256": "CF3FD8D5853D3478AE7315CFEB8AB451460D15B59B600B2C61C33E4ADCC65A9E",
+    "bytes": 51285
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_05\\build_rotated_reflected_q.ps1",
+    "sha256": "1180422842A6E17123348237E951A76B3BEDCC8D57442D5BF87CD6FF53B7D1DD",
+    "bytes": 6523
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_05\\checkpoint.json",
+    "sha256": "95044B6186146C6B648ACEC06329288DF343FE152D3501AD855AD5E09A3126DB",
+    "bytes": 892
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_05\\influence.f90",
+    "sha256": "50860102D759AD94D1D7E0F559BA730D2A3CA9E1FEDEE6A71403A5E9CAD89E33",
+    "bytes": 36373
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_05\\Step.f90",
+    "sha256": "5EE01DF26D520E633DBA09A9CB396FB00F841AA80467FE0508BE5EE0532DF3C8",
+    "bytes": 10249
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_06\\bellhop.f90",
+    "sha256": "83A27E41642ACCBB33AB1DB2B2EA1E0AD475D4257D8C8E5116A5819C264698B7",
+    "bytes": 51725
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_06\\build_rotated_reflected_q.ps1",
+    "sha256": "1180422842A6E17123348237E951A76B3BEDCC8D57442D5BF87CD6FF53B7D1DD",
+    "bytes": 6523
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_06\\checkpoint.json",
+    "sha256": "EA82698715FEF916E5C7220335D62D7DCDCD0D8E651053519DA604DFEA63377D",
+    "bytes": 892
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_06\\influence.f90",
+    "sha256": "50860102D759AD94D1D7E0F559BA730D2A3CA9E1FEDEE6A71403A5E9CAD89E33",
+    "bytes": 36373
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_overlay_reflection_06\\Step.f90",
+    "sha256": "5EE01DF26D520E633DBA09A9CB396FB00F841AA80467FE0508BE5EE0532DF3C8",
+    "bytes": 10249
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.covdiag",
+    "sha256": "FD852EEC1669D27AF87704761D8D32D25D4648DE22A04BEC2C3823DB4E1479A0",
+    "bytes": 400
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.env",
+    "sha256": "232D5D73EE912E93E773B9EBE631AD7F715035DE764C6F36521F8F30D27DA0F1",
+    "bytes": 287
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.iwcov",
+    "sha256": "6F4B4E1D0393DE866DF8C6CE771170ACDE8BFB7C793C07A810862584497EF13B",
+    "bytes": 10
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.iwdiag",
+    "sha256": "9F2BCB17505B6188800E57E4E117002CFEC25B1072B6240A80DE23A240990ABE",
+    "bytes": 497
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.prt",
+    "sha256": "1729F8D978822904F67334866046B8BD901B66AC498A18FB95CAFDA77F107EB8",
+    "bytes": 68388
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.shd",
+    "sha256": "F522E82ACB4AB1CBB2D9C7695C6C09513438D46B30260A617AFAC572AB8D7C66",
+    "bytes": 1804
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\case.ssp",
+    "sha256": "8B269E717B53D8D1B2B68870E5DB8D593142809000C6C19C52959E7273A3D9E1",
+    "bytes": 107030
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\checkpoint.json",
+    "sha256": "9B6C08F684C56D1DBE1C0AE2A938E86E41D06B7E2A7736619976732B7168864C",
+    "bytes": 497
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\checks.csv",
+    "sha256": "D3ADC8A2FF8BFD669587E6DD9A11BA1180BDFE9277DD52B795246E58F9F866F6",
+    "bytes": 69
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\pid.txt",
+    "sha256": "57428B7BF299A9CE24B282333F4740F1B23F2559E17B2D9523177007DA9A60A2",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\result.mat",
+    "sha256": "95DA3594B2C4177E51F814DDA3822256CE527E7C316DB2951F0C4B1B829559AB",
+    "bytes": 2963
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_reflection_disabled_01\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_audit_01\\checkpoint.json",
+    "sha256": "D2D4D8ACFEBD197FBF3368DA87D7590F53162B5AB7372C930E10C06F22756305",
+    "bytes": 421
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_audit_01\\checks.csv",
+    "sha256": "68A93AD60C09E3928A61062094EDC88AE29CA208928FD6A5B7BC96EB16684C67",
+    "bytes": 635
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_audit_01\\diary.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_audit_01\\input_sha256.json",
+    "sha256": "71F1C41D50F7F49A8C8E7578109DB53000CCD5E4B0E3504688C4334C00EB9EA4",
+    "bytes": 7712
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_audit_01\\result.mat",
+    "sha256": "77AC97C10DF7BE0E6408A240FEF4EB80620E42D349B0BD7E2AF202A43012B721",
+    "bytes": 4333
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\checkpoint.json",
+    "sha256": "C21638A375DF0D3070993BEDA6BF29E6F10B2CA1FF61E2E0D5B7A3558F50FD8B",
+    "bytes": 534
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\checks.csv",
+    "sha256": "73E3B7D3B774B292AAC8FA5A150E482C0CFB23827980CE047834DC97D33EEA44",
+    "bytes": 24
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\diary.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\error.log",
+    "sha256": "7474D081FD42FE7888BDE831CEF577DFD1F7BE312D832E5059539E87209A63E3",
+    "bytes": 728
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\result.mat",
+    "sha256": "A9C223E2D23E4CBCA65D2D51B9996FB467B158B4D71A2C11BF42527A467D49E4",
+    "bytes": 1509
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.covdiag",
+    "sha256": "FD852EEC1669D27AF87704761D8D32D25D4648DE22A04BEC2C3823DB4E1479A0",
+    "bytes": 400
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.env",
+    "sha256": "BB3585873A3CB8BA7EC56A5EE168848D72367628BBC647F667BF88456ADC67DD",
+    "bytes": 346
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.iwcov",
+    "sha256": "1A0EB38B449C458434D462E000C9DE89BDB88C37C76AFAA4B0C342CF20F24CC2",
+    "bytes": 43
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.iwdiag",
+    "sha256": "A506D8C86CABB3ED57454FA9FD9BCA1AA3A9FBDFD12B286388584D10E86EDF66",
+    "bytes": 472
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.prt",
+    "sha256": "85AE560762FA8483586CD0CB46403262E8C9B04335D65226F530D7843F337F1D",
+    "bytes": 67021
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.shd",
+    "sha256": "E44154639109BBF9E9579617B2592CB8A0F6FF5D35BCC9C5A8C6AEAA700EA1D5",
+    "bytes": 1640
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\pid.txt",
+    "sha256": "3CB4F294705BD27456478300D02D9FB3E21FC73597249832D7337149B079BB56",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\stderr.log",
+    "sha256": "205DFF5A57E4126F2F83A742E9AC8FE9A0133F7BD777C08C063A9F36F02D32E4",
+    "bytes": 51
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_01\\surface_mode1\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\checkpoint.json",
+    "sha256": "97E2D50E6C232D2EEEC103F228C3258851804F077D0066DB3D58DF1D1E053050",
+    "bytes": 534
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\checks.csv",
+    "sha256": "28EB7D66898B4D247C4094D4371525DE79BA22F19000D53E8F9CF75F7F26C782",
+    "bytes": 367
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\diary.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\error.log",
+    "sha256": "B17C00781BCCC8FCCED52BF38F1CF62C80EBB64E93E6CBF1610655EF9A1446E7",
+    "bytes": 258
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\result.mat",
+    "sha256": "33A9CD882977D60EF2BB5FF727A1D784D36E3F98BBA1AE22EBB2346B41443BBC",
+    "bytes": 1719
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.covdiag",
+    "sha256": "31BBED68172029FF6EEE85FEFFACBA0E3EBB04452BECAFF7F8847905AC33B18F",
+    "bytes": 345045
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.env",
+    "sha256": "904CB22556998819FB654989E93E74D941F3314C79A25AB84E2451E8F5EB2AAC",
+    "bytes": 340
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.iwcov",
+    "sha256": "1A0EB38B449C458434D462E000C9DE89BDB88C37C76AFAA4B0C342CF20F24CC2",
+    "bytes": 43
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.iwdiag",
+    "sha256": "2F68BF9A80C28D8CC1437E9ECBFB99985E85F3A2664C1F31265CCE0A0E71758B",
+    "bytes": 384247
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.prt",
+    "sha256": "362FFD2DD6D99C8A10836DA1821F3FE4DE44936807953D7C7D06B06D92E2A81F",
+    "bytes": 68754
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.shd",
+    "sha256": "8775A5987A8D620B3F30824333FDB095E69FEC3993F8F2C2E2F7E18176A32367",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\pid.txt",
+    "sha256": "16A8C6E37E60C908906516DA666C667015F9419C46E4808E55791BE903595284",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode1\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.covdiag",
+    "sha256": "FD852EEC1669D27AF87704761D8D32D25D4648DE22A04BEC2C3823DB4E1479A0",
+    "bytes": 400
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.env",
+    "sha256": "904CB22556998819FB654989E93E74D941F3314C79A25AB84E2451E8F5EB2AAC",
+    "bytes": 340
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.iwcov",
+    "sha256": "6F4B4E1D0393DE866DF8C6CE771170ACDE8BFB7C793C07A810862584497EF13B",
+    "bytes": 10
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.iwdiag",
+    "sha256": "A506D8C86CABB3ED57454FA9FD9BCA1AA3A9FBDFD12B286388584D10E86EDF66",
+    "bytes": 472
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.prt",
+    "sha256": "7441555A7F10DAA19C451B9CB9B35A5903F5287A507037D072D1273AB4C1FAA0",
+    "bytes": 68754
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.shd",
+    "sha256": "58E5638EDA5C6BA62BCBC02133F763F568E39C6CF2495BFD6C264A29A324D5B0",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\pid.txt",
+    "sha256": "838F461C2FA673CEC73E6EECDAFA88B127802D6CB0A61C53175197A122CB645A",
+    "bytes": 3
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_02\\surface_mode2\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_result.mat",
+    "sha256": "9D9573FE594FA204ADFF163395EB3A40107B00214F133BF66510446DC0406E20",
+    "bytes": 49798
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\checkpoint.json",
+    "sha256": "1FB49FAB370E087C5B9B767D9919C01DD772D1F3A14712E44F18AD62D4DD93E2",
+    "bytes": 536
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\checks.csv",
+    "sha256": "B8DBEE460BF76A28745BA12435123A6E144AC0E1598FD452062CD1779DFCAAF0",
+    "bytes": 1414
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\diary.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\error.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\result.mat",
+    "sha256": "866BA777A4CCEAE31E9B1218E40F4BA86C2442A781EF6EFB3470A7446A18B73F",
+    "bytes": 143310
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_result.mat",
+    "sha256": "94B49E97C3AA18003DD17C350936E1C084205345E0A5CA0912A147D7AA3392FB",
+    "bytes": 53082
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.covdiag",
+    "sha256": "A2BEE0E66747DAF101449D9EAA313B4094C3E880980FBA8693D0CF7A5FF64A1E",
+    "bytes": 345045
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.env",
+    "sha256": "32EE02A8808FD9A6A34450B7E416AE95578C815C9CA39BBA10E5298AB1300FDA",
+    "bytes": 322
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.iwcov",
+    "sha256": "1C51A5E819ADC016C6B2A3D4ED1E7D887A50156366F4CC9FE87A369C8AEE8B8A",
+    "bytes": 35
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.iwdiag",
+    "sha256": "1E4A622C67A0B440A4D75614AE4AAACA11DEBFD63C0DC3D87F2973CC59A544C9",
+    "bytes": 384247
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.prt",
+    "sha256": "D57048AD2E483D053612C29187AEC1A42E8F5EB35923DBF767164814EE021875",
+    "bytes": 37066
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.rotq",
+    "sha256": "7EB6B6D4262F088F017B437066F440339599F7E2D25ADD4BC55ED7A0C0EEBBDE",
+    "bytes": 49
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.shd",
+    "sha256": "A43D3D8961135DD78B1798FEFB2A911A1DECF352C0657D877E53270F80120BA7",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\case.ssp",
+    "sha256": "513168CF84EF5B8D9DB7380BBB2E36A7EBC7664D5C5EBECB9FC030FFC31EC02E",
+    "bytes": 54450
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\pid.txt",
+    "sha256": "7287ED6F11060BF6C3B4AC786F3A562BC5479EE48CCC55EDBFC03417507D4E5F",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode1\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.covdiag",
+    "sha256": "FD852EEC1669D27AF87704761D8D32D25D4648DE22A04BEC2C3823DB4E1479A0",
+    "bytes": 400
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.env",
+    "sha256": "32EE02A8808FD9A6A34450B7E416AE95578C815C9CA39BBA10E5298AB1300FDA",
+    "bytes": 322
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.iwcov",
+    "sha256": "6F4B4E1D0393DE866DF8C6CE771170ACDE8BFB7C793C07A810862584497EF13B",
+    "bytes": 10
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.iwdiag",
+    "sha256": "A506D8C86CABB3ED57454FA9FD9BCA1AA3A9FBDFD12B286388584D10E86EDF66",
+    "bytes": 472
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.prt",
+    "sha256": "9057720C79C250C1CAF2B475E360F90B111DF85C05BFAF969D287FAD4C779A55",
+    "bytes": 37066
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.rotq",
+    "sha256": "7EB6B6D4262F088F017B437066F440339599F7E2D25ADD4BC55ED7A0C0EEBBDE",
+    "bytes": 49
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.shd",
+    "sha256": "F7BE222E8A03992CCC92C043359277305530650B1529A9F7275715DD976A38A4",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\case.ssp",
+    "sha256": "513168CF84EF5B8D9DB7380BBB2E36A7EBC7664D5C5EBECB9FC030FFC31EC02E",
+    "bytes": 54450
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\pid.txt",
+    "sha256": "E0E78422AA4F6D4E1474B64A8E420AF78382DD8ED80BA47FA1C1749041271DFE",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\bottom_mode2\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.env",
+    "sha256": "904CB22556998819FB654989E93E74D941F3314C79A25AB84E2451E8F5EB2AAC",
+    "bytes": 340
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.iwcov",
+    "sha256": "1A0EB38B449C458434D462E000C9DE89BDB88C37C76AFAA4B0C342CF20F24CC2",
+    "bytes": 43
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.iwdiag",
+    "sha256": "2F68BF9A80C28D8CC1437E9ECBFB99985E85F3A2664C1F31265CCE0A0E71758B",
+    "bytes": 384247
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.prt",
+    "sha256": "362FFD2DD6D99C8A10836DA1821F3FE4DE44936807953D7C7D06B06D92E2A81F",
+    "bytes": 68754
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.shd",
+    "sha256": "8775A5987A8D620B3F30824333FDB095E69FEC3993F8F2C2E2F7E18176A32367",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode1\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.env",
+    "sha256": "904CB22556998819FB654989E93E74D941F3314C79A25AB84E2451E8F5EB2AAC",
+    "bytes": 340
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.iwcov",
+    "sha256": "6F4B4E1D0393DE866DF8C6CE771170ACDE8BFB7C793C07A810862584497EF13B",
+    "bytes": 10
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.iwdiag",
+    "sha256": "A506D8C86CABB3ED57454FA9FD9BCA1AA3A9FBDFD12B286388584D10E86EDF66",
+    "bytes": 472
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.prt",
+    "sha256": "7441555A7F10DAA19C451B9CB9B35A5903F5287A507037D072D1273AB4C1FAA0",
+    "bytes": 68754
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.shd",
+    "sha256": "58E5638EDA5C6BA62BCBC02133F763F568E39C6CF2495BFD6C264A29A324D5B0",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_03\\surface_mode2\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_result.mat",
+    "sha256": "59F7C7232144B7A604C2DB0B6D07C946A2E2E22642D187D8645DA8B11FCF2D20",
+    "bytes": 51301
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\checkpoint.json",
+    "sha256": "C9824A97ABE57223CA8AA926BFD53B34F8DFA33C1BA0550E0451E5D1F19E2033",
+    "bytes": 535
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\checks.csv",
+    "sha256": "D2B3869AA2CCF7C2D7FC253AA81A7896B3CA7EE022D64782837F432850BF1D50",
+    "bytes": 1379
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\diary.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\error.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\result.mat",
+    "sha256": "7D8E898DB9CB7AF262048972D3DE0A93124E50F65E9EAB00E75AD3DE942C3FD2",
+    "bytes": 146402
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_result.mat",
+    "sha256": "0690F4B32E4A4977BEDEC7C6BDDC22C21B96FC51B80DE02B7EA74D821ED61CB8",
+    "bytes": 54489
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.covdiag",
+    "sha256": "B18366D32B74AA8340D606F1E5B5D006D28AFE399FC38D95151E3AFBF2E8F516",
+    "bytes": 345045
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.env",
+    "sha256": "32EE02A8808FD9A6A34450B7E416AE95578C815C9CA39BBA10E5298AB1300FDA",
+    "bytes": 322
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.iwcov",
+    "sha256": "1C51A5E819ADC016C6B2A3D4ED1E7D887A50156366F4CC9FE87A369C8AEE8B8A",
+    "bytes": 35
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.iwdiag",
+    "sha256": "452C56002143F76FDD0FCFF7D08AA42BC33E29661FEF62736519ACE69D09A18E",
+    "bytes": 392098
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.prt",
+    "sha256": "D82970A3C6035424AA9CD10EC70CC493D24491935536CA581E1F87F87EA58F1C",
+    "bytes": 37066
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.rotq",
+    "sha256": "7EB6B6D4262F088F017B437066F440339599F7E2D25ADD4BC55ED7A0C0EEBBDE",
+    "bytes": 49
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.shd",
+    "sha256": "A3348419F1868EE70D8379DECE68A62BE4B8844867232BC261A4BEAB7B460072",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\case.ssp",
+    "sha256": "513168CF84EF5B8D9DB7380BBB2E36A7EBC7664D5C5EBECB9FC030FFC31EC02E",
+    "bytes": 54450
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\pid.txt",
+    "sha256": "9782DB6027F5F37025700D231E28C64C9F78CCD455912E17E3F3A027DC4C9B67",
+    "bytes": 4
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode1\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.covdiag",
+    "sha256": "FD852EEC1669D27AF87704761D8D32D25D4648DE22A04BEC2C3823DB4E1479A0",
+    "bytes": 400
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.env",
+    "sha256": "32EE02A8808FD9A6A34450B7E416AE95578C815C9CA39BBA10E5298AB1300FDA",
+    "bytes": 322
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.iwcov",
+    "sha256": "6F4B4E1D0393DE866DF8C6CE771170ACDE8BFB7C793C07A810862584497EF13B",
+    "bytes": 10
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.iwdiag",
+    "sha256": "9F2BCB17505B6188800E57E4E117002CFEC25B1072B6240A80DE23A240990ABE",
+    "bytes": 497
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.prt",
+    "sha256": "34A71719405FD58A5E49051FF753F995E3B162B40BAEA3185BF5299B7B54FE1C",
+    "bytes": 37066
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.rotq",
+    "sha256": "7EB6B6D4262F088F017B437066F440339599F7E2D25ADD4BC55ED7A0C0EEBBDE",
+    "bytes": 49
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.shd",
+    "sha256": "F7BE222E8A03992CCC92C043359277305530650B1529A9F7275715DD976A38A4",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\case.ssp",
+    "sha256": "513168CF84EF5B8D9DB7380BBB2E36A7EBC7664D5C5EBECB9FC030FFC31EC02E",
+    "bytes": 54450
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\pid.txt",
+    "sha256": "95FDC618500E9409D2A5A32EFF6802D8975510DA92DC01FDADC21D8DE8526F50",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\bottom_mode2\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.covdiag",
+    "sha256": "D00799D1AC21D73764957008E64F90BE22DBFC7078A8740499444D24DF9BC3BF",
+    "bytes": 345045
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.env",
+    "sha256": "904CB22556998819FB654989E93E74D941F3314C79A25AB84E2451E8F5EB2AAC",
+    "bytes": 340
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.iwcov",
+    "sha256": "1A0EB38B449C458434D462E000C9DE89BDB88C37C76AFAA4B0C342CF20F24CC2",
+    "bytes": 43
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.iwdiag",
+    "sha256": "69565868BAD46F0874C41453433EB05AF7C2132E466D16E515BC502604EAA4C8",
+    "bytes": 392098
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.prt",
+    "sha256": "CB0CD560D512E5D96A8FD66A7EC994A8CA581B3C3BC42CF7B407932E7D1DC651",
+    "bytes": 68754
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.shd",
+    "sha256": "E866AFDAA99351573166242F5F76087B7DEFC34BE29BA1B218C85C92592FB006",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\pid.txt",
+    "sha256": "A31B547A0B487FDFF6B852D9EBB5FE1438777E23A6509AE83CB5349BE4566C13",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode1\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.covdiag",
+    "sha256": "FD852EEC1669D27AF87704761D8D32D25D4648DE22A04BEC2C3823DB4E1479A0",
+    "bytes": 400
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.env",
+    "sha256": "904CB22556998819FB654989E93E74D941F3314C79A25AB84E2451E8F5EB2AAC",
+    "bytes": 340
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.iwcov",
+    "sha256": "6F4B4E1D0393DE866DF8C6CE771170ACDE8BFB7C793C07A810862584497EF13B",
+    "bytes": 10
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.iwdiag",
+    "sha256": "9F2BCB17505B6188800E57E4E117002CFEC25B1072B6240A80DE23A240990ABE",
+    "bytes": 497
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.prt",
+    "sha256": "09537D58AEFB82218FF54266EE7FEC10A44242315462A3FCD84A5529C9AE1E2B",
+    "bytes": 68754
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.rotq",
+    "sha256": "1AD7EF487666BBA1475A59EFBC59EF13D81FD06F41639C10F85013D793F55391",
+    "bytes": 18
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.shd",
+    "sha256": "58E5638EDA5C6BA62BCBC02133F763F568E39C6CF2495BFD6C264A29A324D5B0",
+    "bytes": 2132
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\case.ssp",
+    "sha256": "BC579E412D724AC1375F0225CF216587FAD48763BCFB067A6694E49265E5BB46",
+    "bytes": 108887
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\exit_code.txt",
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+    "bytes": 1
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\pid.txt",
+    "sha256": "AB0B623E2917148BCEAD58E44E0C7E765F0B9A455AD8F08E76317A56B6429325",
+    "bytes": 5
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\state.txt",
+    "sha256": "D0CDA4072C673328FC25B9E5A1DE9238C9BC8433113E0B82C4C948F9638C958B",
+    "bytes": 8
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\stderr.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_wall_qualification_04\\surface_mode2\\stdout.log",
+    "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+    "bytes": 0
+  }
+]
