@@ -53,10 +53,13 @@ P22保存结果与新Ubuntu最小项目基线保留其历史复核范围；M1仍
 
 **历史审计：**S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。 2026-11-14本次仅核配置与导航，未重做MAT/CSV、SHA数值链或FIG审计；result_date及历史审计结论不变。
 
-**当前重跑条件：**专题入口和保存结果可查；重新求解仍要按原阶段、参考和资源门审批。 当前顺序以任务表R1为准；运行前仍须明确范围、参考和资源门。远程操作仅在用户授权后启用remote-matlab-ssh Skill；MCP故障不自动切换执行模式。
+**当前重跑条件：**专题入口和保存结果可查；重新求解仍要按原阶段、参考和资源门审批。 2026-11-14形状补图入口已实现，但SSH公钥认证失败，尚未执行；用户选择恢复SSH后继续远端，现有P0/P1资格不变。 同日SSH代理恢复后补图完成，五组PNG/FIG与复场回传核查通过；旧SSH失败保留。 当前顺序以任务表R1为准；运行前仍须明确范围、参考和资源门。远程操作仅在用户授权后启用remote-matlab-ssh Skill；MCP故障不自动切换执行模式。
 
 证据入口：
 
+- [当前二维任务表（导航，不授予运行许可）](../reports/active_task_tracker.md) · `reports/active_task_tracker.md`
+- [AGENTS执行与源宽规则](../AGENTS.md) · `AGENTS.md`
+- [10 cm配置与导航同步记录](../reports/agents_configuration_alignment_2026-11-14.md) · `reports/agents_configuration_alignment_2026-11-14.md`
 - [历史20 cm代表参数及三频计划（后续顺序以当前任务表为准）](../reports/piston_source_2d_single_frequency_plan_2026-11-11.md) · `reports/piston_source_2d_single_frequency_plan_2026-11-11.md`
 - [正式收尾报告](../reports/two_dimensional_channel_closeout_report.md) · `reports/two_dimensional_channel_closeout_report.md`
 - [S4 结果索引](../results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md) · `results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md`
@@ -68,9 +71,7 @@ P22保存结果与新Ubuntu最小项目基线保留其历史复核范围；M1仍
 - [此前许可等待检查点（历史）](../results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_license_wait.json) · `results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_license_wait.json`
 - [活塞P0/P1最终报告](../results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md) · `results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md` · 历史版本 `20261112_remote_p0p1_01`
 - [活塞最终检查点](../results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_final.json) · `results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_final.json` · 历史版本 `20261112_remote_p0p1_01`
-- [当前二维任务表（导航，不授予运行许可）](../reports/active_task_tracker.md) · `reports/active_task_tracker.md`
-- [AGENTS执行与源宽规则](../AGENTS.md) · `AGENTS.md`
-- [10 cm配置与导航同步记录](../reports/agents_configuration_alignment_2026-11-14.md) · `reports/agents_configuration_alignment_2026-11-14.md`
+- [10cm形状补图：SSH等待与理论解释](../results/validation/piston_source_shape_comparison/20261114_shape_01/report.md) · `results/validation/piston_source_shape_comparison/20261114_shape_01/report.md`
 
 ### 二维宽带与多模型参考
 
@@ -376,6 +377,14 @@ P22恢复入口与新机最小基线已提交为5d2e9f8。按用户要求暂缓1
 ### 2026-11-12 · 远端P0/P1完成并回传独立审计
 
 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 许可等待、512/8192m梯度失败、周期传播失败、native启动崩溃和首次审计pi变量错误均保留，恢复时使用新job且先检查原进程。
+
+### 2026-11-14 · 活塞形状补图待SSH恢复
+
+已复用既有报告和源码定义并实现MATLAB入口；理论求根表明10cm两种孔径在三频前向均无零点。SSH公钥失败且MCP无法附着，PNG/FIG未运行；下一步仅在恢复SSH后执行本轮自由场补图。进度生成视图尚未刷新。
+
+### 2026-11-14 · 10cm孔径形状与远视野图完成
+
+复用480800个旧场值与97m圆弧，补算外侧自由场及200/500m圆弧；五张PNG/FIG已检查，18文件回传SHA匹配，孔径求积最大差6.94e-13。10cm条带/圆形三频前向均无零点，8kHz圆形主瓣更宽。仅自由场图示，不新增传播资格，停止本轮；MCP不可用，生成进度视图未刷新。
 
 ### 2026-11-14 · 10 cm后续主线与AGENTS配置导航统一（无求解）
 

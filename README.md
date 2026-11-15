@@ -2,6 +2,10 @@
 
 **当前二维研究主线（2026-11-14）：**按 [AGENTS.md](AGENTS.md) 和[当前任务表](reports/active_task_tracker.md)，后续主声源为总宽 **10 cm**（半宽5 cm）的理想二维无限条带；20 cm P0/P1及Gaussian结果保留为历史对照。顺序为4 kHz配对PM比较 → 反射模型决策 → 相干4–8 kHz频响/CIR → 受控通信；R1 seed260001尚未授权，Bellhop独立并行。下方带日期的20 cm主源选择和旧接续步骤仅描述当时范围，不作为当前运行许可。远程操作才启用[SSH Skill](.agents/skills/remote-matlab-ssh/SKILL.md)；本次[配置同步](reports/agents_configuration_alignment_2026-11-14.md)不改变生产默认或数值资格。
 
+**10 cm孔径形状与远视野补图（2026-11-14）：**[报告与五组PNG/FIG](results/validation/piston_source_shape_comparison/20261114_shape_01/report.md)比较二维条带sinc与三维圆形Bessel方向图，并将二维自由场扩至±500/1000m。10cm两源在4/6/8kHz前向均无零点；8kHz圆形主瓣更宽。仅理论形状与自由场图示。
+
+**二维活塞完整声束自由场图（2026-11-13）：**总宽20/10 cm、4/6/8 kHz 的二维速度孔径复压力已在 `matlab-ubuntu-new` 单进程计算并回传；每频有共用绝对色标的压力场与几何声线扇形，另有完整前向角域方向图。见[图、复场、核查与局限](results/visualization/piston_source_full_beam_envelope/20261113_remote_fullbeam_01/report.md)。本图不新增海面或 PE/BIE/FullFK 资格。
+
 **活塞远端P0/P1已完成。** 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [最终报告](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)、[最终图件](results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/figures_final/)与[独立审计](results/validation/piston_source/20261112_remote_p0p1_01/independent_audit_02/receipt.json)。
 
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。

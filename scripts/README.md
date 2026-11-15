@@ -2,6 +2,12 @@
 
 **当前执行导航（2026-11-14）：**先读 [AGENTS.md](../AGENTS.md) 和[任务表](../reports/active_task_tracker.md)。后续二维主源总宽10 cm，先4 kHz固定PM配对比较，再按授权门考虑反射模型决策、4–8 kHz/CIR和通信；R1未授权，Bellhop独立并行。下方20 cm及Gaussian入口、报告和运行回执保留原历史范围，不自动重跑、扩频或推进。仅用户授权的远程操作启用[SSH Skill](../.agents/skills/remote-matlab-ssh/SKILL.md)。
 
+**2026-11-14 活塞解释性四图：**`reporting/render_piston_shape_explanatory(run_id,input_mat)`读取形状比较 `data.mat`，绘制−6～0dB三频理论图、线性幅值极坐标图，以及8kHz的10cm角度—距离等值线和10/20cm同色标对照。仅为缺失圆弧补充孔径积分采样，不重做模型资格。输出 `results/visualization/piston_shape_explanatory/<run_id>/`；交付说明见 `20261114_explain_01/report.md`。
+
+**2026-11-14 活塞孔径形状补图（已完成）：**`reporting/run_piston_source_shape_comparison(run_id,input_mat)`复用既有完整声束MAT的±300m复场和97m圆弧，只补外侧自由场与200/500m圆弧；输出10cm条带/圆形理论对照、±500/1000m视野及20cm辅助图。五张PNG/FIG、复场MAT及独立审计已完成，状态见 `results/validation/piston_source_shape_comparison/20261114_shape_01/report.md`。
+
+**2026-11-13 二维活塞完整声束自由场图：**`reporting/run_piston_full_beam_envelope('new_unique_run_id')`计算严格二维总宽20/10 cm、4/6/8 kHz复声压，在 x=±300 m、0≤z<100 m 画绝对峰值声压与独立几何声线扇形，另画完整前向角域的等距归一化方向图。使用 `baffled_strip_piston_field_vertical`；声线只是示意，远场 sinc 仅核对方向性。输出 `results/visualization/piston_source_full_beam_envelope/<run_id>/` 的 MAT/PNG/FIG/回执。不运行 PE/BIE/FullFK 或修改 Gaussian 默认路径。
+
 ### 2026-11-12 活塞P0/P1最终状态
 
 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 [数据与报告](../results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md)。

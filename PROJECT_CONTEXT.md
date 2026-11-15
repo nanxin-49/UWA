@@ -17,6 +17,14 @@ superseded; a newer explicitly marked entry is authoritative.
 
 实质任务收尾按任务表更新受影响行与最后行动，不能把计划或表格当运行许可。远程Skill位于[remote-matlab-ssh](.agents/skills/remote-matlab-ssh/SKILL.md)，仅在用户授权的远程操作中启用；本次仅本地配置维护，未运行MATLAB、连接SSH、启动实验或提交Git。进度JSON及生成视图按[维护说明](reports/project_progress_maintenance.md)同步为纯文本产物；这不构成新的数值资格或当前MCP连接状态证明。[本次修复记录](reports/agents_configuration_alignment_2026-11-14.md)。
 
+### 10cm孔径形状与远视野补图完成（2026-11-14）
+
+已在SSH恢复后用新隔离目录完成10cm二维条带/三维圆形理论方向图、±500/1000m二维自由场、20cm的8kHz辅助参考及97/200/500m圆弧稳定性图。五组PNG/FIG与复场MAT已回传目视/数值核查，18文件SHA相同，复用480800个旧场值完全一致，加密求积最大6.94e-13。10cm两源三频前向均无零点；8kHz条带/圆形−3dB半角56.02/74.39度。见[报告和图](results/validation/piston_source_shape_comparison/20261114_shape_01/report.md)。旧SSH认证失败保留，本轮不新增PE/BIE/FullFK或海面资格；进度源已更新，MCP不可用，生成看板未刷新。
+
+### 二维活塞完整声束自由场图（2026-11-13，仅可视化）
+
+总宽20/10 cm二维条带、4/6/8 kHz、同峰值振速的自由场扩展至 x=±300 m、0≤z<100 m。每频四面板并列绝对复压力幅值与几何声线扇形，另有全前向角域方向图；4 PNG/FIG 与复场MAT在[结果和图注](results/visualization/piston_source_full_beam_envelope/20261113_remote_fullbeam_01/report.md)。`matlab-ubuntu-new` R2025b Update 1 单进程退出0，回传17文件SHA一致，六组复场与旧quicklook重叠最大归一差2.89e-16，加密求积最大1.91e-14，图件已目视检查。声线仅为示意、画幅有限，不提升P0/P1或正式S5/S6资格；Gaussian默认路径未变，本轮不进入后续阶段。
+
 ### 活塞P0/P1完成并独立审计（2026-11-12，当前状态）
 
 2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。
