@@ -1,36 +1,60 @@
-# Active Research Task Tracker (2-D rough-surface mainline)
+# Active Research Task Tracker（二维粗糙海面主线）
 
-Updated: 2026-11-14 (configuration/navigation alignment only; no MATLAB, SSH, propagation or communication run).
+Updated: 2026-11-15（计划修订；未执行新的声学求解或通信实验）。
 
-This is the short **execution-navigation ledger** for the current 2-D research mainline, not a second authoritative scientific plan or an automatic approval to run. Detailed physics, cost gates, acceptance evidence, and historical failures remain in the applicable reports and `PROJECT_CONTEXT.md`. The current user's task scope overrides this ledger.
+本文件是当前任务导航与阶段状态表，不是完整科学方案，也不自动授权计算。详细物理定义、数值门槛、历史失败、资源证据以对应报告和 `PROJECT_CONTEXT.md` 为准；用户当前明确指令优先于本表。
 
-## Frozen choices for upcoming tasks
+## 术语约定（后续计划、报告和图例统一使用）
 
-- **Forward main source**: ideal 2-D rigid-baffle uniform-velocity strip, **total width W=0.10 m**, half-width a=0.05 m; peak normal velocity v0=0.001 m/s; source (x,z)=(0,100 m), upward. The historical 3-D circle radius 5 cm is only a nominal size correspondence, not evidence of a measured real transducer aperture.
-- **Environment**: c=1500 m/s, rho=1025 kg/m^3, positive z downward; receive depth z=3 m; phase contract v2 and `exp(-i omega t)` native acoustic phasors. Do not normalize away absolute source differences between models.
-- **Comparisons**: use BIE as a qualified *numerical reference with uncertainty*, not an exact solution; compare the same reflected complex field on identical true receiver coordinates. Keep PE Model-0, FullFK, and any FastFK algorithmic acceleration distinct.
-- **PM input provenance**: begin with the **existing frozen** 4-kHz PM seed 260001, then 260002/260003 only after the pilot; preserve each seed's original Fourier coefficients, 160-m period, 12 nonzero modes, Kmax=0.471238898 rad/m, and the documented C2 embedding (|x| <=42 m plateau, vanishing at |x| >=50 m). Reuse the exact saved surfaces, do not re-sample.
-- **Legacy controls**: the 20-cm piston P0/P1 and earlier Gaussian results remain immutable historical controls. Previous P0 covered **both 20 and 10 cm** at 4/6/8 kHz; previous P1 included **both widths at 4 kHz** (free, flat, weak sinusoid). Neither certifies 10-cm PM or broadband production use; the accepted P1 PE used a validation-only continuous-spectrum implementation.
+| 名称 | 本项目中的含义 | 使用规则 |
+|---|---|---|
+| **相位屏反射模型（Phase-Screen, PS）** | 对粗糙海面反射进行局部高度相位修正的近似模型；历史代码/报告中的 `Model-0` 是该模型的旧标签 | 后续统一写“相位屏模型（PS，旧代码标签 Model-0）”，不要称为“PE Model-0”或把它简称为 PE |
+| **PE 传播算子/求解器** | 抛物方程或平方根抛物方程传播方法，用于传播声场 | 它是传播求解方法，不等同于相位屏反射近似。某个验证实现可以使用连续角谱 PE 传播算子承载相位屏计算，但必须分别报告传播算子与海面反射模型 |
+| **BIE** | 边界积分方程数值解 | 本项目中作为经过离散、求积、窗口和残差检查的数值参考；不是严格真值 |
+| **完整 FullFK** | 保留完整双项积分、真实边界法向和弧长权重的 Kirchhoff 积分近似 | 是一种物理近似，不是严格 Helmholtz 解 |
+| **FastFK** | 对 FullFK 计算进行低秩/快速算法加速 | 属于 FullFK 的算法加速路线；算法一致性与 FullFK/BIE 物理差异必须分开评价 |
 
-## Current stages
+历史报告中的“PE Model-0”作为历史原文保留，不追改历史数值记录。新计划、新结果表、图例和结论统一采用“相位屏模型（PS）”。只有在确实讨论传播算子时才使用“PE”。
 
-| ID | Task and minimum exit evidence | State | Dependency / next permitted action |
+## 当前固定选择
+
+- **主声源**：理想二维刚性障板、均匀同相法向速度的无限长条带活塞；总宽 `W=0.10 m`、半宽 `a=0.05 m`，峰值振速 `v0=0.001 m/s`，源中心 `(x,z)=(0,100 m)`，向上辐射。该尺寸是当前二维研究的名义孔径，不等同于已实测确认的真实三维换能器有效振面。
+- **介质与坐标**：`c=1500 m/s`、`rho=1025 kg/m^3`；`z` 正方向向下；接收深度 `z=3 m`；使用 phase contract v2 和 `exp(-i omega t)` 原生声学相量。
+- **历史结果边界**：20 cm 活塞 P0/P1、Gaussian 声源结果均保持为不可变历史对照。此前 P0 覆盖 20/10 cm 的 4/6/8 kHz 源检查；此前 P1 覆盖两种宽度的 4 kHz 自由场、平面和弱正弦案例。它们不自动认证 10 cm PM、宽带生产入口或通信性能。此前接受的 P1 相位屏结果使用验证专用连续角谱 PE 传播实现和精确平面背景；不能据此声称生产 WAPE 入口已完成 10 cm 活塞集成。
+- **PM 输入来源**：先使用已保存的 4 kHz PM seed `260001`，R1 通过审查后才考虑 `260002/260003`。保留原始 Fourier 系数、160 m 周期、12 个非零模态、`Kmax=0.471238898 rad/m` 和既定 C2 嵌入（`|x|<=42 m` 平台、`|x|>=50 m` 平滑归零）；不得重新抽样、逐 seed 归一化或改变海面。
+- **接收支持**：当前 PM 主线只使用 `z=3 m` 的 **411 个真实接收位置**。不再使用九点接收；所有模型必须在相同坐标直接求值，不得由稀疏点插值生成接收结果。
+- **误差评价**：主指标为整条 411 点线上的反射复场相对 L2。必须同时输出沿 `x` 的逐点复残差绝对值（Pa）、幅度差（Pa）、包裹相位差（rad）和统一全线 RMS 尺度归一化的逐点复残差。不得把局部相对误差作为主指标；BIE 声压接近零时相位需按预先声明的统一阈值掩码，并报告有效点数。BIE 粗糙场相对同源平面场的物理变化与模型误差分开报告。
+
+## 当前阶段
+
+| ID | 任务与最低交付证据 | 状态 | 依赖 / 下一步许可 |
 |---|---|---|---|
-| B0 | Reuse prior P0 source qualification and 4-kHz P1 flat/weak-sinusoid evidence for W=10 cm, with correct source/phase metadata | COMPLETE (limited) | No blanket rerun; provenance: `results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md` |
-| R1 | 4 kHz, W=10 cm, fixed PM seed 260001: PE Model-0 / BIE / full double-term FullFK, paired input and numerical-convergence checks, reflection complex-L2 and spatial residual plots | NEXT - NOT AUTHORIZED | Obtain explicit compute scope, budget and reference gates; reuse fixed PM surface. [Navigation alignment only, 2026-11-14](agents_configuration_alignment_2026-11-14.md); no R1 computation |
-| R2 | Extend the same 4-kHz comparison to seeds 260002 and 260003 only if R1 has usable independent reference and cost evidence | PLANNED | Requires R1 result review and explicit run scope |
-| R3 | Reflection-model decision from R1/R2: retain PE as baseline or candidate; assess FullFK physics separately from FastFK accuracy/cost. Test any *new physical simplification* independently | WAITING | Do not automatically discard PE or replace full Kirchhoff with a reduced physical formula |
-| W1 | W=10 cm, coherent 4-8 kHz direct/reflected/total H(f), frequency-grid, phase/group-delay/holdout controls; conditionally validate FastFK against FullFK and physical anchors | WAITING | Depends on reflection-model decision and bounded physical-reference evidence |
-| C1 | Verified CIR/linear-convolution controls followed by fixed-seed QPSK, matched-CSI and mismatched-CSI BER/EVM comparisons | WAITING | Requires coherent W1; common source excitation, power/noise and receiver settings |
-| BH1 | Bellhop parallel line: distinguish existing Tx99 m / Rx3 m geometry, qualify X line-source mapping and flat/direct/first-reflection paths before rough-PM comparisons | PARALLEL - NOT AUTHORIZED | Independent of R1-R3; no direct absolute-Pa model ranking before source/phase qualification |
+| B0 | 复用 10 cm 活塞 P0 及 4 kHz P1 自由场/平面/弱正弦的限定证据；核实声源、相位和数据来源 | COMPLETE（范围受限） | 不做无差别重跑；证据：`results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md`。不包含 10 cm PM 资格 |
+| R1 | 4 kHz、10 cm 条带活塞、固定 PM seed260001；比较**相位屏反射模型（PS，旧代码标签 Model-0）/BIE/完整 FullFK**。仅 411 点接收线；完成共源输入检查、各模型必要数值收敛检查、复场 L2 和逐点残差/幅度/相位图 | NEXT — NOT AUTHORIZED | 用户明确授权后执行。建议资源门：远程累计预算 1100 s、单进程 900 s、最多两个 MATLAB 单线程进程、至少保留 30% 可用物理 RAM；实际成本预检不通过则停止。复用固定 PM 表面 |
+| R2 | 仅在 R1 结果可解释、BIE 参考可信且成本可接受后，将同一 4 kHz、10 cm、411 点比较扩展到 seed260002 和 seed260003 | PLANNED | 需要 R1 结果审查及新的明确执行范围；不自动启动 |
+| R3 | 根据 R1/R2 评估相位屏近似的适用性，并独立评估完整 FullFK 的物理近似误差；另评估 FastFK 相对 FullFK 的算法误差与成本 | WAITING | 不因一次误差较小就宣称模型等价；不自动删除相位屏，也不把 FastFK 当作新的物理模型 |
+| W1 | 10 cm 声源下构建相干 4–8 kHz 直达/反射/总复频响 `H(f)`，完成频率网格、相位、群时延和独立频点检查；在物理锚点支持后评估 FastFK | WAITING | 依赖 R3 的模型选择和有界物理参考；单频结果不能直接组成 CIR |
+| C1 | 在可信 `H(f)` 基础上验证 CIR 与线性卷积，再进行固定随机种子的 QPSK 匹配 CSI / 失配 CSI BER、EVM 比较 | WAITING | 依赖 W1；统一源激励、功率、噪声和接收机设置 |
+| BH1 | Bellhop 独立工作线：核对当前 Tx99 m/Rx3 m 工况、X 线源映射、平面直达/一次海面反射路径，再考虑粗糙面 | PARALLEL — NOT AUTHORIZED | 不作为 R1 前置条件；源强、维度和相位映射未闭合前，不加入 PE/BIE/FullFK 绝对 Pa 误差排名 |
 
-## Update rule for Codex (at every substantive task boundary)
+## R1 的关键执行口径
 
-1. Read this table and the exact user-authorized scope before any work. Move only tasks genuinely started to `IN_PROGRESS`; one task can be active in the PM line while Bellhop proceeds independently.
-2. After a meaningful task, update the affected row to `COMPLETE (scope-limited)`, `INCONCLUSIVE`, `BLOCKED`, `STOPPED`, or its next honest state, with direct report/checkpoint links and key bounded findings. Do not edit old checkpoints to match new conclusions.
-3. Keep a single short last-action record below. Update project-wide `reports/project_progress.json` and `PROJECT_CONTEXT.md` only when that broader status actually changes, under `AGENTS.md`.
-4. The next stage remains **not authorized** until the user expressly requests the new scope; a table row is never permission for heavy computation, remote SSH, multi-process parallelism, or a new method.
+1. **相位屏不是 PE 的别名。** R1 的方法比较对象写为“相位屏反射模型（PS）/BIE/完整 FullFK”。如果 PS 的数值实现使用连续角谱 PE 传播算子，需在报告中单列说明“传播算子=PE；海面反射近似=PS”，不得把两者合并成“PE Model-0”。
+2. BIE 必须用 10 cm 活塞对应的入射数据重新构造边界方程右端项/入射边界数据。可以复用已验证的几何离散或矩阵结构，但不得直接复用 Gaussian 或 20 cm 的散射解。
+3. FullFK 保留完整双项积分、真实法向、弧长权重和入射压力/梯度；不以 FastFK 替代 FullFK。
+4. 主误差定义：`E_m = norm(u_m - u_BIE, 2) / norm(u_BIE, 2)`，`m` 为 PS 或 FullFK，分别对 411 点接收线计算。另画 `abs(u_m-u_BIE)`、`abs(u_m)-abs(u_BIE)` 的绝对差，以及 `angle(u_m .* conj(u_BIE))` 的包裹相位差。
+5. 逐点归一化残差使用同一条 BIE 接收线的全局 RMS 作为尺度，不以每个接收点的 `abs(u_BIE(x_i))` 作分母。相位掩码阈值须事先固定并报告，避免零点附近相位失去意义。
+6. 若要与历史 Gaussian seed260001 比较，必须确认 PM 系数、C2 几何、接收坐标、相位表示和误差分母定义一致。不同声源的绝对 Pa 不直接比较；没有同条件 20 cm PM 数据时，不得把 20 cm 弱正弦结果当作 PM 对照。
+
+## Codex 更新规则（每个实质任务边界执行）
+
+1. 每次开始先读本表和用户本轮明确授权范围。只有实际开始的任务才标记 `IN_PROGRESS`；本表本身不构成运行许可。
+2. 每次有实质进展后更新受影响行及下方 Last action，状态只能如实标记为 `COMPLETE（范围受限）`、`INCONCLUSIVE`、`BLOCKED`、`STOPPED` 或后续真实状态，并链接真实报告/检查点。
+3. 失败、停止、未分辨和未执行的证据均保留；不得修改旧检查点以迎合新结论，不得把计划状态写成数值 PASS。
+4. 只有项目整体状态实际变化时，才同步维护 `reports/project_progress.json` 与 `PROJECT_CONTEXT.md`；它们分别承担看板数据源和详细历史记录，不由本表替代。
+5. 下一阶段默认未授权。完成 R1 不代表自动授权 R2；完成 R2 不代表自动授权 R3/W1。任何远程连接、并行任务、增加预算或新模型计算都必须在用户明确范围内执行。
+6. 新报告、图例和结果表使用“相位屏模型（PS）”称呼旧 `Model-0`；只在描述实际传播算子时使用“PE”。历史文件不追改。
 
 ## Last action
 
-- **2026-11-14 — Configuration alignment complete (scope-limited); Git publication authorized:** Synchronized current context, README navigation and progress source/views with AGENTS: forward W=10 cm; W=20 cm and Gaussian historical controls retained. [Report and static-check receipt](agents_configuration_alignment_2026-11-14.md). The user subsequently requested a scoped commit/push; unrelated pending work stays outside this commit. R1 remains NOT AUTHORIZED (4 kHz, fixed PM seed260001); explicit compute budget, resource and numerical-reference gates remain unresolved. No MATLAB, laboratory SSH or experiment; no research stage advanced.
+- **2026-11-15 — 计划术语与 R1 口径修订；Git分组整理：**明确将旧标签 `PE Model-0` 改称“相位屏反射模型（PS，旧代码标签 Model-0）”，与 PE 传播算子区分；R1 接收支持固定为 411 点真实接收线，增加逐点复残差、幅度差、相位差及统一 RMS 归一化图。主声源固定为 10 cm，20 cm 和 Gaussian 结果保留历史对照。按用户要求分别提交计划修订、既有自由场图示脚本/报告，以及旧计划删除和本地副本忽略规则；旧计划由本表导航替代，历史版本保留在Git。源码快照与提交准备副本留在本地。本次仅静态检查与本地Git提交，不推送、不运行MATLAB、不连接实验室SSH、不启动PM求解；R1仍未授权。
