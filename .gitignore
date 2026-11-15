@@ -165,3 +165,9 @@
 
 # Saved audit runs include historical code copies; keep them local as evidence.
 /results/validation/p22_reproducibility_baseline/
+
+# Local Git preparation copies and immutable run-source evidence stay local.
+/results/validation/project_progress_dashboard/20261114_agents_git_publish_01/candidates/
+/results/validation/piston_source_shape_comparison/20261114_shape_01/source_snapshot/
+/results/visualization/piston_shape_explanatory/20261114_explain_01/source_snapshot/
+/results/visualization/piston_source_full_beam_envelope/20261113_remote_fullbeam_01/source_snapshot/
