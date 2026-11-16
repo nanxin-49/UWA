@@ -41,6 +41,15 @@
 !/scripts/validation/support/prepare_r1_bie_manual_package.ps1
 !/scripts/validation/support/r1_bie_runtime.sh
 !/scripts/validation/support/r1_bie_runtime_json.py
+!/scripts/validation/support/prepare_r1_bie_c4_package.ps1
+!/scripts/validation/support/manage_r1_bie_c4_continuation.ps1
+!/scripts/validation/support/launch_r1_bie_c4_continuation.sh
+!/scripts/validation/support/r1_bie_c4_preflight.py
+!/scripts/validation/support/test_r1_bie_c4_package.py
+!/scripts/validation/support/status_r1_bie_c4_session.sh
+!/scripts/validation/support/test_r1_bie_c4_status.sh
+!/scripts/validation/support/test_r1_bie_c4_status.ps1
+!/scripts/validation/support/invoke_r1_bie_status_stdin.ps1
 !/scripts/validation/support/test_r1_bie_runtime.sh
 
 # Re-generable build, compiler, toolchain, and Python cache content must stay
@@ -184,6 +193,10 @@
 # Manual R1 bundles/dry-run sentinels are generated evidence, not source APIs.
 /results/comparisons/piston_2d_pm/20261116_r1_bie_manual_*/
 /results/validation/r1_bie_manual_preparation/
+/results/comparisons/piston_2d_pm/20261116_r1_bie_c4_policy_v2_*/
+/results/comparisons/piston_2d_pm/r1_bie_manual_c4_policy_v2_*/
+/results/validation/r1_bie_c4_preparation/
+/results/comparisons/piston_2d_pm/20261116_r1_v2_review_*/solve_sentinels/
 
 # Retrieved run copies stay local; publish only the compact static diagnosis evidence.
 /results/comparisons/piston_2d_pm/r1_bie_manual_runtime_fix_20261116_02_retrieved_20261116_144235/

@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 
-最新runtime配置故障修复与新任务目录见 [修复报告](reports/r1_bie_runtime_json_fix_2026-11-16.md)。本轮仅本地验证，未启动远程计算。
+最新R1固定Seed回收结果已通过v2经验参考与保存数据审查，见[R1完整审查](reports/r1_bie_v2_final_review_2026-11-16.md)。PS/BIE复L2=15.9235%，FullFK/BIE=0.0747208%，均可分辨；本轮不启动R2。
 
 ## Purpose
 This file is the append-only project log and long-term model memory for the
@@ -10,6 +10,36 @@ the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-16）
+
+### R1回收审查完成：v2经验参考合格，单Seed边界保留（2026-11-16，最新）
+
+用户两份回收目录`173532/173609`各287项SHA全部匹配、任务证据逐字节一致，选较新的`r1_bie_manual_c4_policy_v2_20261116_04_retrieved_20261116_173609`；原/迁移/C4/最终封存有效，原v1 Nonmonotonic FAIL保留。C4实际L70/ppw12/qa96、4480节点、476平台中点，窗口最坏差2.77995e-14；空间/自求积三项约1e-7均<1e-4。按获批v2政策完成固定10 cm、4 kHz、seed260001、411点的经验参考资格，不宣称严格误差上界。
+
+本轮现有MCP R2025b Update6/PID19636临时单线程，仅保存数据重审计42.01 s：C4全部中点+19独立点、综合源/rhs/几何/BIE/FullFK双项/PS Green/MAT-CSV、最终不确定性/分辨率均0失败；12条FIG误差线一致，两组保存PNG重导出对像素差0，4图实际目视检查。求解入口哨兵保护，新增密度求解0、SSH0；回收原件未改，生产实现和门不变，未提交推送Git。审查产物`results/comparisons/piston_2d_pm/20261116_r1_v2_review_01/`。
+
+PS/BIE复L2=0.15923498070661（15.9235%），5倍经验阈值1.89577e-6，约83995倍；99.7691%平方残差来自相位。最大9.361446Pa在x21.09375m，Q4占约41.94%误差能量。FullFK/BIE=0.000747208248357（0.0747208%），5倍阈值1.56441e-6，约477.63倍；最大0.03669583Pa在x−18.5546875m，误差小但可分辨，不能称严格一致。Gaussian同Seed各自BIE尺度下为12.74525%/0.0762687%，只作条件配对，不比较跨源绝对Pa或单一孔径因果。
+
+用户实际C4函数106.646 s、进程242.95 s（整秒账243），新调用1次，RAM最小为基准95.565%，单线程无parpool；未重复C0–C3。建议另获范围/预算后以seed260002/260003作有限R2复核，不直接宽带/通信；当前R1限定完成，R2仍未授权。[完整报告与图表](reports/r1_bie_v2_final_review_2026-11-16.md)。
+
+### v2 Status修复、用户C4会话报告完成（2026-11-16，仅只读诊断，待回收审查）
+
+用户手动启动04包后，首次Status的“无检查点/退出回执”位于启动到首个检查点约51秒空档；本轮17:13:07只读SSH确认已在C4_SOLVING、MATLAB仍运行、stderr为空、调用1次。更新Status时引入的Windows PowerShell/OpenSSH/Bash引号错误已修复：通过.NET参数数组和UTF-8标准输入传输只读脚本，不修改已封存04包，不启动/重启/停止计算。7项原生传输及12种状态测试通过，实际远端只读查询通过。
+
+同一session `20261116T091043_470983242_3891066`的修复后查询返回`REAL_EXIT_CODE=0`、`CHECKPOINT_STATUS=R1_REFERENCE_COMPLETE_WAITING_REVIEW`、`CHECKPOINT_STATE=COMPLETE`、C4调用总数1。本轮未Fetch或重新审计完整MAT/CSV/FIG/最终封存，不能仅据状态升级为R1科学审查通过；下一步为用户回收并另行审查，不自动R2。原包SHA不变、旧FAIL保留，不提交推送Git。[修复证据、命令及范围](reports/r1_bie_v2_status_fix_2026-11-16.md)。
+
+### R1-BIE v2仅C4包已准备并封存（2026-11-16，最新；未启动C4）
+
+用户已明确批准[诊断政策/迁移方案](reports/r1_bie_nonmonotonic_policy_c4_plan_2026-11-16.md)的实施准备。新包`results/comparisons/piston_2d_pm/20261116_r1_bie_c4_policy_v2_04/`使用独立schema 2/policy与旧新双链，保留旧Nonmonotonic FAIL及8.18133%上升；原四配对<1e-4、残差/全部中点/独立审计/5倍经验分辨口径不变。C0–C3已零求解迁移，C3在新工作区独立审计PASS（476全平台点+19额外点），最终参考仍C3；正式入口只有C4=L70/ppw12/qa96一次密度求解分支，调用前持久化标记，孤立/失败求解不得自动重复。
+
+现有MCP R2025b Update6/PID19636连接恢复后，本地迁移/验收临时单线程，结束恢复会话原8线程。正式04包31项MATLAB检查、6文件Analyzer 0消息、25项SHA/准入拒绝测试、29项原runtime测试通过，归档解包后Python/MATLAB dry-run通过；原110回收文件SHA再核一致。最终审计夹具明确模拟C4，仅测试后处理，排除在交付包外，不算C4结果。本轮密度求解0、SSH0，未修改旧包/结果、BIE求解器、PS/FullFK/生产WAPE，未提交/推送Git。
+
+归档`input_package.tar`为33632256 bytes，SHA `901cd359adfab5b8aa36f247d5828de45803a21f017519e729973fbf7c9d15f7`；[实施、启动/状态/回收/恢复说明](reports/r1_bie_v2_c4_implementation_2026-11-16.md)。初次MCP连接失败、候选01空日志SHA失败及本地缺python3的dry-run失败全部保留；候选02/03及其测试不覆盖，正式仅04。C4、远端完整进程生命周期、实际最终五阶段参考/图件审计未执行，R1仍参考未合格，等待用户手动启动；R2未授权。
+
+### R1-BIE诊断政策与仅C4续行方案（2026-11-16，仅设计，待批准）
+
+[静态方案](reports/r1_bie_nonmonotonic_policy_c4_plan_2026-11-16.md)已完成：建议仅在新包中将两处严格空间单调硬门改为诊断，保留旧FAIL、原四项<1e-4、全部边界/独立审计和5倍经验分辨规则。旧包不改；核验C0–C3原SHA与链，在独立schema/policy下创建带来源的新迁移链，禁止重求解C0–C3；C3仅在新工作区重建审计，唯一新求解是C4=L70/ppw12/qa96（4480节点、476平台中点、411真实接收点）。最终参考仍为C3，C4贡献窗口不确定性，不替换参考。
+
+本轮仅静态读码、JSON/封存核对和方案文档：110回收SHA、36包SHA、C0–C2提交链/C3 solved及8个当前/冻结文件SHA一致，见`results/validation/r1_bie_c4_continuation_plan/20261116_static_01/static_checks.json`。没有修改执行代码、政策、原结果或旧链，没有MATLAB/SSH/Resume/新求解或新数值重建；未来测试清单未执行。实施、迁移与新包手动启动须按批准范围分别落实，R1仍停止且参考未合格，R2未授权。
 
 ### 回收R1-BIE非单调停止结果的静态诊断（2026-11-16，最新）
 

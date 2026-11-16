@@ -1,5 +1,11 @@
 # 脚本与验证运行索引
 
+**2026-11-16 R1回收审查：**`validation/audit_r1_bie_v2_retrieval(source,out)`在回收SHA核验记录`out/retrieval_integrity.json`有效后，检查旧/v2/C4/最终封存，在新工作区重做保存密度/Green/MAT-CSV/经验分辨率审计、12条FIG曲线与保存PNG对核验，输出分区/逐点/相位能量及条件Gaussian分析。仅使用已保存数据，求解器哨兵禁止新密度/PS/FullFK求解，临时单线程并恢复路径/线程；不改回收源。[R1审查与结论](../reports/r1_bie_v2_final_review_2026-11-16.md)。
+
+**2026-11-16 v2 Status客户端修复：**当前`support/manage_r1_bie_c4_continuation.ps1 -Action Status`通过`invoke_r1_bie_status_stdin.ps1`向固定任务发送只读`status_r1_bie_c4_session.sh`，区分初始化/求解/退出/未知，不把脚本拼进`bash -c`，不修改已封存04包、不启动/重启求解。7项原生标准输入及12种状态回归和远端只读调用通过。用户原session已退出0、检查点报告完成、C4调用1次；完整数值结果待回收审查。[修复与命令](../reports/r1_bie_v2_status_fix_2026-11-16.md)。
+
+**2026-11-16 R1-BIE v2仅C4包：**`validation/run_r1_bie_c4_continuation(root,mode,session_id)`缺省dry-run，仅验证已迁移C0–C3；正式模式只有C4=L70/ppw12/qa96的一个求解调用，调用前持久化标记防止中断后重算。新schema/policy/来源双链保留旧FAIL，将严格单调改为诊断，原四项<1e-4、边界/独立审计及5倍经验分辨规则不改，参考仍C3。`support/migrate_r1_bie_checkpoints`只核验/导入与C3保存密度重建；`validate_r1_bie_c4_preparation`覆盖合成政策、恢复、迁移、最终审计模拟夹具和零求解哨兵。新PowerShell打包/管理与Bash启动入口见[实施与用户命令](../reports/r1_bie_v2_c4_implementation_2026-11-16.md)。旧入口/旧包不改；本轮未连接SSH、未启动C4，不授权R2。
+
 最新runtime配置故障修复与新任务目录见 [修复报告](../reports/r1_bie_runtime_json_fix_2026-11-16.md)。本轮仅本地验证，未启动远程计算。
 
 **当前执行导航（2026-11-14）：**先读 [AGENTS.md](../AGENTS.md) 和[任务表](../reports/active_task_tracker.md)。后续二维主源总宽10 cm，先4 kHz固定PM配对比较，再按授权门考虑反射模型决策、4–8 kHz/CIR和通信；R1于2026-11-15仅本轮授权执行（见下条），Bellhop独立并行。下方20 cm及Gaussian入口、报告和运行回执保留原历史范围，不自动重跑、扩频或推进。仅用户授权的远程操作启用[SSH Skill](../.agents/skills/remote-matlab-ssh/SKILL.md)。

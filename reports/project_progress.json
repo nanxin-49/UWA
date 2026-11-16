@@ -5,7 +5,7 @@
   "updated_at": "2026-11-16",
   "checked_at": "2026-11-16",
   "review_revision": "compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot; piston P0/P1 remote 20261112_remote_p0p1_01 audited; 2026-11-14 AGENTS navigation alignment only; no numerical re-audit",
-  "headline": "R1回收结果：C1/C2已提交，C3审计通过但严格非单调门失败；本轮只读诊断，不续算",
+  "headline": "R1固定Seed审查通过：PS/BIE复场差15.9235%，FullFK/BIE差0.0747208%且可分辨；R2未授权",
   "overview": [
     "这个项目想回答的是：海底附近发出的声音，经过直达和海面反射到达接收机后，会怎样影响通信？为此，一边需要可信的声场和信道，一边需要能检验信道估计与均衡方法的通信实验。",
     "你离开前，已经完成二维单频比较，做过三维固定海面的独立频点检查，还在一个接收点上跑通了受控的宽带与四相位调制（QPSK，每个符号承载两比特）通信实验。因此，重新开始时有不少结果可以接着用。",
@@ -21,26 +21,26 @@
     "2026-11-16本次仅准备用户手动C1–C4批处理与新执行政策：取消旧累计/成本预测停止，单个R2025b单线程、无parpool、30%RAM与原数值门保留；已通过本地静态与声学入口哨兵dry-run。C0不重算、已审计阶段按SHA跳过，真实C1–C4尚未运行。"
   ],
   "reading_note": "最新只读分析确认用户已完成C1/C2提交和C3求解审计；C3随后因严格非单调门停止，C4未运行。本轮不启动MATLAB/SSH或续算，历史结果/失败保留。",
-  "review_scope": "M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。 2026-11-14本次仅静态修复AGENTS、任务表、当前上下文与进度导航的一致性；二维工作线checked_at指配置核对日期，不是旧P0/P1、PM或其他工作线的数值复查日期。 2026-11-15只在本轮R1范围复核P0/P1回执绑定与三个核源码、Gaussian11项历史SHA；新PS/FullFK数值检查、10 cm BIE一层及已算数据独立重建已执行。BIE三类收敛未执行，不升级R1/S5/S6或生产WAPE资格。 2026-11-16缓存实现默认关闭，执行N64/N128×qa64/96冻结原/默认/关/开四组以及3200节点C0全回放，矩阵/密度/411复场等价差0；另做独立C0接收重建和MAT/CSV/SHA核验。C1–C4未派发，不升级R1参考/S5/S6或生产接口资格。 2026-11-16本次只做手动脚本、包输入/代码SHA、PowerShell/Bash解析、带7个声学入口哨兵的MATLAB元数据/检查点状态机dry-run；Code Analyzer 0消息。没有SSH连接、BIE/PE/FullFK/Hankel声学计算，C1–C4数值结果未执行。",
-  "runtime_note": "M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。 本轮数值仅远端SSH，未调用本机MATLAB MCP。P0加密进程许可等待与真实计算分开记录；首次SHA监控cwd/CR换行错误已修正，无数值重派。进度视图按维护文档做纯文本包装，不将其当MATLAB运行或物理证据。 2026-11-14配置同步：用户明确禁止MATLAB与SSH，本轮未探测MCP、未调用MATLAB或远程主机；用同一JSON/HTML模板和既有progressMarkdown函数纯文本刷新两种视图，检查点见results/validation/project_progress_dashboard/20261114_agents_alignment_01/checkpoint.json。MATLAB渲染、Code Analyzer、浏览器视觉/交互和历史数值审计均未运行；不据此判断当前MCP可用性。 2026-11-15 R1远程R2025b Update1累计439/1100 s、单进程最长265/900 s，实际串行无parpool；首层后触发剩余参考成本预检STOP，后续仅保存数据分析/审计/导图。最小可用RAM109280206848 B，为启动量98.18%；图件尺寸审计失败保留，最终12条误差线与两图逐像素核通过。 2026-11-16仅一个远端R2025b Update1单线程进程，无parpool。S0含启动22.4246s，C0求解调用55.481928s（历史作业函数254.689257s，运行日与计时边界不同）；边界残差26.93s、基础组装15.43s为本轮主要阶段。余层加收尾730.29s>决策时剩582.80s，触发成本STOP。新86s、累计525/1100s；最小可用RAM为启动量98.09%。65文件SHA回传一致，C0独立重建通过；PS/FullFK/Gaussian未重算。 本次准备的独立launcher在用户手动启动后才创建一个R2025b单线程进程，取消旧1100秒累计/730秒预测门和旧短时倒计时，仅按30%RAM、数值/独立审计/异常停止；保留完整stdout/stderr、真实退出码和逐阶段SHA检查点，支持已通过阶段跳过与已求解仅补审计。不要求Codex持续监控。当前只本机MCP无声学dry-run，未连接远端；原缓存核心及PS/FullFK/生产WAPE未改。 最新静态核验回收进程实际退出1、304 s，C1/C2/C3各仅1次求解，C0导入；本轮只读CSV/JSON/SHA，进度视图按维护说明纯文本打包，不启动MATLAB。",
+  "review_scope": "M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。 2026-11-14本次仅静态修复AGENTS、任务表、当前上下文与进度导航的一致性；二维工作线checked_at指配置核对日期，不是旧P0/P1、PM或其他工作线的数值复查日期。 2026-11-15只在本轮R1范围复核P0/P1回执绑定与三个核源码、Gaussian11项历史SHA；新PS/FullFK数值检查、10 cm BIE一层及已算数据独立重建已执行。BIE三类收敛未执行，不升级R1/S5/S6或生产WAPE资格。 2026-11-16缓存实现默认关闭，执行N64/N128×qa64/96冻结原/默认/关/开四组以及3200节点C0全回放，矩阵/密度/411复场等价差0；另做独立C0接收重建和MAT/CSV/SHA核验。C1–C4未派发，不升级R1参考/S5/S6或生产接口资格。 2026-11-16本次只做手动脚本、包输入/代码SHA、PowerShell/Bash解析、带7个声学入口哨兵的MATLAB元数据/检查点状态机dry-run；Code Analyzer 0消息。没有SSH连接、BIE/PE/FullFK/Hankel声学计算，C1–C4数值结果未执行。 2026-11-16获批实施v2准备：本地单线程保存C3重建审计、迁移/控制流程及包装验证，不含C4求解或远端实机生命周期。 R1回收原287项SHA/封存、保存密度/源/Green/MAT-CSV、分辨率及FIG/PNG独立复核已完成，仅限本Seed。",
+  "runtime_note": "M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。 本轮数值仅远端SSH，未调用本机MATLAB MCP。P0加密进程许可等待与真实计算分开记录；首次SHA监控cwd/CR换行错误已修正，无数值重派。进度视图按维护文档做纯文本包装，不将其当MATLAB运行或物理证据。 2026-11-14配置同步：用户明确禁止MATLAB与SSH，本轮未探测MCP、未调用MATLAB或远程主机；用同一JSON/HTML模板和既有progressMarkdown函数纯文本刷新两种视图，检查点见results/validation/project_progress_dashboard/20261114_agents_alignment_01/checkpoint.json。MATLAB渲染、Code Analyzer、浏览器视觉/交互和历史数值审计均未运行；不据此判断当前MCP可用性。 2026-11-15 R1远程R2025b Update1累计439/1100 s、单进程最长265/900 s，实际串行无parpool；首层后触发剩余参考成本预检STOP，后续仅保存数据分析/审计/导图。最小可用RAM109280206848 B，为启动量98.18%；图件尺寸审计失败保留，最终12条误差线与两图逐像素核通过。 2026-11-16仅一个远端R2025b Update1单线程进程，无parpool。S0含启动22.4246s，C0求解调用55.481928s（历史作业函数254.689257s，运行日与计时边界不同）；边界残差26.93s、基础组装15.43s为本轮主要阶段。余层加收尾730.29s>决策时剩582.80s，触发成本STOP。新86s、累计525/1100s；最小可用RAM为启动量98.09%。65文件SHA回传一致，C0独立重建通过；PS/FullFK/Gaussian未重算。 本次准备的独立launcher在用户手动启动后才创建一个R2025b单线程进程，取消旧1100秒累计/730秒预测门和旧短时倒计时，仅按30%RAM、数值/独立审计/异常停止；保留完整stdout/stderr、真实退出码和逐阶段SHA检查点，支持已通过阶段跳过与已求解仅补审计。不要求Codex持续监控。当前只本机MCP无声学dry-run，未连接远端；原缓存核心及PS/FullFK/生产WAPE未改。 最新静态核验回收进程实际退出1、304 s，C1/C2/C3各仅1次求解，C0导入；本轮只读CSV/JSON/SHA，进度视图按维护说明纯文本打包，不启动MATLAB。 v2准备开始时MCP无法附着，用户恢复后使用现有R2025b Update6/PID19636；正式04本地迁移和31项验收临时单线程，结束恢复原8线程，C3审计11.07s；密度求解与SSH均0。候选01空日志SHA失败及Git Bash缺python3失败保留，v2修复不改旧helper；测试模拟窗口不是C4结果。 R1最终审查使用现有MCP R2025b Update6/PID19636，临时单线程42.01s后恢复原线程/路径；独立重建均通过，新增密度求解0、SSH0。用户C4实际进程242.95s/整秒243s，函数106.646s，RAM最低95.565%基准；本次不重复C0–C4密度求解。",
   "workstreams": [
     {
       "id": "two-dimensional",
       "name": "二维单频比较",
       "checked_at": "2026-11-16",
       "status": "partial",
-      "status_label": "C1/C2通过 · C3非单调门STOP · C4未运行",
-      "result_date": "2026-11-16（用户回收C1–C3；本轮只读核查）",
-      "summary": "回收证据显示C1/C2已通过审计与提交，C3完成求解和独立审计但严格非单调门失败。空间最坏复L2 1.397757e-7→1.512112e-7（+8.18%）均低于1e-4；不是C2失败或单点异常。3次新求解计数对应C1/C2/C3，C0导入不计；C4未运行，R1参考仍未完成。",
+      "status_label": "R1单Seed经验参考通过 · R2未授权",
+      "result_date": "2026-11-16（用户C4运行；本轮保存数据重审计）",
+      "summary": "10 cm条带、4 kHz、PM seed260001、411点：两份回收各287项SHA和封存链有效；v2原四参考敏感性/独立审计通过。PS/BIE复L2=15.9235%，主要为相位差；完整FullFK/BIE=0.0747208%，小但仍高于5倍经验阈值约478倍。原非单调FAIL保持，当前只完成固定Seed经验参考与保存结果审查。",
       "why": "先在较容易控制的二维问题里，确认不同方法比较的是同一声源、同一海面、同一接收位置，再看它们算出的反射波差多少。",
-      "done": "以下模型比较分别保留其Gaussian或20/10 cm原始声源条件，不能合并当作10 cm PM资格。PE、边界积分方程（BIE，独立数值参考）和完整 Kirchhoff 积分近似（FullFK）的同源比较已完成。平面和三档正弦海面的九点结果齐全，三个预定 PM 海面实现也完成了比较；相关表格、图和历史审计均有保存。 新增严格二维速度孔径积分三频自由场，保存同振速绝对复Pa、接收线、近场/整体场和方向图；独立积分/角谱与保存数据检查无失败。 远端R2025b Update1及实际双进程已验证，源解析梯度对独立角谱/差分/速度/相位通过；BIE/FullFK输入差0，Gaussian标量默认差0；123项部分产物回传SHA匹配。 许可恢复后P0六组、P1自由/平面/弱C2正弦实际完成；最终独立审计0失败，PNG/FIG/MAT/CSV/日志/SHA回传。 2026-11-15完成本轮R1范围内的PS窗口/网格/步长、FullFK求积/范围、10 cm BIE L60/ppw10/qa96一层及10类已执行保存数据独立检查；四张最终PNG/FIG、逐点复场/幅相/残差CSV、MAT、SHA、日志和停止检查点齐备。 2026-11-16新增默认关闭缓存、阶段计时和阶段/累计时间及RAM中止门；4组小对照和C0完整回放通过，独立C0密度接收重建与MAT/CSV通过，65个回传文件SHA匹配。 最新准备完整MATLAB入口、Linux后台启动/状态/回收脚本、Windows管理及打包工具，包35项SHA、PowerShell/Bash检查和带7个声学入口哨兵的dry-run通过；恢复状态机覆盖fresh、audit-only、skip、前序变化、篡改、孤立数据拒绝。 已静态确认回收C1/C2通过提交与C3已求解审计，参考非单调门停止；未改旧证据。",
-      "meaning": "C0和缓存数值等价性沿用已验证证据；新手动包已完成输入/代码及控制流程准备，不能由dry-run升级C1–C4或R1参考资格。历史PS/FullFK暂定误差和原数值失败保持原样，生产物理默认不改。",
-      "gap": "C3严格单调性门未过，C4窗口及最终参考经验分辨率未完成。直接Resume仍会被原门阻断，不能偷偷改包/阈值绕过。",
-      "next": "先审查非单调硬门的科学适用性与显式检查点迁移方案；可将复用已算C3/受控C4作为候选，但本轮不修复、不改门、不Resume。",
+      "done": "以下模型比较分别保留其Gaussian或20/10 cm原始声源条件，不能合并当作10 cm PM资格。PE、边界积分方程（BIE，独立数值参考）和完整 Kirchhoff 积分近似（FullFK）的同源比较已完成。平面和三档正弦海面的九点结果齐全，三个预定 PM 海面实现也完成了比较；相关表格、图和历史审计均有保存。 新增严格二维速度孔径积分三频自由场，保存同振速绝对复Pa、接收线、近场/整体场和方向图；独立积分/角谱与保存数据检查无失败。 远端R2025b Update1及实际双进程已验证，源解析梯度对独立角谱/差分/速度/相位通过；BIE/FullFK输入差0，Gaussian标量默认差0；123项部分产物回传SHA匹配。 许可恢复后P0六组、P1自由/平面/弱C2正弦实际完成；最终独立审计0失败，PNG/FIG/MAT/CSV/日志/SHA回传。 2026-11-15完成本轮R1范围内的PS窗口/网格/步长、FullFK求积/范围、10 cm BIE L60/ppw10/qa96一层及10类已执行保存数据独立检查；四张最终PNG/FIG、逐点复场/幅相/残差CSV、MAT、SHA、日志和停止检查点齐备。 2026-11-16新增默认关闭缓存、阶段计时和阶段/累计时间及RAM中止门；4组小对照和C0完整回放通过，独立C0密度接收重建与MAT/CSV通过，65个回传文件SHA匹配。 最新准备完整MATLAB入口、Linux后台启动/状态/回收脚本、Windows管理及打包工具，包35项SHA、PowerShell/Bash检查和带7个声学入口哨兵的dry-run通过；恢复状态机覆盖fresh、audit-only、skip、前序变化、篡改、孤立数据拒绝。 已静态确认回收C1/C2通过提交与C3已求解审计，参考非单调门停止；未改旧证据。 已完成非单调门调整与仅C4有条件续行的静态设计，明确两处政策一致、原数值门不变、双链封存与C3参考不换；尚未实施。 v2独立代码/政策/来源双链迁移完成，正式04包31项MATLAB、25项完整性/准入、29项runtime及归档重定位dry-run通过；新密度求解0。 修复Status的Windows引号传输及初始化误导；7项原生stdin与12种状态回归和实际SSH只读查询通过，未启动/重启求解。 回收最终287项SHA/旧新C4及最终封存已核；新工作区重做C4 476+19点、源/密度/Green/FullFK双项/MAT-CSV/分辨审计0失败，12条FIG及两组PNG对一致、四图实际查看。",
+      "meaning": "本次已能在明确经验分辨能力下评价该固定二维单频海面的三模型差异：PS差异明显，FullFK更接近BIE但不能称数值不可分辨或严格一致。不能将单Seed结论外推多海况、真实3-D换能器、宽带CIR或通信。",
+      "gap": "R1单Seed审查已完成；多Seed稳健性、反射模型选择、频率相干/宽带与通信仍缺，R2以后须另行授权。经验不确定性不是严格误差上界。",
+      "next": "用户审查R1报告后，可另定同4kHz/10cm/411点的seed260002/260003有限R2及资源/停止门；当前不执行新计算，不自动宽带或R2。",
       "details": "固定二维、4 kHz、984 项 Gaussian 发射场；原九点与 411 点接收线分别统计。S4=CORE_COMPLETE，S3A=3/3，S3B 因预算未运行；PHI_PLUS90 的混合平台 BIE 求解差未直接定界。 活塞quicklook：c1500 m/s、rho1025 kg/m³、Tx100 m/Rx3 m、峰值振速1 mm/s，W20/10/5 cm；20 cm三频-3 dB全宽112/67/49°。",
-      "saved_results": "正式结果、表格和图件入口存在。 活塞run 20261111_2d_strip_01：MAT、CSV、8张交付PNG/FIG、日志、SHA和检查点。 本轮20261112_remote_p0p1_01保存复MAT、逐点与粗细接收线CSV、五组最终PNG/FIG、日志、资源和SHA。 R1结果位于results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/，137个远端交付文件SHA匹配，最终四图已实际查看。 缓存新run results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/保存4组对照MAT、C0原生密度/411点场与CSV、8阶段计时、成本决策、独立审计、真实日志/退出码及SHA。本轮不新增重复物理图。 手动包results/comparisons/piston_2d_pm/20261116_r1_bie_manual_ready_03/；本地无声学验收results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/。",
-      "historical_audit": "S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。 2026-11-14本次仅核配置与导航，未重做MAT/CSV、SHA数值链或FIG审计；result_date及历史审计结论不变。 R1本轮10类已执行检查0失败，另外4项参考资格检查未执行；源/密度/Green核/FullFK双项/MAT-CSV重建通过。最终12条误差线一致，两图重导出像素差0。BIE参考未完成资格，不以小残差或退出0替代收敛。 2026-11-16本轮小矩阵/右端/密度/复场/边界对照差0，C0对历史差0，独立密度重建7.69e-15、MAT/CSV最大6.91e-14 Pa；65文件SHA相同。C1–C4与参考经验分辨资格未执行，原STOP仍保留。 本次只对脚本/输入/恢复状态机作本地检查，声学调用与SSH连接0。最终dry-run Code Analyzer 0消息、七个声学入口哨兵有效；C1–C4真实数值验收尚未执行。 最新仅静态核回收110项SHA、包36项SHA、C0–C2提交链及C3 solved绑定；保存审计回执均PASS，未复跑MAT或Green核。",
-      "rerun": "不要直接Resume：C3为AUDIT_ONLY，原单调门将再次失败；后续须先审查判据政策及代码/manifest/提交链迁移，不能重复已通过求解。",
+      "saved_results": "正式结果、表格和图件入口存在。 活塞run 20261111_2d_strip_01：MAT、CSV、8张交付PNG/FIG、日志、SHA和检查点。 本轮20261112_remote_p0p1_01保存复MAT、逐点与粗细接收线CSV、五组最终PNG/FIG、日志、资源和SHA。 R1结果位于results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/，137个远端交付文件SHA匹配，最终四图已实际查看。 缓存新run results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/保存4组对照MAT、C0原生密度/411点场与CSV、8阶段计时、成本决策、独立审计、真实日志/退出码及SHA。本轮不新增重复物理图。 手动包results/comparisons/piston_2d_pm/20261116_r1_bie_manual_ready_03/；本地无声学验收results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/。 正式v2包results/comparisons/piston_2d_pm/20261116_r1_bie_c4_policy_v2_04/；原证据、新迁移/审计/本地准入及归档SHA齐全，C4数据不存在。 最终审查产物results/comparisons/piston_2d_pm/20261116_r1_v2_review_01/，含MAT/CSV、回执、原图PNG/FIG按SHA复制及独立重审计，报告reports/r1_bie_v2_final_review_2026-11-16.md。",
+      "historical_audit": "S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。 2026-11-14本次仅核配置与导航，未重做MAT/CSV、SHA数值链或FIG审计；result_date及历史审计结论不变。 R1本轮10类已执行检查0失败，另外4项参考资格检查未执行；源/密度/Green核/FullFK双项/MAT-CSV重建通过。最终12条误差线一致，两图重导出像素差0。BIE参考未完成资格，不以小残差或退出0替代收敛。 2026-11-16本轮小矩阵/右端/密度/复场/边界对照差0，C0对历史差0，独立密度重建7.69e-15、MAT/CSV最大6.91e-14 Pa；65文件SHA相同。C1–C4与参考经验分辨资格未执行，原STOP仍保留。 本次只对脚本/输入/恢复状态机作本地检查，声学调用与SSH连接0。最终dry-run Code Analyzer 0消息、七个声学入口哨兵有效；C1–C4真实数值验收尚未执行。 最新仅静态核回收110项SHA、包36项SHA、C0–C2提交链及C3 solved绑定；保存审计回执均PASS，未复跑MAT或Green核。 v2本轮现有MCP单线程重建C3：476平台点+19额外GL112点通过，密度接收重建1.40e-15、边界9.68e-8；原110回收SHA不变。31项MATLAB/25项完整性/29项runtime通过，模拟C4最终化测试不作窗口资格。 最新R1固定Seed保存数据重审计42.01s通过，BIE密度重建1.89e-14、PS直接Green2.16e-8、FullFK双项1.10e-14，所有原门保持；原v1 Nonmonotonic失败不追改，v2获批后诊断保留。",
+      "rerun": "R1无需重求解：原回收/封存及新保存数据审查证据齐全。其他Seed不能复用本Seed密度，须独立完成对应参考资格。",
       "evidence": [
         {
           "label": "当前二维任务表（导航，不授予运行许可）",
@@ -199,6 +199,34 @@
         {
           "label": "R1-BIE非单调停止只读诊断",
           "path": "reports/r1_bie_nonmonotonic_diagnosis_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1-BIE诊断政策、SHA迁移与仅C4续行方案（待批准）",
+          "path": "reports/r1_bie_nonmonotonic_policy_c4_plan_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1-BIE v2仅C4正式包、验证与手动操作命令（未启动）",
+          "path": "reports/r1_bie_v2_c4_implementation_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1-BIE v2 Status修复与用户会话状态（待数值回收审查）",
+          "path": "reports/r1_bie_v2_status_fix_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1固定Seed最终回收审查：参考资格、误差位置与R2候选",
+          "path": "reports/r1_bie_v2_final_review_2026-11-16.md",
           "kind": "report",
           "revision": "",
           "expected_exists": true
@@ -864,6 +892,34 @@
       "date": "2026-11-16",
       "title": "C3严格非单调门STOP的静态诊断",
       "text": "只读回收CSV/JSON/源码/SHA，C0–C2已提交，C3求解/审计通过但门失败，C4未运行；三次新求解计数合理。空间最坏差在同一Q4增8.18%，绝对均约1e-7且低于1e-4，原严格单调硬门触发，并非单点异常或已确认求解器错误。不修改阈值/求解器/原结果，不启动MATLAB/SSH/Resume；建议先审查门与显式迁移方案。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-c4-policy-migration-plan-20261116",
+      "date": "2026-11-16",
+      "title": "非单调诊断政策与仅C4续行方案完成（未实施）",
+      "text": "只做静态审查和方案设计：建议新包将严格空间单调作为完整诊断，原四项1e-4及残差/全部中点/独立审计/5倍分辨规则保持。设计旧新双链SHA迁移、C0–C3不重求解、C3新工作区重建审计和唯一C4求解。110/36项SHA、原封存链及8个代码版本核对一致；没有修改旧包/求解器/门或执行MATLAB/SSH/Resume，等待用户批准实施，R1仍STOPPED。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-v2-c4-package-ready-20261116",
+      "date": "2026-11-16",
+      "title": "v2零求解迁移与仅C4手动包准备通过",
+      "text": "按用户批准实现独立v2 policy/manifest/旧新双链，严格单调改为保留旧FAIL的诊断，原四项1e-4及全部数值/边界/独立审计/5倍分辨规则不变。C0–C3零求解迁移，C3本地单线程476+19点独立审计PASS；31项MATLAB、25项完整性/准入、29项runtime及归档重定位dry-run通过。正式04包封存，原110项SHA未变，新密度求解0、SSH0，等待用户手动启动C4；实际最终参考仍未合格，不进入R2，不提交推送Git。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-v2-readonly-status-fix-20261116",
+      "date": "2026-11-16",
+      "title": "Status传输修复，用户原C4会话退出0",
+      "text": "首次无检查点提示发生在启动空档，SSH只读见C4运行、调用1次。客户端改进引入的bash -c引号错误已用.NET UTF-8标准输入修复，7项传输与12种状态回归及实际只读调用通过。用户同一session现退出0、检查点报告完成；本轮不启动/Resume/终止/改包、不Fetch完整结果，不据状态宣布数值PASS，等待回收审查。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-v2-final-saved-review-20261116",
+      "date": "2026-11-16",
+      "title": "R1单Seed经验参考及保存数据审查通过",
+      "text": "两份回收各287项SHA和证据一致，原/迁移/C4/最终封存有效。现有MCP单线程42.01s重审C4 476+19点、综合源/密度/PS Green/完整FullFK/MAT-CSV/分辨率0失败，12条FIG及两组PNG对一致，四图已查看。PS复L2=15.9235%且相位项99.7691%，FullFK=0.0747208%仍超阈值约478倍；原非单调FAIL保留，原门不变。R1只在固定10cm/4kHz/seed260001/411点范围完成，本轮新增密度求解0/SSH0，不启动R2、不提交推送Git。",
       "workstream_id": "two-dimensional"
     }
   ],
