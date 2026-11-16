@@ -18,7 +18,7 @@ kind='V'; if strcmp(cfg.reflection_wall,'bottom'), kind='A'; end
 fid=fopen([case_root '.rotq'],'w'); assert(fid>=0); closer=onCleanup(@()fclose(fid));
 fprintf(fid,'%.17g %s %.17g %.17g %.17g\n%d %.17g\n',cfg.transverse_origin_m,kind, ...
     real(cp_native),imag(cp_native),cfg.bottom_rho_gcm3,cfg.reflection_order,cfg.water_depth_m); clear closer
-write_bellhop_rotated_field_options(case_root,cfg.receiver_range_m,meta.q_receiver_m,point3d=true,fast_q=true);
+write_bellhop_rotated_field_options(case_root,cfg.receiver_range_m,meta.q_receiver_m,point3d=true,fast_q=true,native_range_metadata_repair=true);
 meta.reflection_order=cfg.reflection_order;
 meta.expected_surface_bounces=cfg.expected_surface_bounces;
 meta.expected_bottom_bounces=cfg.expected_bottom_bounces;

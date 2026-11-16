@@ -30,7 +30,8 @@ try
     end
     source_names={'run_bellhop_rotated_field_component','run_bellhop_rotated_local_case', ...
         'write_bellhop_rotated_multifield_q','write_bellhop_rotated_munk_q','write_bellhop_rotated_horizontal_q', ...
-        'write_bellhop_rotated_field_options','read_bellhop_rotated_field','munk_profile_sound_speed'};
+        'write_bellhop_rotated_field_options','read_bellhop_rotated_field','munk_profile_sound_speed', ...
+        'repair_bellhop_rotated_range_metadata'};
     code_versions=struct('path',{},'sha256',{});
     for b=1:numel(source_names)
         path=which(source_names{b}); code_versions(b)=struct('path',path,'sha256',black_file_hash(path));

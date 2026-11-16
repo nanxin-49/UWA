@@ -1,0 +1,111 @@
+{
+  "status": "NUMERICAL_PASS_TIMING_LIMITED_RAM_STOP",
+  "date": "2026-11-15",
+  "base_git_revision": "f2cea1a",
+  "completed_steps": [
+    "actual_compiled_REAL8_source_review",
+    "exact_call_and_segment_count_baseline",
+    "low_frequency_and_coarse_timing",
+    "independent_flatwall_cull_overlay",
+    "fixed_minimum_case_state_and_pressure_comparison",
+    "one_uninstrumented_timing_pair",
+    "saved_byte_and_historical_SHA_audit234"
+  ],
+  "config": {
+    "native_q_m": [
+      -1,
+      0,
+      1
+    ],
+    "source_width": "N/A omni3D point",
+    "beams": 101,
+    "receiver_count": 10981,
+    "max_job_s": 20,
+    "ssp_spacing_m": 1.25,
+    "step_m": 1,
+    "launch_RAM_bytes": 1610612736.0,
+    "coordinate_and_pressure_gate": "exact bytes, no relaxation",
+    "physical_x_m": [
+      1,
+      0,
+      -1
+    ],
+    "reflection_order": 13,
+    "wall_segments": 2,
+    "frequency_hz": 10000,
+    "wall_nodes": 3,
+    "water_depth_m": 5000,
+    "source_z_m": 4950,
+    "runtime_RAM_bytes": 268435456
+  },
+  "input_code_artifact_sha256": "sha256_manifest.csv",
+  "native_jobs_completed": 6,
+  "native_job_elapsed_sum_s": 14.823099,
+  "unrun_checks": [
+    "two further complete timing pairs, incomplete after RAM launch gate",
+    "precise short-function time attribution",
+    "complete A/order14-16/B/C/D/convergence/FFP"
+  ],
+  "failed_checks": {
+    "numerical": 0,
+    "gprof": "no effective samples",
+    "timing_sample_limits": "short function sampling biased; optimized early-return samples not used",
+    "resource": "Available<1.5GiB, no next PID",
+    "preparation": "anchor/type/index and instrumentation compile failures retained"
+  },
+  "audit": {
+    "original_REAL8_manifest72_preserved": true,
+    "failed": 0,
+    "path": "saved_audit01/checkpoint.json",
+    "original25_preserved": true,
+    "checks": 234
+  },
+  "timing": {
+    "pair_count": 1,
+    "scope": "one observed pair, not general performance guarantee",
+    "CPU_sample_speedup": 1.1818181818181819,
+    "speedup": 1.1071541074066154,
+    "elapsed_reduction": 0.09678337160994843,
+    "baseline_elapsed_s": 2.4268952,
+    "optimized_elapsed_s": 2.1920121,
+    "unpaired_optimized_elapsed_s": 1.9874675
+  },
+  "geometry_counts": {
+    "max_state_difference": 0,
+    "reflection_states_compared": 1313,
+    "optimized": [
+      12193259.0,
+      24386518.0,
+      22698226.0,
+      2626,
+      5252,
+      5252,
+      2652,
+      2652,
+      844146
+    ],
+    "baseline": [
+      12193259.0,
+      24386518.0,
+      22698226.0,
+      12194572.0,
+      45396452.0,
+      24389144.0,
+      2652,
+      12315348.0,
+      844146
+    ]
+  },
+  "resource_usage": {
+    "output_bytes": 589793663.0,
+    "compile_logs": "compile_*_stdout/stderr.log and available *_receipt.json",
+    "RAM_stop": "checkpoint_ram_stop.json",
+    "native_elapsed_s": 14.823099
+  },
+  "next_allowed_step": "STOP for manual review; no full A/order14-16/B/C/D or new solve, no commit/push",
+  "execution_mode": "existing shared MATLAB MCP, local serial isolated native binaries",
+  "matlab_release": "R2025b Update6",
+  "git_commit": "none requested; no commit performed",
+  "manifest_entries": 287,
+  "manifest_sha256": "c502aa52455656f6d2d709e048eccea99e304bb87c775d10b24c961ec8afecc5"
+}

@@ -1,0 +1,78 @@
+{
+  "status": "NUMERICAL_PASS_TIMING_LIMITED_RAM_STOP",
+  "failed_checks": 0,
+  "checks_count": 234,
+  "elapsed_s": 6.1592806,
+  "native_jobs_completed": 6,
+  "native_jobs_elapsed_sum_s": 14.823099,
+  "paired_repetitions_completed": 1,
+  "planned_pair_count": 3,
+  "unrun_due_RAM_gate": [
+    "pair2baseline",
+    "pair3baseline",
+    "pair3optimized"
+  ],
+  "baseline_elapsed_s": 2.4268952,
+  "optimized_elapsed_s": 2.1920121,
+  "actual_speedup": 1.1071541074066154,
+  "actual_elapsed_reduction_fraction": 0.096783371609948432,
+  "CPU_sample_speedup": 1.1818181818181819,
+  "CPU_sample_reduction_fraction": 0.15384615384615385,
+  "additional_unpaired_optimized_elapsed_s": 1.9874675,
+  "baseline_counts": [
+    1.2193259E+7,
+    2.4386518E+7,
+    2.2698226E+7,
+    1.2194572E+7,
+    4.5396452E+7,
+    2.4389144E+7,
+    2652,
+    1.2315348E+7,
+    844146
+  ],
+  "optimized_counts": [
+    1.2193259E+7,
+    2.4386518E+7,
+    2.2698226E+7,
+    2626,
+    5252,
+    5252,
+    2652,
+    2652,
+    844146
+  ],
+  "wall_sample": {
+    "method": "1/1024 systematic SYSTEM_CLOCK samples; short-function overhead/100ns quantization materially affects estimates",
+    "rate_hz": 1.0E+7,
+    "calibrated_clock_pair_overhead_s": 2.1129999999999998E-8,
+    "step_reduce_cross_geometry_raw_s": [
+      3.0102716180734022,
+      1.0056084939951289,
+      0.71404281285752957,
+      0.68172040480349338
+    ],
+    "step_reduce_cross_geometry_corrected_s": [
+      2.7526280554034019,
+      0.49032136865512888,
+      0.23442929747752952,
+      0.42404909844349342
+    ],
+    "ssp_calls": 3.6581193E+7,
+    "ssp_raw_s": 1.9163576569772973,
+    "ssp_corrected_s": 1.1433970488872973,
+    "trace_influence_scale_coarse_s": [
+      2.020559,
+      0.1305854,
+      0.00152
+    ],
+    "wall_cross_plus_geometry_raw_fraction_of_profile_process": 0.51375411276784877,
+    "wall_cross_plus_geometry_corrected_fraction_of_profile_process": 0.24237347695700662,
+    "warning": "fractions are overhead-sensitive estimates, not precise CPU attribution; optimized cross sample excludes early returns and is not used"
+  },
+  "geometry_event_count": 1313,
+  "all_state_max_difference": 0,
+  "original25_and_REAL8_artifact_SHA_preserved": true,
+  "run_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_performance_review_01",
+  "can_resume_full_A": "No automatic resumption; minimum case only, RAM gate stopped repeated timing; manual review required",
+  "next_allowed_step": "Stop for review. No new Bellhop solve, no complete A/order14-16/B/C/D, no commit/push."
+}

@@ -1,0 +1,14 @@
+{
+  "status": "STOPPED_BEFORE_LAUNCH_RAM_GATE",
+  "date": "2026-11-15",
+  "intended_case": "timing_pair2_baseline",
+  "minimum_available_bytes": 1610612736.0,
+  "measured_available_bytes": "unknown: assertion checked Available<1.5GiB but value was not persisted",
+  "native_process_started": false,
+  "unrun": [
+    "pair2baseline",
+    "pair3baseline",
+    "pair3optimized"
+  ],
+  "next_allowed_step": "No new solve in this review; finish offline audit/report. No full A/order14-16/B/C/D."
+}

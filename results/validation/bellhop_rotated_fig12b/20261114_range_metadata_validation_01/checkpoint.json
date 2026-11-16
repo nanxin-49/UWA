@@ -1,0 +1,9 @@
+{
+  "status": "COMPLETE",
+  "failed_checks": 0,
+  "elapsed_s": 6.485577,
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_range_metadata_validation_01",
+  "scope": "Native13-wall input-label monotonicity and exact pressure invariance only; no complete field or physical FFP qualification",
+  "executable_sha256": "93ab5754e45525ab0bff0e5490035c74ffedac83472e9c298b3690eb9928c107",
+  "source_checkpoint": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_03\\A_Q125_h1_B401\\up_order13\\checkpoint.json"
+}

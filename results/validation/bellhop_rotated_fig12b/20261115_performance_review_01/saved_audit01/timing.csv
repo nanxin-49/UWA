@@ -1,0 +1,7 @@
+case,elapsed_s,cpu_sample_s
+baseline_profile_case02,3.295332,2.9375
+baseline_clock_case01,2.7167923,2.328125
+optimized_clock_case01,2.2045999,1.890625
+timing_pair1_baseline,2.4268952,2.234375
+timing_pair1_optimized,2.1920121,1.890625
+timing_pair2_optimized,1.9874675,1.890625

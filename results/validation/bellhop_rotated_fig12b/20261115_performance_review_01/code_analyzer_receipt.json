@@ -1,0 +1,32 @@
+[
+  {
+    "path": "scripts/validation/support/prepare_bellhop_rotated_performance_overlay.m",
+    "source_sha256": "d1405a01682ca3ee893e57f8637e419418f8ddcf0bd62090a50e143cdeb5c6d3",
+    "code_analyzer_issues": 0,
+    "executed_in": "existing MATLAB MCP R2025b Update6"
+  },
+  {
+    "path": "scripts/validation/support/add_bellhop_rotated_performance_clocks.m",
+    "source_sha256": "6703c56b84ecff382104337f6e9f65c1f0260a7afabbd740ca586fe53a620e95",
+    "code_analyzer_issues": 0,
+    "executed_in": "existing MATLAB MCP R2025b Update6"
+  },
+  {
+    "path": "scripts/validation/support/optimize_bellhop_rotated_flatwall_overlay.m",
+    "source_sha256": "e0bcfaa996481adfb39f3ab527105695d38c0fa8755245becd1b340a81a7efb0",
+    "code_analyzer_issues": 0,
+    "executed_in": "existing MATLAB MCP R2025b Update6"
+  },
+  {
+    "path": "scripts/validation/run_bellhop_rotated_performance_case.m",
+    "source_sha256": "6469bc94cb46f4495d8a0f4349a71581978fe22e9548b8a5869aa50e63cba2c4",
+    "code_analyzer_issues": 0,
+    "executed_in": "existing MATLAB MCP R2025b Update6"
+  },
+  {
+    "path": "scripts/validation/audit_bellhop_rotated_performance_saved.m",
+    "source_sha256": "e3bafec144a92798a7f8e00ca8330c18e1e2d46cef8879737ce023444fa1bbda",
+    "code_analyzer_issues": 0,
+    "executed_in": "existing MATLAB MCP R2025b Update6"
+  }
+]

@@ -258,3 +258,30 @@
 !/results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/dashboard_render_receipt.json
 # Quarantine exclusion remains last.
 /cash/
+
+# Reviewed Bellhop performance and metadata evidence only.
+!/results/validation/bellhop_rotated_fig12b/20261114_metadata_fix_01/authorization_software_fix.json
+!/results/validation/bellhop_rotated_fig12b/20261114_metadata_fix_01/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_metadata_fix_01/checks.csv
+!/results/validation/bellhop_rotated_fig12b/20261114_range_metadata_disabled_01/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_range_metadata_disabled_01/checks.csv
+!/results/validation/bellhop_rotated_fig12b/20261114_range_metadata_validation_01/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261114_range_metadata_validation_01/checks.csv
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/checkpoint_ram_stop.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/checkpoint_stage.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/code_analyzer_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/compile_baseline02_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/compile_baseline03_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/compile_clock_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/compile_clock03_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/compile_optimized_clock_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/compile_optimized_plain_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/dashboard_render_receipt.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/flatwall_optimization_review.patch
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/official_sources_unchanged.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/saved_audit01/checkpoint.json
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/saved_audit01/checks.csv
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/saved_audit01/timing.csv
+!/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/sha256_manifest.csv
+# Retired quarantine remains excluded after every allow-rule.
+/cash/

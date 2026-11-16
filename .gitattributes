@@ -16,3 +16,20 @@ results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/
 # Keep selected M0/M1 receipts byte-identical to their SHA manifests.
 results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/** -text whitespace=cr-at-eol
 results/validation/m1_preflight/** -text whitespace=cr-at-eol
+
+# Preserve frozen Bellhop stage evidence and source snapshots exactly as hashed.
+results/validation/bellhop_rotated_fig12b/20261114_metadata*/** -text whitespace=cr-at-eol
+results/validation/bellhop_rotated_fig12b/20261114_range_metadata*/** -text whitespace=cr-at-eol
+results/validation/bellhop_rotated_fig12b/20261115_*/** -text whitespace=cr-at-eol
+results/validation/bellhop_rotated_fig12b/20261116_*/** -text whitespace=cr-at-eol
+results/comparisons/bellhop_C_vs_FFP/20261116_post02/** -text whitespace=cr-at-eol
+results/visualization/bellhop_rotated_fig12b/20261115_*/** -text whitespace=cr-at-eol
+results/visualization/bellhop_rotated_fig12b/20261116_*/** -text whitespace=cr-at-eol
+results/visualization/bellhop_C_vs_FFP/20261116_*/** -text whitespace=cr-at-eol
+
+results/validation/bellhop_rotated_fig12b/20261114_full_03/** -text whitespace=cr-at-eol
+results/validation/bellhop_rotated_fig12b/20261114_full_controller_03/** -text whitespace=cr-at-eol
+
+# Unified diff context lines intentionally retain their leading space.
+results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/*.patch -whitespace
+results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/returned/20261116_ray_remote_03/*.patch -whitespace

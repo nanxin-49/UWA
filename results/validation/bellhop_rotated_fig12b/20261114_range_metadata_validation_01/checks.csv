@@ -1,0 +1,15 @@
+check,pass,value,limit
+case1_strict_native_metadata,1,0,0
+case1_existing_metadata_ULP_bound,1,1,2
+case1_actual_range_binding,1,0,0
+case1_raw_metadata_strict,1,0,0
+case1_raw_metadata_existing_bound,1,1,2
+case2_strict_native_metadata,1,0,0
+case2_existing_metadata_ULP_bound,1,1,2
+case2_actual_range_binding,1,0,0
+case2_raw_metadata_strict,1,0,0
+case2_raw_metadata_existing_bound,1,1.48000000044703,2
+different_metadata_actually_used,1,0,0
+physical_coordinates_identical,1,0,0
+complex_pressure_identical,1,0,0
+source_binary_unchanged,1,0,0

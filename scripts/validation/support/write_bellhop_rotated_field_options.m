@@ -6,6 +6,7 @@ arguments
     depths_m double {mustBeFinite}
     options.point3d (1,1) logical = true
     options.fast_q (1,1) logical = true
+    options.native_range_metadata_repair (1,1) logical = false
 end
 assert(isvector(ranges_m) && isvector(depths_m));
 assert(all(diff(ranges_m(:))>0) && all(diff(depths_m(:))>0));
@@ -13,4 +14,6 @@ path=[case_root '.r25d']; assert(~isfile(path),'Refusing to overwrite coordinate
 fid=fopen(path,'w'); assert(fid>=0); closer=onCleanup(@()fclose(fid));
 fprintf(fid,'%d %d\n%d %d\n',options.point3d,options.fast_q,numel(ranges_m),numel(depths_m));
 fprintf(fid,'%.17g ',ranges_m); fprintf(fid,'\n'); fprintf(fid,'%.17g ',depths_m); fprintf(fid,'\n');
+clear closer
+if options.native_range_metadata_repair, repair_bellhop_rotated_range_metadata(case_root,ranges_m); end
 end

@@ -1,0 +1,27 @@
+{
+  "status": "CACHE_INPUT_COMPATIBILITY_QUALIFIED_NO_NEW_FULL_SOLVE",
+  "failed_checks": 0,
+  "checks_count": 148,
+  "cached_components": 31,
+  "qualification_elapsed_s": 25.0775954,
+  "new_suite_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_metadata_fix_01\\suite.mat",
+  "new_suite_sha256": "b2946c24b035e0c9ed224193075f9b41c15ad63fd16e98a47b41e1557790797f",
+  "new_authorization_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_metadata_fix_01\\authorization_software_fix.json",
+  "resume_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_metadata_fix_01\\reuse",
+  "cumulative_measured_before_resume_s": 460.24372739999995,
+  "remaining_solver_audit_budget_s": 3109.7562726,
+  "unmeasured_preparation_reserved_s": 30,
+  "unchanged_physical_plan_sha256": [
+    "d3566fc6d4e2bc163826ea74eebe61d7a806a2ebe6598ed1db31b97c6742558e",
+    "899a9b805c95646f43264584de14512b4d2017cec51517578625f590720625e6",
+    "cce53c33f09104675eed7ef6131b6b9d6154259b25baaeffa83570d331947e97",
+    "6d468c2f4b375fb149faa92f9dfdfd4f76269e88c4bfbb8ff68edbc54a150f51"
+  ],
+  "unchanged_executable_sha256": "93ab5754e45525ab0bff0e5490035c74ffedac83472e9c298b3690eb9928c107",
+  "changed_source_roles": [
+    "run_bellhop_rotated_field_component",
+    "write_bellhop_rotated_multifield_q",
+    "write_bellhop_rotated_field_options"
+  ],
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_metadata_fix_01"
+}

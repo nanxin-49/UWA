@@ -1,0 +1,48 @@
+diff --git "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\Step.f90" "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_performance_review_01\\optimized_plain_overlay01\\Step.f90"
+index 17f8a42..d58ee9a 100644
+--- "a/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_receiver64_minimal_01\\overlay02\\Step.f90"
++++ "b/C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_performance_review_01\\optimized_plain_overlay01\\Step.f90"
+@@ -9,6 +9,7 @@ MODULE Step
+   ! Validation-only sampled internal wall. The profile points are an ordered
+   ! parametric support; range need not be monotone. No ATI-style endpoint
+   ! extension is used for an internal wall.
++  LOGICAL :: WallIsExactVertical=.FALSE.
+   INTEGER :: WallNProfile = 0
+   REAL (KIND=8), ALLOCATABLE :: WallX( :, : ), WallSegT( :, : ), WallNodeT( :, : )
+   REAL (KIND=8), ALLOCATABLE :: WallSegLen( : ), WallSegKappa( : )
+@@ -31,6 +32,7 @@ CONTAINS
+ 
+     WallX( 1, : ) = R
+     WallX( 2, : ) = Z
++    WallIsExactVertical=ALL(R==R(1))
+ 
+     DO i = 1, nSeg
+        WallSegT( :, i ) = WallX( :, i + 1 ) - WallX( :, i )
+@@ -110,6 +112,10 @@ CONTAINS
+     hWall = HUGE( hWall )
+     IF ( WallNProfile <= 0 ) RETURN
+     tol = 1.0d-10
++    IF(WallIsExactVertical) THEN
++       IF(MAX(x0(1),x0(1)+hTrial*u(1))<WallX(1,1)-1d-7.OR. &
++          MIN(x0(1),x0(1)+hTrial*u(1))>WallX(1,1)+1d-7) RETURN
++    END IF
+     DO i = 1, WallNProfile - 1
+        d = WallX( :, i + 1 ) - WallX( :, i )
+        q = WallX( :, i ) - x0
+@@ -176,7 +182,16 @@ CONTAINS
+ 
+     CALL EvaluateSSP( ray2%x, c2, cimag2, gradc2, crr2, crz2, czz2, rho, freq, 'TAB' )
+     ray2%c = c2
++    iWallSeg=0; wallLambda=0d0; wallT=0d0; wallN=0d0; wallKappa=0d0; wallResidual=HUGE(wallResidual)
++    IF(WallActive) THEN
++       IF(WallIsExactVertical) THEN
++          IF(ABS(ray2%x(1)-WallX(1,1))<=1d-3) THEN
++    CALL GetWallGeometry( ray2%x, iWallSeg, wallLambda, wallT, wallN, wallKappa, wallResidual )
++          END IF
++       ELSE
+     CALL GetWallGeometry( ray2%x, iWallSeg, wallLambda, wallT, wallN, wallKappa, wallResidual )
++       END IF
++    END IF
+     WallHit = WallActive .AND. iWallSeg > 0 .AND. ABS( wallResidual ) <= 1.0d-8
+     IF(RotQEnabled.AND.WallActive.AND.iWallSeg>0.AND..NOT.WallHit) THEN
+        IF(ABS(wallResidual)<1d-3.OR.(ray0%x(1)<WallX(1,1).AND.ray2%x(1)>WallX(1,1))) &
