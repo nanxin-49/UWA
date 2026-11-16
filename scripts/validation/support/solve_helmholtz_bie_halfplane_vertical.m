@@ -8,6 +8,15 @@ arguments
     cfg (1,1) struct
 end
 
+% Research-only opt-in. Omitting this field preserves the original path.
+if isfield(cfg,'enable_static_cache')
+    assert(islogical(cfg.enable_static_cache) && isscalar(cfg.enable_static_cache));
+    if cfg.enable_static_cache
+        out = solve_helmholtz_bie_halfplane_cached_vertical(cfg);
+        return;
+    end
+end
+
 required = {'frequency_hz','c0_mps','half_width_m','points_per_wavelength', ...
     'panel_order','self_quadrature_order','halfplane_h_m','window_plateau_ratio', ...
     'eta_fn','eta_prime_fn','incident_fn','receiver_x_m','receiver_z_m'};
@@ -177,6 +186,9 @@ out = struct( ...
     'receiver_x_m',receiver_x,'receiver_z_m',receiver_z,'receiver_field',u_receiver, ...
     'finite',all(isfinite([real(psi);imag(psi);real(u_receiver);imag(u_receiver); ...
         real(boundary_total);imag(boundary_total)])));
+if isfield(cfg,'return_system_for_validation') && cfg.return_system_for_validation
+    out.validation_system = struct('A',A,'rhs',rhs);
+end
 end
 
 function weights = local_panel_operator_weights(xt,zt,target_xi,a,b,gx,k,h,c,L,eta_fn,deta_fn,qa,singular)

@@ -1,6 +1,12 @@
 # 脚本与验证运行索引
 
-**当前执行导航（2026-11-14）：**先读 [AGENTS.md](../AGENTS.md) 和[任务表](../reports/active_task_tracker.md)。后续二维主源总宽10 cm，先4 kHz固定PM配对比较，再按授权门考虑反射模型决策、4–8 kHz/CIR和通信；R1未授权，Bellhop独立并行。下方20 cm及Gaussian入口、报告和运行回执保留原历史范围，不自动重跑、扩频或推进。仅用户授权的远程操作启用[SSH Skill](../.agents/skills/remote-matlab-ssh/SKILL.md)。
+**当前执行导航（2026-11-14）：**先读 [AGENTS.md](../AGENTS.md) 和[任务表](../reports/active_task_tracker.md)。后续二维主源总宽10 cm，先4 kHz固定PM配对比较，再按授权门考虑反射模型决策、4–8 kHz/CIR和通信；R1于2026-11-15仅本轮授权执行（见下条），Bellhop独立并行。下方20 cm及Gaussian入口、报告和运行回执保留原历史范围，不自动重跑、扩频或推进。仅用户授权的远程操作启用[SSH Skill](../.agents/skills/remote-matlab-ssh/SKILL.md)。
+
+**2026-11-16 R1-BIE用户手动执行包：**`validation/run_r1_bie_manual(root,mode,session_id)`缺省为无声学`dry-run`；用户通过`support/manage_r1_bie_manual.ps1`上传并启动`support/launch_r1_bie_manual.sh`后，单进程R2025b单线程导入已验证C0，严格依次执行C1–C4。每阶段封存SOLVED、独立审计、参考门和SHA绑定的AUDITED_PASS检查点；恢复跳过通过阶段，已求解未审计只补审计，源码/输入/产物漂移停止。全部通过后自动保存数据重建、参考分辨率及PNG/FIG误差更新。按用户新政策移除累计1100 s及730 s成本门，不建parpool，保留30%RAM和数值/异常停止；Codex本轮未连接SSH/未启动求解。正式包`results/comparisons/piston_2d_pm/20261116_r1_bie_manual_ready_03/`；[启动/状态/恢复/回收命令](../reports/r1_bie_manual_execution_2026-11-16.md)。`validation/validate_r1_bie_manual_preparation`仅本地SHA/元数据/恢复状态机dry-run，带声学调用哨兵；不替代C1–C4实跑验收。
+
+**2026-11-16 R1-BIE缓存续行：**`validation/run_r1_bie_cache_continuation(absolute_run_dir)`在获准的独立远端快照内先做N64/N128×qa64/96的冻结原实现/默认/显式关闭/开启缓存对照，再做C0（L60/ppw10/qa96）历史回放与阶段计时。`support/solve_helmholtz_bie_halfplane_vertical`新增逻辑字段`enable_static_cache`，默认省略或false保留原路径；true委托`support/solve_helmholtz_bie_halfplane_cached_vertical`，仅复用求积、插值模板和本次调用的源面几何，完整核/求积/累加与全部边界中点不变。`return_system_for_validation`默认关闭，仅小测试可返回A/rhs；缓存路径另增`out.cost_meta.timings`。原439 s带入累计1100 s，串行单线程，只有等价性、RAM和全部剩余成本门通过才继续原C1–C4；`support/launch_r1_bie_cache_continuation.sh`同时执行阶段/累计时间及RAM外部守门。结果入口`results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/`：S0/C0等价性通过，C0调用55.48 s，余层成本门未过，C1–C4未派发；累计525/1100 s。详见[实施报告](../reports/r1_bie_cache_implementation_2026-11-16.md)，不授权R2。
+
+**2026-11-15 R1固定PM：**`comparisons/run_piston_pm_r1_job(absolute_run_dir,job_id)`仅用于4 kHz、10 cm条带、seed260001和411点真实接收线。PS采用已接受的解析平面背景加紧支撑相屏扰动、平方根PE传播及真实坐标直接Fourier求值；BIE重新计算10 cm入射右端，FullFK保留双项/真实法向/弧长/梯度。`validation/audit_piston_pm_r1`独立重建源、BIE密度接收场/离节点边界、PS Green传播、FullFK双项及MAT/CSV；`reporting/render_piston_pm_r1`从保存数据生成PNG/FIG并重开误差曲线。SSH调度器`validation/support/launch_piston_pm_r1.sh`只用于本轮已授权预算，不构成后续运行许可。当前证据在`results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/`；阶段状态以任务表及最终检查点为准，R2以后未授权。
 
 **2026-11-14 活塞解释性四图：**`reporting/render_piston_shape_explanatory(run_id,input_mat)`读取形状比较 `data.mat`，绘制−6～0dB三频理论图、线性幅值极坐标图，以及8kHz的10cm角度—距离等值线和10/20cm同色标对照。仅为缺失圆弧补充孔径积分采样，不重做模型资格。输出 `results/visualization/piston_shape_explanatory/<run_id>/`；交付说明见 `20261114_explain_01/report.md`。
 

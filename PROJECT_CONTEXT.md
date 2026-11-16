@@ -7,7 +7,33 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-14）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-16）
+
+### R1-BIE手动C1–C4执行包已准备，新执行政策（2026-11-16，仅准备）
+
+用户本轮只授权编写/检查脚本和无声学dry-run，要求由用户手动启动。新`run_r1_bie_manual`从已验证C0导入（无C0求解路径），单个R2025b单线程进程显式开启原已验证缓存，依次C1=L60/ppw12/qa96、C2=L60/ppw12/qa64、C3=L60/ppw14/qa96、C4=L70/ppw12/qa96。逐阶段保存密度/复场/MAT-CSV/配置/计时/diary/资源/SHA、独立重建与原数值门；有审计PASS且SHA有效的阶段直接跳过，SOLVED封存完整时只补审计，输入/代码/产物漂移或孤立数据停止，禁止静默重算通过阶段。全部通过后自动更新经验参考分辨率、误差CSV/MAT及最终PNG/FIG。
+
+本条覆盖旧预算政策对该新手动包的前向限制：用户接受较长运行时间，取消1100 s累计硬停止及730 s成本预测派发门；不继承旧短时控制器的S0/C0/单会话倒计时。仍一个单线程、无parpool、30%可用RAM、独立检查点及异常停止，后台脚本自行守门，不需要Codex持续监控。旧累计525 s、旧成本STOP和失败保持历史原貌，不表示本轮已执行，也不自动授权其他seed/频率/通信/Bellhop或R2。
+
+[用户命令与恢复说明](reports/r1_bie_manual_execution_2026-11-16.md)，完整包`results/comparisons/piston_2d_pm/20261116_r1_bie_manual_ready_03/`。本地PowerShell/Bash静态检查、包35项SHA校验和带7个声学入口哨兵的MATLAB元数据/状态机dry-run通过，Code Analyzer 0消息，声学调用及SSH连接均0。正式Linux后台/锁/信号链和真实C1–C4尚未实机运行。R1仍STOPPED/参考未合格；本轮不改PS/FullFK/生产WAPE/缓存核心，不提交或推送Git，停止等待用户手动启动。
+
+### R1-BIE缓存S0/C0通过，后续参考在成本门停止（2026-11-16，历史执行状态）
+
+按用户本轮明确指令实现默认关闭的验证专用缓存并执行小规模对照与C0完整回放。`solve_helmholtz_bie_halfplane_vertical`省略/false的`enable_static_cache`保留原路径；true调用独立缓存helper，复用同阶Gauss规则、插值模板及本次调用源面几何，保持Green组合层、奇异求积、法向/弧长和累加顺序。四组N64/N128×qa64/96冻结原/默认/显式关闭/开启对照的A、rhs、密度、411点复场与边界差全部0；C0原3200节点密度/修正场/完整反射场对历史差0，340个离节点边界残差6.97e-8、线性3.42e-15通过。缓存为数值等价实现，不是新物理模型，不改变生产默认/通信接口。
+
+C0求解调用55.481928 s，内部全平台边界残差26.931892 s、基础组装15.434528 s、稠密求解3.375252 s。旧作业函数254.689257 s与新求解调用的观察比约4.59，运行日与计时边界不同，不是严格重复测速。S0含启动22.4246 s，原N³+25%余量+110 s收尾预测C1–C4需730.287955 s，高于决策时582.803964 s余额，控制器STOPPED_COST_GATE_AFTER_C0，未派发任何C1–C4。之后仅独立保存数据审计与封存，新进程保守86 s、带入旧439 s后累计525/1100 s，名义余额575 s不构成新许可。RAM最小为启动量98.09%，单线程串行、无parpool。
+
+独立C0密度到411点场重建7.69e-15，MAT/CSV最大差6.91e-14 Pa；65个远端文件回传SHA匹配。C0数值等价后不重算PS/FullFK/Gaussian或重复物理图。R1仍缺C1–C4空间/求积/窗口收敛与参考分辨资格，旧15.9235%及0.0747208%暂定比较边界不变；旧run、STOP和图件失败保留。[实施与真实成本报告](reports/r1_bie_cache_implementation_2026-11-16.md)、[新结果](results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/report.md)、[检查点](results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/checkpoint.json)。本轮未提交Git，完成后停止等待审查；R2及更广seed/频率/通信/Bellhop仍未授权。
+
+### R1固定PM已执行，在BIE参考成本门停止（2026-11-15，历史状态）
+
+本条取代下方R1“未授权/未执行”的历史导航。本轮明确授权范围为10 cm二维条带、4 kHz、PM seed260001、原411点z=3 m接收线，结果为 **STOPPED_BUDGET_PREFLIGHT / BIE_REFERENCE_UNQUALIFIED**。PS（相位屏反射近似）使用已接受的精确平面背景加紧支撑扰动、平方根PE传播及真实坐标直接Fourier求值；BIE重新构造10 cm边界右端；FullFK保留完整双项、真实法向、弧长和入射梯度。无九点、FastFK、其他seed/频率或通信计算，生产配置和接口未改。
+
+暂定PS/BIE复场L2为0.1592349792、FullFK/BIE为0.0007472079，最大绝对复残差分别9.361444 Pa（x=21.09375 m）和0.036697864 Pa（x=−18.5546875 m）。PS幅度L2仅0.007651760，约99.7691%的平方复残差来自相位项。PS窗口/网格/步长与FullFK求积/范围检查通过；BIE仅完成L60 m/ppw10/qa96/3200节点一层，线性残差3.42e-15、离节点残差6.97e-8通过，离散/自求积/窗口收敛仍缺，不能称FullFK/BIE已一致或R1 PASS。历史Gaussian同表面411点的PS/BIE=0.1274524972、FullFK/BIE=0.0007626867，仅各自BIE尺度下的条件配对，不比较跨源绝对Pa或解释成单一孔径因果效应。
+
+首层BIE实测进程265 s，累计327 s时剩余参考层保守预计2130 s，高于773 s余额，后续求解未派发。之后仅从保存数据分析、审计与导图；全部远端R2025b Update1进程累计439/1100 s、最长265/900 s，实际串行、无parpool，最小可用RAM为启动量98.18%。10类已执行独立保存数据检查0失败，4项参考资格检查未完成；137项回传SHA匹配，四张最终PNG/FIG已查看，12条误差线重建及两张PNG重导出像素差0。首次FIG重开导出尺寸失败及原图保留；未重算物理场。
+
+[结果与方法报告](results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/report.md)、[阶段检查点](results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/checkpoint.json)、[独立审计](results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/audit/receipt.json)。新研究入口与限制见`scripts/README.md`。本轮未提交Git。下一步只等待审查并另定有界R1参考续行；R2/R3/W1/C1与Bellhop未获本轮许可，旧M1、S5/S6停止状态不变。
 
 ### 后续二维主线统一为10 cm条带（2026-11-14，仅配置与导航同步）
 

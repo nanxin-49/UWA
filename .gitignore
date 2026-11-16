@@ -34,6 +34,12 @@
 !/scripts/validation/support/launch_two_dimensional_s5a_weak_bie.sh
 !/scripts/validation/support/launch_two_dimensional_s5a_weak_bie_8k.sh
 
+# User-started R1-BIE workflow source; generated bundles remain ignored.
+!/scripts/validation/support/launch_r1_bie_manual.sh
+!/scripts/validation/support/archive_r1_bie_manual.sh
+!/scripts/validation/support/manage_r1_bie_manual.ps1
+!/scripts/validation/support/prepare_r1_bie_manual_package.ps1
+
 # Re-generable build, compiler, toolchain, and Python cache content must stay
 # ignored even though the repository-wide source/documentation rules above
 # allow .m and .md files.
@@ -171,3 +177,7 @@
 /results/validation/piston_source_shape_comparison/20261114_shape_01/source_snapshot/
 /results/visualization/piston_shape_explanatory/20261114_explain_01/source_snapshot/
 /results/visualization/piston_source_full_beam_envelope/20261113_remote_fullbeam_01/source_snapshot/
+
+# Manual R1 bundles/dry-run sentinels are generated evidence, not source APIs.
+/results/comparisons/piston_2d_pm/20261116_r1_bie_manual_*/
+/results/validation/r1_bie_manual_preparation/
