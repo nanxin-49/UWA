@@ -1,0 +1,36 @@
+{
+  "status": "STATIC_ANALYSIS_COMPLETE_NO_EXECUTION",
+  "date": "2026-11-16",
+  "completed_steps": [
+    "read tracker/current-state index",
+    "locate retrieved run",
+    "verify 110 retrieval SHA and 36 package bindings",
+    "verify C0-C2 committed chain and C3 solved seal",
+    "read stage audit/gates/timings and exception source",
+    "independently recompute 411-line and four-segment CSV residuals",
+    "identify C3 actual stopping stage and three-solve count",
+    "write diagnostic report without changing numeric thresholds or solver",
+    "update records and text-only progress views"
+  ],
+  "config": "fixed 10cm 4kHz seed260001 saved 411-point receiver line only",
+  "input_versions_sha256": "source_versions_sha256.json",
+  "code_versions_sha256": "source_versions_sha256.json",
+  "artifacts_sha256": "SHA256SUMS.txt",
+  "failed_or_unrun_checks": [
+    "Original C3 nonmonotonic gate remains FAIL",
+    "C4 and final reference qualification unrun",
+    "No MATLAB or saved MAT/Green audit rerun",
+    "No code repair, checkpoint migration, Resume or new solve"
+  ],
+  "resource_usage": {
+    "MATLAB_starts": 0,
+    "new_acoustic_solves": 0,
+    "SSH_connections": 0
+  },
+  "audit_status_and_path": "analysis.json: read-only SHA, saved receipts and independent CSV algebra",
+  "next_allowed_step": "User reviews gate policy and migration proposal; do not Resume or recompute C3",
+  "execution_mode": "Local Python standard-library CSV/JSON/SHA and Node text packaging only",
+  "matlab_release": "Not queried or started",
+  "report": "reports/r1_bie_nonmonotonic_diagnosis_2026-11-16.md",
+  "original_results_overwritten": false
+}

@@ -184,3 +184,13 @@
 # Manual R1 bundles/dry-run sentinels are generated evidence, not source APIs.
 /results/comparisons/piston_2d_pm/20261116_r1_bie_manual_*/
 /results/validation/r1_bie_manual_preparation/
+
+# Retrieved run copies stay local; publish only the compact static diagnosis evidence.
+/results/comparisons/piston_2d_pm/r1_bie_manual_runtime_fix_20261116_02_retrieved_20261116_144235/
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/analyze_saved.py
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/analysis.json
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/checkpoint.json
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/point_residuals.csv
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/project_progress_before.json
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/source_versions_sha256.json
+!/results/validation/r1_bie_nonmonotonic_analysis/20261116_01/SHA256SUMS.txt

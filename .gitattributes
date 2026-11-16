@@ -16,3 +16,6 @@ results/comparisons/two_dimensional_channel_closeout/20261026_s3a_seed260003_01/
 # Keep selected M0/M1 receipts byte-identical to their SHA manifests.
 results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/** -text whitespace=cr-at-eol
 results/validation/m1_preflight/** -text whitespace=cr-at-eol
+
+# Keep the R1 saved-result diagnosis byte-identical to its SHA manifest.
+results/validation/r1_bie_nonmonotonic_analysis/20261116_01/** -text whitespace=cr-at-eol

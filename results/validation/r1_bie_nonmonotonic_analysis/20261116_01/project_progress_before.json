@@ -1,0 +1,932 @@
+{
+  "schema_version": 1,
+  "title": "从这里接着做",
+  "subtitle": "垂直水声项目 · 仿真与验证进度",
+  "updated_at": "2026-11-16",
+  "checked_at": "2026-11-16",
+  "review_revision": "compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot; piston P0/P1 remote 20261112_remote_p0p1_01 audited; 2026-11-14 AGENTS navigation alignment only; no numerical re-audit",
+  "headline": "R1-BIE C1–C4手动执行包已就绪：导入C0、逐阶段审计与恢复；本轮未运行远程声学任务",
+  "overview": [
+    "这个项目想回答的是：海底附近发出的声音，经过直达和海面反射到达接收机后，会怎样影响通信？为此，一边需要可信的声场和信道，一边需要能检验信道估计与均衡方法的通信实验。",
+    "你离开前，已经完成二维单频比较，做过三维固定海面的独立频点检查，还在一个接收点上跑通了受控的宽带与四相位调制（QPSK，每个符号承载两比特）通信实验。因此，重新开始时有不少结果可以接着用。",
+    "P22保存结果与新Ubuntu最小项目基线保留其历史复核范围；M1仍停在RAM门，正式S5/S6仍暂停。当前前向研究顺序以AGENTS.md和reports/active_task_tracker.md为准：10 cm条带4 kHz PM → 反射模型决策 → 相干4–8 kHz频响/CIR → 受控通信；统计、时变、多普勒及1500 m扩展留待另定范围。",
+    "2026-11-10 M0：生产原生PE到DSP改为完整包络共轭，统计/迁移/外部桥接同步。P22平面波高度、Gaussian同源角谱、C/P、SSA、CIR及小型已知CSI无噪声通信通过；旧失败和历史结果保留。",
+    " 本轮追溯原始窗口证据并冻结M1：不重扫失败小窗口，采用192.1875m起点、独立AS参考及逐步边缘检查。",
+    "2026-11-11：本轮M1执行在MCP连接前置门停止，未取得窗口、网格、步长或吸收层新资格；没有合格生产推荐配置，不能进入M2。",
+    "历史方案（2026-11-11）曾选20 cm代表尺寸，安排共源、4 kHz试点及三频比较；这些原始源条件和结果继续保留。2026-11-14起后续主源总宽改为10 cm（半宽5 cm）的理想二维无限条带，不能当作已测实物三维有效口径；不重标20 cm结果，也不接管M1预算。",
+    "同日后续M1：既有MCP版本/PID核实后，完成P4/P6和10组独立AS；已完成对照独立审计0失败。P8在RAM跌破启动可用量30%时中止，Z4/Z8和全部吸收层对照未派发，无生产推荐，不进入M2。",
+    "2026-11-11后续活塞图示：旧5 cm经GitHub和本地代码确认是圆形半径，本次以二维总宽10 cm映射半尺寸，并加总宽5 cm控制。20/10/5 cm同振速三频自由场已保存复Pa、图、独立检查；这不关闭P0，后续先共源压力/梯度/相位资格，再平面镜像。",
+    "2026-11-15 R1：10 cm、4 kHz、PM seed260001、411点反射场已保存；PS/FullFK数值检查通过，BIE首层残差通过，但剩余收敛层按本机成本预计超预算而未派发。暂定复L2为15.9235%和0.0747208%，参考未合格；R1停止，R2及以后不启动。",
+    "2026-11-16实现验证专用默认关闭缓存并执行S0/C0：4组小规模及3200节点历史密度/复场差全部0。C0调用55.48 s，原N³成本门预测余层730.29 s高于582.80 s余额，C1–C4未派发；累计525/1100 s，R1参考仍未合格。",
+    "2026-11-16本次仅准备用户手动C1–C4批处理与新执行政策：取消旧累计/成本预测停止，单个R2025b单线程、无parpool、30%RAM与原数值门保留；已通过本地静态与声学入口哨兵dry-run。C0不重算、已审计阶段按SHA跳过，真实C1–C4尚未运行。"
+  ],
+  "reading_note": "先读当前任务表和手动执行说明。最新一轮只准备脚本及本地无声学dry-run；旧525秒与成本STOP为历史，新手动包不再受原累计/预测门约束。R1参考未合格，R2及更广范围仍未授权。",
+  "review_scope": "M1前置任务曾从compare/c90d0ca干净基线核M0的181项产物SHA，48项源码/文档42匹配、6项为既有导航漂移，MATLAB源码一致。新增活塞计划本轮只查官方资料、静态核必要接入点和生成视图，不重演该身份审计、不运行声学求解或MAT数值审计。当前工作树另有M1修改，未将其作为冻结活塞版本。 本次M1执行另核真实版本/PID、生产代码与相位v2，补默认关闭的每步验证观察；完成既有数据MAT/IEEE-754 CSV/SHA和参考/生产对照审计。未接管活塞计划或将其预算用于M1。 后续P8内存任务仅查保存资源轨迹、源码和当前元数据，给出未实施优化方案，不改变M1数值状态。 本次活塞quicklook只做二维Hankel孔径积分；独立角谱含传播与倏逝分量、加密求积、MAT/CSV与FIG数据重建。没有生产模型接入、PE/BIE/FullFK比较、SSH或后续阶段执行。 2026-11-14本次仅静态修复AGENTS、任务表、当前上下文与进度导航的一致性；二维工作线checked_at指配置核对日期，不是旧P0/P1、PM或其他工作线的数值复查日期。 2026-11-15只在本轮R1范围复核P0/P1回执绑定与三个核源码、Gaussian11项历史SHA；新PS/FullFK数值检查、10 cm BIE一层及已算数据独立重建已执行。BIE三类收敛未执行，不升级R1/S5/S6或生产WAPE资格。 2026-11-16缓存实现默认关闭，执行N64/N128×qa64/96冻结原/默认/关/开四组以及3200节点C0全回放，矩阵/密度/411复场等价差0；另做独立C0接收重建和MAT/CSV/SHA核验。C1–C4未派发，不升级R1参考/S5/S6或生产接口资格。 2026-11-16本次只做手动脚本、包输入/代码SHA、PowerShell/Bash解析、带7个声学入口哨兵的MATLAB元数据/检查点状态机dry-run；Code Analyzer 0消息。没有SSH连接、BIE/PE/FullFK/Hankel声学计算，C1–C4数值结果未执行。",
+  "runtime_note": "M1前置任务保留连接失败及18作业未派发的历史回执。本次活塞计划更新时，现有MATLAB MCP两次正式渲染成功，45项引用无意外缺失；最后修改接续步骤后的再次渲染一直未返回，已结束编排等待，未终止MATLAB进程，是否稍后完成未知。最终视图依维护说明用同一JSON/模板纯文本包装刷新。未核或恢复M1执行门；无新MATLAB、SSH、活塞仿真、物理/通信回归或浏览器视觉验收。 同日后续M1使用现有本机MCP R2025b Update 6、PID28836、CPU double单线程串行。P4/P6与10组AS完成；P8用时552.6459804s，在入射976/1067步因可用RAM713232384B低于保留769405747B而停止。全部失败、先导重跑和审计计入14400s账；未使用SSH/GPU/新MATLAB。本次看板正式刷新结果以最新render_receipt为准，未做浏览器目视验收。 内存诊断耗时1.529s，无新传播，单独记录且不改M1原封账。 活塞quicklook使用同一MCP R2025b Update6/PID28836，数值计算6.418s、独立数值审计1.123s；图件试绘失败记录保留，交付figures_delivered明确与试绘版区分，未重算声压。 2026-11-12继续完成图件封存：最终渲染与FIG审计50.688s，FIG审计12.202s、CData差0，8张PNG实际查看；一次图导出异常保留，未重算数值场。 本轮数值仅远端SSH，未调用本机MATLAB MCP。P0加密进程许可等待与真实计算分开记录；首次SHA监控cwd/CR换行错误已修正，无数值重派。进度视图按维护文档做纯文本包装，不将其当MATLAB运行或物理证据。 2026-11-14配置同步：用户明确禁止MATLAB与SSH，本轮未探测MCP、未调用MATLAB或远程主机；用同一JSON/HTML模板和既有progressMarkdown函数纯文本刷新两种视图，检查点见results/validation/project_progress_dashboard/20261114_agents_alignment_01/checkpoint.json。MATLAB渲染、Code Analyzer、浏览器视觉/交互和历史数值审计均未运行；不据此判断当前MCP可用性。 2026-11-15 R1远程R2025b Update1累计439/1100 s、单进程最长265/900 s，实际串行无parpool；首层后触发剩余参考成本预检STOP，后续仅保存数据分析/审计/导图。最小可用RAM109280206848 B，为启动量98.18%；图件尺寸审计失败保留，最终12条误差线与两图逐像素核通过。 2026-11-16仅一个远端R2025b Update1单线程进程，无parpool。S0含启动22.4246s，C0求解调用55.481928s（历史作业函数254.689257s，运行日与计时边界不同）；边界残差26.93s、基础组装15.43s为本轮主要阶段。余层加收尾730.29s>决策时剩582.80s，触发成本STOP。新86s、累计525/1100s；最小可用RAM为启动量98.09%。65文件SHA回传一致，C0独立重建通过；PS/FullFK/Gaussian未重算。 本次准备的独立launcher在用户手动启动后才创建一个R2025b单线程进程，取消旧1100秒累计/730秒预测门和旧短时倒计时，仅按30%RAM、数值/独立审计/异常停止；保留完整stdout/stderr、真实退出码和逐阶段SHA检查点，支持已通过阶段跳过与已求解仅补审计。不要求Codex持续监控。当前只本机MCP无声学dry-run，未连接远端；原缓存核心及PS/FullFK/生产WAPE未改。",
+  "workstreams": [
+    {
+      "id": "two-dimensional",
+      "name": "二维单频比较",
+      "checked_at": "2026-11-16",
+      "status": "partial",
+      "status_label": "手动C1–C4脚本就绪 · 参考待执行",
+      "result_date": "2026-11-16（C0数值结果；最新仅手动脚本/无声学dry-run）",
+      "summary": "已准备R1-BIE完整手动执行包：复用已验证C0，顺序C1–C4、阶段独立重建/原数值门、SHA绑定断点恢复，最终更新分辨率及误差图。用户取消旧累计/成本预测硬停止，保留单进程单线程、30%RAM和失败停止。本次只本地静态及无声学dry-run，真实C1–C4尚未运行。",
+      "why": "先在较容易控制的二维问题里，确认不同方法比较的是同一声源、同一海面、同一接收位置，再看它们算出的反射波差多少。",
+      "done": "以下模型比较分别保留其Gaussian或20/10 cm原始声源条件，不能合并当作10 cm PM资格。PE、边界积分方程（BIE，独立数值参考）和完整 Kirchhoff 积分近似（FullFK）的同源比较已完成。平面和三档正弦海面的九点结果齐全，三个预定 PM 海面实现也完成了比较；相关表格、图和历史审计均有保存。 新增严格二维速度孔径积分三频自由场，保存同振速绝对复Pa、接收线、近场/整体场和方向图；独立积分/角谱与保存数据检查无失败。 远端R2025b Update1及实际双进程已验证，源解析梯度对独立角谱/差分/速度/相位通过；BIE/FullFK输入差0，Gaussian标量默认差0；123项部分产物回传SHA匹配。 许可恢复后P0六组、P1自由/平面/弱C2正弦实际完成；最终独立审计0失败，PNG/FIG/MAT/CSV/日志/SHA回传。 2026-11-15完成本轮R1范围内的PS窗口/网格/步长、FullFK求积/范围、10 cm BIE L60/ppw10/qa96一层及10类已执行保存数据独立检查；四张最终PNG/FIG、逐点复场/幅相/残差CSV、MAT、SHA、日志和停止检查点齐备。 2026-11-16新增默认关闭缓存、阶段计时和阶段/累计时间及RAM中止门；4组小对照和C0完整回放通过，独立C0密度接收重建与MAT/CSV通过，65个回传文件SHA匹配。 最新准备完整MATLAB入口、Linux后台启动/状态/回收脚本、Windows管理及打包工具，包35项SHA、PowerShell/Bash检查和带7个声学入口哨兵的dry-run通过；恢复状态机覆盖fresh、audit-only、skip、前序变化、篡改、孤立数据拒绝。",
+      "meaning": "C0和缓存数值等价性沿用已验证证据；新手动包已完成输入/代码及控制流程准备，不能由dry-run升级C1–C4或R1参考资格。历史PS/FullFK暂定误差和原数值失败保持原样，生产物理默认不改。",
+      "gap": "C1网格12、C2自求积64、C3网格14、C4窗口70、最终参考分辨率及真实Linux后台完整链尚未执行。本轮不宣称这些结果PASS；当前等待用户手动启动，不是继续受旧1100秒/730秒门拦截。",
+      "next": "使用runtime修复新包20261116_r1_bie_manual_runtime_fix_02手动启动；旧失败session保留，C1–C4仍未运行。详见reports/r1_bie_runtime_json_fix_2026-11-16.md。",
+      "details": "固定二维、4 kHz、984 项 Gaussian 发射场；原九点与 411 点接收线分别统计。S4=CORE_COMPLETE，S3A=3/3，S3B 因预算未运行；PHI_PLUS90 的混合平台 BIE 求解差未直接定界。 活塞quicklook：c1500 m/s、rho1025 kg/m³、Tx100 m/Rx3 m、峰值振速1 mm/s，W20/10/5 cm；20 cm三频-3 dB全宽112/67/49°。",
+      "saved_results": "正式结果、表格和图件入口存在。 活塞run 20261111_2d_strip_01：MAT、CSV、8张交付PNG/FIG、日志、SHA和检查点。 本轮20261112_remote_p0p1_01保存复MAT、逐点与粗细接收线CSV、五组最终PNG/FIG、日志、资源和SHA。 R1结果位于results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/，137个远端交付文件SHA匹配，最终四图已实际查看。 缓存新run results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/保存4组对照MAT、C0原生密度/411点场与CSV、8阶段计时、成本决策、独立审计、真实日志/退出码及SHA。本轮不新增重复物理图。 手动包results/comparisons/piston_2d_pm/20261116_r1_bie_manual_ready_03/；本地无声学验收results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/。",
+      "historical_audit": "S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。 2026-11-14本次仅核配置与导航，未重做MAT/CSV、SHA数值链或FIG审计；result_date及历史审计结论不变。 R1本轮10类已执行检查0失败，另外4项参考资格检查未执行；源/密度/Green核/FullFK双项/MAT-CSV重建通过。最终12条误差线一致，两图重导出像素差0。BIE参考未完成资格，不以小残差或退出0替代收敛。 2026-11-16本轮小矩阵/右端/密度/复场/边界对照差0，C0对历史差0，独立密度重建7.69e-15、MAT/CSV最大6.91e-14 Pa；65文件SHA相同。C1–C4与参考经验分辨资格未执行，原STOP仍保留。 本次只对脚本/输入/恢复状态机作本地检查，声学调用与SSH连接0。最终dry-run Code Analyzer 0消息、七个声学入口哨兵有效；C1–C4真实数值验收尚未执行。",
+      "rerun": "最新用户政策为手动启动一个独立R2025b单线程进程，取消旧累计/预测时限但保留RAM/数值/审计门。脚本导入C0、不重复已通过阶段，失败后仅用户手动恢复；Codex本轮不得自行连接或启动远程计算。",
+      "evidence": [
+        {
+          "label": "当前二维任务表（导航，不授予运行许可）",
+          "path": "reports/active_task_tracker.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "AGENTS执行与源宽规则",
+          "path": "AGENTS.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "10 cm配置与导航同步记录",
+          "path": "reports/agents_configuration_alignment_2026-11-14.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "历史20 cm代表参数及三频计划（后续顺序以当前任务表为准）",
+          "path": "reports/piston_source_2d_single_frequency_plan_2026-11-11.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "正式收尾报告",
+          "path": "reports/two_dimensional_channel_closeout_report.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "S4 结果索引",
+          "path": "results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "保存证据审计摘要",
+          "path": "results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "原二维研究工作台",
+          "path": "UWA_2D_research_review_workbench.html",
+          "kind": "topic",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "二维活塞自由场图示与历史尺寸溯源",
+          "path": "reports/piston_source_quicklook_2026-11-11.md",
+          "kind": "report",
+          "revision": "a37fd75 + source snapshots",
+          "expected_exists": true
+        },
+        {
+          "label": "活塞quicklook最终检查点（非P0资格）",
+          "path": "results/validation/piston_source_quicklook/20261111_2d_strip_01/checkpoint_final.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "活塞P0/P1执行与恢复记录",
+          "path": "reports/piston_p0p1_remote_execution_2026-11-12.md",
+          "kind": "report",
+          "revision": "compare/6c53632 + immutable snapshots",
+          "expected_exists": true
+        },
+        {
+          "label": "此前许可等待检查点（历史）",
+          "path": "results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_license_wait.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "活塞P0/P1最终报告",
+          "path": "results/comparisons/piston_2d_single_frequency/20261112_remote_p0p1_01/report.md",
+          "kind": "report",
+          "revision": "20261112_remote_p0p1_01",
+          "expected_exists": true
+        },
+        {
+          "label": "活塞最终检查点",
+          "path": "results/validation/piston_source/20261112_remote_p0p1_01/checkpoint_final.json",
+          "kind": "audit",
+          "revision": "20261112_remote_p0p1_01",
+          "expected_exists": true
+        },
+        {
+          "label": "10cm形状补图：SSH等待与理论解释",
+          "path": "results/validation/piston_source_shape_comparison/20261114_shape_01/report.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1固定10 cm PM结果与成本停止报告",
+          "path": "results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/report.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1阶段检查点（参考未合格）",
+          "path": "results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/checkpoint.json",
+          "kind": "checkpoint",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "默认关闭BIE缓存实现、C0实测阶段成本与STOP",
+          "path": "reports/r1_bie_cache_implementation_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "缓存续行最终检查点（C1–C4未派发）",
+          "path": "results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/checkpoint.json",
+          "kind": "checkpoint",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "R1-BIE手动启动、状态、恢复、回收与新执行政策",
+          "path": "reports/r1_bie_manual_execution_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "手动包无声学dry-run回执（不是C1–C4数值PASS）",
+          "path": "results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/receipt.json",
+          "kind": "checkpoint",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "runtime配置根因修复、新目录与测试",
+          "path": "reports/r1_bie_runtime_json_fix_2026-11-16.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        }
+      ]
+    },
+    {
+      "id": "broadband-reference",
+      "name": "二维宽带与多模型参考",
+      "checked_at": "2026-11-11",
+      "status": "stopped",
+      "status_label": "M1_INCOMPLETE · P8 RAM门停止",
+      "result_date": "2026-11-11（M1部分对照/资源停止）；正式S5/S6仍暂停",
+      "summary": "M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RAM门中止，步长与吸收层资格未完成，无生产推荐配置。",
+      "why": "要把声场变成可用于通信的信道冲激响应（CIR，声音在不同延迟上的复响应），频率之间必须使用一致的声源、相位和时间原点，还要知道反射参考是否可靠。几个单频点相近并不足以保证时域结果可信。",
+      "done": "10 月 27 日已有 129 点同源直达检查和弱正弦 P22 的 6/8 kHz 单点参考。10 月 31 日的独立试点完成 4062.5 Hz、4031.25 Hz 的五层 BIE 参考，并检查了事先锁定的一个插值预测。 本轮完成原生reduced/physical/DSP三表示修复，P22平面波eta=0/±.01m与Gaussian同源角谱、统计和CIR独立控制通过。 本轮对37项相关文件绑定当前SHA，读取旧MAT/CSV并核主海面裁剪；17项限定门通过。设计5次生产PE及10组AS以分离空间/步长误差。 2026-11-11静态复核M0产物181/181 SHA一致，所有清单内MATLAB代码一致；确认吸收层单方向三次增长、x/y相加。连接前置门失败已保存，未启动PE或AS。 同日MCP恢复后执行生产P4/P6与10组AS，参考自身边缘、三频空间对照与4/6kHz PE-AS通过；独立收尾81行比较与MAT/CSV/SHA审计0失败。默认关闭的观察接口逐步记录三段传播，64²开关输出差0，已有M0宽带H消费者回放BER/SER=0。 后续只读诊断核41项源码、run03内部209项产物SHA一致。系统可用RAM下降1.724GiB，但P8采样工作集1.149–1.281GiB且生涯峰值不增长，未证实泄漏。",
+      "meaning": "说明频率表示与局部参考已有实际进展，后续可以据此设计更有针对性的验证。两个新频点只是小范围试点，还不能替代整个频带。 允许单独安排M1；不是全频物理CIR或三维粗糙海面认证。 M1_INCOMPLETE是执行受阻，不表示物理门数值失败；原吸收层既未判合格也未判不合格。 本轮证明指定均匀/平面Gaussian离散锚点的已完成对照，不形成完整M1配置资格。8kHz AS通过不能代替未完成生产PE或步长实测。",
+      "gap": "完整 65/129 点反射参考、九点覆盖、高频与时间窗检查仍缺。4031.25 Hz 的 PE 独立步长/网格敏感性未齐；FullFK 与 BIE 的差异低于约定分辨率，不能据此判优。原正式 S5/S6 仍暂停。 最终封存发现两频点检查点所指审计代码 SHA=2c95abb6… 的原文未定位；固定提交的通用审计脚本为 bd865b9c…，不能顶替完整旧最终审计的来源。6 个产物绑定及 287 条数据清单匹配，本轮新 MATLAB 限定数值重核有效。 旧结果缺当次源码SHA，边缘仅33/65个z采样；新平面4–8kHz网格/步长与全步边缘资格待执行。 本轮M1没有新MAT数据、三频误差、逐步边缘或吸收对照；当前会话版本、真实PID与可靠长作业追踪尚未确认。 当前P8仅直达1036/1036、入射977/1068、反射0/33平面；Z4/Z8及SP4/SP6/SP8均未派发。原吸收层既未判合格也未判不合格。 缺运行期系统占用归因及内部数组分配轨迹；优化尚未实施、没有实测节省或P8重跑。部分MAT没有中途psi_k，不能直接从976步续算。",
+      "next": "先审阅P8内存方案：优先缩短无用数组寿命、缓存固定环境屏，再做保持原运算链和逐步诊断的等价/资源验证。当前不派发传播，M1仍INCOMPLETE；后续恢复需当前资源、预算、版本/PID和输入证据门。",
+      "details": "二维 Tx=(0,100 m)，P22=(0,3 m)，原弱 C2 正弦 A=0.01 m、K=0.1 rad/m。10-31 状态为 DATA_COMPLETE_REFERENCE_PASS_MODEL_RESOLUTION_LIMITED；全带重建、物理 CIR/PDP/BER 未生成。10-27 的 48 h 提案尚未获批，不能作为后续执行许可。",
+      "saved_results": "10-27 和 10-31 的结果包、检查点与审计摘要存在。 11-10 合并镜像 234 条与增补 53 条 SHA 清单均核验一致。",
+      "historical_audit": "历史两个新频点参考通过但模型分辨受限；11-10 独立 MATLAB 保存标量/源数组/配置/相位/退出记录与预测公式重核通过，未重演原全部场合成与边界数组检查。",
+      "rerun": "两频点原求解入口已从 24a05ba 恢复；BIE helper 少几项历史输入检查，已列差异但未替换/执行。远端布局、预测冻结及调度环境未恢复为可直接运行环境；正式流程仍暂停。 本轮MCP attachment失败，禁止将远程或新MATLAB进程作为替代；当前M1任务已授权，不重复申请每个子步骤。 当前MCP版本和PID已核实，原连接失败成为历史；本轮停止原因更新为P8 RAM门。原run02空diary与300s传输超时保留，经确认终态后以显式stdout捕获在新run03重跑P4且三表示圆盘差0。",
+      "evidence": [
+        {
+          "label": "正式流程暂停与门槛",
+          "path": "reports/two_dimensional_s5_s6_2026-10-27.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "10-31 两频点检查点",
+          "path": "results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json",
+          "kind": "result",
+          "revision": "24a05ba72b58042084417e54ca437f03adb988dd",
+          "expected_exists": true
+        },
+        {
+          "label": "两频点独立审计摘要",
+          "path": "results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "两频点运行入口（已恢复）",
+          "path": "scripts/validation/run_two_dimensional_s5_p22_dualfreq_remote.m",
+          "kind": "entrypoint",
+          "revision": "24a05ba72b58042084417e54ca437f03adb988dd",
+          "expected_exists": true
+        },
+        {
+          "label": "P22 可复现基线与对应表",
+          "path": "reports/p22_reproducibility_baseline_2026-11-10.md",
+          "kind": "report",
+          "revision": "747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9",
+          "expected_exists": true
+        },
+        {
+          "label": "约100m静态模型收尾计划",
+          "path": "reports/static_channel_model_100m_closeout_plan_2026-11-10.md",
+          "kind": "plan",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "M0合同修复与验收报告",
+          "path": "reports/m0_phase_contract_closeout_2026-11-10.md",
+          "kind": "report",
+          "revision": "3f7071d + working tree",
+          "expected_exists": true
+        },
+        {
+          "label": "M0独立数值与MAT/CSV审计",
+          "path": "results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/checkpoint.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "M0封存与M1窗口/网格/步长预审设计",
+          "path": "reports/m0_seal_m1_preflight_2026-11-10.md",
+          "kind": "report",
+          "revision": "M0 source 969127f",
+          "expected_exists": true
+        },
+        {
+          "label": "M1历史原始数据只读审计",
+          "path": "results/validation/m1_preflight/20261110_saved_evidence_04/audit.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "M1执行收尾：连接门停止",
+          "path": "reports/m1_static_convergence_closeout_2026-11-11.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "M1前置检查点",
+          "path": "results/validation/m1_convergence/20261111_m1_execution_preflight_01/checkpoint_preflight.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "M1数值执行收尾与RAM停止",
+          "path": "reports/m1_static_convergence_qualification_2026-11-11.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "已完成对照独立审计",
+          "path": "results/validation/m1_convergence/20261111_m1_execution_03/partial_closeout_audit/checkpoint.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "18项矩阵实际状态",
+          "path": "results/validation/m1_convergence/20261111_m1_execution_03/matrix_status.csv",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "P8内存诊断与无物理改动优化方案",
+          "path": "reports/m1_p8_memory_diagnosis_2026-11-11.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "P8只读内存诊断回执",
+          "path": "results/validation/m1_p8_memory_diagnosis/20261111_01/checkpoint.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        }
+      ]
+    },
+    {
+      "id": "controlled-communication",
+      "name": "P22 宽带与通信控制实验",
+      "checked_at": "2026-11-10",
+      "status": "partial",
+      "status_label": "局部通过 · 已知信道控制",
+      "result_date": "2026-10-30（P22历史）；2026-11-10（M0小型控制）",
+      "summary": "历史P22已知CSI控制保留原资格；本轮新增修复后小型无噪声链路门，不能拿旧P22代替新物理真值。",
+      "why": "先把一条受控的“频响 → 时域信道 → 发射 → 加噪 → 均衡 → 误码统计”链路走通，排除表示或通信实现本身的问题。",
+      "done": "最初直接比较 65/129 点 IFFT 没通过。后来把分量按共同时间窗投影到 257 点网格，并与独立计算的 257 点 PE 对照，通过原有门槛，随后完成平面与弱正弦两种海面的 QPSK 实验。 11-10 最小入口已恢复；原检查点输入/输出 SHA 核验，保存频响共同窗重建及原 QPSK 固定配置重放均通过原审计。 M0发现线性卷积截尾与FFT逆的边界不匹配，保留完整尾部后，在相同新生产H上BER从.07421875变为0；解析taps和CIR门通过。",
+      "meaning": "共同窗表示与已知 CSI 通信链现在有当前可用入口、匹配原记录的数据和本轮独立复核；可以继续用作受控基线。",
+      "gap": "接收端事先知道信道，尚未验证从导频估计信道的能力；也没有完成 PE/BIE/FullFK 全频带的通信影响比较。该实验不升级正式 S5/S6，更不能代替目标深海场景验证。 旧carrier-only DSP、CIR、统计和相位敏感通信结果须明确来源后另存迁移/重算，不能直接标为新合同通过。",
+      "next": "基线整理已结束；后续如需导频估计或模型失配研究，另定范围、预算和验收门，不自动开始。",
+      "details": "P22=(0,3 m)，发射深度 100 m，平面/原弱 C2 正弦；共同 257 点、64 ms 表示。65/129 共同窗 CIR 差约 7.1e-6，小于 1e-3。QPSK、已知 CSI 块 FFT LMMSE 均衡，SNR=0/6/12/18/24 dB，每点 262144 bit。原始 IFFT 失败记录保留，不能写成原始方法后来通过。",
+      "saved_results": "原共同窗和 QPSK 结果保持原位；新审计、图件、版本/哈希/日志保存在 p22_reproducibility_baseline/20261110_115037。",
+      "historical_audit": "原始 IFFT 失败保留。共同窗/QPSK 原审计通过；11-10 保存数据重审通过，均衡符号差 0，CSV 指标最大差 3.9080e-14。",
+      "rerun": "三个关键入口和两个独立审计已最小恢复；审计支持显式新输出目录，原数值门不变。当前可复核保存数据；新性能实验未授权。",
+      "evidence": [
+        {
+          "label": "最初 CIR 失败检查点",
+          "path": "results/validation/pe_screen_p22_comm/20261030_01/checkpoint.json",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "共同窗通过检查点",
+          "path": "results/validation/pe_screen_p22_common_window/20261030_01/checkpoint.json",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "共同窗独立审计",
+          "path": "results/validation/pe_screen_p22_common_window/20261030_01/audit.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "最终 QPSK 检查点",
+          "path": "results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json",
+          "kind": "result",
+          "revision": "24a05ba72b58042084417e54ca437f03adb988dd",
+          "expected_exists": true
+        },
+        {
+          "label": "QPSK 独立审计",
+          "path": "results/communication/pe_screen_p22_qpsk/20261030_03/audit.json",
+          "kind": "audit",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "QPSK 运行入口（已恢复）",
+          "path": "scripts/validation/run_pe_screen_p22_qpsk.m",
+          "kind": "entrypoint",
+          "revision": "24a05ba72b58042084417e54ca437f03adb988dd",
+          "expected_exists": true
+        },
+        {
+          "label": "共同窗验证入口（已恢复）",
+          "path": "scripts/validation/validate_pe_screen_p22_common_window.m",
+          "kind": "entrypoint",
+          "revision": "24a05ba72b58042084417e54ca437f03adb988dd",
+          "expected_exists": true
+        },
+        {
+          "label": "P22 可复现基线与对应表",
+          "path": "reports/p22_reproducibility_baseline_2026-11-10.md",
+          "kind": "report",
+          "revision": "747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9",
+          "expected_exists": true
+        },
+        {
+          "label": "M0合同修复与验收报告",
+          "path": "reports/m0_phase_contract_closeout_2026-11-10.md",
+          "kind": "report",
+          "revision": "3f7071d + working tree",
+          "expected_exists": true
+        }
+      ]
+    },
+    {
+      "id": "three-dimensional",
+      "name": "三维固定海面与深海模型",
+      "checked_at": "2026-11-10",
+      "status": "partial",
+      "status_label": "局部通过 · 目标海况待验证",
+      "result_date": "2026-10-27",
+      "summary": "固定测试海面在多个独立频点上有条件通过，但还没有证明整个频带或目标随机海况都可靠。",
+      "why": "二维模型不能自动代表真实三维散射，需要对三维点源、二维海面和指定链路另建独立参考。",
+      "done": "固定 compact-dual 海面已有 4/5/6/7/8 kHz 锚点及后续独立频点检查。65 点预测网格又用事先锁定的四个新频点检查，四点都通过约定筛查门。",
+      "meaning": "固定案例的跨频预测有有限的独立支持，可以继续研究怎样少算一些频点。65 点是预测输出网格，并非 65 个独立参考都已算过。",
+      "gap": "连续频带、时域窗和 CIR/BER 尚未认证。目标 PM 随机海面的独立参考仍未解决；Q1 BIE 路线因独立误差门失败已经停止，不应继续沿用早期“下一步修 BIE”的建议。",
+      "next": "暂缓1500m深海分支。约100m公共三维模型按新计划独立核约定和数值误差；二维BIE证据不自动认证三维PM，目标PM独立参考缺口保留。",
+      "details": "固定 Tx=(0,150.5,1500 m)、Rx=(0,0,5 m)，C2 compact-dual 测试海面。四个新点为 4750/7250/4125/6562.5 Hz。G1_target_PM=OPEN，WP2_formal=false。此处 FE 指 Dirichlet 场展开，不是有限元。",
+      "saved_results": "正式报告、四点原生结果、预测锁和检查点存在。",
+      "historical_audit": "四点筛查和保存数据审计通过，有条件参考的范围不变。",
+      "rerun": "历史结果来自旧 Ubuntu R2023b；不能直接视为新 Ubuntu R2025b 已通过项目验证。",
+      "evidence": [
+        {
+          "label": "四个新频点正式报告",
+          "path": "reports/deepsea3d_65grid_four_holdout_2026-10-27.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "结果索引",
+          "path": "results/validation/deepsea3d_65grid_four_20261027/README.md",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "Q1 BIE 停止决策",
+          "path": "reports/deepsea3d_bie_q1_decision_2026-10-26.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "三维总研究计划",
+          "path": "reports/deep_sea_channel_research_plan.md",
+          "kind": "plan",
+          "revision": "",
+          "expected_exists": true
+        }
+      ]
+    },
+    {
+      "id": "target-geometry",
+      "name": "1500 m 目标深海几何与 PE 窗口",
+      "checked_at": "2026-11-10",
+      "status": "paused",
+      "status_label": "暂缓 · 先完成约100m建模",
+      "result_date": "2026-11-01",
+      "summary": "已经算清楚几条候选路径什么时候到；还没有验证生产 PE 在这个长距离、大偏移场景下能否算准。",
+      "why": "先明确目标场景里直达、海面和海底一次反射的距离与时延，再判断计算窗口够不够大，避免接收点已经落进吸收边缘却把结果当成物理变化。",
+      "done": "水深 1500 m、Tx1490 m、Rx3/6/10 m、偏移 0–200 m 的解析几何表和图已生成。海底一次反射的候选到达也补算过。另对生产 PE 的窗口、网格和海绵层限制进行了代码核查。",
+      "meaning": "后续传播验证有了独立的几何参照。Rx 深度 10 m 时，平面海面与平坦海底的一次反射几何到达重合；这只说明到达时间重合，声压强弱还不知道。",
+      "gap": "400 m 窗口下，200 m 接收位置落入吸收层；保持既有分辨率的更大窗口又受到当前窗口/网格保护限制。实际内存、运行时间与长程复声场收敛未测量。",
+      "next": "按用户2026-11-10要求暂不推进1500 m孔径及大偏移计算；原解析几何和限制保留，后续有需要再另立任务。",
+      "details": "等声速 c=1500 m/s 的镜像法，603 行几何采样；没有计算路径复声压、海底反射系数、粗糙散射或通信。600/800 m 只是候选窗口，不是已通过的配置。",
+      "saved_results": "D/S 和 D/S/B 解析报告、CSV 和图件入口存在。",
+      "historical_audit": "解析代数、CSV 和图件检查通过；没有目标 PE 传播通过结论。",
+      "rerun": "解析几何入口在当前工作树；生产 PE 目标数值试验尚未准入。",
+      "evidence": [
+        {
+          "label": "解析几何与 PE 孔径设计",
+          "path": "reports/rc1_target_deepsea_geometry_and_pe_aperture_design_2026-11-01.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "海底一次反射几何补充",
+          "path": "reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "D/S/B 几何入口",
+          "path": "scripts/reporting/render_target_deepsea_dsb_geometry.m",
+          "kind": "entrypoint",
+          "revision": "",
+          "expected_exists": true
+        }
+      ]
+    },
+    {
+      "id": "bellhop",
+      "name": "Bellhop 代表案例与平面对照",
+      "checked_at": "2026-11-10",
+      "status": "partial",
+      "status_label": "图示已完成 · 对照有未过项",
+      "result_date": "100 m 代表案例报告未标日期；连通 smoke 为 2026-11-01",
+      "summary": "当前代表图采用 100 m 水深、发射机离底 1 m；声线展示完成，但不能把画出来的路径当成幅相已经验证。",
+      "why": "借助独立的射线方法理解多途结构，并在可比较的平面条件下检查 PE 与 Bellhop 的差异。",
+      "done": "Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。",
+      "meaning": "已有直观的路径材料，也已经定位出对照尚未闭合的部分。连通 smoke 说明程序能运行；代表图和部分通过项各有自己的用途。",
+      "gap": "未完成角度/宽带扫描，也未认证粗糙面全部幅相。平面对照的空间相位约 0.0612 rad，大于 0.05 rad 门；空间复 L2 约 0.0613，大于 0.02 门。",
+      "next": "若要继续比较，先限定相同路径拓扑、声源和相位约定，解释已有失败项；不要拿含底高阶多途直接对照当前 PE 的直达加一次海面反射。",
+      "details": "当前安装：水深100 m，Tx99 m，Rx3 m；停止零离底 epsilon 扫描。代表案例193条 ARR、199条 E 贡献记录、1001条展示声线；这些数量不代表真实独立到达路径数。旧500 m材料已经退役，本页不引用归档内容。",
+      "saved_results": "代表案例报告、图件及平面对照 checks.csv 存在。",
+      "historical_audit": "代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。",
+      "rerun": "当前绘图入口存在，仍依赖外部 Bellhop 可执行文件；本次没有重跑。",
+      "evidence": [
+        {
+          "label": "当前安装与代表图报告",
+          "path": "reports/bellhop_100m_source1m_visuals_report.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "当前重建计划顶部修订",
+          "path": "reports/bellhop_100m_rebaseline_plan.md",
+          "kind": "plan",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "平面展开逐项检查表",
+          "path": "results/validation/pe_bellhop_unfolded_flat_gaussian/checks.csv",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "当前代表图入口",
+          "path": "scripts/reporting/generate_bellhop_100m_source1m_visuals_vertical.m",
+          "kind": "entrypoint",
+          "revision": "",
+          "expected_exists": true
+        }
+      ]
+    },
+    {
+      "id": "reproducibility",
+      "name": "运行环境与重跑条件",
+      "checked_at": "2026-11-10",
+      "status": "partial",
+      "status_label": "新机最小项目基线通过 · 完整迁移未做",
+      "result_date": "P22 原结果至 2026-10-31；本机保存数据复核及新机最小基线 2026-11-10",
+      "summary": "新机隔离快照已通过小型公共信道的跨平台数值比较和两项 P22 保存结果审计；范围以外的项目组件仍待检查。",
+      "why": "后续计算应能说明用哪份代码、哪台机器和哪套输入得到结果，避免把环境打通当成科研验证通过。",
+      "done": "11-10 先恢复 P22 五个缺失文件并独立复核保存数据；随后在新机隔离快照上传 23 个白名单文件，逐项 SHA 通过。三组 CPU double 小型信道案例与两项 P22 保存结果审计在 Linux/R2025b Update 1 通过，与本机 Update 6 数值对照通过；92 个回传文件 SHA 匹配。 M0新增独立run，保留SHA回执失败、通信边界失败、CSV舍入和hex导入失败，再在新子目录恢复/复核。条件模型schema3与phase_contract_version=2.0.0阻止旧表示静默混入；代码/结果SHA和完整日志可追溯。 M0源码已有969127f，轻量检查点/失败记录/哈希白名单封存；既有47份生成源码快照保留历史，新快照不再自动纳入。旧窗口源码可恢复至8946b8e，但不能伪补原run绑定。",
+      "meaning": "当前来源和输入身份可追溯；新机已取得限定于 128×128、4 kHz 直达/反射、4–8 kHz 九点接口及两项 P22 保存审计的最小项目环境与兼容性基线。",
+      "gap": "/home/misc/cwx 仍非完整 Git 工作区；仅隔离快照有本轮 23 个文件。未查完整项目全部 toolbox、Linux MEX、外部程序、大网格或长时任务；九点不认证 CIR，正式 S5/S6 继续暂停。两频点旧最终审计代码 SHA=2c95abb6… 的原文仍未定位，不能用固定提交中 SHA=bd865b9c… 的通用脚本顶替；旧失败证据保留。",
+      "next": "本轮停止。后续如获授权，再核完整项目目标工作区、代码与输入身份，并按拟执行任务设计兼容性、资源和数值验收；不自动迁移或启动科研重计算。",
+      "details": "本机现有 MCP R2025b Update 6，新增工作连同进度看板刷新保守计 110/180 s；新机 SSH BatchMode、R2025b Update 1、单计算线程经实测，七次远端 MATLAB 进程 204.02/600 s，最长 50.70/180 s。五个数值作业逐项过 RAM/负载/磁盘门；未访问旧主机、归档或他人目录。",
+      "saved_results": "本轮隔离结果包保存逐文件来源清单、补丁差异、完整本机/远端输出与日志、配置及原生数值数组、逐作业资源回执、对照 JSON、上传及回传 SHA 和检查点；原 P22 结果包未覆盖。",
+      "historical_audit": "此前基础 FFT smoke 仅说明基础环境；本轮最小真实项目案例和 P22 原保存数据审计建立限定基线，不追认旧 R2023b 结果或两频点完整旧最终审计。",
+      "rerun": "只可按本轮隔离快照、固定配置和资源门重建限定基线；更大项目范围仍需独立授权与资格检查。",
+      "evidence": [
+        {
+          "label": "新机交接与边界",
+          "path": "reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "新机基础 smoke 检查点",
+          "path": "results/validation/new_ubuntu_matlab_smoke/20261109_232540_new_ubuntu/checkpoint.json",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "现行公共信道入口",
+          "path": "vertical_channel_model.m",
+          "kind": "entrypoint",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "P22 可复现基线与对应表",
+          "path": "reports/p22_reproducibility_baseline_2026-11-10.md",
+          "kind": "report",
+          "revision": "747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9",
+          "expected_exists": true
+        },
+        {
+          "label": "新机最小项目基线报告",
+          "path": "reports/new_ubuntu_minimal_project_baseline_2026-11-10.md",
+          "kind": "report",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "新机最小项目基线最终检查点",
+          "path": "results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json",
+          "kind": "result",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "M0合同修复与验收报告",
+          "path": "reports/m0_phase_contract_closeout_2026-11-10.md",
+          "kind": "report",
+          "revision": "3f7071d + working tree",
+          "expected_exists": true
+        },
+        {
+          "label": "M0封存与M1窗口/网格/步长预审设计",
+          "path": "reports/m0_seal_m1_preflight_2026-11-10.md",
+          "kind": "report",
+          "revision": "M0 source 969127f",
+          "expected_exists": true
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "s4-closeout",
+      "date": "2026-10-26",
+      "title": "二维核心正式收尾",
+      "text": "把已有比较收成一个范围明确的结论；三个预定 PM 实现完成，新增五个因预算没有运行。之后可以复用成果，不必从二维起点重做。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "q1-stop",
+      "date": "2026-10-26",
+      "title": "停止当前三维 Q1 BIE 参考路线",
+      "text": "线性求解残差虽小，独立边界和场误差仍未过门。因此停止继续扩大这条路线，旧计划中的继续调参建议不再有效。",
+      "workstream_id": "three-dimensional"
+    },
+    {
+      "id": "s5-pause",
+      "date": "2026-10-27",
+      "title": "正式宽带流程停下来等待审阅",
+      "text": "直达与少数频点参考有进展，但全频带反射、九点和通信依赖还不齐。48 小时只是一份待批提案，没有开始全带计算。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "dual-four",
+      "date": "2026-10-27",
+      "title": "三维预测接受四个新频点检查",
+      "text": "固定海面的预测在四个新点通过有限筛查。它支持继续研究稀疏预测，但没有把 65 点网格变成 65 个独立物理参考。",
+      "workstream_id": "three-dimensional"
+    },
+    {
+      "id": "cir-failure",
+      "date": "2026-10-30",
+      "title": "先发现 CIR 比较失败，再修正比较表示",
+      "text": "原始 65/129 点 IFFT 差异没有过门；共同窗、按分量和时延处理后，与独立 257 点 PE 对照通过原门槛。原失败记录保留。",
+      "workstream_id": "controlled-communication"
+    },
+    {
+      "id": "qpsk-pass",
+      "date": "2026-10-30",
+      "title": "P22 已知信道 QPSK 控制实验跑通",
+      "text": "通信链获得受控仿真结果和独立审计。这里尚未从导频估计信道，也没有升级正式多模型宽带资格。",
+      "workstream_id": "controlled-communication"
+    },
+    {
+      "id": "two-frequency",
+      "date": "2026-10-31",
+      "title": "补齐两个邻近频点的参考试点",
+      "text": "4062.5/4031.25 Hz 的 BIE 参考完成，局部预测也接受检查；模型差异的分辨能力和全带覆盖仍是缺口。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "geometry",
+      "date": "2026-11-01",
+      "title": "目标深海路径几何算清楚，窗口问题浮现",
+      "text": "有了直达、海面和海底一次反射的几何到达表；代码检查同时发现 200 m 偏移与现有 PE 窗口/吸收层冲突，尚未进入传播试验。",
+      "workstream_id": "target-geometry"
+    },
+    {
+      "id": "new-machine",
+      "date": "2026-11-09",
+      "title": "新 Ubuntu 通路打通，项目仍待迁移",
+      "text": "连接、MATLAB 版本和独立 FFT 检查通过；项目目录还不是 Git 工作区。机器能运行基础计算与项目能复现是两件需要分别验收的事。",
+      "workstream_id": "reproducibility"
+    },
+    {
+      "id": "progress-baseline",
+      "date": "2026-11-10",
+      "title": "建立统一进度首页，补上索引漏记的进展",
+      "text": "把二维、三维、P22 控制实验、目标几何与环境放在同一条阅读路径中；登记缺失入口和持续更新规则。本次没有新增声场或通信计算。",
+      "workstream_id": "reproducibility"
+    },
+    {
+      "id": "p22-repro-baseline-20261110",
+      "date": "2026-11-10",
+      "title": "P22 最小入口已恢复，保存数据已独立复核",
+      "text": "恢复 5 个缺失工作流文件，隔离审计输出；23 条旧检查点 SHA 和 287 条两频点清单匹配，共同窗/QPSK 原门和两频点限定重核通过。首次回执脚本错误保留并计时，原证据不覆盖。仍缺全带多模型、PE 敏感性和新机项目资格；下一步只能审阅本基线，另行授权后再设计后续工作。",
+      "workstream_id": "reproducibility"
+    },
+    {
+      "id": "p22-audit-code-provenance-gap-20261110",
+      "date": "2026-11-10",
+      "title": "两频点最终旧审计代码来源仍缺一环",
+      "text": "封存时六项产物 SHA 匹配，但检查点未给路径的最终审计代码 SHA 与固定提交的通用审计脚本不同。已保留首次封存失败记录，不替换旧检查点或假装代码一致。本轮保存标量/配置/相位重核可用，完整旧最终审计仍不能宣称已复现；本轮停止，不从归档补齐。",
+      "workstream_id": "reproducibility"
+    },
+    {
+      "id": "new-ubuntu-minimal-project-baseline-20261110",
+      "date": "2026-11-10",
+      "title": "新机最小项目兼容性基线通过",
+      "text": "在不覆盖 /home/misc/cwx 原文件的隔离快照中上传 23 项白名单并验证 SHA；本机与新 Ubuntu 三组 128×128 CPU double 公共信道数值逐元素通过原容差，两项 P22 保存结果原审计通过，92 个回传文件 SHA 匹配。只建立本轮小案例与保存审计资格；九点不认证 CIR，完整项目依赖与迁移仍缺，正式 S5/S6 暂停及两频点旧审计来源缺口保留。下一步须另行授权并按目标任务核代码、输入、资源与数值门，本轮停止。",
+      "workstream_id": "reproducibility"
+    },
+    {
+      "id": "static-model-100m-focus",
+      "date": "2026-11-10",
+      "title": "提交基线成果，优先收尾约100m静态模型",
+      "text": "P22恢复入口与新机最小基线已提交为5d2e9f8。按用户要求暂缓1500m，接下来先核生产入口的声源/高度/相位，再做窗口、宽带CIR和粗糙海面范围验证。本次只是计划，不新增数值结论。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "m0-phase-contract-v2-closeout-20261110",
+      "date": "2026-11-10",
+      "title": "M0相位合同与最小控制闭合，停在M1之前",
+      "text": "修复原生PE到DSP的全包络共轭及C/P、增广实统计、迁移、SSA和桥接，物理/统计/CIR/无噪声控制和独立审计通过。保留回执与CSV打包失败；通信截尾边界失败在相同H上修复为BER=0。旧结果未覆盖，未升级正式S5/S6；下一步仅可另行授权M1。用户要求停止main合并，已abort并保留compare原HEAD。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "m0-seal-m1-preflight-20261110",
+      "date": "2026-11-10",
+      "title": "封存M0，改用历史192m证据设计M1",
+      "text": "确认969127f已包含M0，核SHA并追加轻量失败/验收凭据。只读旧窗口数据，确认192m合格范围、160m边缘失败、33/65深度采样及源码绑定缺口；冻结5个PE/10组AS的最小新矩阵和保守资源门。本轮无新传播，下一步须新任务授权M1。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "m1-mcp-attachment-stop-20261111",
+      "date": "2026-11-11",
+      "title": "M1完整执行在现有MCP连接门停止",
+      "text": "已获5个无吸收层PE、10组AS和阶段门后3个吸收层PE的14400s任务授权。核M0产物181项及源码身份、相位v2和吸收层定义后，MCP返回failed to attach to MATLAB session，无法确认版本、真实PID和日志/状态追踪，故18作业均未派发。无新数值资格和生产推荐，M1_INCOMPLETE；保留错误与SHA检查点。下一步仅在现有MCP恢复且资源/版本/PID门通过后从P4继续，不启动M2。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "piston-2d-parameter-plan-20261111",
+      "date": "2026-11-11",
+      "title": "活塞比较先定代表参数与严格二维范围",
+      "text": "用户暂无实物参数，委托查阅后自行选择。依据厂家半波长口径量级，取20 cm工程参照；首轮严格二维使用20 cm宽匀速条带、向上发射、同一振速，在4/6/8 kHz沿单接收线比较PE/BIE/FullFK。圆形活塞与无限条带分开解释。已保存共源、采样、窗口、参考与新Ubuntu分阶段并行计划；没有实现新源或运行仿真。下一步先共源控制和4 kHz试点，取得远端成本后再定正式范围；原Gaussian收尾和其他窗口M1任务状态与预算保留。本次现有MCP正式渲染成功，未核或恢复M1执行门。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "m1-resumed-p8-ram-stop-20261111",
+      "date": "2026-11-11",
+      "title": "M1恢复运行后在P8触发RAM预留门",
+      "text": "现有MCP确认R2025b Update 6/PID28836，完成P4/P6与10组AS；三频AS空间和4/6kHz生产同格对照及MAT/CSV/SHA独立审计通过。首次P4空diary/300s超时保留并计时，新run显式捕获stdout重跑且数值差0；首版参考审计错误保留后修正，仅重审已有MAT。P8在入射976步因RAM713232384B低于769405747B停止，Z4/Z8与全部SP未派发。故M1_INCOMPLETE，无生产推荐、不启动M2；下一步仅在继续指令和资源复核后恢复未完成M1。活塞计划及其他工作流记录/预算保留。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "m1-p8-memory-diagnosis-20261111",
+      "date": "2026-11-11",
+      "title": "P8确认RAM余量门触发，给出无物理改动优化方案",
+      "text": "只读核源码/回执/SHA和当前workspace元数据，没有传播或生产修改。系统可用RAM下降1.724GiB，P8工作集采样变化不足以解释全部下降，未证实泄漏、具体系统来源仍缺证据。列出缩短数组生命周期、固定环境屏缓存和分块逐步统计的方案及验证门；节省量只是静态估算。M1仍INCOMPLETE，不自动重跑或进入M2。",
+      "workstream_id": "broadband-reference"
+    },
+    {
+      "id": "piston-source-freefield-quicklook-20261111",
+      "date": "2026-11-11",
+      "title": "活塞三频自由场图示完成，先P0再平面",
+      "text": "核GitHub/本地历史确认5 cm为圆形半径；严格二维改用总宽20/10/5 cm速度孔径积分，不复用圆形方向图。保存三频绝对复Pa、接收线与归一化方向图；独立角谱/求积/MAT-CSV/FIG重建检查无失败，仅支持本次可视化。20 cm三频全宽约112/67/49°，8 kHz宽角域出现深谷，大离轴可弱于小孔径。缺生产共源压力/梯度、相位、Gaussian回归与平面反射；本轮停止，下次先P0。未运行PE/BIE/FullFK/SSH，不改Gaussian或转用M1预算。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "piston-quicklook-figure-seal-20261112",
+      "date": "2026-11-12",
+      "title": "活塞图件修正版检查并封存",
+      "text": "继续完成前一日quicklook交付：保留试绘标题重叠、首版负增益截断和一次exportgraphics多容器异常；改用单布局专用标题行，8张交付PNG逐图查看、FIG重建36幅CData差0，24条接收曲线匹配，0失败。声压数据未重算，数值源码SHA未变。交付绘图加图审计50.688s；报告、MAT/CSV、源码快照、日志和SHA封存。仍缺P0共源压力/梯度/相位与Gaussian回归，之后才做P1平面；本轮停止，不自动推进。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "piston-p0p1-remote-license-wait-20261112",
+      "date": "2026-11-12",
+      "title": "P0部分数值完成，PE门失败后加密进程等待许可",
+      "text": "在新Ubuntu独立快照验证56项SHA并实跑最多两个单线程MATLAB。源/梯度/速度/相位、BIE/FullFK输入和Gaussian标量默认回归完成；PE512m压力对齐但隐含梯度未过原1e-4门。保留失败并派发8192m加密，发现新进程停在MathWorks账号提示、尚无加密数值结果；已请用户恢复远端非交互许可，不代填账号、不重发或改用本机。123项部分证据回传SHA一致。P0完整资格与P1均未完成，先核原作业状态再续，旧M1/S5S6不升级。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "piston-p0p1-audited-complete-20261112",
+      "date": "2026-11-12",
+      "title": "远端P0/P1完成并回传独立审计",
+      "text": "2026-11-12最终封存。活塞P0与4 kHz P1自由场、平面、弱C2正弦均通过，独立MAT/CSV/密度重建审计失败0项，80条FIG曲线核验一致，五组最终PNG已目视检查。弱面20 cm反射复场PE Model-0/BIE相对L2为0.0048932994，FullFK/BIE为2.0947621e-6，均超过五倍经验数值分辨率门。周期截窗初场失败保留，接受结果采用验证专用连续角谱平方根PE与精确平面背景加紧支撑相屏扰动。20 cm可作为该范围主源。后续生产入口与更广工况需要单独检查，本轮止于P1。 许可等待、512/8192m梯度失败、周期传播失败、native启动崩溃和首次审计pi变量错误均保留，恢复时使用新job且先检查原进程。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "piston-shape-ssh-wait-20261114",
+      "date": "2026-11-14",
+      "title": "活塞形状补图待SSH恢复",
+      "text": "已复用既有报告和源码定义并实现MATLAB入口；理论求根表明10cm两种孔径在三频前向均无零点。SSH公钥失败且MCP无法附着，PNG/FIG未运行；下一步仅在恢复SSH后执行本轮自由场补图。进度生成视图尚未刷新。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "piston-shape-complete-20261114",
+      "date": "2026-11-14",
+      "title": "10cm孔径形状与远视野图完成",
+      "text": "复用480800个旧场值与97m圆弧，补算外侧自由场及200/500m圆弧；五张PNG/FIG已检查，18文件回传SHA匹配，孔径求积最大差6.94e-13。10cm条带/圆形三频前向均无零点，8kHz圆形主瓣更宽。仅自由场图示，不新增传播资格，停止本轮；MCP不可用，生成进度视图未刷新。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "agents-10cm-navigation-alignment-20261114",
+      "date": "2026-11-14",
+      "title": "10 cm后续主线与AGENTS配置导航统一（无求解）",
+      "text": "仅修复配置与当前导航：后续主源总宽10 cm，20 cm及Gaussian结果和所有历史失败保持原条件；顺序统一为4 kHz固定PM、反射模型决策、相干4–8 kHz/CIR及受控通信。R1仍未授权，额外种子和各后续阶段保留独立范围/资源/参考门，Bellhop独立并行。仅静态检查并按维护说明纯文本打包看板，无MATLAB、SSH、实验或Git提交，未重做历史数值审计。记录见reports/agents_configuration_alignment_2026-11-14.md；下一步仅可讨论或明确授权有界R1范围，不自动执行。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-seed260001-budget-stop-20261115",
+      "date": "2026-11-15",
+      "title": "R1三模型411点场已算，BIE后续参考层在成本门停止",
+      "text": "10 cm、4 kHz、固定PM seed260001的PS/完整FullFK数值检查通过，BIE一层线性及离节点残差通过；暂定复L2为15.9235%和0.0747208%。首层265 s后，余下参考按实测预计2130 s超过773 s余额，未派发；全部进程439/1100 s。已执行独立保存数据检查0失败，BIE网格/自求积/窗口收敛与参考分辨资格仍缺。最终四图、MAT/CSV/日志/SHA和停止检查点齐备，首次图件审计失败保留；下一步等待R1审查，不自动R2。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-bie-cache-c0-cost-stop-20261116",
+      "date": "2026-11-16",
+      "title": "默认关闭BIE缓存与C0等价性通过；剩余参考成本STOP",
+      "text": "按用户明确指令实施缓存并完成4组N64/N128×qa64/96原/默认/关/开及C0原3200节点回放，矩阵、右端、密度、411复场和边界差0。C0调用55.48 s，边界残差26.93 s、基础组装15.43 s；余层加收尾按原门预测730.29 s超过决策时582.80 s余额，未派发C1–C4。新增86 s、累计525/1100 s，单线程串行、RAM预留门通过，65文件SHA一致、独立重建通过。缓存不改变物理模型，R1参考未合格；下一步等待成本与参考续行审查，不自动R2。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-bie-manual-c1c4-package-prepared-20261116",
+      "date": "2026-11-16",
+      "title": "手动C1–C4执行包及断点恢复准备完成（未求解）",
+      "text": "按用户指令准备批处理、后台启动/状态/回收工具、阶段密度/411复场/计时/日志/资源/SHA与独立审计检查点；C0仅导入，C1–C4原顺序和1e-4门保留。取消旧1100秒累计及730秒预测停止，仍单进程单线程、无parpool、30%RAM和异常停止。包35项SHA、PowerShell/Bash与7声学入口哨兵dry-run通过，恢复/篡改拒绝测试通过；本轮SSH连接、声学计算均0。等待用户手动启动，真实C1–C4及Linux完整链未实跑，不升级参考资格或R2。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-runtime-json-fix-20261116",
+      "date": "2026-11-16",
+      "title": "手动包runtime.json启动配置修复（未求解）",
+      "text": "2026-11-16 — runtime.json故障修复：移除有printf重定向歧义的AWK最大值，验证整数后改Bash比较；保留starting/initial/baseline独立字段，Python标准库序列化并立即解析校验，异常在MATLAB前退出78。29项本地测试与新包无声学dry-run通过；新包/新目录和命令见 reports/r1_bie_runtime_json_fix_2026-11-16.md。未连接SSH/未运行C1–C4，旧失败session/结果不改。",
+      "workstream_id": "two-dimensional"
+    }
+  ],
+  "next_actions": [
+    {
+      "title": "用户手动启动R1-BIE C1–C4并回收审计结果",
+      "text": "使用已准备的manual_ready_02包及说明手动UploadAndStart，原C0不重跑。脚本完成逐阶段独立审计、恢复检查点及最终误差/分辨率；可自行Status/Fetch/Resume，不要求Codex持续监控。",
+      "completion": "真实C1–C4与阶段/最终独立审计实际通过并回收核SHA后，才评估R1参考资格和模型差。当前只脚本就绪，不能把dry-run当数值PASS。",
+      "gate": "仅固定10cm/4kHz/seed260001/411点；新手动包按用户取消旧累计/成本预测时限，保留30%RAM与原数值门。Codex本轮不连接SSH/启动计算，R2及其他seed/频率/通信仍未授权。"
+    },
+    {
+      "title": "R2/R3候选：按门扩展种子并决定反射模型",
+      "text": "R1有可用独立参考和成本证据后，才另定seed260002/260003范围；随后区分相位屏（PS）基线、FullFK物理近似和FastFK算法误差/成本，作反射模型决策。",
+      "completion": "冻结同一海面的比较证据、适用范围和未分辨差异明确，新增物理简化另经独立验证。",
+      "gate": "R2为PLANNED、R3为WAITING；阶段审查不等于下一阶段授权。不自动淘汰PS，不将相屏基线静默换为Kirchhoff或约化公式。"
+    },
+    {
+      "title": "W1/C1候选：模型决策后才进入相干频响、CIR和通信",
+      "text": "反射模型决策后，再另定10 cm相干4–8 kHz直达/反射/总H(f)及频率网格、相位/群延迟和留出频点控制；通过CIR/线性卷积检查后，才做固定种子的受控QPSK与CSI比较。",
+      "completion": "同一源激励、功率/噪声及接收设置下，频响相干性、CIR和通信链各有独立验证与范围限定。",
+      "gate": "W1和C1仍为WAITING；每阶段单独明确范围、预算及参考门。三个离散单频不等于宽带/CIR资格，正式S5/S6不升级。"
+    },
+    {
+      "title": "BH1候选：Bellhop独立并行（未授权）",
+      "text": "沿既有水深100 m、Tx99 m、Rx3 m及1 m物理安装净空，先资格化X线源映射、平面直达/首次反射，再考虑粗糙PM；不依赖也不阻塞R1–R3。",
+      "completion": "源映射、相位和绝对幅度资格在各自明确范围成立后，才可讨论绝对Pa模型排序。",
+      "gate": "BH1仍为PARALLEL - NOT AUTHORIZED；不运行旧500 m默认入口、不读取cash/，不自动扩大Bellhop范围。"
+    },
+    {
+      "title": "窗口M1停在RAM门，保留已完成证据",
+      "text": "P4/P6及全部AS已通过限定审计，P8部分轨迹保留；步长与吸收层尚未取得资格。",
+      "completion": "后续取得完整P8、Z4/Z8及阶段门后的吸收层证据，才可判M1最终资格。",
+      "gate": "当前不自动重跑或进入M2；保留30%启动可用RAM余量、14400s累计与3600s单作业限制。该预算不转用活塞计划。"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "PE / WAPE",
+      "meaning": "抛物方程 / 宽角抛物方程：本项目逐步推进声波的传播算法。它是一种近似方法，仍需检查数值和适用范围。"
+    },
+    {
+      "term": "BIE",
+      "meaning": "边界积分方程：在本项目的一些受控案例中充当独立数值参考；它也有离散误差，并非实测真值。"
+    },
+    {
+      "term": "FullFK",
+      "meaning": "完整 Kirchhoff 积分近似：保留完整积分项的另一种声场计算方法。完整指积分形式，不代表物理上精确。"
+    },
+    {
+      "term": "CIR / PDP",
+      "meaning": "信道冲激响应 / 功率时延分布：描述不同延迟上收到的复信号或能量。空间接收线图不能直接当作时域信道。"
+    },
+    {
+      "term": "已知 CSI",
+      "meaning": "接收端事先知道信道信息。适合先验证通信链和均衡控制，但不能证明导频估计已经实现。"
+    },
+    {
+      "term": "QPSK",
+      "meaning": "四相位调制：每个符号承载两比特，用来测试信道和均衡后的通信表现。"
+    },
+    {
+      "term": "PM 海面 / compact-dual",
+      "meaning": "PM 是按指定谱构造的随机海面；compact-dual 是这里固定的测试海面。固定测试海面通过不代表随机海况总体通过。"
+    },
+    {
+      "term": "S4 / S5 / S6",
+      "meaning": "二维专项的阶段编号：单频核心收尾 / 宽带与时域 / 通信。P22 的独立控制实验与原正式阶段需要分别记录。"
+    },
+    {
+      "term": "未分辨",
+      "meaning": "观测到的模型差小于预先约定的数值分辨能力。只能说本次比较分不清，不能说两种模型严格相同。"
+    }
+  ],
+  "maintenance": {
+    "source": "reports/project_progress.json",
+    "command": "setup_vertical_project; render_project_progress_dashboard();",
+    "rule": "以后影响进度的任务完成、失败或停止时，修改相关工作线，追加事件，再刷新页面和文字版。旧失败和停止原因保留，记录只说明已有证据，不授予计算许可。",
+    "qualification": "只更新与当次任务有关的内容；没有状态变化时不制造进展。结果日期、核查日期和生成时间分别记录。MATLAB MCP 不可用时注明未执行检查，不改用其他 MATLAB 运行模式。"
+  }
+}

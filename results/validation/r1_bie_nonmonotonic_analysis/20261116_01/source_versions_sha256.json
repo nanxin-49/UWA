@@ -1,0 +1,22 @@
+[
+  {
+    "path": "results/comparisons/piston_2d_pm/r1_bie_manual_runtime_fix_20261116_02_retrieved_20261116_144235/checkpoint.json",
+    "sha256": "e624d15f8bb8ee6fdbfeeffc9ef6380640db133e4b2d1342bc31a0ba738ee293"
+  },
+  {
+    "path": "results/comparisons/piston_2d_pm/r1_bie_manual_runtime_fix_20261116_02_retrieved_20261116_144235/manifest.json",
+    "sha256": "b1298d630881a62b284fb48df9bb617e38ed31736e28b0359b0577a65ae7a0ab"
+  },
+  {
+    "path": "results/comparisons/piston_2d_pm/r1_bie_manual_runtime_fix_20261116_02_retrieved_20261116_144235/code/run_r1_bie_manual.m",
+    "sha256": "e559bc2bba6170d9fae767610d05c2ebe2d40c4df5f720579577a9f88405ea6b"
+  },
+  {
+    "path": "results/comparisons/piston_2d_pm/r1_bie_manual_runtime_fix_20261116_02_retrieved_20261116_144235/code/audit_r1_bie_manual_final.m",
+    "sha256": "9dfe7c4844596ea4b5efec2b3c8a96859a1c55bd155826953e1f8b54751e319b"
+  },
+  {
+    "path": "reports/r1_bie_nonmonotonic_diagnosis_2026-11-16.md",
+    "sha256": "f868f02abce9edc650c9427d587922191f91a4a9fff67b5585f9089c6aad6cc0"
+  }
+]
