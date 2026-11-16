@@ -1,0 +1,17 @@
+{
+  "status": "COMPLETE",
+  "label": "A_N12_to_N16",
+  "failed_checks": 0,
+  "elapsed_s": 1.8221533,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_A_resume_01\\N12_to_N16_audit01",
+  "settings": {
+    "label": "A_N12_to_N16",
+    "relative_tolerance": 0.001,
+    "envelope_tolerance": 0.001,
+    "phase_tolerance_rad": 0.01
+  },
+  "coarse_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_A_resume_01\\assembly\\sum_through_order12.mat",
+  "coarse_sha256": "6ab06f771ad34d8590f77a3288692ab2a3a5de75534e86b981604b7461244a6d",
+  "fine_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_A_resume_01\\assembly\\result.mat",
+  "fine_sha256": "e94e79fc6e235ecf36db2b6bdbd88bc0911f98d5114fa0c364b32b13f89cc6b4"
+}

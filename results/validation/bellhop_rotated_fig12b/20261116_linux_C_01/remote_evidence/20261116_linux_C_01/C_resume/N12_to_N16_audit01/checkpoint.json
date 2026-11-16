@@ -1,0 +1,17 @@
+{
+  "status": "COMPLETE",
+  "label": "C_N12_to_N16",
+  "failed_checks": 0,
+  "elapsed_s": 1.968598,
+  "result_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/N12_to_N16_audit01",
+  "settings": {
+    "label": "C_N12_to_N16",
+    "relative_tolerance": 0.001,
+    "envelope_tolerance": 0.001,
+    "phase_tolerance_rad": 0.01
+  },
+  "coarse_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/assembly/sum_through_order12.mat",
+  "coarse_sha256": "4488b1eb0442e86695883e0a5f53c5d6899924ada5a014ae49ecb4de1f4459cc",
+  "fine_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/assembly/result.mat",
+  "fine_sha256": "d1931b853a037cdf593c5bfee67a946f051281fe8a426bac2d0dfc8aa9a275b9"
+}

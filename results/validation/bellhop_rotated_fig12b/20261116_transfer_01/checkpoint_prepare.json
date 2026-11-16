@@ -1,0 +1,15 @@
+{
+  "status": "ALLOWLIST_SHA_READY_NO_TRANSFER",
+  "file_count": 2736,
+  "bytes": 9532044433,
+  "GiB": 8.877408162690699,
+  "historical_SHA_verified": 2148,
+  "elapsed_s": 30.8536034,
+  "local_source_root": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain",
+  "remote_root": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01",
+  "new_Bellhop_processes": 0,
+  "C_completed": 30,
+  "C_recomputed": 0,
+  "remaining_acoustic_budget_s": 799.1655991,
+  "note": "Transfer and its integrity verification are separately measured I/O; no acoustic solve or physics audit. No new physics budget granted."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "ABC_FIGURE_INDEPENDENT_AUDIT",
+  "failed_checks": 0,
+  "checks_count": 101,
+  "elapsed_s": 9.661305,
+  "figure_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/ABC_figures",
+  "new_native_processes": 0
+}

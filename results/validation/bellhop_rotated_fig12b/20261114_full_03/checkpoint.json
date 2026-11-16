@@ -1,0 +1,19 @@
+{
+  "status": "FAILED",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_03",
+  "suite_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_suite_plan_03\\suite.mat",
+  "suite_sha256": "e77c30416d96f5f3dcf708d497d7e47d912299bbd221ca5db8b1346b3aba776c",
+  "used_before_s": 262.9679051,
+  "approval_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_authorization_01\\authorization.json",
+  "approval_sha256": "9af0465945b514ecc06bfa16a925f887394d9b8d7451d7413ae5134106dc5660",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "cumulative_elapsed_s": 426.0276439,
+  "disk_roots": [
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_01",
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_02",
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_03",
+    "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_resume_anchor_01"
+  ],
+  "elapsed_s": 163.0596717,
+  "error": "错误使用 assert\nBellhop fatal/storage failure; inspect\nC:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261114_full_03\\A_Q125_h1_B401\\up_order13.\n\n出错 run_bellhop_rotated_local_case (第 61 行)\nassert(~contains(lower(prt),'fatal') && ~contains(lower(prt),'insufficient storage'), ...\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_rotated_field_component (第 54 行)\n        process=run_bellhop_rotated_local_case(executable,stem,options.max_seconds, ...\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_rotated_field_assembly (第 59 行)\n        result=run_bellhop_rotated_field_component(executable,job.cfg,d, ...\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_rotated_field_suite (第 58 行)\n            results{k}=run_bellhop_rotated_field_assembly(suite.plan_files{k},executable,out, ...\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 execute_bellhop_rotated_approved_suite>@()run_bellhop_rotated_field_suite(suite_file,executable,output_dir,authorization_file,reuse_dir=options.reuse_dir) (第 34 行)\ninvoke=@()run_bellhop_rotated_field_suite(suite_file,executable,output_dir,authorization_file,reuse_dir=options.reuse_dir); %#ok<NASGU> Called by fixed evalc expression.\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 execute_bellhop_rotated_approved_suite (第 35 行)\nstdout=evalc('try; suite_result=invoke(); catch exception; failure=getReport(exception,\"extended\",\"hyperlinks\",\"off\"); fprintf(\"%s\\n\",failure); end');\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}

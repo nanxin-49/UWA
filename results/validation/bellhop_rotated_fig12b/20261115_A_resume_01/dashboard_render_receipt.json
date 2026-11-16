@@ -1,0 +1,699 @@
+{
+  "status": "GENERATED_WITH_REFERENCE_WARNINGS",
+  "generated_at": "2026-11-15 09:52:13 +0800",
+  "matlab_release": "25.2.0.3312555 (R2025b) Update 6",
+  "source_updated_at": "2026-11-15",
+  "review_checked_at": "2026-11-15",
+  "file_checks": [
+    {
+      "workstream_id": "two-dimensional",
+      "path": "reports/piston_source_2d_single_frequency_plan_2026-11-11.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "two-dimensional",
+      "path": "reports/two_dimensional_channel_closeout_report.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "two-dimensional",
+      "path": "results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/result_index.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "two-dimensional",
+      "path": "results/comparisons/two_dimensional_channel_closeout/20261026_s4_final_closeout_01/s4_saved_evidence_audit.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "two-dimensional",
+      "path": "UWA_2D_research_review_workbench.html",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "topic",
+      "revision": ""
+    },
+    {
+      "workstream_id": "two-dimensional",
+      "path": "reports/piston_source_quicklook_2026-11-11.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "a37fd75 + source snapshots"
+    },
+    {
+      "workstream_id": "two-dimensional",
+      "path": "results/validation/piston_source_quicklook/20261111_2d_strip_01/checkpoint_final.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/two_dimensional_s5_s6_2026-10-27.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "scripts/validation/run_two_dimensional_s5_p22_dualfreq_remote.m",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "entrypoint",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/p22_reproducibility_baseline_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9"
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/static_channel_model_100m_closeout_plan_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "plan",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/m0_phase_contract_closeout_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "3f7071d + working tree"
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/m0_seal_m1_preflight_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "M0 source 969127f"
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_preflight/20261110_saved_evidence_04/audit.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/m1_static_convergence_closeout_2026-11-11.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_convergence/20261111_m1_execution_preflight_01/checkpoint_preflight.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/m1_static_convergence_qualification_2026-11-11.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_convergence/20261111_m1_execution_03/partial_closeout_audit/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_convergence/20261111_m1_execution_03/matrix_status.csv",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "reports/m1_p8_memory_diagnosis_2026-11-11.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_p8_memory_diagnosis/20261111_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/validation/pe_screen_p22_comm/20261030_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/validation/pe_screen_p22_common_window/20261030_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/validation/pe_screen_p22_common_window/20261030_01/audit.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/communication/pe_screen_p22_qpsk/20261030_03/audit.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "scripts/validation/run_pe_screen_p22_qpsk.m",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "entrypoint",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "scripts/validation/validate_pe_screen_p22_common_window.m",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "entrypoint",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "reports/p22_reproducibility_baseline_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9"
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "reports/m0_phase_contract_closeout_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "3f7071d + working tree"
+    },
+    {
+      "workstream_id": "three-dimensional",
+      "path": "reports/deepsea3d_65grid_four_holdout_2026-10-27.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "three-dimensional",
+      "path": "results/validation/deepsea3d_65grid_four_20261027/README.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "three-dimensional",
+      "path": "reports/deepsea3d_bie_q1_decision_2026-10-26.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "three-dimensional",
+      "path": "reports/deep_sea_channel_research_plan.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "plan",
+      "revision": ""
+    },
+    {
+      "workstream_id": "target-geometry",
+      "path": "reports/rc1_target_deepsea_geometry_and_pe_aperture_design_2026-11-01.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "target-geometry",
+      "path": "reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "target-geometry",
+      "path": "scripts/reporting/render_target_deepsea_dsb_geometry.m",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "entrypoint",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_100m_source1m_visuals_report.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_100m_rebaseline_plan.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "plan",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/pe_bellhop_unfolded_flat_gaussian/checks.csv",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "scripts/reporting/generate_bellhop_100m_source1m_visuals_vertical.m",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "entrypoint",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/munk_ffp_5000m_result_2026-11-12.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/visualization/munk_ffp_5000m/20261112_full_01_v4/index.html",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/munk_ffp_5000m/20261112_full_01/audit_03/receipt.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/munk_ffp_5000m/20261112_full_01/figure_audit_v4/receipt.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_fig12b_stage1_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_fig12b_stage2_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_fig12b_stage3_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_fig12b_stage4_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "plan",
+      "revision": "suite03"
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_fig12b_execution_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "partial A"
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_receiver64_minimal_2026-11-14.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/saved_audit01/checkpoint.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_performance_review_2026-11-15.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "uncommitted"
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/saved_audit01/checkpoint.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "reports/bellhop_rotated_A_complete_2026-11-15.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "uncommitted"
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/bellhop_rotated_fig12b/20261115_A_resume_01/checkpoint_stage.json",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/visualization/bellhop_rotated_fig12b/20261115_A_preliminary_01/index.html",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "reports/new_ubuntu_ssh_matlab_handoff_2026-11-09.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "results/validation/new_ubuntu_matlab_smoke/20261109_232540_new_ubuntu/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "vertical_channel_model.m",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "entrypoint",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "reports/p22_reproducibility_baseline_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "747af7ee88abda0bd7f554ddbd940ad3bc5f8cb9"
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "reports/new_ubuntu_minimal_project_baseline_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "reports/m0_phase_contract_closeout_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "3f7071d + working tree"
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "reports/m0_seal_m1_preflight_2026-11-10.md",
+      "exists": true,
+      "expected_exists": true,
+      "kind": "report",
+      "revision": "M0 source 969127f"
+    }
+  ],
+  "failed_checks": 16,
+  "unexpected_references": [
+    {
+      "workstream_id": "two-dimensional",
+      "path": "results/validation/piston_source_quicklook/20261111_2d_strip_01/checkpoint_final.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/two_dimensional_s5_p22_dualfreq/20261031_01/audit_dualfreq_complete_01/audit.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m0_phase_contract/20261110_m0_native_dsp_v2_01/independent_audit_final/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_convergence/20261111_m1_execution_preflight_01/checkpoint_preflight.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_convergence/20261111_m1_execution_03/partial_closeout_audit/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_convergence/20261111_m1_execution_03/matrix_status.csv",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "broadband-reference",
+      "path": "results/validation/m1_p8_memory_diagnosis/20261111_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/validation/pe_screen_p22_comm/20261030_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/validation/pe_screen_p22_common_window/20261030_01/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/validation/pe_screen_p22_common_window/20261030_01/audit.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/communication/pe_screen_p22_qpsk/20261030_03/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": "24a05ba72b58042084417e54ca437f03adb988dd"
+    },
+    {
+      "workstream_id": "controlled-communication",
+      "path": "results/communication/pe_screen_p22_qpsk/20261030_03/audit.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "audit",
+      "revision": ""
+    },
+    {
+      "workstream_id": "bellhop",
+      "path": "results/validation/pe_bellhop_unfolded_flat_gaussian/checks.csv",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "results/validation/new_ubuntu_matlab_smoke/20261109_232540_new_ubuntu/checkpoint.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    },
+    {
+      "workstream_id": "reproducibility",
+      "path": "results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/project/results/validation/new_ubuntu_project_baseline/20261110_121507_new_ubuntu_minimal/checkpoint_final.json",
+      "exists": false,
+      "expected_exists": true,
+      "kind": "result",
+      "revision": ""
+    }
+  ],
+  "source_sha256": "ddc635ab912849009c7fcfca3d5ddd26ee42df9597090956d1d38ecfad355b1a",
+  "renderer_sha256": "6a5d00f73c6a004dffe0ddb0f67e8a2f12e0846f48920ca8ed66418f270bb77c",
+  "template_sha256": "4a4581122ed0357566c3f37e786ded35853e75ee54c676881e76ba844157b2b7",
+  "html_sha256": "74c24b34f6cdbe00185251432ef3f7c60bb5302fc1916452faf4439b81ea8837",
+  "markdown_sha256": "1ab07c6105ecbbbef02c1aaa8af53c73d0c732dcb375da67fa6ea46ed2e48672",
+  "new_acoustic_computations": 0,
+  "audit_scope": "Exact-file existence only; historical numerical audits not rerun"
+}

@@ -1,0 +1,20 @@
+{
+  "local_prefix": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain",
+  "remote_prefix": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain",
+  "rule": "Preserve every relative path; original JSON/MAT absolute paths untouched. Linux runtime must use a separate path adapter.",
+  "original_windows_executables": "Reference only where required by immutable manifest. Never execute on Linux.",
+  "full_project": false,
+  "source": "Validated patched Fortran tree plus related MATLAB workflows and required A/B/C evidence",
+  "remote_empty_directories": [
+    "src/channel",
+    "src/propagation",
+    "src/surface",
+    "src/receiver",
+    "src/statistics",
+    "src/communication",
+    "src/bubble",
+    "examples",
+    "scripts/comparisons",
+    "scripts/experiments"
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "status": "C_COMPLETE_ALL_STAGE_GATES_PASS_STOPPED_FOR_REVIEW",
+  "C_completed": 39,
+  "C_reused": 30,
+  "new_formal_C": 9,
+  "new_formal_C_native_s": 204.97597800000003,
+  "C_all_native_s": 475.70415870000005,
+  "numeric": {
+    "status": "C_STAGE_GATES_PASS_STOPPED_FOR_REVIEW",
+    "run_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume",
+    "failed_checks": 0,
+    "completed_stage": "boundary",
+    "raw": {
+      "status": "COMPLETE_RAW_RECONSTRUCTION_ONLY",
+      "failed_checks": 0,
+      "checks_count": 61,
+      "elapsed_s": 64.341822,
+      "result_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/raw_audit01",
+      "comparison": {
+        "status": "NOT_REQUESTED"
+      }
+    },
+    "tail": {
+      "status": "COMPLETE",
+      "label": "C_N12_to_N16",
+      "failed_checks": 0,
+      "elapsed_s": 1.968598,
+      "result_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/N12_to_N16_audit01",
+      "settings": {
+        "label": "C_N12_to_N16",
+        "relative_tolerance": 0.001,
+        "envelope_tolerance": 0.001,
+        "phase_tolerance_rad": 0.01
+      },
+      "coarse_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/assembly/sum_through_order12.mat",
+      "coarse_sha256": "4488b1eb0442e86695883e0a5f53c5d6899924ada5a014ae49ecb4de1f4459cc",
+      "fine_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/assembly/result.mat",
+      "fine_sha256": "d1931b853a037cdf593c5bfee67a946f051281fe8a426bac2d0dfc8aa9a275b9"
+    },
+    "change": {
+      "status": "COMPLETE",
+      "label": "B_to_C_step_only",
+      "failed_checks": 0,
+      "elapsed_s": 1.913013,
+      "result_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/B_to_C_audit01",
+      "settings": {
+        "label": "B_to_C_step_only",
+        "relative_tolerance": 0.02,
+        "envelope_tolerance": 0.02,
+        "phase_tolerance_rad": 0.05
+      },
+      "coarse_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261115_B_run_02/assembly/result.mat",
+      "coarse_sha256": "752062dfd553fc05abb1b568e2e209862810df5ea84a8230c3735ba0a2d3ea62",
+      "fine_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/assembly/result.mat",
+      "fine_sha256": "d1931b853a037cdf593c5bfee67a946f051281fe8a426bac2d0dfc8aa9a275b9"
+    },
+    "boundary": {
+      "status": "SAVED_BOUNDARY_CHECK",
+      "elapsed_s": 1.267426,
+      "failed_checks": 0,
+      "top_pressure_release_max_over_envelope": 0.00082171641304219865,
+      "top_original_tolerance": 0.001,
+      "left_right_symmetry_max_over_envelope": 1.8352181474539651E-6,
+      "family_sum_association_max_over_envelope": 6.1795307505732056E-16,
+      "true_source_mask_count": 1,
+      "near_bottom_spacing_m": 0.010000000000218279,
+      "bottom_pressure_finite": true,
+      "bottom_operator_status": "Native lossy-fluid Reflect2D preserved; finite-aperture fluid DtN/independent FFP comparison not performed in A-only stage",
+      "source_model": "Omnidirectional3D point; 10kHz,5000m,source4950m; bottom assumptions unchanged"
+    },
+    "elapsed_s": 76.779284
+  },
+  "figure_audit": {
+    "status": "ABC_FIGURE_INDEPENDENT_AUDIT",
+    "failed_checks": 0,
+    "checks_count": 101,
+    "elapsed_s": 9.661305,
+    "figure_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/ABC_figures",
+    "new_native_processes": 0
+  },
+  "field_sha256": "d1931b853a037cdf593c5bfee67a946f051281fe8a426bac2d0dfc8aa9a275b9",
+  "binary_sha256": "5d87293a27e7fafc3aedefb569f3f35065294f42426503c4881d6eb55e6769e9",
+  "original_plan_sha256": "cce53c33f09104675eed7ef6131b6b9d6154259b25baaeffa83570d331947e97",
+  "remaining_original_budget_s": 253.27592355624392,
+  "accounted_cumulative_s": 3346.7241794405822,
+  "scope": "C remaining9 only; no D/FFP/commit/push",
+  "unrun": [
+    "D",
+    "new FFP",
+    "final independent paper qualification"
+  ],
+  "MATLAB_version": "25.2.0.3042426 (R2025b) Update 1",
+  "A_B_recomputed": 0,
+  "C_completed_recomputed": 0,
+  "windows_checkpoint_overwritten": false
+}

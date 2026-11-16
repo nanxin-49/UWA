@@ -1,0 +1,18 @@
+{
+  "status": "READ_ONLY_CROSS_PLATFORM_PRESSURE_AUDIT",
+  "range_bitwise_equal": true,
+  "transverse_bitwise_equal": true,
+  "complex_points": 32943,
+  "nonfinite": 0,
+  "maximum_absolute_complex_difference": 0,
+  "relative_L2": 0,
+  "unequal_complex_points": 0,
+  "original_pressure_tolerance": 0,
+  "native_exit_status": "unknown: launcher pid() error after native start",
+  "coordinate_audit_bytes_equal": {
+    "x_rr64input": true,
+    "x_rr64eval": true,
+    "x_rr64scale": true
+  },
+  "elapsed_s": 0.6530246
+}

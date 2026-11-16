@@ -1,0 +1,14 @@
+{
+  "status": "SAVED_BOUNDARY_CHECK",
+  "elapsed_s": 1.2315619,
+  "failed_checks": 0,
+  "top_pressure_release_max_over_envelope": 0.00082171824418508885,
+  "top_original_tolerance": 0.001,
+  "left_right_symmetry_max_over_envelope": 1.8352181474389173E-6,
+  "family_sum_association_max_over_envelope": 6.2522891932856134E-16,
+  "true_source_mask_count": 1,
+  "near_bottom_spacing_m": 0.010000000000218279,
+  "bottom_pressure_finite": true,
+  "bottom_operator_status": "Native lossy-fluid Reflect2D preserved; finite-aperture fluid DtN/independent FFP comparison not performed in A-only stage",
+  "source_model": "Omnidirectional3D point; 10kHz,5000m,source4950m; bottom assumptions unchanged"
+}

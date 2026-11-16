@@ -1,0 +1,331 @@
+{
+  "status": "STOPPED_NO_RETRY",
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_C_run_01",
+  "components": [
+    {
+      "tag": "direct_up_part1",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_C_run_01\\C_Q625_h05_B401\\direct_up_part1\\component.mat",
+      "checkpoint_path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_C_run_01\\C_Q625_h05_B401\\direct_up_part1\\checkpoint.json",
+      "checkpoint_sha256": "cd125e963d0f6e6d1bcc3a11a70aafb6b6ddf08953230d4fddde7c126080a1c5",
+      "component_sha256": "f829421c494f7a1f694263169274f3a7a0321d1780bbd6f87b2b77eedefe830d",
+      "order": 0
+    },
+    {
+      "tag": "direct_up_part2",
+      "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_C_run_01\\C_Q625_h05_B401\\direct_up_part2\\component.mat",
+      "checkpoint_path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_C_run_01\\C_Q625_h05_B401\\direct_up_part2\\checkpoint.json",
+      "checkpoint_sha256": "dc8389ed62a84758db444ba38c32b2b7ce9b06ecc0166afbeb6964c49391c548",
+      "component_sha256": "29864613af6a1969023491ad3aeaffd35c7904ee8fe7915ea9b16e2c37c1e1a1",
+      "order": 0
+    },
+    {
+      "tag": "direct_up_part3",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 0
+    },
+    {
+      "tag": "direct_down_part1",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 0
+    },
+    {
+      "tag": "direct_down_part2",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 0
+    },
+    {
+      "tag": "direct_left",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 0
+    },
+    {
+      "tag": "direct_right",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 0
+    },
+    {
+      "tag": "up_order1",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 1
+    },
+    {
+      "tag": "down_order1",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 1
+    },
+    {
+      "tag": "up_order2",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 2
+    },
+    {
+      "tag": "down_order2",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 2
+    },
+    {
+      "tag": "up_order3",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 3
+    },
+    {
+      "tag": "down_order3",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 3
+    },
+    {
+      "tag": "up_order4",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 4
+    },
+    {
+      "tag": "down_order4",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 4
+    },
+    {
+      "tag": "up_order5",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 5
+    },
+    {
+      "tag": "down_order5",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 5
+    },
+    {
+      "tag": "up_order6",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 6
+    },
+    {
+      "tag": "down_order6",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 6
+    },
+    {
+      "tag": "up_order7",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 7
+    },
+    {
+      "tag": "down_order7",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 7
+    },
+    {
+      "tag": "up_order8",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 8
+    },
+    {
+      "tag": "down_order8",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 8
+    },
+    {
+      "tag": "up_order9",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 9
+    },
+    {
+      "tag": "down_order9",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 9
+    },
+    {
+      "tag": "up_order10",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 10
+    },
+    {
+      "tag": "down_order10",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 10
+    },
+    {
+      "tag": "up_order11",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 11
+    },
+    {
+      "tag": "down_order11",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 11
+    },
+    {
+      "tag": "up_order12",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 12
+    },
+    {
+      "tag": "down_order12",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 12
+    },
+    {
+      "tag": "up_order13",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 13
+    },
+    {
+      "tag": "down_order13",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 13
+    },
+    {
+      "tag": "up_order14",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 14
+    },
+    {
+      "tag": "down_order14",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 14
+    },
+    {
+      "tag": "up_order15",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 15
+    },
+    {
+      "tag": "down_order15",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 15
+    },
+    {
+      "tag": "up_order16",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 16
+    },
+    {
+      "tag": "down_order16",
+      "path": "",
+      "checkpoint_path": "",
+      "checkpoint_sha256": "",
+      "component_sha256": "",
+      "order": 16
+    }
+  ],
+  "completed_count": 2,
+  "new_native_count": 2,
+  "new_native_elapsed_s": 3.5878694,
+  "resume_elapsed_s": 9.1629662,
+  "prior_used_and_reserved_s": 1869.8136519000002,
+  "plan_sha256": "cce53c33f09104675eed7ef6131b6b9d6154259b25baaeffa83570d331947e97",
+  "executable_sha256": "4d3b99f4365f778eff40b52714794eeee627b1f5b54af51baeba8b0b811ecdf2",
+  "scope": "C only; no D/FFP or commits",
+  "latest_available_bytes": 1.907130368E+9,
+  "output_bytes": 9.082416943E+9,
+  "current_tag": "direct_up_part3",
+  "cumulative_accounted_s": 1878.9766181000002,
+  "error": "错误使用 assert\nB/C non-step input changed\n\n出错 run_bellhop_rotated_REAL8_C_component (第 15 行)\n        if isfile(reference), assert(strcmpi(black_file_hash(reference),black_file_hash(current)),'B/C non-step input changed'); end\n                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_rotated_C_next (第 22 行)\n    result=run_bellhop_rotated_REAL8_C_component(p.executable,job,out,min(120,remain-60));\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}

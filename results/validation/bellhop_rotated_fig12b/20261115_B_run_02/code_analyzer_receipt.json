@@ -1,0 +1,120 @@
+[
+  {
+    "path": "scripts/validation/prepare_bellhop_rotated_B_run.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "变量的大小似乎在每个循环迭代都会更改。请考虑进行预分配以提升速度。",
+          "end_column": 16,
+          "fixable": false,
+          "line": 22,
+          "severity": "info",
+          "start_column": 9
+        }
+      ]
+    }
+  },
+  {
+    "path": "scripts/validation/run_bellhop_rotated_B_next.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/support/write_bellhop_rotated_REAL8_B_inputs.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/support/run_bellhop_rotated_REAL8_B_component.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/recover_bellhop_rotated_B_metadata_only.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "此处之前隐藏了一条代码分析器消息，但该消息不再产生。",
+          "end_column": 141,
+          "fixable": true,
+          "line": 15,
+          "severity": "info",
+          "start_column": 131
+        }
+      ]
+    }
+  },
+  {
+    "path": "scripts/validation/assemble_bellhop_rotated_B_run.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/audit_bellhop_rotated_B_raw.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/validate_bellhop_rotated_B_stage.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/reporting/render_bellhop_rotated_AB_comparison.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "变量的大小似乎在每个循环迭代都会更改。请考虑进行预分配以提升速度。",
+          "end_column": 84,
+          "fixable": false,
+          "line": 11,
+          "severity": "info",
+          "start_column": 80
+        },
+        {
+          "description": "此关键字可能未与其在第 21 行上的匹配 END 对齐。",
+          "end_column": 6,
+          "fixable": false,
+          "line": 19,
+          "severity": "warning",
+          "start_column": 5
+        },
+        {
+          "description": "变量的大小似乎在每个循环迭代都会更改。请考虑进行预分配以提升速度。",
+          "end_column": 93,
+          "fixable": false,
+          "line": 55,
+          "severity": "info",
+          "start_column": 88
+        }
+      ]
+    }
+  },
+  {
+    "path": "scripts/validation/audit_bellhop_rotated_AB_figures.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "此关键字可能未与其在第 14 行上的匹配 END 对齐。",
+          "end_column": 10,
+          "fixable": false,
+          "line": 12,
+          "severity": "warning",
+          "start_column": 9
+        }
+      ]
+    }
+  },
+  {
+    "path": "scripts/validation/finalize_bellhop_rotated_B_run.m",
+    "result": {
+      "code_issues": []
+    }
+  }
+]

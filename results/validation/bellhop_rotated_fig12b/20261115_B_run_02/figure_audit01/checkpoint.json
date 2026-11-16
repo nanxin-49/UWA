@@ -1,0 +1,11 @@
+{
+  "status": "AB_FIGURE_INDEPENDENT_AUDIT",
+  "failed_checks": 0,
+  "checks_count": 79,
+  "elapsed_s": 5.0145305,
+  "A_sha256": "e94e79fc6e235ecf36db2b6bdbd88bc0911f98d5114fa0c364b32b13f89cc6b4",
+  "B_sha256": "752062dfd553fc05abb1b568e2e209862810df5ea84a8230c3735ba0a2d3ea62",
+  "figure_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\visualization\\bellhop_rotated_fig12b\\20261115_AB_comparison_01",
+  "output_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\figure_audit01",
+  "new_native_processes": 0
+}

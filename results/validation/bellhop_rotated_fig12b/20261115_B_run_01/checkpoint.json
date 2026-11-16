@@ -1,0 +1,7 @@
+{
+  "status": "PRE_SOLVER_PLAN_CHECK_REJECTED_Q_ALIAS",
+  "native_processes_started": 0,
+  "reason": "Frozen horizontal charts express the sameQ spacing in both ssp_spacing_m and horizontal_ssp_spacing_m; initial check permitted only the first name",
+  "physical_parameters_changed": false,
+  "next_step": "Correct verifier to require bothQ aliases1.25to.625 while every other field stays identical; use separate output dir"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "STREAM_TERMINATED_PENDING_SHA",
+  "tar_exit_code": 0,
+  "ssh_extract_exit_code": 0,
+  "elapsed_s": 1156.228288,
+  "remote_root": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01",
+  "local_archive_created": false,
+  "new_Bellhop_processes": 0
+}

@@ -1,0 +1,81 @@
+{
+  "status": "A_COMPLETE_STAGE_GATES_PASS_STOPPED_FOR_REVIEW",
+  "completed_formal": 39,
+  "reused_formal": 31,
+  "new_formal": 8,
+  "original25_SHA_unchanged": true,
+  "new_native_elapsed_s": 100.31289919999999,
+  "whole_A_saved_native_elapsed_s": 332.9184458,
+  "new_native_peak_MiB": 58.61328125,
+  "raw_audit_checks": 61,
+  "tail_failed_regions": 0,
+  "figure_audit_checks": 69,
+  "top_residual": 0.0008217335937449078,
+  "accounted_elapsed_s": 912.8580723,
+  "remaining_original_budget_s": 2687.1419277,
+  "output_GiB": 4.430831756442785,
+  "available_RAM_after_GiB": 1.9219017028808594,
+  "figure_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\visualization\\bellhop_rotated_fig12b\\20261115_A_preliminary_01",
+  "field_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_A_resume_01\\assembly\\result.mat",
+  "field_sha256": "e94e79fc6e235ecf36db2b6bdbd88bc0911f98d5114fa0c364b32b13f89cc6b4",
+  "unrun": [
+    "B",
+    "C",
+    "D",
+    "full-grid independentFFP comparison",
+    "paper claim"
+  ],
+  "next_group_plan": {
+    "jobs_per_group": 39,
+    "B_Q_m": 0.625,
+    "B_step_m": 1,
+    "B_beams": 401,
+    "C_Q_m": 0.625,
+    "C_step_m": 0.5,
+    "C_beams": 401,
+    "D_Q_m": 0.625,
+    "D_step_m": 0.5,
+    "D_beams": 801,
+    "rough_native_seconds_B": [
+      499.37766869999996,
+      665.8368916
+    ],
+    "rough_native_seconds_C": [
+      599.25320244,
+      865.5879590799999
+    ],
+    "rough_native_seconds_D": [
+      1098.63087114,
+      1664.5922289999999
+    ],
+    "native_peak_MiB_estimate": [
+      80,
+      160
+    ],
+    "MATLAB_extra_peak_MiB_estimate": [
+      300,
+      600
+    ],
+    "extra_output_GiB_per_group": [
+      1.5,
+      2.5
+    ],
+    "caution": "Planning ranges, not measuredB/C/D. Add audit/I-O costs; upper total may exceed original remaining budget. Review stagedB only, not automatic dispatch."
+  },
+  "delivery_verification": {
+    "manifest_entries": 277,
+    "manifest_sha256": "5448f82436cc5940cdd4d3f2aaed14e73b9efe60df588f93bdf313df8eb3b831",
+    "strict_capacity_max_steps": 145395,
+    "strict_capacity_exclusive_limit": 570000,
+    "executed_source_map": "executed_source_map.json",
+    "original_graph_false_failures": 12,
+    "final_graph_checks": 69,
+    "final_graph_failed": 0,
+    "code_analyzer": "code_analyzer_receipt.json",
+    "known_dashboard_missing_refs": 16,
+    "new_commit": "none",
+    "new_group_started": "none",
+    "native_jobs_terminal": 8,
+    "next_allowed_step": "manual review only"
+  }
+}

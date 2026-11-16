@@ -1,0 +1,65 @@
+{
+  "status": "B_STAGE_GATES_PASS_STOPPED_FOR_REVIEW",
+  "run_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02",
+  "failed_checks": 0,
+  "completed_stage": "boundary",
+  "raw": {
+    "status": "COMPLETE_RAW_RECONSTRUCTION_ONLY",
+    "failed_checks": 0,
+    "checks_count": 61,
+    "elapsed_s": 56.805047,
+    "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\raw_audit01",
+    "comparison": {
+      "status": "NOT_REQUESTED"
+    }
+  },
+  "tail": {
+    "status": "COMPLETE",
+    "label": "B_N12_to_N16",
+    "failed_checks": 0,
+    "elapsed_s": 1.9579635,
+    "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\N12_to_N16_audit01",
+    "settings": {
+      "label": "B_N12_to_N16",
+      "relative_tolerance": 0.001,
+      "envelope_tolerance": 0.001,
+      "phase_tolerance_rad": 0.01
+    },
+    "coarse_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\assembly\\sum_through_order12.mat",
+    "coarse_sha256": "11255f0020b34bececdb5084c7f52abb6c8c6f7d4b18f11a5392df2b20e9501e",
+    "fine_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\assembly\\result.mat",
+    "fine_sha256": "752062dfd553fc05abb1b568e2e209862810df5ea84a8230c3735ba0a2d3ea62"
+  },
+  "change": {
+    "status": "COMPLETE",
+    "label": "A_to_B_Q_only",
+    "failed_checks": 0,
+    "elapsed_s": 1.4037491,
+    "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\A_to_B_audit01",
+    "settings": {
+      "label": "A_to_B_Q_only",
+      "relative_tolerance": 0.02,
+      "envelope_tolerance": 0.02,
+      "phase_tolerance_rad": 0.05
+    },
+    "coarse_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_A_resume_01\\assembly\\result.mat",
+    "coarse_sha256": "e94e79fc6e235ecf36db2b6bdbd88bc0911f98d5114fa0c364b32b13f89cc6b4",
+    "fine_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\assembly\\result.mat",
+    "fine_sha256": "752062dfd553fc05abb1b568e2e209862810df5ea84a8230c3735ba0a2d3ea62"
+  },
+  "boundary": {
+    "status": "SAVED_BOUNDARY_CHECK",
+    "elapsed_s": 1.2315619,
+    "failed_checks": 0,
+    "top_pressure_release_max_over_envelope": 0.00082171824418508885,
+    "top_original_tolerance": 0.001,
+    "left_right_symmetry_max_over_envelope": 1.8352181474389173E-6,
+    "family_sum_association_max_over_envelope": 6.2522891932856134E-16,
+    "true_source_mask_count": 1,
+    "near_bottom_spacing_m": 0.010000000000218279,
+    "bottom_pressure_finite": true,
+    "bottom_operator_status": "Native lossy-fluid Reflect2D preserved; finite-aperture fluid DtN/independent FFP comparison not performed in A-only stage",
+    "source_model": "Omnidirectional3D point; 10kHz,5000m,source4950m; bottom assumptions unchanged"
+  },
+  "elapsed_s": 69.5269987
+}

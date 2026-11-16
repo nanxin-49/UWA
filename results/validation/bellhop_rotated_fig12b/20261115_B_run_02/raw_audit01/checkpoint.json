@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETE_RAW_RECONSTRUCTION_ONLY",
+  "failed_checks": 0,
+  "checks_count": 61,
+  "elapsed_s": 56.805047,
+  "result_dir": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\raw_audit01",
+  "comparison": {
+    "status": "NOT_REQUESTED"
+  }
+}

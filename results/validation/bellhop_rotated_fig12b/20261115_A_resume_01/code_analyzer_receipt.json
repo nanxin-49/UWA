@@ -1,0 +1,89 @@
+[
+  {
+    "path": "scripts/validation/prepare_bellhop_rotated_A_resume.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/resume_bellhop_rotated_A_next.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/support/write_bellhop_rotated_REAL8_A_inputs.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/support/run_bellhop_rotated_REAL8_A_component.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/assemble_bellhop_rotated_A_resume.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/audit_bellhop_rotated_A_resume_raw.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/check_bellhop_rotated_A_boundaries.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "赋给变量的值可能未使用。",
+          "end_column": 23,
+          "fixable": false,
+          "line": 5,
+          "severity": "warning",
+          "start_column": 23
+        }
+      ]
+    }
+  },
+  {
+    "path": "scripts/reporting/render_bellhop_rotated_A_preliminary.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "此处之前隐藏了一条代码分析器消息，但该消息不再产生。",
+          "end_column": 127,
+          "fixable": true,
+          "line": 62,
+          "severity": "info",
+          "start_column": 117
+        }
+      ]
+    }
+  },
+  {
+    "path": "scripts/validation/audit_bellhop_rotated_A_figures.m",
+    "result": {
+      "code_issues": []
+    }
+  },
+  {
+    "path": "scripts/validation/finalize_bellhop_rotated_A_resume.m",
+    "result": {
+      "code_issues": [
+        {
+          "description": "赋给变量的值可能未使用。",
+          "end_column": 92,
+          "fixable": false,
+          "line": 3,
+          "severity": "warning",
+          "start_column": 89
+        }
+      ]
+    }
+  }
+]

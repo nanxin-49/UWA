@@ -1,0 +1,782 @@
+[
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part1\\case.r25d",
+    "sha256": "1ead66a013e7d61bae479183e5d01e04b043864f7a2aa0a347179bab7099067e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part1\\case.shd",
+    "sha256": "1d19c528a989538be18d790cdc84a580e9a2cc9733c46881014833bda9ded387"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part1\\case.env",
+    "sha256": "99566b85c1e7e2da5c77439921fa645e2ecca172781df82674a65a7625389d41"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part1\\case.ssp",
+    "sha256": "4a0d74ddce910c1f73738065125e1d38fe1faa579c1f6d8b107acc5e163a611f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part1\\case.iwcov",
+    "sha256": "6f4b4e1d0393de866df8c6ce771170acde8bfb7c793c07a810862584497ef13b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part2\\case.r25d",
+    "sha256": "b75a6f45cc9d77a79aa3d9315f9703d695af8cd4b444a7a09ed48e2e61ff24b1"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part2\\case.shd",
+    "sha256": "dc9abd760d9b59e5077e469fcdd1e04e21383efb6f6aca0b1f526c82453f1d0d"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part2\\case.env",
+    "sha256": "da42d3f9bc083d1fd6d52050ed39eb424ff7adcacf2c50358365857aef73cb4b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part2\\case.ssp",
+    "sha256": "5ed9b7c692d2788c8e6e74df330d6c7557b395f44b86307be4e7addc7983063a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part2\\case.iwcov",
+    "sha256": "6f4b4e1d0393de866df8c6ce771170acde8bfb7c793c07a810862584497ef13b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part3\\case.r25d",
+    "sha256": "5118fa3e6ff0f52e9f9ccc584af733b3be3a6932cfaffbfb08ecfc04a00d6f27"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part3\\case.shd",
+    "sha256": "79e2cc3d3cdddd0cccfcfdbb9de11af93037f9fe8c1679d9db330be8a0d1a642"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part3\\case.env",
+    "sha256": "59bef26316b9adfafb4afb152fddd3b1c498fa22eef95580c1c3e02737096f3d"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part3\\case.ssp",
+    "sha256": "8870c34af6238a08728672ae7ba74752889b39347b141f2f32526e64ad90bdd4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_up_part3\\case.iwcov",
+    "sha256": "6f4b4e1d0393de866df8c6ce771170acde8bfb7c793c07a810862584497ef13b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part1\\case.r25d",
+    "sha256": "1ead66a013e7d61bae479183e5d01e04b043864f7a2aa0a347179bab7099067e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part1\\case.shd",
+    "sha256": "98477c8afb1248a0e46a377b4643ca08b9de8a9985d755ce2d4525931597b01e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part1\\case.env",
+    "sha256": "99566b85c1e7e2da5c77439921fa645e2ecca172781df82674a65a7625389d41"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part1\\case.ssp",
+    "sha256": "a8bbfcc7cc991874b5899df25ca5d01c52434d3f9b6ebffba26efa24d88b05fd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part1\\case.iwcov",
+    "sha256": "6f4b4e1d0393de866df8c6ce771170acde8bfb7c793c07a810862584497ef13b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part2\\case.r25d",
+    "sha256": "b75a6f45cc9d77a79aa3d9315f9703d695af8cd4b444a7a09ed48e2e61ff24b1"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part2\\case.shd",
+    "sha256": "64eb69e0308763e2a7a944624203f0373106a6e310b8ecb32f32ff7b932f0165"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part2\\case.env",
+    "sha256": "da42d3f9bc083d1fd6d52050ed39eb424ff7adcacf2c50358365857aef73cb4b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part2\\case.ssp",
+    "sha256": "a7d577d8b80631ee4fd39367a2b3e94a2e9e067a2f16b55a40cc9996d92d1c1d"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_down_part2\\case.iwcov",
+    "sha256": "6f4b4e1d0393de866df8c6ce771170acde8bfb7c793c07a810862584497ef13b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_left\\case.r25d",
+    "sha256": "53c1acb51980de109d4fa256331eca2ad5f5170fb429c90a72d18da893ad50ed"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_left\\case.shd",
+    "sha256": "f7db2faff7dac7879bb7d0ce84bcbbf9a7292e2ed958b79aedb6827aeb767835"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_left\\case.env",
+    "sha256": "aeb35dc0c1811b248f98d5b7d493e719aa3fd408730520e536d0fbca9598344f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_left\\case.ssp",
+    "sha256": "44579559222e33216205f43cee7557df27c4a60c80426062ee7c5d5413191457"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_left\\case.iwcov",
+    "sha256": "c7439bb059c7f54d8af0da9e364b9535679d8c3f780d372033cb468812ac3717"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_right\\case.r25d",
+    "sha256": "ac03a9d858bdc9ef9516a474a41ffe49859c4c4cd99e1a46c50cc0ab8f03d556"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_right\\case.shd",
+    "sha256": "8b83c7a36efeba16ee1205055a980ac7e78431c681687872e8d9a913360003ef"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_right\\case.env",
+    "sha256": "b2f00efb45ca9fd808e73c1152c5d75ee2afa586d3bd135d4976bac50e31ba4e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_right\\case.ssp",
+    "sha256": "15966f1936e1d844deb5bb2529c741adb038f5e5adf6387a731654d826182df0"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\direct_right\\case.iwcov",
+    "sha256": "c7439bb059c7f54d8af0da9e364b9535679d8c3f780d372033cb468812ac3717"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order1\\case.r25d",
+    "sha256": "4f1d1688b4b3855a4926efaa31b7472159c422758cd1bbef48bd149bb5820ed7"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order1\\case.shd",
+    "sha256": "3dfb9b157529faae576d711cdae6b2511fb46290bedead42bf066326b3a908a1"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order1\\case.env",
+    "sha256": "8ece09b66d5fcb5d77d69cbee7b8cafad1ab0bbc305cacdc373ef262c0dec560"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order1\\case.ssp",
+    "sha256": "4c9c851693bd82920671e4270e27371561e7b8890449158ac8422da37eed6f0a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order1\\case.iwcov",
+    "sha256": "963e835983b797f7fb6d9e600dfad0ba683be2748366c7c22e39f85f7204da14"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order1\\case.r25d",
+    "sha256": "5ccd9b94e62e2932b18b9dd1d3e9027222ffa3a829377edc30deb05a86f952c4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order1\\case.shd",
+    "sha256": "83835dd6e60bb5ca5e1a036e55be08eae393a4c8a640e71724af78ff22b26d90"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order1\\case.env",
+    "sha256": "2d83ff0f1a308e80dffc1927bcab7ce0a4b9dcf84e953a63b3d9b166264abd68"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order1\\case.ssp",
+    "sha256": "b40ca7d89ed045936bb0b2ccedf02cdb2e01f36504528fb66913897771f29e67"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order1\\case.iwcov",
+    "sha256": "c40ce5bf3f50b4ec6f91822aacf66a72aa880da3a85bf24737c82e19d2d3a5e1"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order2\\case.r25d",
+    "sha256": "74be7a7153a02c54a0ba5b1133566e0f5e748f01dd526bec1cba42ca46adbac3"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order2\\case.shd",
+    "sha256": "6be82c1ff208464c66224cf2de8ea89995003c4ca8fc74a33680703f690aace4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order2\\case.env",
+    "sha256": "da520f3fe6655b9c210dfa8baf998d13df3a853138eba2baab3cbb9eb68a2688"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order2\\case.ssp",
+    "sha256": "bf32ddb45713b1dce4689ec72ab2661657507d65eb807a1a236b7c418d767af4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order2\\case.iwcov",
+    "sha256": "77b99a2898835c9423b5b72580b9f8b85958e3510d7e25dda8063a52797d8616"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order2\\case.r25d",
+    "sha256": "2f94f49344b9e328de3da4ca046d687b232db0b5c78d86984a480480bfa70128"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order2\\case.shd",
+    "sha256": "78338406c214dc4ec9d47862762bee4c689107a2ac013ea17b0afbe3355ac323"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order2\\case.env",
+    "sha256": "3a8e7642a6317d04cfc8fb1456dd55f63d1e5eec9d795fc6b5867db51b76738c"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order2\\case.ssp",
+    "sha256": "9aa821dbf31249f9c387e8cd3accc8955ac6e0837e8579ff6b006b8d989d53ca"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order2\\case.iwcov",
+    "sha256": "924d3ed70e710baa234d567def801d4ba8a23a316df81baa432819e5a93ef021"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order3\\case.r25d",
+    "sha256": "95736e5ad63faa7be72d9143cd62452830bd053c06700bb8940531045f1f3fd5"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order3\\case.shd",
+    "sha256": "22784b28cb63e1550027e0e113698d6c44ec543603fd27a98fce7472e8a9ff1d"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order3\\case.env",
+    "sha256": "97c6829a5e3bf44f2e098291609394941b3ecd123a097f63020015d78178c61e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order3\\case.ssp",
+    "sha256": "7ce2fda594667c01eabe1f1147a3e8e6fed33dd6989a57690911e8285166e4ff"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order3\\case.iwcov",
+    "sha256": "bd90167f334a10d38baee003949b1b6ed7cee65150bbaf9b135315b71f16cbf3"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order3\\case.r25d",
+    "sha256": "d1f3e991f3f43ef1962abd18cf0ef88f52860f2572df15a008815c151197e047"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order3\\case.shd",
+    "sha256": "441bea91104c005d0004e428c881438b849eb4c07fc2ca38963452311e8049d8"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order3\\case.env",
+    "sha256": "2f7d8b788916a9a4903f4db334cf79e68d49dc60ed03fc7511baf69660b8072a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order3\\case.ssp",
+    "sha256": "47d7b206907e206b88c521cbb985d703469d01336cbc71c37e4ff9179100937e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order3\\case.iwcov",
+    "sha256": "124811de3b7c595b62589e41640151a8fc588cf47f5920533278fdaa444a7399"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order4\\case.r25d",
+    "sha256": "9a84242766c4209e916d74853a7f84de5f8c20c4bfbb3af920359da49ecf296e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order4\\case.shd",
+    "sha256": "1691121b4afe97481838b072e1a658460b426bebb8a6aa84392a11630223e659"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order4\\case.env",
+    "sha256": "f639e5d0c71b9c402add85f7e54484c0d70c1326f034c88bd5043f9956f2e734"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order4\\case.ssp",
+    "sha256": "282c464486c3e95a6716ff61e7d3e7281875b85a8cb36610a9efb76b193aa299"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order4\\case.iwcov",
+    "sha256": "6f39db3c99d43a0a15d8acc880c2b9059d0a08500577077e4f16d0e776b60ae2"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order4\\case.r25d",
+    "sha256": "c17d7414e0dd9e4a1366eab987eaee987325295f0a64f885f98f1af86f71535d"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order4\\case.shd",
+    "sha256": "45b3826c26d325832234c73198794946c0b6d26433147d75cdb2c4f76e016e51"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order4\\case.env",
+    "sha256": "634b255cceb9b01b1a7f6059a54e63b9b3a097be165afde83edee79215cfa20e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order4\\case.ssp",
+    "sha256": "b282921a3d0aaf736f0a6d8ea4da4470c80e2fbdddcb4d33d06d49dc013778da"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order4\\case.iwcov",
+    "sha256": "10b4b6bd09dcd18ee1026348ff3830f7cf5f5d9200afde5132e2e4b7923fd87a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order5\\case.r25d",
+    "sha256": "84e7a924f7e5469a20fb9d8aa17e375d7f7978c2459cf5b8bea578780ef3a5d7"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order5\\case.shd",
+    "sha256": "3caefc71c267e0b8ed1a24a919eab8be92abf1bbc7d6248ca46b9eaf8fe11714"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order5\\case.env",
+    "sha256": "55b182b45e98d5b206e42c0e715ce0fac832efc6e4aed17132fbea6bb744d681"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order5\\case.ssp",
+    "sha256": "681d721c2d53becf450ae31a5ac69950ca4cae072575800df4c270fe1031ba5c"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order5\\case.iwcov",
+    "sha256": "fadc6b2caf4422202db3f9457e402ec1d0b5672ac6c8a53f1b932299f7cb57ba"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order5\\case.r25d",
+    "sha256": "7596a5a703dfc04899104e361269df4088fd6760dcd6a3c3438b9df3cbee33d8"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order5\\case.shd",
+    "sha256": "64315d8a8e0670f5aaa457e42b7db12be620247d1254b738b37698a6dde13bf1"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order5\\case.env",
+    "sha256": "4e96e986270130a6a90e58d687eda89f67cb83a3ff09f48512080f8b6ec0e400"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order5\\case.ssp",
+    "sha256": "246f26946ab512b36369cb49864be9243d489e9d8df2e534b800b58b5cab35d3"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order5\\case.iwcov",
+    "sha256": "36af8f35845d158596327985bf244f95f0f729f7be069f02027c0a84fbaa58f2"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order6\\case.r25d",
+    "sha256": "c21f3fb63f209939b44bbb2fad222e1d890fd3a07d320bd2837e32832168d2fd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order6\\case.shd",
+    "sha256": "b162a8c740c910181796b6d99fb8370c733e430a19607dda68cc3af2c4e6191f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order6\\case.env",
+    "sha256": "ad94807543ef066e0585981596364bceef9758382a861a8786b04a93054dd4a6"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order6\\case.ssp",
+    "sha256": "e45222719f42b4a6d59eebccb138b9d25f9095c1ce00df9558dcfc9dfabb6c48"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order6\\case.iwcov",
+    "sha256": "37761684b7ba224507864d023c93ba33c474c8f1e6011167c39c44adc008edbd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order6\\case.r25d",
+    "sha256": "af3a45a6d447d107f61c7c4fa911d2bc0f2e9da35089352c497625b7f7e1d65f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order6\\case.shd",
+    "sha256": "4ed1bbffa8273e69d3ef8b6bc3fec7815adce0a2ae3efc827e1d5836fce2ffe9"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order6\\case.env",
+    "sha256": "7c7562d0a7064738808119e3197acc699a9bd22d9092415ef759140f2d7053ad"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order6\\case.ssp",
+    "sha256": "22b2126dea92dadb7e24594131c52b2d084be343943a32371d95b1af9195056a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order6\\case.iwcov",
+    "sha256": "2673d9a334da02a70c1f3f0157b484365e642bc494f51adfedbc8ddba38e99fd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order7\\case.r25d",
+    "sha256": "254b95a46b9ea72381d649a0d3c88f1d34c0b460378e1342bc934fdcaac8ad49"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order7\\case.shd",
+    "sha256": "dc8a71b9d894d137a117aea570fe6ac40ad76e4eb9f3b433cc35a64a3181bae6"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order7\\case.env",
+    "sha256": "d742fb57a47bdf62dea9adbf47ff23f3c43b2b1aff47769f6c130e86c4d4de54"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order7\\case.ssp",
+    "sha256": "258572dd7efebb8ca99c9d78e938261fa677eb0967362e4a920c28c14d2860ea"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order7\\case.iwcov",
+    "sha256": "e5b3fb1fc7a7a9306467b53d18f70af909860136bb62ebf801ab5b2bf7e061ad"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order7\\case.r25d",
+    "sha256": "a2a69a6fb826477e7bdaaabaeea72ca8a29de0573ac2a19d9879972168bff193"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order7\\case.shd",
+    "sha256": "d1141e53c60d690d57d73872e52c69a1bbf1b02a5b9c2b7b864c3a349329da97"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order7\\case.env",
+    "sha256": "6daee2aa992b4fbe16d6d1c3bdfde5157eaad8c7351fc6aa4c9114a8769e7914"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order7\\case.ssp",
+    "sha256": "1ff8ab8dd050df768180a57a78536fea71da28efe67f7777478d30d26a592f08"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order7\\case.iwcov",
+    "sha256": "7d2d85ed7d403cd319dc3b898de6da03098d790439b0ffe5dcbfe42a1ab15b32"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order8\\case.r25d",
+    "sha256": "c840aa9e4cf7c748daf5e1b1ffe6436313422bec24d3d5bab65e7cc0fbb37879"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order8\\case.shd",
+    "sha256": "73d573f5bf46fb32cc7ccda5997e1382a16db0f08cfdaf10da421a4d34923364"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order8\\case.env",
+    "sha256": "62ef6a972cbfe28e6b78f29170278d8da217e04b276fa3f1d8619ead04a8e0a5"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order8\\case.ssp",
+    "sha256": "a730f304f1279684eb9b2c66f224689883420ac0d28fc8b7c1e34566f9b5eaf5"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order8\\case.iwcov",
+    "sha256": "0a4ea8a51a9f338b640b3fddbc4205f902f570ae5fea40301b83a8ee29afa966"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order8\\case.r25d",
+    "sha256": "6a8ded2e1414598eaa56f9d32aed3ce5a35f748a53b3bd76c821429e210ba69b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order8\\case.shd",
+    "sha256": "abe28331fee245ab4fd12ae679e54daebc53001d3068012f8a8110d7b834a756"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order8\\case.env",
+    "sha256": "e8cd3096bfa0af420b79d3a5d7c7dcae799dbe84f29be1eb242f9502caf3a8b4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order8\\case.ssp",
+    "sha256": "3b5c5f1b54c50c748508579f551ccd00e3f25a41bac54960e695d66c0f6c9392"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order8\\case.iwcov",
+    "sha256": "4b91b1a7e7758d2b82db86ca4396bc3db690cbf75fde4e1ad3b536d9361cd116"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order9\\case.r25d",
+    "sha256": "5445fa813d1fe9202763041044c3c7f26dde4dde32eaa424fe49ca6806dcad07"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order9\\case.shd",
+    "sha256": "ada9160408b75f49efab5e18c6727caf4551587c5a1acb41c06265ac7ef94086"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order9\\case.env",
+    "sha256": "6402d12de63149cb418a25547939903e3d492bd9f35d70c6751c86d2a5aafeec"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order9\\case.ssp",
+    "sha256": "21ad229ff72d9d1c914d6ecba3ad6d100c0acc964b6ca3df2b43cdf2ac29f72c"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order9\\case.iwcov",
+    "sha256": "e24c65966162d1b1d5aa4f5e5a69ee15a56e36d96dd9ed46931c6335784d8133"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order9\\case.r25d",
+    "sha256": "82d53d68106da7d603c15a0244e67ddf48f979a543bd4aaefd5abf41e2315afd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order9\\case.shd",
+    "sha256": "391f99ab2e44a6c6a6c4d82d351ab491d37dba93be00b9472ea6d876319e9111"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order9\\case.env",
+    "sha256": "48759a0611069bd29e7ba263d5e87910e0e2511f7961914c8d822d7d42587d5a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order9\\case.ssp",
+    "sha256": "ccd1d6013b508db1b4848cea054ebb259f12b3df09ad006a8f9d1e9a64a75150"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order9\\case.iwcov",
+    "sha256": "3b870d586580a9bd3693aeb6a0626cfb9472eebc30d013570ec6584b1507a09f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order10\\case.r25d",
+    "sha256": "5e53b4cf0f7cc91fa926b1efb8b942b3321b2a848cd452b1a624ec4091e7c3d1"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order10\\case.shd",
+    "sha256": "c6af727647746ee1c2c4ce88f834156e03bf0646d570176b4fd611df0e0af30f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order10\\case.env",
+    "sha256": "6d6fa96c7a8e49db22428fd24782246bb5e4cd3e262aef1afdd4bc6c981bc781"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order10\\case.ssp",
+    "sha256": "6c6d67ab502d7d2497db4cd26fc1e9191cc4b72d6ce26b18ad58c0bf0b89b645"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order10\\case.iwcov",
+    "sha256": "5c594bd13bfeb365107585f08a6c1304a34fb7a2e0389dbe4faa229f0c4fa615"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order10\\case.r25d",
+    "sha256": "f24ceb20bd9f9131936c08c155e232b3b29bab4ff05d0eb1ce1db5f48e5b9846"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order10\\case.shd",
+    "sha256": "8aa140d4615b74bacb5a44565abe149416564653332b4fa8735e1b14dd1f812b"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order10\\case.env",
+    "sha256": "ffd5a6a41668ba551250349f0cb27a401a383dce58c38b0a6a9a99036e6afd12"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order10\\case.ssp",
+    "sha256": "031f8bc05405ab116f1fde2bcbb8759ed3172c15e02b5b0a98c066482b36be55"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order10\\case.iwcov",
+    "sha256": "166eb4ecbca0f09f445f76aba204f072184d2a0db121a94445ee9e2941eaebe0"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order11\\case.r25d",
+    "sha256": "b4aa38fb17933486a1c5c9e376de51a6b09bf66407dea55fc4fe972801920e24"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order11\\case.shd",
+    "sha256": "e5cee74fc1ce4828c68635fbc6399ae9efe4b4898b79c5e6ba19fde4338b2f4e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order11\\case.env",
+    "sha256": "e2655aca092b4ce5b16676068c4d3e16505f2c0580733ad8ae3fedaad8296987"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order11\\case.ssp",
+    "sha256": "3cc59e943cef3d91ecbb406ea312e5e0ffc745646d28e5cb0a9921fed1e82fa8"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order11\\case.iwcov",
+    "sha256": "478fca660f70ba46c88b4b6ec84a5ff6d63877cbf572d3221a46ae37605b101f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order11\\case.r25d",
+    "sha256": "385a53721d8f921f2f1d85594971bc0c6c91c743e5522373f016fcb2d9d15f8a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order11\\case.shd",
+    "sha256": "67ebda1ba77058a2c74ffcee26ffe7f248225c2c61d7ef5db9fbe7d9130c52b4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order11\\case.env",
+    "sha256": "5d29507ce0bc1a2e9df2d156ba307f8f8f8a276a9e35a098c7a52a4eaef7d3be"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order11\\case.ssp",
+    "sha256": "7d24d77aaa19a46480868e4989fa040dccb3a4847879f5237971dba45ef4fa92"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order11\\case.iwcov",
+    "sha256": "6ffc6a25e9953d9be58481f0fc87a013535e175c1801a4b19b527d1a64645ae3"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order12\\case.r25d",
+    "sha256": "3cca13c6ce72ceb73cdf9cf41c1c8123803cd4461632944b209d7cea9b37b419"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order12\\case.shd",
+    "sha256": "6e4ca0f4275a9de7ff29a4e7f3bb83682bf428e811b4aef8514aa6fe0625e272"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order12\\case.env",
+    "sha256": "67ab1587e59e233fced93b0befc59da49b6b56407c5d96721840f9f6a32094d8"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order12\\case.ssp",
+    "sha256": "4ddd614a633834e426c7d417df5e6d6cbc81bf1b72e79378a2cb7b72883338fd"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order12\\case.iwcov",
+    "sha256": "8ab8b6f994d8befa45ed2c463752ff5fb79c1b0ab126acf49f8c321fa84651a7"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order12\\case.r25d",
+    "sha256": "10db3109baf29d2c28bbc2e38477e5d6a5437ed63c5c5f671f4a8272610b11be"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order12\\case.shd",
+    "sha256": "91b6fa448ae0e20e6491e8a5a1b709dc9ed516a9067f74f48f5ad53d69ab12e9"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order12\\case.env",
+    "sha256": "53262a83b3511905a4b57b86ccf885daf78c0aebfa783c73a48c054f3b07d4ad"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order12\\case.ssp",
+    "sha256": "04cc23ab274883f3ba5bd780e8907f6b52981e9b0e24593ecd0692e0ea117273"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order12\\case.iwcov",
+    "sha256": "ae9b8a931655a383d7e9ac21c12af57de4b502cb4f150d0b35115920719c3bc8"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order13\\case.r25d",
+    "sha256": "1845078c5423b885cc0f3f19fe642bda86deac459050ba71fcb04685851bc6f0"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order13\\case.shd",
+    "sha256": "2ce3f5d09a836f1650edc6deb46a3f96f8ab785f7314e49ec7b4e2fbb261d5a5"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order13\\case.env",
+    "sha256": "e4746cb9b98c2d5b72df02fb1faac70bf0fa4a8d9408dad49e0f954d23d12527"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order13\\case.ssp",
+    "sha256": "6aa0af60247a1c0aa94a53013fd7a7c8a55c53045c646257535441d9bcb415f9"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order13\\case.iwcov",
+    "sha256": "4d9c81f2b0aeced0d2597fc6d0434e0845013743319e8555c5b84b7f01bcb7db"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order13\\case.r25d",
+    "sha256": "966627f58c1daf4d44f076cadc60278ca27910937be10286ae24abba7704c50c"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order13\\case.shd",
+    "sha256": "2e9c35374388e0c3de091435d6ef1a6a4a955a02f542897bfc1ff9cd03c2cf18"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order13\\case.env",
+    "sha256": "c2b9fb98c0e948349e52d7c4f5f721d7703dabc1176f68694f1602f4463a8736"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order13\\case.ssp",
+    "sha256": "6918c9b3476ce74822a6339cbe948a7a948371f01c64d0fc1c3821445a0f2a9e"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order13\\case.iwcov",
+    "sha256": "5583ff7db4fcfe8f816c09b4abba45d276c2d7faf5c1468ce09eaa069258d6ee"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order14\\case.r25d",
+    "sha256": "66efe6e3de9918dfcfa18ecee79c2723226206fc178a195f3694e3608526a9b4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order14\\case.shd",
+    "sha256": "8efc91efba0bbb8f63907cfa96f0b4b0250a5323f3f52c7e80d706883673e7b7"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order14\\case.env",
+    "sha256": "8c841e2d517fa6be39e3359f6d8cab9c86ab76eb476736d63c7884882a418751"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order14\\case.ssp",
+    "sha256": "44b0381515efd235962d18e434ef583c59508b20653765ebc313c84cdaf90100"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order14\\case.iwcov",
+    "sha256": "4682508903936fee24d7635a466e903d1226fa99a8663e2c2dd46153af1d7c24"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order14\\case.r25d",
+    "sha256": "810d4f8f096bf7c0d6a067a520f449c1a69663cf478e3dcf03367414c96fd36c"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order14\\case.shd",
+    "sha256": "b3690eea40e9866ae3ff2c5c73425ebf8965fed7d7ee60292c4625a8d224e121"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order14\\case.env",
+    "sha256": "086465c46fe510bf6e522812ba62ffba77e38ad42c2314d42485bceade9bb112"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order14\\case.ssp",
+    "sha256": "85cc9a004c163924518367b1578e62bf982624d6601377e5ac09b41d9ebdcdc5"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order14\\case.iwcov",
+    "sha256": "c0b4160c143e93254c7936e4d0a973fa3ca8ef3838082747e364401f23cc6bd0"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order15\\case.r25d",
+    "sha256": "c6aec86d325314dab3bb76bd01347c243862ae4a88776a9afab427fd4628b143"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order15\\case.shd",
+    "sha256": "d00301d4ae0618ac337aea88e6f52c352d39e7f838497c53dfbdc327d0d35c82"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order15\\case.env",
+    "sha256": "8f634276def5d3a83eca793f469d11a4a0d814d596150f0812449c8dd7d55f77"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order15\\case.ssp",
+    "sha256": "3696fa2512d4c28d1220b50070dcbad548f4be79e91fe09f7039a2d17cbba1c4"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order15\\case.iwcov",
+    "sha256": "870c76e874136bdcc0b3edbdc687ab2f65250601eaef5dcb3078b4c60d952b4a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order15\\case.r25d",
+    "sha256": "f573024ea2b0f416067be8b06d0f4dff9080dce512f0016685b7e42f7c38bc96"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order15\\case.shd",
+    "sha256": "8c8436055763854f6ab523579996f4540a52acfad9043aca706d76eb9b94d0dc"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order15\\case.env",
+    "sha256": "ecf44ea5ef209ad1cddf7e94a48bf06aa4f5408ba989b6127cb61f3e39b04ac8"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order15\\case.ssp",
+    "sha256": "f8390eb65f90b35c4375a709e5a5b5a27b4c51f96a3b0aebc6b8a18db1eccc68"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order15\\case.iwcov",
+    "sha256": "368bef4745aae3c2a8860fb59f1fb5c5d6dacd0ba10d649ba7b9b45fbd22fdbf"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order16\\case.r25d",
+    "sha256": "6a3e20987d0607ceeaac743fb89c15a408b9b6b8e810a4f6e7ee521faf73751f"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order16\\case.shd",
+    "sha256": "1ca7d8f37a38af542dcf0bd6260ad678ad5dd6e68c50090b9b960880b234ca43"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order16\\case.env",
+    "sha256": "d70efe3b88f7ec8f7b80e23a2d820f5c5aac79f1bffe6793d32c34d515917304"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order16\\case.ssp",
+    "sha256": "1a66d1da3d9fe168cab79e562159996c46a62bedee6d3aa486a23dc462674d50"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\up_order16\\case.iwcov",
+    "sha256": "8db0588186595f5165193d4d7a55ff1ddfff882f9e2d4ebec9604b619f334c7a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order16\\case.r25d",
+    "sha256": "ebf9d41bb8a51999eee22e366c8119276fb5d8d58ddbab12afd1c1388f4c922a"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order16\\case.shd",
+    "sha256": "c10c9b1d850ef52dc63948b96c74af5666e36a1b05699a055ef9c261540a2846"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order16\\case.env",
+    "sha256": "2f70c13b410d37ffe57a2b9861d83864f5056ea4c688e256934b119d2507c0af"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order16\\case.ssp",
+    "sha256": "a6e24645d502c1433694543ea5a80dfc15f233fa8cb913a8147e2cb78dd11f82"
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261115_B_run_02\\B_Q625_h1_B401\\down_order16\\case.iwcov",
+    "sha256": "a640c4758a43e83835425421833538c467ef1ec247c174421b4247056378b835"
+  }
+]

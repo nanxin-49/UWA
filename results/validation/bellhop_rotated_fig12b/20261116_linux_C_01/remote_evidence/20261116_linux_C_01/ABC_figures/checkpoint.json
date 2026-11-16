@@ -1,0 +1,14 @@
+{
+  "status": "ABC_SAVED_FIELD_FIGURES",
+  "failed_checks": 0,
+  "elapsed_s": 43.711808,
+  "A_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261115_A_resume_01/assembly/result.mat",
+  "B_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261115_B_run_02/assembly/result.mat",
+  "C_file": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/C_resume/assembly/result.mat",
+  "output_dir": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/ABC_figures",
+  "new_physics_solves": 0,
+  "native_grid": [
+    10981,
+    201
+  ]
+}

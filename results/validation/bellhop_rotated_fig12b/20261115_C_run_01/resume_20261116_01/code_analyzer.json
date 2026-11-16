@@ -1,0 +1,19 @@
+[
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\prepare_bellhop_rotated_C_remaining.m",
+    "messages": {
+      "id": "INUSD",
+      "message": "可能未使用输入参数。请考虑改用 ~ 替换该参数。",
+      "fix": 1,
+      "line": 1,
+      "column": [
+        54,
+        65
+      ]
+    }
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\run_bellhop_rotated_C_remaining_next.m",
+    "messages": []
+  }
+]

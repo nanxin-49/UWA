@@ -1,0 +1,22 @@
+{
+  "status": "QUALIFICATION_FAILED_C_NOT_STARTED",
+  "failed_checks": 1,
+  "checks_count": 5,
+  "elapsed_s": 1.825368,
+  "process": [],
+  "relative_L2": null,
+  "original_pressure_tolerance": 0,
+  "original_coordinate_tolerance": 0,
+  "matlab_version": "25.2.0.3042426 (R2025b) Update 1",
+  "executable_sha256": "5d87293a27e7fafc3aedefb569f3f35065294f42426503c4881d6eb55e6769e9",
+  "build_elapsed_s": 0,
+  "MATLAB_job_wall_s": 10.161202907562256,
+  "prior_budget_remaining_s": 741.89533304393922,
+  "charged_this_round_s": 10.161202907562256,
+  "remaining_original_budget_s": 731.734130136377,
+  "C_completed": 30,
+  "new_formal_C": 0,
+  "baseline": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/timing_pair1_optimized/case",
+  "root": "/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/minimal02/case",
+  "error": "未定义与 'java.lang.UNIXProcess' 类型的输入参数相对应的函数 'pid'。\n\n出错 run_bellhop_rotated_local_case (第 12 行)\nstarted=tic; proc=builder.start(); pid=double(proc.pid()); write('pid.txt',num2str(pid)); if isfile(sprintf('/proc/%d/stat',pid)), write('process_identity.txt',fileread(sprintf('/proc/%d/stat',pid))); end\n                                              ^^^^^^^^^^\n出错 linux_qualify02 (第 10 行)\n process=run_bellhop_rotated_local_case(exe,root,120,allow_task_termination=true,minimum_runtime_available_bytes=256*2^20);\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}
