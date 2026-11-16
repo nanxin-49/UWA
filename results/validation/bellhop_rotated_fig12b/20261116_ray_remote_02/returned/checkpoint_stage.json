@@ -1,0 +1,28 @@
+{
+  "status": "RAY_ONLY_STOPPED_NO_RETRY",
+  "initial_remaining_s": 126.40996715902713,
+  "native_jobs": 2,
+  "groups_complete": 1,
+  "new_FFP": 0,
+  "ABC_recomputed": 0,
+  "rays": {
+    "status": "RAY_ONLY_STOPPED_NO_RETRY",
+    "groups_complete": 1,
+    "native_jobs_launched": 2,
+    "receiver_pressure_evaluations": 0,
+    "ABC_recomputed": 0,
+    "new_FFP": 0,
+    "max_coordinate_roundtrip_m": 4.5474735088646412E-13,
+    "elapsed_s": 2.227828,
+    "remaining_budget_s": 98.382822057891872,
+    "source": "Original C frozen configs; only run_type R and beam_count3; no field integration",
+    "error": "错误使用 assert\nExpected exactly one incident/reflected native node pair at each wall\n\n出错 run_bellhop_C_representative_rays_linux (第 18 行)\n    pairs=hit(ismember(hit+1,hit)); assert(isscalar(pairs),'Expected exactly one incident/reflected native node pair at each wall');\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_rays_remote (第 10 行)\n rays=run_bellhop_C_representative_rays_linux(project_root,fullfile(run_dir,'rays'),budget()-10); receipt.rays=rays; receipt.native_jobs=rays.native_jobs_launched; receipt.groups_complete=rays.groups_complete;\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+  },
+  "error": "错误使用 assert\nRay geometry stop: inspect original case; no retry\n\n出错 run_bellhop_rays_remote (第 11 行)\n assert(strcmp(rays.status,'RAY_ONLY_COMPLETE')&&rays.groups_complete==6,'Ray geometry stop: inspect original case; no retry');\n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+  "matlab_version": "25.2.0.3042426 (R2025b) Update 1",
+  "job_wall_s": 18.323722839355469,
+  "remaining_original_budget_s": 108.08467504858402,
+  "accounted_cumulative_s": 3611.9153249514161,
+  "approved_total_limit_s": 3720,
+  "next_allowed_step": "Manual review only; no D/newFFP or field recalculation."
+}

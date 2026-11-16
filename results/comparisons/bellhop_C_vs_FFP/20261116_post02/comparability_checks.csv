@@ -1,0 +1,17 @@
+check,pass
+exact_x_coordinates,1
+exact_z_coordinates,1
+same_source_mask,1
+frequency,1
+water_depth,1
+source_depth,1
+Munk_parameters,1
+bottom_cp_mps,1
+bottom_rho_gcm3,1
+bottom_atten_db_wavelength,1
+FFP_top_pressure_release,1
+FFP_bottom_fluid,1
+FFP_water_rho1,1
+FFP_pressure_normalization,1
+finite_common_support,1
+FFP_final_audit_pass,1

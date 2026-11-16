@@ -3,9 +3,9 @@
 
 垂直水声项目 · 仿真与验证进度
 
-记录更新：2026-11-14；本次核查：2026-11-14。
+记录更新：2026-11-16；本次核查：2026-11-16。
 
-Bellhop REAL8接收距离最小验证通过；原10981点与25分量保留，完整计算继续暂停待审。
+Bellhop C与既有FFP共点比较完成；6类18条真实声线已补齐，停止人工审查。
 
 ## 现在在哪里
 
@@ -210,27 +210,27 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 
 ### Bellhop诊断与5000m独立波动参考
 
-状态：REAL8最小验证通过；完整计算暂停待审；结果日期：2026-11-12独立Munk；原Bellhop各结果保留原日期；本次核查：2026-11-14。
+状态：C/FFP共点与6类完整代表声线完成，停止待审；结果日期：2026-11-12独立Munk；2026-11-14 REAL8；2026-11-15性能/A/B；2026-11-15 C部分停止；2026-11-16恢复前RAM停止；2026-11-16 Linux C完成；2026-11-16 C/FFP共点比较；2026-11-16远程声线补齐；本次核查：2026-11-16。
 
-独立Munk全深度接收网格在明确假设下通过数值检查，轴有限且近底高分辨率，但未支持论文窄中央亮带；Bellhop资格未升级。 2026-11-14新旋转分支通过直接Q时延/路径及保存数据审计，隔离binary与官方所测直接Q一致；尚无反射或总场。 S2单墙Q局部反射通过，复差3.85e-5/8.09e-6；不是独立FFP/完整总场资格。 S3面外点源输运、double求值坐标及源平面图表固定先导通过，仍非完整独立波动资格。 S4显式多次反射在固定稀疏接收点通过逐墙与复分量检查，漏墙及粗步长失败保留。 两阶稀疏场尚未收敛，FFP局部差3.76%包络，不能用全局小L2代替局部资格。 冻结03已批，A组25/39作业完成后资源停止；2幅稀疏图及57门保真审计完成，不是完整场资格。 2026-11-14后续按用户要求暂停完整运行，原13阶因ENV单精度两阶段舍入出现166对重复；隔离REAL8/1000d0修复后只做13阶101束3列，116项检查通过，实际坐标逐位一致，复声压与既有最小基准位模式相同。
+C/FFP原网格共点比较已完成，近底更一致、上部有局部残差，两场无贯通窄中央亮带；本次补齐6类18条真实R声线，两套坐标图已保存。
 
 **为什么做：**借助独立的射线方法理解多途结构，并在可比较的平面条件下检查 PE 与 Bellhop 的差异。
 
-**做了什么：**Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。 独立Munk新分支完成分层Green/J0、七组完整场、同尺度均匀参考、Munk时延及图件数据/坐标审计，所有失败版本保留。 新增上下proper rotation、Q输入、轴/非轴先导、98项保存审计、直接Q编译/对照和2图FIG/PNG独立审计。工具链安装获得单独授权，未改官方Bellhop。 单墙26项、独立原始SHD/MAT与解析Q段Snell13项及关闭回归通过；墙交点缝隙失败及修复证据均保留。 新增27门输运、18门图表、31门原始数据、4门长坐标、点源单墙与关闭回归；原幅度/SHD记录歧义失败保留。 新增1–3阶及10/12阶控制、112门逐墙/原始数据审计和关闭回归。 新增84点组装15.82s与18门原始重建、16阶成本先导22.46s、SHA恢复路径复差0；完整四组计划03冻结。 已保存全接收网格上的7个直达图表及上下1–9阶基础运行证据，组级重建/截断仍待完成。 REAL8输入与有效坐标全链最小验证通过，唯一新进程2.5999938s；101束全部13墙，原10981点与原25分量SHA完整保留。
+**做了什么：**Tx99 m、Rx3 m 的 4 kHz 代表案例已有接收贡献图和完整发射扇区图。另有平面镜像展开对照的保存表：波束收敛、宽带幅相和时延等检查通过，空间相位及复场差仍有未通过项。 独立Munk新分支完成分层Green/J0、七组完整场、同尺度均匀参考、Munk时延及图件数据/坐标审计，所有失败版本保留。 新增上下proper rotation、Q输入、轴/非轴先导、98项保存审计、直接Q编译/对照和2图FIG/PNG独立审计。工具链安装获得单独授权，未改官方Bellhop。 单墙26项、独立原始SHD/MAT与解析Q段Snell13项及关闭回归通过；墙交点缝隙失败及修复证据均保留。 新增27门输运、18门图表、31门原始数据、4门长坐标、点源单墙与关闭回归；原幅度/SHD记录歧义失败保留。 新增1–3阶及10/12阶控制、112门逐墙/原始数据审计和关闭回归。 新增84点组装15.82s与18门原始重建、16阶成本先导22.46s、SHA恢复路径复差0；完整四组计划03冻结。 已保存全接收网格上的7个直达图表及上下1–9阶基础运行证据，组级重建/截断仍待完成。 REAL8输入与有效坐标全链最小验证通过，唯一新进程2.5999938s；101束全部13墙，原10981点与原25分量SHA完整保留。 新增6个固定最小性能/数值案例和234项保存审计，原25分量与REAL8清单72项SHA保持。 A完整10981x201有限N16复场及直达/两初始反射族已保存，7直达图表+32反射项齐全；3组初步PNG/FIG/离线图册完成。 B完整N16复场和A/B全域/中央/近底/轴并排3组PNG/FIG/HTML保存，Q采样单变量门已通过。 C仅完成30项，native270.728s，556组件/150输入门通过；413绑定SHA、A/B78和277/1044清单及原25保持。 2026-11-16复核A277/B1044/C827清单及A/B78+C30 component/CP SHA通过，冻结计划/二进制保持。 远程Ubuntu24.04.4/x86_64、MATLAB R2025bU1健康和9项返回SHA通过，保存独立运行日志；本轮无声学计算。 允许清单迁移2736项SHA一致，2148历史SHA和8源码匹配，路径对应表保存。 Linux独立REAL8/平面优化编译12s，101束3列18门通过；C新增9项native204.976s，727组件/195输入/61重建、五区截断和五区步长及海面门全通过；101图审与543返回SHA一致。 既有J07独立共点比较已完成，16可比性/19图数据/39独立复核通过；6组统一色标PNG/FIG/HTML，无拟合或插值，源字段和A/B/C/FFP SHA保持。 本次完成18条R轨迹/1299038节点，18往返映射、102FIG数据、298返回SHA及4发布SHA通过；仅诊断R导出保留墙前历史，原C ELF保持。
 
 **说明什么：**当前有可复现的固定单频Munk模型参考，不能将其数值通过当成论文原参数恢复、实物海试或通信资格；源点以外轴直接计算。
 
-**还差什么：**当前缺口：完整网格相干总场、束数/步长/Q/反射阶数收敛、独立FFP共点及最终图册。高阶Q20m只是反射计数和低幅贡献控制。论文底质/方向图/源级未核实；旧平面空间相位/复场失败与所有历史限制保留，不授予生产信道或通信资格。 本轮输入修复通过不补齐上述完整场与收敛资格；SHD头仍float32标签，原生复声压仍complex32。
+**还差什么：**完整首海面/首海底/高阶代表声线缺口已关闭；仍缺D束数、严格底DtN/残差贡献分离，以及论文原始源底参数，不能据几何轴线认定中央亮带。
 
-**下一步：**停止等待人工审查REAL8修复、实际坐标位模式及SHA证据；不得自动恢复完整A、14–16阶或B/C/D。此前资源恢复即续算的描述仅作历史。
+**下一步：**停止人工审查。累计上限3600+120=3720s，余7.860s；本次追加预算只限声线。不得启动D、新FFP或重算ABC，不提交/推送/合并。
 
 **技术范围：**当前安装：水深100 m，Tx99 m，Rx3 m；停止零离底 epsilon 扫描。代表案例193条 ARR、199条 E 贡献记录、1001条展示声线；这些数量不代表真实独立到达路径数。旧500 m材料已经退役，本页不引用归档内容。 独立Munk为5000/4950m、10kHz、全向三维点源、示例流体底；最终层厚.625m、K100、面板.0625、数值轮廓.1。元数据明示4πGreen=pressure_1m，不冒充生产H_f。
 
-**已有结果：**代表案例报告、图件及平面对照 checks.csv 存在。 新结果20261114_receiver64_minimal_01保留独立源码/构建、原ENV文本、3类坐标二进制审计、SHD、MAT、stdout/stderr/真实退出码及前置/运行/独立CSV。
+**已有结果：**代表案例报告、图件及平面对照 checks.csv 存在。 新结果20261114_receiver64_minimal_01保留独立源码/构建、原ENV文本、3类坐标二进制审计、SHD、MAT、stdout/stderr/真实退出码及前置/运行/独立CSV。 性能结果20261115_performance_review_01保存计数、420字节反射状态、采样原始值、无采样计时、RAM停止、独立审计及原版/优化源码和binary。 新20261115_A_resume_01保存8正式原始分量、39项来源索引、N1…16复和、完整复数result.mat、原始/截断/海面/FIG审计；20261115_A_preliminary_01为3组PNG/FIG图册。 B结果20261115_B_run_02及20261115_AB_comparison_01图册保存39项SHA/MAT/SHD/坐标/日志、截断和A→B CSV、图件与路径更正记录。 C运行20261115_C_run_01保留30项MAT/SHD/坐标/日志、827文件SHA清单及资源停止封存；没有完整ABC图。 本轮resume_20261116_01保留旧CP副本、执行源码、错误补记、进程内存快照和停止CP，无新复场。 新20261116_remote_C_01及远程bellhop_rotated_C_20261116_remote01保存环境/健康stdoutstderr/diary/exit/resource/SHA；无新复场。 20261116_transfer_01保存允许清单、完整路径表、原SHA复核、流式日志和远端2736项SHA日志。 20261116_linux_C_01保存Linux源码/ELF、最小资格、9新分量、C39组装/收敛/图审及返回证据；20261116_ABC_linux_01为ABC图册，轴图例v2数据不变。 20261116_post02 comparison保存原共点压力、指标/亮度CSV、39独立复核及R模式RAM停止CP；visualization同名目录保存六组PNG/FIG/HTML。 新20261116_ray_remote_03保存隔离R专用源码/ELF/补丁、原生输入输出、all_rays、18映射与102FIG审计、298返回SHA及交付CP；20261116_rays_complete_01为完整声线与既有TL图册。
 
-**历史审计：**代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。 独立Munk audit_01粗求积FAIL保留；audit_03必需门全通过；v2图像深度坐标FAIL保留、v4五组FIG/PNG数据/坐标及逐像素一致；当前源码样本重建通过。 本轮25项前置、31项运行、60项保存审计通过；生成换行/静态扫描假失败副本、旧输入FATAL及原分量保留。
+**历史审计：**代表图检查完成；平面对照 12 项中有 2 项未通过，不能记为整体通过。 独立Munk audit_01粗求积FAIL保留；audit_03必需门全通过；v2图像深度坐标FAIL保留、v4五组FIG/PNG数据/坐标及逐像素一致；当前源码样本重建通过。 本轮25项前置、31项运行、60项保存审计通过；生成换行/静态扫描假失败副本、旧输入FATAL及原分量保留。 2026-11-15保存审计234项通过，gprof无有效样本、插桩准备/编译失败和RAM未启动记录均保留。 A原始SHD61门、N12→16五区、海面门、图件独立69门通过；首次图件坐标检查器12假失败保留，完整向量审计关闭，原25 SHA最终复核一致。 B727组件/61重建/五区截断/五区Q比较/海面和79图审通过。首项可选rotq记账只读恢复、原生重跑0；首次图册误写默认compare后9文件逐项SHA一致迁回目标树，原回执保留。 C下12启动前RAM门失败无PID；第3项域外SSP保护点检查及封存CSV误识别失败保留，均无native重跑。 2026-11-16恢复SHA预检后再次RAM<1.5GiB；初始2.294GiB、停止后1.254GiB，失败瞬时确数unknown。未发现可安全释放的大型任务数组，无清会话/终止进程。 Ubuntu预检缺gfortran停止；MATLAB健康不代表跨平台SHD/声学物理资格。Windows既有结果与CP保留。 数据SHA全过(exit0)，收尾壳CR与缺失可选环境日志保留，不宣称运行时资格。 本轮18资格/727组件/195输入/61重建、五区截断与步长/海面/101图审通过。543返回SHA、A/B78及原25保持；辅助函数预启动失败、Java8 pid接口导致的退出码缺失案例保留，最终独立资格03真实exit0。 本轮原网格精确相等，C/FFP数组逐位复核；首次x==.1索引后处理失败保留且保守计20s。R-only未启动，直达历史轨迹与13阶命中点明确区分，未捏造完整反射声线。 本次remote01预算启动前停止0PID、remote02首海面缺前段的映射FAIL保留；修复只作用独立R导出。完整18条映射与接缝通过，最大逆映射4.55e-13m，PNG目视2/2。
 
-**当前重跑条件：**本次唯一授权案例已执行；即使资源充足也须先人工审查，不自动派发新Bellhop。无求解保存审计入口可重读明确结果。
+**当前重跑条件：**已补齐声线，无自动重试或求解授权；原ABC/FFP及原C二进制复用不重算。后续需要独立人工授权和预算。
 
 证据入口：
 
@@ -250,6 +250,32 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 - [获批执行、资源停止及稀疏诊断图](../reports/bellhop_rotated_fig12b_execution_2026-11-14.md) · `reports/bellhop_rotated_fig12b_execution_2026-11-14.md` · 历史版本 `partial A`
 - [REAL8最小修复中文对照与数值审计](../reports/bellhop_rotated_receiver64_minimal_2026-11-14.md) · `reports/bellhop_rotated_receiver64_minimal_2026-11-14.md`
 - [REAL8实际坐标保存字节独立审计](../results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/saved_audit01/checkpoint.json) · `results/validation/bellhop_rotated_fig12b/20261114_receiver64_minimal_01/saved_audit01/checkpoint.json`
+- [Bellhop性能审查中文报告](../reports/bellhop_rotated_performance_review_2026-11-15.md) · `reports/bellhop_rotated_performance_review_2026-11-15.md` · 历史版本 `uncommitted`
+- [性能优化反射状态与SHA独立审计](../results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/saved_audit01/checkpoint.json) · `results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/saved_audit01/checkpoint.json`
+- [A组完成及后续组成本中文报告](../reports/bellhop_rotated_A_complete_2026-11-15.md) · `reports/bellhop_rotated_A_complete_2026-11-15.md` · 历史版本 `uncommitted`
+- [A组阶段验收检查点](../results/validation/bellhop_rotated_fig12b/20261115_A_resume_01/checkpoint_stage.json) · `results/validation/bellhop_rotated_fig12b/20261115_A_resume_01/checkpoint_stage.json`
+- [A组初步完整场离线图册](../results/visualization/bellhop_rotated_fig12b/20261115_A_preliminary_01/index.html) · `results/visualization/bellhop_rotated_fig12b/20261115_A_preliminary_01/index.html`
+- [B组完成与A/B复场中文报告](../reports/bellhop_rotated_B_complete_2026-11-15.md) · `reports/bellhop_rotated_B_complete_2026-11-15.md` · 历史版本 `uncommitted`
+- [B组阶段验收checkpoint](../results/validation/bellhop_rotated_fig12b/20261115_B_run_02/checkpoint_stage.json) · `results/validation/bellhop_rotated_fig12b/20261115_B_run_02/checkpoint_stage.json`
+- [A/B并排离线图册](../results/visualization/bellhop_rotated_fig12b/20261115_AB_comparison_01/index.html) · `results/visualization/bellhop_rotated_fig12b/20261115_AB_comparison_01/index.html`
+- [C组30/39 RAM停止中文报告](../reports/bellhop_rotated_C_stopped_2026-11-15.md) · `reports/bellhop_rotated_C_stopped_2026-11-15.md` · 历史版本 `uncommitted`
+- [C组停止封存回执](../results/validation/bellhop_rotated_fig12b/20261115_C_run_01/checkpoint_stage.json) · `results/validation/bellhop_rotated_fig12b/20261115_C_run_01/checkpoint_stage.json`
+- [C剩9项恢复前再次RAM停止报告](../reports/bellhop_rotated_C_resume_ram_stop_2026-11-16.md) · `reports/bellhop_rotated_C_resume_ram_stop_2026-11-16.md` · 历史版本 `uncommitted`
+- [2026-11-16 C恢复停止回执](../results/validation/bellhop_rotated_fig12b/20261115_C_run_01/resume_20261116_01/checkpoint_stop.json) · `results/validation/bellhop_rotated_fig12b/20261115_C_run_01/resume_20261116_01/checkpoint_stop.json`
+- [Bellhop Ubuntu环境及编译依赖停止报告](../reports/bellhop_rotated_remote_preflight_2026-11-16.md) · `reports/bellhop_rotated_remote_preflight_2026-11-16.md` · 历史版本 `uncommitted`
+- [Bellhop远程迁移预检CP](../results/validation/bellhop_rotated_fig12b/20261116_remote_C_01/checkpoint.json) · `results/validation/bellhop_rotated_fig12b/20261116_remote_C_01/checkpoint.json`
+- [远端拷贝与路径对应报告](../reports/bellhop_rotated_remote_transfer_2026-11-16.md) · `reports/bellhop_rotated_remote_transfer_2026-11-16.md` · 历史版本 `uncommitted`
+- [2736文件迁移检查点](../results/validation/bellhop_rotated_fig12b/20261116_transfer_01/checkpoint.json) · `results/validation/bellhop_rotated_fig12b/20261116_transfer_01/checkpoint.json`
+- [Linux C完成与完整收敛中文报告](../reports/bellhop_rotated_C_complete_linux_2026-11-16.md) · `reports/bellhop_rotated_C_complete_linux_2026-11-16.md` · 历史版本 `uncommitted`
+- [C组最终预算及阶段checkpoint](../results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/checkpoint_delivery.json) · `results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/checkpoint_delivery.json`
+- [ABC并排离线图册](../results/visualization/bellhop_rotated_fig12b/20261116_ABC_linux_01/index.html) · `results/visualization/bellhop_rotated_fig12b/20261116_ABC_linux_01/index.html`
+- [Linux返回543文件及历史SHA审计](../results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/local_return_audit01/checkpoint.json) · `results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/local_return_audit01/checkpoint.json`
+- [C与已有FFP共点比较中文报告](../reports/bellhop_C_FFP_common_point_2026-11-16.md) · `reports/bellhop_C_FFP_common_point_2026-11-16.md` · 历史版本 `uncommitted`
+- [C/FFP无拟合TL与真实声线证据图册](../results/visualization/bellhop_C_vs_FFP/20261116_post02/index.html) · `results/visualization/bellhop_C_vs_FFP/20261116_post02/index.html`
+- [共点比较及反射轨迹RAM停止checkpoint](../results/comparisons/bellhop_C_vs_FFP/20261116_post02/checkpoint_delivery.json) · `results/comparisons/bellhop_C_vs_FFP/20261116_post02/checkpoint_delivery.json`
+- [远程完整代表声线中文报告](../reports/bellhop_C_rays_remote_complete_2026-11-16.md) · `reports/bellhop_C_rays_remote_complete_2026-11-16.md`
+- [6类18条声线两套坐标图册](../results/visualization/bellhop_C_vs_FFP/20261116_rays_complete_01/index.html) · `results/visualization/bellhop_C_vs_FFP/20261116_rays_complete_01/index.html`
+- [声线交付及追加预算checkpoint](../results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/checkpoint_delivery.json) · `results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/checkpoint_delivery.json`
 
 ### 运行环境与重跑条件
 
@@ -408,6 +434,46 @@ P22恢复入口与新机最小基线已提交为5d2e9f8。按用户要求暂缓1
 
 用户先暂停完整求解并批准根因，随后仅授权REAL8/1000d0读取与13阶101束3列最小验证。10981点/顺序/ENV文本不变，实际求值32943坐标对和10981缩放距离均位模式一致；116项检查通过，复声压与旧最小基准差0，原25分量SHA保持。唯一新进程2.5999938s；完整A、14–16阶、B/C/D及完整场/收敛/FFP仍缺，等待人工审查后再定范围。
 
+### 2026-11-15 · 平面墙最小优化等价通过，单次实测加速与RAM停止
+
+实际REAL8构建确有全段扫描但墙仅2段；独立保守排除/停用墙跳过将45396452/24389144次精确段检查降至各5252次，2652候选与1313反射状态及复声压逐字节相同。234项保存审计通过，原25分量和REAL8清单保持。6个最小求解14.823099s；一次无采样配对2.4268952→2.1920121s，1.107倍，余下计时在RAM启动门停止。短函数精确占比未取得；不恢复完整A或14–16/B/C/D，不提交/推送，停止人工审查。
+
+### 2026-11-15 · A正式39项完成，阶段门通过，B/C/D停止待审
+
+按用户A-only恢复指令核原25 SHA及31完成项，仅新增上下13–16阶8个401束/201列正式分量，native100.3129s。原REAL8/平面优化/物理参数保持；SHD重建61门、N12→16五区、海面残压门通过；初步3组PNG/FIG及独立图审69门通过，首次图审12假失败保留。原预算计入约912.86s、余2687.14s，后续组成本上界可能超余量。A阶段完成不等于论文/FFP资格，停待审查B规划，不提交/推送/合并。
+
+### 2026-11-15 · B39项和A/BQ采样比较通过，停止待审
+
+仅Q1.25→.625m，39项串行native457.43s，727组件/61原始重建通过；B N12→16及A→B五区原门全过，maxQ复差/包络1.27570e-4、max相位1.14775e-3rad。A39/277清单及原25 SHA保持，A/B PNG/FIG/HTML与79图审完成。首项可选rotq收尾恢复无重跑，图册误写默认目录后9文件SHA一致迁回目标树。原账1763.12s/8.42GiB，C/D/FFP未执行，停待审、不提交/推送/合并。 最终SHA审计另计24s，累计1787.12s、余1812.88s；未启动任何后续求解。
+
+### 2026-11-15 · C30/39完成，下一项在RAM启动门停止
+
+Q.625m固定、各图表步长减半；30项native270.728s，556组件/150输入合同门通过。下12启动前RAM<1.5GiB、无PID；未运行余9项，未取得完整C/截断/B→C/ABC图资格。A/B78及277/1044清单、原25 SHA保持，C413绑定SHA通过；累计封存2485.834s、余1114.166s，交付收尾另计。旧失败保留，无重跑、不D/FFP、不提交/推送/合并。 最终交付计账：累计2540.834401秒，原预算剩余1059.165599秒；本次收尾另计55秒（含向上取整及3秒保存余量），没有新的求解。 交付回执核对另保守计40秒（含收尾）：最终累计2580.834401秒，余1019.165599秒。看板既有16个缺失含旧Bellhop平面对照CSV，新C证据存在；未恢复历史材料，未运行求解。
+
+### 2026-11-16 · C恢复SHA通过后再次RAM门停止，native0
+
+用户授权剩9项，复核A277/B1044/C827及A/B78+C30 component/CP SHA通过；预检后RAM<1.5GiB停止，无PID、无求解。初始可用2.294GiB、停止后1.254GiB；未发现可安全释放的大型任务数组，未清共享会话或其他进程。原预算扣保守160s后余859.166s；C保持30/39，完整场/截断/B→C/ABC图未执行，不自动重试、D/FFP或提交。
+
+### 2026-11-16 · 远程MATLAB健康通过，缺gfortran停止
+
+SSH已授权；Ubuntu24.04.4、RAM51.15GiB/磁盘4.78TiB、MATLAB R2025bU1许可证/健康退出0，9返回文件SHA一致。未找到gfortran及常见版本或安装记录，未sudo安装、未迁移A/B/C、未构建/最小物理验证或求解，C30/39保持。Windows结果和CP不覆盖，迁移账本保守60s后余799.166s；待管理员依赖，不D/FFP或提交。
+
+### 2026-11-16 · 按用户请求帮拷贝，2736文件SHA通过
+
+gfortran13.3可用，唯一远端Explain保留本地结构，8.88GiB/2736项全部SHA通过，原2148SHA和8源码一致；C仍30/39，不编译/求解。路径表已保存，Windows结果不覆盖。校验后CR及缺失可选日志保留，不重复全量检查；声学预算余799.17s，不D/FFP或提交。
+
+### 2026-11-16 · Linux恢复C9，C39完整收敛和ABC图审通过
+
+现有副本复用，不重复迁移；gfortran13.3独立构建12s，101束3列18门且复声压零差/真实exit0。前30项复用，仅新增9项native204.976s；C727组件/195输入/61重建、N12→16及B→C五区、海面门通过，101图审及543返回SHA一致。B→C复L2=1.503e-7，max复差/E=3.378e-6，max相位9.809e-6rad；A/B78及原25保持。保留两个Linux准备失败，ABC PNG/FIG/HTML与轴图例副本保存。原预算余155.832s，停止待审，不D/FFP、不提交/推送/合并，尚非论文最终资格。
+
+### 2026-11-16 · C/FFP共点比较完成，完整反射声线在RAM门停止
+
+冻结C与J07的10981×201网格及物理/源参考可比，16/19/39检查通过。全复L2=2.9902e-5、bulk=1.7931e-4、近底=4.9566e-5；max复差/E=8.7220e-4、max有效相位.01216rad，较大残差位于上部，两场均不支持贯通中央强亮带。6组PNG/FIG/HTML完成；R-only首项RAM<1.5GiB、PID0，不重试，历史直达/13阶命中点不冒充完整轨迹。原预算余60.268s，A/B/C/FFP重算0，无D/新FFP或Git提交。
+
+### 2026-11-16 · 远程补齐6类18条真实声线，停止待审
+
+独立R导出修复保留完整墙前历史，原REAL8 C ELF不变；18映射/102FIG/298返回SHA及两PNG目视通过，1299038节点。复用直达、最终新5反射作业；接收场及ABC/D/FFP新计算为0。仅声线追加120s，累计3712.140/3720s、余7.860s。停止人工审查，D/底DtN/论文参数仍缺。
+
 ## 重新开始先做什么
 
 ### 1. 下一任务先做P0声源资格
@@ -464,11 +530,11 @@ P4/P6及全部AS已通过限定审计，P8部分轨迹保留；步长与吸收�
 
 ## 记录与核查范围
 
-本轮仅修复独立validation overlay的ENV REAL8/1000d0读取，追踪ReceiverRange64有效求值链；只新增13阶101束3列一例，完成坐标位模式/原始SHD/保存MAT/旧25分量SHA审计。无完整A恢复、14–16阶、B/C/D、FFP重算或生产接口变更。
+本轮仅远程Ubuntu R-only代表声线：6类各3条，复用有效直达、最终新5反射作业；不求接收复场，不重算ABC/FFP，不启动D。
 
-现有MATLAB MCP R2025b Update6，本机隔离gfortran16.2.0；唯一新Bellhop进程2.5999938s，启动可用RAM约2.80GiB，保持1.5GiB/256MiB门，无SSH/新MATLAB/并行。停止等待人工审查。16项旧工作树缺失引用保持登记，不恢复归档。旧预算、失败与停止账保留，不能自动恢复完整计算。
+原累计3600s加用户仅本次声线追加120s，上限3720s；含原停止与导出失败，累计3712.140s、余7.860s。REAL8原C ELF不变，R专用导出副本隔离；RAM/时间/磁盘门不放宽。16项旧引用警告待本次看板回执复核。
 
-本次核查代码基线：`experiment/bellhop-rotated-fig12b / receiver64 minimal validation, stopped for review`。
+本次核查代码基线：`f2cea1a + uncommitted completed B-only run`。
 
 唯一维护源：`reports/project_progress.json`。
 

@@ -9,6 +9,62 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### Bellhop C代表声线远程补齐，停止待审（2026-11-16）
+
+- 6类各3条真实R轨迹、1299038原生节点，直达/首海面/首海底及3/4/13阶齐全；18映射和102重开FIG通过，最大往返4.55e-13m。298返回及4发布SHA一致，两套PNG目视检查；已有C/FFP相干TL直接复用。
+- 独立诊断构建仅R模式不再压缩墙前历史，C分支及原REAL8 ELF SHA保持；最终新5项反射、复用1直达，接收复场求值/ABC重算/D/新FFP为0。早先预算停止与截断导出失败独立保留。
+- [中文报告](reports/bellhop_C_rays_remote_complete_2026-11-16.md)、[交付CP](results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/checkpoint_delivery.json)、[完整声线图册](results/visualization/bellhop_C_vs_FFP/20261116_rays_complete_01/index.html)。原3600+仅本次声线120=3720s，保守交付计账后余7.860s；停止人工审查，不D/FFP/提交。几何轴线不是中央亮带证据；D/底DtN及论文参数仍缺。以下停止状态按历史保留。
+
+### Bellhop C/FFP共点比较完成，完整反射声线RAM停止（2026-11-16）
+
+- 冻结C与FFP J07原10981×201坐标、源参考、10kHz/Munk/底参数一致，16项检查通过；不插值、不拟合，A/B/C与FFP无重算。全场复L2=2.990198e-5，bulk=1.793107e-4、近底=4.956590e-5；max复差/C包络8.722000e-4位于(-1.3,725)m，max有效相位.01215987rad位于(-3.95,670)m。两场不支持贯通窄中央强亮带；残差倾向离散/传播近似，但束数及具体贡献未分离，论文源/底假设仍未核。
+- 6组PNG/FIG/HTML含共点coherent TL、近底细纹、轴幅相、误差及真实历史声线；19图件数据与39独立检查通过。新6×3束R-only在首项RAM<1.5GiB启动门停止，0PID，不重试；仅复用S1直达轨迹和早期13阶真实命中标记，完整首海面/首海底/高阶曲线仍缺，未用示意线补造。
+- [中文报告](reports/bellhop_C_FFP_common_point_2026-11-16.md)、[最终CP](results/comparisons/bellhop_C_vs_FFP/20261116_post02/checkpoint_delivery.json)、[图册](results/visualization/bellhop_C_vs_FFP/20261116_post02/index.html)。原预算余60.268096s，等待人工审查。D、FFP新求解及提交/推送/合并均0；同求解器.02/.02/.05窗仅作跨方法诊断参照，不作为新物理验收门。以下旧状态保留。
+
+### Bellhop C39项完成，Linux资格及步长/截断门通过（2026-11-16）
+
+- 复用既有2736文件快照；独立REAL8+平面墙优化编译12s，最终101束3列18门零差通过（真实exit0）。Windows C30直接引用，仅Ubuntu新增下12和上下13–16阶9项，native204.975978s，单项最大25.865179s。原网格/物理参数/声束保持，未动生产代码。
+- C39的727组件/195输入合同、61原始重建、N12→16和B→C五区及海面门通过；B→C全复L2=1.502993e-7，max复差/E=3.378219e-6，max有效相位9.809435e-6rad。543返回SHA、A/B78及原25保持，101图审与3组PNG/FIG/HTML完成，轴线图例另存不改数据。启动前辅助函数/Java8PID失败保留，没有C分量重算。
+- [中文报告](reports/bellhop_rotated_C_complete_linux_2026-11-16.md)、[最终CP](results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/checkpoint_delivery.json)、[ABC图册](results/visualization/bellhop_rotated_fig12b/20261116_ABC_linux_01/index.html)。原预算余155.831578s。停止待审；D束数、独立FFP/底DtN及论文最终资格仍缺，不自动下一阶段，不提交/推送/合并。以下旧停止/复制状态按历史保留。
+
+### Bellhop远端文件快照SHA通过，本轮仅拷贝（2026-11-16）
+
+- gfortran13.3已安装并复查；本地目标树统一映射到/home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain。2736文件/8.8774GiB流式拷贝、全部SHA通过；2148历史SHA和8源码一致，逐文件路径表已保存。Windows结果/CP不覆盖，C30/39，无新Bellhop/编译/物理门或ABC图，声学余799.17s保留。
+- 校验后壳脚本CR导致外层退出1，附加环境日志缺失；2736数据核验本身exit0，三个实存校验记录已取回，不重复全量扫描。Linux构建/调度及路径适配仍未资格通过。[报告](reports/bellhop_rotated_remote_transfer_2026-11-16.md)、[CP](results/validation/bellhop_rotated_fig12b/20261116_transfer_01/checkpoint.json)。以下旧状态为历史。
+
+### Bellhop Ubuntu迁移预检：MATLAB可用，gfortran缺失停止（2026-11-16）
+
+- 用户授权matlab-ubuntu-new/misc、/home/misc/cwx独立目录，SSH通过；Ubuntu24.04.4/x86_64、56逻辑CPU、可用51.15GiB、磁盘4.78TiB。R2025bUpdate1健康/许可证通过，wall43.26s，9返回文件SHA一致。未使用sudo或修改共享配置。
+- 远端gfortran及常见版本命令/包记录缺失，按用户要求先报告；未迁移源码/分量、编译、101束3列物理验证或C9，C30/39保持，无新复场/ABC图。原Windows结果/CP保留；新迁移账本保守计60s、余799.165599s。需管理员提供gfortran或明确已有工具链路径，不用普通Bellhop替代。[中文报告](reports/bellhop_rotated_remote_preflight_2026-11-16.md)、[迁移CP](results/validation/bellhop_rotated_fig12b/20261116_remote_C_01/checkpoint.json)。以下旧状态按历史保留。
+
+### Bellhop C恢复前SHA通过，再次RAM门停止（2026-11-16）
+
+- 用户明确授权剩9项恢复，但SHA预检后启动RAM<1.5GiB，本轮native0、C仍30/39。初始可用2.293716GiB，停止后采样1.254295GiB；MATLAB占用报告2.098831→2.525875GiB。未发现可安全清除的大型任务临时数组，未动共享会话或他人进程，未认定内存泄漏。
+- A277/B1044/C827清单、A/B78与C30分量CP以及冻结计划/二进制SHA复核通过；旧下12阶无PID。本轮保守计160s，累计2740.834401s、余859.165599s，输出10.630438GiB、空闲132.446716GiB。完整C/截断/B→C/ABC图仍未执行，不自动重试、D/新FFP或提交。[中文报告](reports/bellhop_rotated_C_resume_ram_stop_2026-11-16.md)、[恢复停止CP](results/validation/bellhop_rotated_fig12b/20261115_C_run_01/resume_20261116_01/checkpoint_stop.json)。以下旧状态按历史保留。
+
+### Bellhop C组30/39，RAM启动门停止（2026-11-15）
+
+- 仅C授权，Q.625m不变、各图表步长减半；完成7直达+上下1–11阶+上12阶，native270.728s，556组件/150输入合同门通过。下12阶启动前RAM<1.5GiB被拒，无PID；余9项未执行，禁止自动重试。A/B78、277/1044项清单及原25 SHA复核保持，C413输入输出绑定SHA通过。
+- [中文停止报告](reports/bellhop_rotated_C_stopped_2026-11-15.md)、[封存回执](results/validation/bellhop_rotated_fig12b/20261115_C_run_01/checkpoint_stage.json)。封存时累计2485.834s、余1114.166s（交付收尾另计），输出10.630GiB。没有完整C组装/截断/B→C/ABC图资格；D/新FFP未运行，不提交/推送/合并。域外SSP保护节点检查修正与CSV审计失败均保留，未改物理网格或数值门。以下旧状态按历史保留。
+
+### Bellhop B组39项完成，Q采样比较通过，C/D待审（2026-11-15）
+
+- 仅Q1.25→.625m，其余39项配置、步长/束数/接收网格/物理模型保持。39项串行native457.43s，727项组件检查、61项原始SHD重建通过；A39项、277项交付及原25分量SHA最终一致，未重算A。
+- B N12→16五区通过；A→B五区通过，max复差/包络1.27570e-4、max有效相位1.14775e-3rad，近底max复差/包络1.32391e-5。海面残压8.21718e-4<.001；A/B PNG/FIG/HTML及79门图件审计通过。
+- [B中文报告](reports/bellhop_rotated_B_complete_2026-11-15.md)、[A/B图册](results/visualization/bellhop_rotated_fig12b/20261115_AB_comparison_01/index.html)。可选rotq收尾记账以保存数据恢复，无原生重跑；图册曾误写默认compare目录，9个文件已SHA一致迁回目标工作树，记录保留。实际求解/源码/数据始终C目标工作树。
+- 总账约1787.12s，余约1812.88s；累计输出约8.42GiB。本轮停止待审，不自动C/D或FFP，不提交/推送/合并；原Goal的步长/束数和独立FFP资格尚缺。以下早期状态按历史保留。
+
+### Bellhop A组39项完成并通过阶段门，B/C/D等待审查（2026-11-15）
+
+- 按用户新授权恢复原A：31项直接复用，仅新增上下13–16阶8个正式401束/201列分量，原生100.3129s。原25分量SHA保持，独立平面优化REAL8 binary及原始网格/相量桥不变；未动旧失败或生产PE。
+- 39项独立SHD重建61门通过，旧N12重建复差0；N12→16五区全部通过，max变化/包络1.84784e-5、max有效相位2.09667e-4rad。海面残压/包络8.21734e-4<.001。3组初步PNG/FIG及独立完整坐标向量69门通过，初始图检查器12项假失败保留。
+- [中文阶段报告与B/C/D成本](reports/bellhop_rotated_A_complete_2026-11-15.md)、[初步图册](results/visualization/bellhop_rotated_fig12b/20261115_A_preliminary_01/index.html)。原预算计入约912.86s，余约2687.14s；后续三组估计总上界可能超余量。当前停止待人工审查B单组计划，不自动计算、不提交/推送/合并；FFP共点及最终论文资格未取得。以下旧未授权/暂停文字仅为历史。
+
+### Bellhop平面墙性能审查：最小数值等价，重复计时在RAM门停止（2026-11-15）
+
+- 核实际REAL8编译源码：当前墙只有2段，却有每步两次全段求交、一次几何查询及反射重复查询。独立保守平面排除/停用墙跳过将两类精确段检查分别从45396452/24389144降至5252/5252，真实候选2652及1313次反射状态、最终复声压逐字节不变；234项保存审计通过，前轮72产物与原25分量SHA不变。
+- 一次无采样配对2.4268952→2.1920121s（1.107倍，耗时减少9.678%）；后续RAM启动门停止，3对计划仅完成1对，不作稳定加速承诺。短函数计时开销敏感，穷举精确占比未取得；粗粒度Trace2.021s/影响函数.131s。[中文审查](reports/bellhop_rotated_performance_review_2026-11-15.md)。当前NUMERICAL_PASS/TIMING_LIMITED/RAM_STOP；只保留独立优化候选，不恢复A/14–16/B/C/D、不提交/推送。下列旧接续状态为历史。
+
 ### Bellhop接收距离REAL8最小验证通过，完整计算继续暂停（2026-11-14）
 
 - 独立validation overlay改ENV REAL8/1000d0读取，原10981点/文本/顺序不变。有效ReceiverRange64到真实影响函数和扩散缩放均逐位审计；第13阶101束3原列唯一新求解2.5999938s，25+31+60检查通过，复声压与已有同坐标基准位模式一致。原25分量与旧FATAL SHA保留。

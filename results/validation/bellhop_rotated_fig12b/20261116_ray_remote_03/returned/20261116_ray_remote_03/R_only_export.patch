@@ -1,0 +1,13 @@
+--- /home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_linux_C_01/build/Bellhop/bellhop.f90	2026-11-16 11:13:46.992614838 +0800
++++ /home/misc/cwx/bellhop_rotated_C_transfer_20261116_01/Explain/results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/build/Bellhop/bellhop.f90	2026-11-16 15:12:47.956114613 +0800
+@@ -974,8 +974,10 @@
+ 
+   ! Isolate the coordinate-chart seam: the existing influence routine sees
+   ! only the transformed, monotonically increasing post-wall branch.
++  IF ( Beam%RunType(1:1) /= 'R' ) THEN
+   ray2D( 1 : NPost ) = ray2D( WallBranchStart : Beam%Nsteps )
+   Beam%Nsteps = NPost
++  END IF
+ END SUBROUTINE TraceRay2D
+ 
+ ! **********************************************************************!

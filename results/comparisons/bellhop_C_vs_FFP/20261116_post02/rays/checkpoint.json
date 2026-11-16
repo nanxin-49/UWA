@@ -1,0 +1,13 @@
+{
+  "status": "RAY_ONLY_STOPPED_NO_RETRY",
+  "groups_complete": 0,
+  "native_jobs_launched": 0,
+  "receiver_pressure_evaluations": 0,
+  "ABC_recomputed": 0,
+  "new_FFP": 0,
+  "max_coordinate_roundtrip_m": 0,
+  "elapsed_s": 0.8515742,
+  "remaining_budget_s": 128.48607528353276,
+  "source": "Original C frozen configs; only run_type R and beam_count3; no field integration",
+  "error": "错误使用 assert\nRay-only RAM launch gate\n\n出错 run_bellhop_C_representative_rays (第 8 行)\n [~,ram]=memory; assert(ram.PhysicalMemory.Available>=1.5*2^30,'Ray-only RAM launch gate'); assert(remaining_s-toc(start)>10,'Ray-only shared budget gate'); j=find(strcmp({p.plan.jobs.tag},tags{k})); assert(isscalar(j)); cfg=p.plan.jobs(j).cfg; cfg.run_type='R'; cfg.beam_count=3;\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+}

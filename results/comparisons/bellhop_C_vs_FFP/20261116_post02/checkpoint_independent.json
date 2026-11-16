@@ -1,0 +1,10 @@
+{
+  "status": "FROZEN_SOURCE_COMMON_POINT_INDEPENDENT_AUDIT",
+  "checks_count": 39,
+  "failed_checks": 0,
+  "elapsed_s": 6.6749078,
+  "new_native": 0,
+  "new_FFP": 0,
+  "ABC_recomputed": 0,
+  "numerical_acceptance": "Artifact/data consistency only; no new cross-method physical threshold"
+}

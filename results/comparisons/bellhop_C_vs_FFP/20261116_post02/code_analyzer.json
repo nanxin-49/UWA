@@ -1,0 +1,39 @@
+[
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\prepare_bellhop_C_ffp_comparison.m",
+    "messages": []
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\run_bellhop_C_representative_rays.m",
+    "messages": []
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\validation\\audit_bellhop_C_ffp_saved.m",
+    "messages": []
+  },
+  {
+    "path": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\scripts\\reporting\\render_bellhop_C_ffp_saved.m",
+    "messages": [
+      {
+        "id": "AGROW",
+        "message": "变量的大小似乎在每个循环迭代都会更改。请考虑进行预分配以提升速度。",
+        "fix": 0,
+        "line": 9,
+        "column": [
+          73,
+          77
+        ]
+      },
+      {
+        "id": "NBRAK2",
+        "message": "无需使用方括号 []。",
+        "fix": 1,
+        "line": 47,
+        "column": [
+          6,
+          6
+        ]
+      }
+    ]
+  }
+]

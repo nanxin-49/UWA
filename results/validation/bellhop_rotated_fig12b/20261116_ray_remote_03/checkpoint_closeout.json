@@ -1,0 +1,12 @@
+{
+  "status": "CLOSEOUT_COMPLETE",
+  "date": "2026-11-16",
+  "dashboard": "GENERATED_WITH_REFERENCE_WARNINGS",
+  "historical_missing_references": 16,
+  "new_evidence_references": 3,
+  "new_missing_evidence": 0,
+  "dashboard_elapsed_s": 2.064933,
+  "budget_included_in_conservative_closeout_s": 20,
+  "native_jobs_after_delivery": 0,
+  "next_step": "STOPPED_FOR_MANUAL_REVIEW"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "RAY_ONLY_STOPPED_NO_RETRY",
+  "initial_remaining_s": 60.268096183532748,
+  "native_jobs": 0,
+  "groups_complete": 0,
+  "new_FFP": 0,
+  "ABC_recomputed": 0,
+  "error": "错误使用 assert\nShared remaining budget gate before R-only\n\n出错 run_bellhop_rays_remote (第 9 行)\n assert(budget()>30,'Shared remaining budget gate before R-only');\n ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+  "matlab_version": "25.2.0.3042426 (R2025b) Update 1",
+  "job_wall_s": 51.855731010437012,
+  "remaining_original_budget_s": 8.4099671590271328,
+  "accounted_cumulative_s": 3591.590032840973,
+  "next_allowed_step": "Manual review only; no D/newFFP or field recalculation."
+}

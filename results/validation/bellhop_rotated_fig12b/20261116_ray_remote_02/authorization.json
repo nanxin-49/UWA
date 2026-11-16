@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-16",
+  "user_approval": "追加120秒，仅用于本次声线补齐",
+  "added_budget_s": 120,
+  "prior_total_limit_s": 3600,
+  "approved_total_limit_s": 3720,
+  "prior_spent_s": 3591.590032840973,
+  "preparation_reserve_s": 2,
+  "new_remaining_s": 126.40996715902713,
+  "scope": "6 categories x3 R-only; native coordinates, geometry mapping, PNG/FIG/HTML and SHA audit only; no ABC pressure, D, FFP or Git publication"
+}

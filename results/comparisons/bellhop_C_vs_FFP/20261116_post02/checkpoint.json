@@ -1,0 +1,113 @@
+{
+  "status": "COMPARABLE_SAVED_FIELDS_COMPARED_NO_FIT",
+  "comparability_checks": 16,
+  "comparability_failed": 0,
+  "metrics": [
+    {
+      "region": "all",
+      "points": 2207180.0,
+      "complex_relative_L2_FFP": 2.9901983716947863E-05,
+      "max_absolute_complex": 0.00011746796835164078,
+      "max_complex_over_C_envelope": 0.0008722000488083505,
+      "max_effective_phase_rad": 0.012159871248556194,
+      "phase_support": 2205964.0,
+      "TL_difference_p95_dB": 0.0015257968137968533,
+      "within_same_solver_gate_diagnostic_only": true
+    },
+    {
+      "region": "bulk_z0_4900",
+      "points": 197181,
+      "complex_relative_L2_FFP": 0.00017931068626971772,
+      "max_absolute_complex": 3.5347235839970534E-06,
+      "max_complex_over_C_envelope": 0.0008722000488083505,
+      "max_effective_phase_rad": 0.012159871248556194,
+      "phase_support": 195965,
+      "TL_difference_p95_dB": 0.02288264397635325,
+      "within_same_solver_gate_diagnostic_only": true
+    },
+    {
+      "region": "near_bottom_r_ge1",
+      "points": 2003956.0,
+      "complex_relative_L2_FFP": 4.956590338589456E-05,
+      "max_absolute_complex": 7.848812269182755E-05,
+      "max_complex_over_C_envelope": 0.00029390648732277277,
+      "max_effective_phase_rad": 0.00023773970753569623,
+      "phase_support": 2003956.0,
+      "TL_difference_p95_dB": 0.0004128991603640237,
+      "within_same_solver_gate_diagnostic_only": true
+    },
+    {
+      "region": "axis_r_ge1",
+      "points": 10782,
+      "complex_relative_L2_FFP": 2.15230255971473E-05,
+      "max_absolute_complex": 2.5262755995584063E-05,
+      "max_complex_over_C_envelope": 9.619759594860256E-05,
+      "max_effective_phase_rad": 0.0007918901182341564,
+      "phase_support": 10776,
+      "TL_difference_p95_dB": 0.0004038201975472474,
+      "within_same_solver_gate_diagnostic_only": true
+    },
+    {
+      "region": "source_vicinity_r_lt1",
+      "points": 6244,
+      "complex_relative_L2_FFP": 1.597823303518967E-05,
+      "max_absolute_complex": 0.00011746796835164078,
+      "max_complex_over_C_envelope": 7.951091339398344E-05,
+      "max_effective_phase_rad": 7.13434949792718E-05,
+      "phase_support": 6244,
+      "TL_difference_p95_dB": 0.00023721032071051705,
+      "within_same_solver_gate_diagnostic_only": true
+    },
+    {
+      "region": "central_abs_x_le1",
+      "points": 450220,
+      "complex_relative_L2_FFP": 1.7737541213882988E-05,
+      "max_absolute_complex": 0.00011746796835164078,
+      "max_complex_over_C_envelope": 0.0008058975477671401,
+      "max_effective_phase_rad": 0.011208029683612947,
+      "phase_support": 449974,
+      "TL_difference_p95_dB": 0.0015203958383466637,
+      "within_same_solver_gate_diagnostic_only": true
+    }
+  ],
+  "brightness": [
+    {
+      "depth_m": 1000,
+      "Bellhop_axis_minus_r01_TL_dB": -0.0003453435416732803,
+      "FFP_axis_minus_r01_TL_dB": 2.4890443551600092E-05
+    },
+    {
+      "depth_m": 3000,
+      "Bellhop_axis_minus_r01_TL_dB": -0.0013219694972683648,
+      "FFP_axis_minus_r01_TL_dB": -9.616776213782396E-05
+    },
+    {
+      "depth_m": 4000,
+      "Bellhop_axis_minus_r01_TL_dB": -0.0012551343986244496,
+      "FFP_axis_minus_r01_TL_dB": -5.648516999634686E-05
+    }
+  ],
+  "meta": {
+    "C_file": "C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_rotated_fig12b\\20261116_linux_C_01\\remote_evidence\\20261116_linux_C_01\\C_resume\\assembly\\result.mat",
+    "FFP_file": "C:\\Users\\ASUS\\.codex\\worktrees\\munk_ffp_20261112\\Explain\\results\\validation\\munk_ffp_5000m\\20261112_full_01\\J07.mat",
+    "C_sha256": "d1931b853a037cdf593c5bfee67a946f051281fe8a426bac2d0dfc8aa9a275b9",
+    "FFP_sha256": "8e123af0beff9904289a5419fdb82f74473beda075792b7b2f9819bd133ce3be",
+    "source_reference": "Fixed1m: Bellhop -conj(native), FFP4pi Green; no gain/phase fit",
+    "differences": [
+      "Bellhop Q-linear SSP versus FFP midpoint constant layers; both .625m sampling",
+      "Bellhop finite N16 Gaussian/ray field versus full layered-wave spectrum including evanescent content",
+      "Bellhop beam-count D convergence and full fluid-DtN comparison remain unqualified"
+    ],
+    "native_grid": [
+      10981,
+      201
+    ]
+  },
+  "elapsed_s": 6.4939009,
+  "new_FFP": 0,
+  "ABC_recomputed": 0,
+  "prior_remaining_s": 135.83157788353276,
+  "remaining_budget_s": 129.33767698353276,
+  "same_solver_window_exceeding_regions_diagnostic_only": 0,
+  "classification_scope": "No independent-method acceptance gate defined; .02/.02/.05 is same-solver diagnostic window only"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "RAY_ONLY_COMPLETE",
+  "groups_complete": 6,
+  "native_jobs_launched": 5,
+  "reused_ray_jobs": 1,
+  "receiver_pressure_evaluations": 0,
+  "ABC_recomputed": 0,
+  "new_FFP": 0,
+  "max_coordinate_roundtrip_m": 4.5474735088646412E-13,
+  "elapsed_s": 8.794829,
+  "remaining_budget_s": 72.020278241470365,
+  "source": "Original C frozen configs; only run_type R and beam_count3; no field integration",
+  "error": ""
+}

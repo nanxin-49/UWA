@@ -1,5 +1,21 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+**2026-11-16 C/FFP共点比较：** [报告](reports/bellhop_C_FFP_common_point_2026-11-16.md)、[统一色标图册](results/visualization/bellhop_C_vs_FFP/20261116_post02/index.html)。原网格无拟合，全场复L2=2.99e-5；近底一致、上部有局部残差，均不支持贯通中央亮带。完整反射声线在RAM启动门停止，PID0，保留真实直达/命中点图及缺口；不D/新FFP或提交。
+
+**2026-11-16 C组39项完成待审：** [中文报告](reports/bellhop_rotated_C_complete_linux_2026-11-16.md)、[A/B/C图册](results/visualization/bellhop_rotated_fig12b/20261116_ABC_linux_01/index.html)。Windows30复用+Ubuntu9新增，截断和步长五区原门均通过，原预算余155.83s；D/新FFP未启动，不提交/推送/合并。
+
+**2026-11-16 Bellhop远程预检：**[报告](reports/bellhop_rotated_remote_preflight_2026-11-16.md)。远程MATLAB健康和9项返回SHA通过；缺gfortran停止，无数据迁移/编译/新求解，C30/39保持，不自动安装或D/FFP。
+
+**2026-11-16 C恢复前再次RAM停止：** [报告](reports/bellhop_rotated_C_resume_ram_stop_2026-11-16.md)。SHA预检通过后RAM门失败，本轮native0、C保持30/39，原预算余859.17s。不自动重试、D、新FFP或提交。
+
+**2026-11-15 Bellhop C组资源停止：**C组30/39在RAM启动门停止，复用A/B未重算；[中文停止报告](reports/bellhop_rotated_C_stopped_2026-11-15.md)。未取得完整C收敛资格，余9项及ABC图待后续人工审查；不自动重试、D、新FFP或提交。
+
+**2026-11-15 Bellhop B组完成：**[中文报告](reports/bellhop_rotated_B_complete_2026-11-15.md)、[A/B并排图册](results/visualization/bellhop_rotated_fig12b/20261115_AB_comparison_01/index.html)。Q加密是唯一变量，B39项及B截断/A→B原门通过；A数据保持，C/D/FFP未执行，停止人工审查，不提交/推送/合并。
+
+**2026-11-15 Bellhop A组完成：**[中文阶段报告和B/C/D成本](reports/bellhop_rotated_A_complete_2026-11-15.md)、[初步离线图册](results/visualization/bellhop_rotated_fig12b/20261115_A_preliminary_01/index.html)。39/39项，31复用+8新增，截断/原始重建/海面门通过；后续数值收敛与FFP未执行，停待人工审查，不提交或自动启动下一组。
+
+**2026-11-15 Bellhop性能审查：**[中文报告](reports/bellhop_rotated_performance_review_2026-11-15.md)。独立平面排除优化保持第13阶最小例反射状态/复声压逐字节一致；一次实测1.107倍，重复计时在RAM门停止。未恢复完整计算，未提交或推送。
+
 **2026-11-14 Bellhop REAL8接收距离最小验证：**[中文报告](reports/bellhop_rotated_receiver64_minimal_2026-11-14.md)。10981原坐标逐位保留，第13阶101束3列唯一新求解及保存数据审计通过；原25分量保留。完整A、第14–16阶和B/C/D仍暂停等待人工审查。
 
 **一段时间没接着做？先看这里：**[项目进度文字版](reports/project_progress.md)按“做了什么、说明什么、还差什么”串起七条仿真/验证工作线；[本地离线看板](results/visualization/project_progress/index.html)提供相同内容和可展开的证据入口。[持续更新说明](reports/project_progress_maintenance.md)给出维护方式。看板由 `reports/project_progress.json` 生成，随影响进度的项目任务更新。
@@ -191,3 +207,11 @@ Rx仍为3 m。当前独立绘图入口为 `generate_bellhop_100m_source1m_visual
 旋转Fig12b完整四组网格计划已冻结但未执行；见[本地完整场预算与审批边界](reports/bellhop_rotated_fig12b_full_budget_2026-11-14.md)。
 
 旋转完整预算03已获批，A组部分运行被RAM门停止；接续与后处理证据见[执行记录](reports/bellhop_rotated_fig12b_execution_2026-11-14.md)。
+
+
+
+
+
+
+最新Bellhop状态（2026-11-16）：A/B/C与已有FFP共点比较已完成；本次补齐6类18条真实声线、旋转及物理坐标PNG/FIG/HTML，[报告](reports/bellhop_C_rays_remote_complete_2026-11-16.md)。18映射/102FIG/298返回SHA通过；仅R导出隔离修复，不重算原场。D/底DtN/论文参数仍待审，停止计算。上述早期状态保留为历史。
+2026-11-16版本封存：[提交范围、原始数据边界与推送回执说明](reports/bellhop_rotated_publication_2026-11-16.md)。MAT/FIG和原始求解数据留在完整工作树，Git保存源码、精简审计和PNG图册。
