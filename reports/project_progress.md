@@ -51,7 +51,7 @@ P22保存结果与新Ubuntu最小项目基线保留其历史复核范围；M1仍
 
 **还差什么：**C1网格12、C2自求积64、C3网格14、C4窗口70、最终参考分辨率及真实Linux后台完整链尚未执行。本轮不宣称这些结果PASS；当前等待用户手动启动，不是继续受旧1100秒/730秒门拦截。
 
-**下一步：**用户按reports/r1_bie_manual_execution_2026-11-16.md手动上传并启动；可自行查状态、停止后回收/核SHA或手动恢复，脚本必须跳过已通过阶段。完成R1后仍停下审查，不自动进入R2。
+**下一步：**使用runtime修复新包20261116_r1_bie_manual_runtime_fix_02手动启动；旧失败session保留，C1–C4仍未运行。详见reports/r1_bie_runtime_json_fix_2026-11-16.md。
 
 **技术范围：**固定二维、4 kHz、984 项 Gaussian 发射场；原九点与 411 点接收线分别统计。S4=CORE_COMPLETE，S3A=3/3，S3B 因预算未运行；PHI_PLUS90 的混合平台 BIE 求解差未直接定界。 活塞quicklook：c1500 m/s、rho1025 kg/m³、Tx100 m/Rx3 m、峰值振速1 mm/s，W20/10/5 cm；20 cm三频-3 dB全宽112/67/49°。
 
@@ -84,6 +84,7 @@ P22保存结果与新Ubuntu最小项目基线保留其历史复核范围；M1仍
 - [缓存续行最终检查点（C1–C4未派发）](../results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/checkpoint.json) · `results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/checkpoint.json`
 - [R1-BIE手动启动、状态、恢复、回收与新执行政策](../reports/r1_bie_manual_execution_2026-11-16.md) · `reports/r1_bie_manual_execution_2026-11-16.md`
 - [手动包无声学dry-run回执（不是C1–C4数值PASS）](../results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/receipt.json) · `results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/receipt.json`
+- [runtime配置根因修复、新目录与测试](../reports/r1_bie_runtime_json_fix_2026-11-16.md) · `reports/r1_bie_runtime_json_fix_2026-11-16.md`
 
 ### 二维宽带与多模型参考
 
@@ -413,6 +414,10 @@ P22恢复入口与新机最小基线已提交为5d2e9f8。按用户要求暂缓1
 ### 2026-11-16 · 手动C1–C4执行包及断点恢复准备完成（未求解）
 
 按用户指令准备批处理、后台启动/状态/回收工具、阶段密度/411复场/计时/日志/资源/SHA与独立审计检查点；C0仅导入，C1–C4原顺序和1e-4门保留。取消旧1100秒累计及730秒预测停止，仍单进程单线程、无parpool、30%RAM和异常停止。包35项SHA、PowerShell/Bash与7声学入口哨兵dry-run通过，恢复/篡改拒绝测试通过；本轮SSH连接、声学计算均0。等待用户手动启动，真实C1–C4及Linux完整链未实跑，不升级参考资格或R2。
+
+### 2026-11-16 · 手动包runtime.json启动配置修复（未求解）
+
+2026-11-16 — runtime.json故障修复：移除有printf重定向歧义的AWK最大值，验证整数后改Bash比较；保留starting/initial/baseline独立字段，Python标准库序列化并立即解析校验，异常在MATLAB前退出78。29项本地测试与新包无声学dry-run通过；新包/新目录和命令见 reports/r1_bie_runtime_json_fix_2026-11-16.md。未连接SSH/未运行C1–C4，旧失败session/结果不改。
 
 ## 重新开始先做什么
 

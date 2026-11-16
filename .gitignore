@@ -39,6 +39,9 @@
 !/scripts/validation/support/archive_r1_bie_manual.sh
 !/scripts/validation/support/manage_r1_bie_manual.ps1
 !/scripts/validation/support/prepare_r1_bie_manual_package.ps1
+!/scripts/validation/support/r1_bie_runtime.sh
+!/scripts/validation/support/r1_bie_runtime_json.py
+!/scripts/validation/support/test_r1_bie_runtime.sh
 
 # Re-generable build, compiler, toolchain, and Python cache content must stay
 # ignored even though the repository-wide source/documentation rules above

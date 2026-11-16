@@ -34,7 +34,8 @@ $code=@('scripts/validation/run_r1_bie_manual.m','scripts/validation/support/r1_
     'scripts/validation/support/piston_independent_angular_spectrum_vertical.m',
     'scripts/comparisons/run_piston_pm_r1_job.m','scripts/validation/audit_piston_pm_r1.m',
     'scripts/reporting/render_piston_pm_r1.m','scripts/validation/support/launch_r1_bie_manual.sh',
-    'scripts/validation/support/archive_r1_bie_manual.sh','scripts/validation/support/manage_r1_bie_manual.ps1')
+    'scripts/validation/support/archive_r1_bie_manual.sh','scripts/validation/support/manage_r1_bie_manual.ps1',
+    'scripts/validation/support/r1_bie_runtime.sh','scripts/validation/support/r1_bie_runtime_json.py')
 foreach($f in $code){Copy-Item -LiteralPath (Join-Path $project $f) -Destination (Join-Path $package code)}
 Copy-Item -LiteralPath (Join-Path $parent 'common.mat') -Destination (Join-Path $package common.mat)
 $map=@{'jobs/bie_coarse/data.mat'='C0_data.mat';'jobs/bie_coarse/points.csv'='C0_points.csv';

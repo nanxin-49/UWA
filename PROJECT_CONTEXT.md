@@ -1,5 +1,7 @@
 # PROJECT_CONTEXT.md
 
+最新runtime配置故障修复与新任务目录见 [修复报告](reports/r1_bie_runtime_json_fix_2026-11-16.md)。本轮仅本地验证，未启动远程计算。
+
 ## Purpose
 This file is the append-only project log and long-term model memory for the
 MATLAB vertical underwater acoustic channel and MPSK communication project.

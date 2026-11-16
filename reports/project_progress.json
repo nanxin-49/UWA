@@ -36,7 +36,7 @@
       "done": "以下模型比较分别保留其Gaussian或20/10 cm原始声源条件，不能合并当作10 cm PM资格。PE、边界积分方程（BIE，独立数值参考）和完整 Kirchhoff 积分近似（FullFK）的同源比较已完成。平面和三档正弦海面的九点结果齐全，三个预定 PM 海面实现也完成了比较；相关表格、图和历史审计均有保存。 新增严格二维速度孔径积分三频自由场，保存同振速绝对复Pa、接收线、近场/整体场和方向图；独立积分/角谱与保存数据检查无失败。 远端R2025b Update1及实际双进程已验证，源解析梯度对独立角谱/差分/速度/相位通过；BIE/FullFK输入差0，Gaussian标量默认差0；123项部分产物回传SHA匹配。 许可恢复后P0六组、P1自由/平面/弱C2正弦实际完成；最终独立审计0失败，PNG/FIG/MAT/CSV/日志/SHA回传。 2026-11-15完成本轮R1范围内的PS窗口/网格/步长、FullFK求积/范围、10 cm BIE L60/ppw10/qa96一层及10类已执行保存数据独立检查；四张最终PNG/FIG、逐点复场/幅相/残差CSV、MAT、SHA、日志和停止检查点齐备。 2026-11-16新增默认关闭缓存、阶段计时和阶段/累计时间及RAM中止门；4组小对照和C0完整回放通过，独立C0密度接收重建与MAT/CSV通过，65个回传文件SHA匹配。 最新准备完整MATLAB入口、Linux后台启动/状态/回收脚本、Windows管理及打包工具，包35项SHA、PowerShell/Bash检查和带7个声学入口哨兵的dry-run通过；恢复状态机覆盖fresh、audit-only、skip、前序变化、篡改、孤立数据拒绝。",
       "meaning": "C0和缓存数值等价性沿用已验证证据；新手动包已完成输入/代码及控制流程准备，不能由dry-run升级C1–C4或R1参考资格。历史PS/FullFK暂定误差和原数值失败保持原样，生产物理默认不改。",
       "gap": "C1网格12、C2自求积64、C3网格14、C4窗口70、最终参考分辨率及真实Linux后台完整链尚未执行。本轮不宣称这些结果PASS；当前等待用户手动启动，不是继续受旧1100秒/730秒门拦截。",
-      "next": "用户按reports/r1_bie_manual_execution_2026-11-16.md手动上传并启动；可自行查状态、停止后回收/核SHA或手动恢复，脚本必须跳过已通过阶段。完成R1后仍停下审查，不自动进入R2。",
+      "next": "使用runtime修复新包20261116_r1_bie_manual_runtime_fix_02手动启动；旧失败session保留，C1–C4仍未运行。详见reports/r1_bie_runtime_json_fix_2026-11-16.md。",
       "details": "固定二维、4 kHz、984 项 Gaussian 发射场；原九点与 411 点接收线分别统计。S4=CORE_COMPLETE，S3A=3/3，S3B 因预算未运行；PHI_PLUS90 的混合平台 BIE 求解差未直接定界。 活塞quicklook：c1500 m/s、rho1025 kg/m³、Tx100 m/Rx3 m、峰值振速1 mm/s，W20/10/5 cm；20 cm三频-3 dB全宽112/67/49°。",
       "saved_results": "正式结果、表格和图件入口存在。 活塞run 20261111_2d_strip_01：MAT、CSV、8张交付PNG/FIG、日志、SHA和检查点。 本轮20261112_remote_p0p1_01保存复MAT、逐点与粗细接收线CSV、五组最终PNG/FIG、日志、资源和SHA。 R1结果位于results/comparisons/piston_2d_pm/20261115_r1_seed260001_01/，137个远端交付文件SHA匹配，最终四图已实际查看。 缓存新run results/comparisons/piston_2d_pm/20261116_r1_bie_cache_01/保存4组对照MAT、C0原生密度/411点场与CSV、8阶段计时、成本决策、独立审计、真实日志/退出码及SHA。本轮不新增重复物理图。 手动包results/comparisons/piston_2d_pm/20261116_r1_bie_manual_ready_03/；本地无声学验收results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/。",
       "historical_audit": "S4 保存证据审查通过并保留限制；本次没有重做数值审计。 本轮仅核旧源代码/检查点中的半径定义与SHA，不重演旧声学资格。 本次活塞保存数据独立重算、边界密度重建、FIG逐曲线及传输审计已执行。 2026-11-14本次仅核配置与导航，未重做MAT/CSV、SHA数值链或FIG审计；result_date及历史审计结论不变。 R1本轮10类已执行检查0失败，另外4项参考资格检查未执行；源/密度/Green核/FullFK双项/MAT-CSV重建通过。最终12条误差线一致，两图重导出像素差0。BIE参考未完成资格，不以小残差或退出0替代收敛。 2026-11-16本轮小矩阵/右端/密度/复场/边界对照差0，C0对历史差0，独立密度重建7.69e-15、MAT/CSV最大6.91e-14 Pa；65文件SHA相同。C1–C4与参考经验分辨资格未执行，原STOP仍保留。 本次只对脚本/输入/恢复状态机作本地检查，声学调用与SSH连接0。最终dry-run Code Analyzer 0消息、七个声学入口哨兵有效；C1–C4真实数值验收尚未执行。",
@@ -186,6 +186,13 @@
           "label": "手动包无声学dry-run回执（不是C1–C4数值PASS）",
           "path": "results/validation/r1_bie_manual_preparation/20261116_ready_03_dry_run/receipt.json",
           "kind": "checkpoint",
+          "revision": "",
+          "expected_exists": true
+        },
+        {
+          "label": "runtime配置根因修复、新目录与测试",
+          "path": "reports/r1_bie_runtime_json_fix_2026-11-16.md",
+          "kind": "report",
           "revision": "",
           "expected_exists": true
         }
@@ -836,6 +843,13 @@
       "date": "2026-11-16",
       "title": "手动C1–C4执行包及断点恢复准备完成（未求解）",
       "text": "按用户指令准备批处理、后台启动/状态/回收工具、阶段密度/411复场/计时/日志/资源/SHA与独立审计检查点；C0仅导入，C1–C4原顺序和1e-4门保留。取消旧1100秒累计及730秒预测停止，仍单进程单线程、无parpool、30%RAM和异常停止。包35项SHA、PowerShell/Bash与7声学入口哨兵dry-run通过，恢复/篡改拒绝测试通过；本轮SSH连接、声学计算均0。等待用户手动启动，真实C1–C4及Linux完整链未实跑，不升级参考资格或R2。",
+      "workstream_id": "two-dimensional"
+    },
+    {
+      "id": "r1-runtime-json-fix-20261116",
+      "date": "2026-11-16",
+      "title": "手动包runtime.json启动配置修复（未求解）",
+      "text": "2026-11-16 — runtime.json故障修复：移除有printf重定向歧义的AWK最大值，验证整数后改Bash比较；保留starting/initial/baseline独立字段，Python标准库序列化并立即解析校验，异常在MATLAB前退出78。29项本地测试与新包无声学dry-run通过；新包/新目录和命令见 reports/r1_bie_runtime_json_fix_2026-11-16.md。未连接SSH/未运行C1–C4，旧失败session/结果不改。",
       "workstream_id": "two-dimensional"
     }
   ],
