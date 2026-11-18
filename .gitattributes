@@ -2,6 +2,9 @@
 *.txt text eol=lf
 *.md text eol=lf
 
+# Linux workflow launchers must remain executable by Bash after checkout.
+scripts/validation/support/*.sh text eol=lf
+
 # Preserve source-model comparison evidence exactly as hashed in checkpoints.
 results/comparisons/source_model_minimal/run_20261030_02/** -text
 results/comparisons/source_model_minimal/piston_frequency_20261030_01/** -text

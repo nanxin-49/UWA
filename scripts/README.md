@@ -1,5 +1,25 @@
 # 脚本与验证运行索引
 
+**2026-11-18 K1手动包准备：** `validation/run_k1_pm_case(case_root)`默认dry-run，真实模式仅由用户手动启动器进入；`comparisons/run_k1_piston_pm_job`是原R2公式保持的U_PM/N适配；`prepare_k1_pm_anchor`核严格历史锚点；`validate_k1_pm_preparation`只做无求解测试；`reporting/summarize_k1_pm_cases`封存后生成七条件报告/图。support中的prepare/manage_k1_pm.ps1、launch_k1_pm.sh及Python控制器处理冻结1×1资源门/身份/恢复/回收。support/test_k1_pm_native_linux.py为独立有界非声学Linux诊断，11项原生锁/身份/信号检查通过；不调用正式启动器。最终05包待用户启动，原生产/数值门不改。[资源策略](../reports/k1_resources_strategy_2026-11-18.md)、[测试](../reports/k1_preparation_validation_2026-11-18.md)、[命令](../reports/k1_manual_commands_2026-11-18.md)。
+
+**2026-11-18 K0回收保存审查完成：** `validation/review_pm_wind_cutoff_saved(source_dir,new_absolute_output_dir)`在现有MCP独立重审45组MAT/CSV/Fourier/C2/谱/理论/采样及原FIG117条曲线，仅复制保存数据，不生成新海面/求声场；`validation/support/review_pm_wind_cutoff_retrieval.ps1`只读核574项SHA、配置、检查点和配对CSV；`reporting/render_pm_wind_cutoff_review(source_dir,numeric_review_dir,new_absolute_output_dir)`输出新PNG/FIG、固定U/固定N/交互CSV和七条件K1几何表。0失败，原回收SHA保持；K1方案选定但执行禁用。[审查报告与K1矩阵](../reports/pm_wind_cutoff_k0_review_2026-11-18.md)。
+
+**2026-11-17 PM风速—截止K0/K1准备：** `experiments/run_pm_wind_cutoff_k0(absolute_package_root)`默认preflight，正式execute只允许冻结45组、Ubuntu R2025b单线程；`build_pm_wind_cutoff_surface`为隔离研究生成器，`validation/audit_pm_wind_cutoff_k0_case`审计保存MAT/CSV/Fourier/C2/谱/理论/采样，`reporting/render_pm_wind_cutoff_k0`生成PNG/FIG/CSV。`experiments/run_pm_wind_cutoff_k1()`只返回候选方案，传任何参数均拒绝求解。`validation/validate_pm_wind_cutoff_preparation`仅本地TEST_ONLY；support中的`prepare/manage_pm_wind_cutoff_k0.ps1`和`launch_pm_wind_cutoff_k0.sh`负责手动包/启动/单次状态/回收，Python仅基础设施。最终05包位于`results/experiments/pm_wind_cutoff/preparation_20261117_05/`；正式K0、SSH及K1本轮未执行，生产未改。[方案](../reports/pm_wind_cutoff_k0_k1_plan_2026-11-17.md)、[本地测试](../reports/pm_wind_cutoff_preparation_validation_2026-11-17.md)、[用户命令](../reports/pm_wind_cutoff_manual_commands_2026-11-17.md)。
+
+**2026-11-17 三Seed海面补图（仅几何）：** `reporting/render_r2_three_seed_surfaces(new_absolute_output_dir)`读取R1/R2封存PM系数，绘制同尺度叠加及单Seed高程eta=-z_s，标记原C2过渡带；核原几何、独立Fourier/C2、FIG六曲线和两次PNG零像素差。输出PNG/FIG/MAT/CSV/来源SHA，不声学求解、不改既有封存。见[补图说明](../reports/r2_three_seed_surface_visualization_2026-11-17.md)。
+
+**2026-11-18 D0正式回收审查完成：** `validation/review_d0_saved(absolute_source_dir,new_absolute_output_dir)`只核保存数组/CSV/独立保存角谱/差分/DFT/误差分解与原FIG，不调用声源或传播器；`support/review_d0_retrieval.ps1`核传输/manifest/阶段SHA、真实退出码和保存远端门；`reporting/render_d0_saved_review(saved_data_cells,new_absolute_output_dir)`只绘保存数据的8类PNG/FIG并重开核验。150项SHA保持、165远端门/127本地检查、原60/新70曲线通过；回收与分析在results/experiments/d0_incident_depth/、results/validation/d0_retrieval/和results/visualization/d0_incident_depth/。正式计算由用户此前手动完成，本轮无新声学/SSH/Git。[研究报告](../reports/d0_incident_depth_review_2026-11-18.md)。
+
+**2026-11-18 D0入射复场准备（历史准备记录）：** `experiments/run_d0_incident_depth(absolute_package_root)`默认只预检，显式execute由远端R2025b单线程监督器门控；`d0_incident_diagnostics`只做研究场诊断，`validation/audit_d0_incident_case`独立审计，`support/d0_incident_spectrum_reference`复用P0被积函数的分段求积，`reporting/render_d0_incident_depth`只从保存数据生成6类PNG/FIG/表。`validation/validate_d0_preparation`仅合成夹具；support内prepare/manage_d0_incident_depth.ps1、launch_d0_incident_depth.sh、d0_package.py/d0_supervisor.py及test_d0_*提供冻结包/手动UploadAndStart/Status/Fetch与离线测试。最终06包位于results/experiments/d0_incident_depth/，该准备时刻正式场未运行，不改生产/R1/R2/K0。[方案](../reports/d0_incident_depth_plan_2026-11-18.md)、[测试](../reports/d0_incident_depth_preparation_validation_2026-11-18.md)、[命令](../reports/d0_incident_depth_manual_commands_2026-11-18.md)。
+
+**2026-11-17 R2保存数据最终收尾（不求解）：** `validation/closeout_r2_saved_seed(case_root,seed,mode)`分numeric/figures/seal三段，复用原C0–C4保存密度，完整独立数值审计、原FIG核对及新FIG/PNG零差；`reporting/render_r2_stable_saved`使用显式轴位置/刻度及原画布，`validation/audit_r2_final_figures`独立逐点核曲线并恢复FIG原尺寸重导两次，仍像素差0。`reporting/summarize_r2_qualified_closeout(case_root)`只在两个新Seed封存校验后生成三Seed正式/快照分离的指标和图；准备/来源复核与封存在`validation/support/prepare_r2_saved_closeout.py`、`seal_r2_saved_closeout.py`。全部路径显式、输出须新目录，先setup_vertical_project；哨兵禁止求解，临时单线程并恢复环境。R2两Seed125/84文件新封存通过，原260002 FAIL保留。见[最终报告](../reports/r2_saved_closeout_final_2026-11-17.md)及`results/comparisons/piston_2d_pm/r2_saved_closeout_20261117_01/`。
+
+**2026-11-17 R2 seed260002回收诊断（只读保存数据）：** `validation/audit_r2_seed260002_saved(source,new_review_dir,mode)`要求既有回收SHA准入回执，支持numeric、figures、renderer-replay三段；只在新目录核C3/C4/综合/最终数值、12条FIG及导出状态，求解入口哨兵遮蔽，临时单线程并恢复路径/线程。原229/239回收链有效，260002原PNG像素FAIL保留，本地数值0失败/原renderer重放通过；不SSH/Resume/新求解。见[诊断](../reports/r2_seed260002_retrieval_diagnosis_2026-11-17.md)。
+
+**2026-11-17 R2有限跨Seed准备（未求解）：** `validation/run_r2_pm_seed(package_root,'dry-run')`默认只核冻结SHA/配置/几何，正式run只由包内Linux launcher在资源/排他锁下调用；`comparisons/run_r2_piston_pm_job`是R1 PS/完整FullFK原公式的冻结输入适配，所有BIE/源/独立核复用原实现。每Seed新建C0–C4，C3参考，原v2/数值门不变，失败停且不自动重求解。`validation/validate_r2_pm_preparation(package_root,new_output_dir)`提供带7声学入口哨兵的MATLAB轻量验收；`reporting/render_r2_pm_seed`保存PNG/FIG并核12条误差线/重导像素；`reporting/summarize_r2_pm_fields({seed260001_work,seed260002_work,seed260003_work},new_output_dir)`只分析已审计保存场，三Seed按260001/260002/260003顺序，输出复L2/幅相/相位贡献/逐点/互斥分段能量及排序。先setup_vertical_project后用显式绝对路径，可从任意当前目录调用，不cd。
+
+手动打包/上传/启动/查询/恢复/回收位于`validation/support/prepare_r2_pm_package.ps1`和`manage_r2_pm_seed.ps1`；交付03包支持两个Seed各单线程并行、共享30%RAM/24GiB准入，同Seed重复拒绝。当前MCP不可连接，本轮MATLAB验收/Analyzer和Linux原生锁测试未运行，已列入实际启动前必需检查；本轮仅静态/脚本dry-run，不SSH、不求解。见[方案](../reports/r2_pm_multiseed_plan_2026-11-17.md)、[本地验证](../reports/r2_pm_preparation_validation_2026-11-17.md)和[手动命令](../reports/r2_pm_manual_commands_2026-11-17.md)。
+
 **2026-11-16 R1回收审查：**`validation/audit_r1_bie_v2_retrieval(source,out)`在回收SHA核验记录`out/retrieval_integrity.json`有效后，检查旧/v2/C4/最终封存，在新工作区重做保存密度/Green/MAT-CSV/经验分辨率审计、12条FIG曲线与保存PNG对核验，输出分区/逐点/相位能量及条件Gaussian分析。仅使用已保存数据，求解器哨兵禁止新密度/PS/FullFK求解，临时单线程并恢复路径/线程；不改回收源。[R1审查与结论](../reports/r1_bie_v2_final_review_2026-11-16.md)。
 
 **2026-11-16 v2 Status客户端修复：**当前`support/manage_r1_bie_c4_continuation.ps1 -Action Status`通过`invoke_r1_bie_status_stdin.ps1`向固定任务发送只读`status_r1_bie_c4_session.sh`，区分初始化/求解/退出/未知，不把脚本拼进`bash -c`，不修改已封存04包、不启动/重启求解。7项原生标准输入及12种状态回归和远端只读调用通过。用户原session已退出0、检查点报告完成、C4调用1次；完整数值结果待回收审查。[修复与命令](../reports/r1_bie_v2_status_fix_2026-11-16.md)。
@@ -185,7 +205,6 @@
   [BIE报告](../reports/deepsea3d_bie_minimum_report.md)、[重建报告](../reports/deepsea_frequency_reconstruction_report.md)、[协议](../reports/deepsea_bie_reconstruction_protocol_2026-10-14.md)。
   数据`results/validation/deepsea_bie_reconstruction_20261014/`。BIE未过参考门停止，B仅已知路径解析重建通过；G1 OPEN/WP2=false。
 
-
 - `validation/validate_deepsea3d_preconditioner_decision.m`：右Neumann P=2I−B的小规模线性/显式矩阵诊断与70%可用RAM预检。
   `validation/validate_deepsea3d_preconditioner_checkpoint.m`：同一冻结B下flat→dual→quarter→pm的唯一干预，96内步/640 B调用/600s单案/3600s总核，拒绝覆盖。
   `support/solve_deepsea3d_right_neumann`与`deepsea3d_right_neumann_action`只属于验证；旧求解器不改。
@@ -193,7 +212,6 @@
   `support/audit_deepsea_two_track`重算新场原始离散残差并核对物理配置，`estimate_deepsea3d_bie_cost`仅非对角算术微基准与成本外推。
   [A报告](../reports/deepsea3d_preconditioner_decision_report.md)、[B报告](../reports/deepsea_singlelink_readiness_report.md)、[协议](../reports/deepsea_two_track_protocol_2026-10-14.md)。
   数据`results/validation/deepsea_two_track_20261014/`；A原PM失败并按规则停止，B确定性控制通过；G1 OPEN/WP2=false。无生产或旧基准更改。
-
 
 - `validation/validate_deepsea3d_mapped_direct.m`：无Taylor的t=1矩阵自由mapped Helmholtz原型。
   setup后flat→dual→quarter→pm→pm_restart12；拒绝覆盖，PM要求controls已过门。

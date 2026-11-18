@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 
-最新R1固定Seed回收结果已通过v2经验参考与保存数据审查，见[R1完整审查](reports/r1_bie_v2_final_review_2026-11-16.md)。PS/BIE复L2=15.9235%，FullFK/BIE=0.0747208%，均可分辨；本轮不启动R2。
+D0五深度入射复场已正式回收并完成保存审查；1490m幅度更平坦但大范围相位仍弯曲，局部平面波适用性取决于patch尺度，R1/R2反射误差不可直接外推。见[D0研究报告](reports/d0_incident_depth_review_2026-11-18.md)。K1及其他工作线维持各自范围与状态。
 
 ## Purpose
 This file is the append-only project log and long-term model memory for the
@@ -9,7 +9,87 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-16）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-18）
+
+### D0五深度正式回收与保存数据分析完成（2026-11-18，最新）
+
+用户已手动运行/回收 `results/experiments/d0_incident_depth/d0_incident_depth_20261118_01_retrieved_20261118_152730/`。唯一远端R2025b单进程单计算线程、五深度顺序；总152.710190s、MATLAB/监督器退出0/0，最低可用36.1135GiB（启动可用量95.5513%）、owned PID峰RSS1.69210GiB。回收tar与保留的远端归档文本SHA一致；150项回收manifest、28项冻结代码/输入及所有阶段链有效，本地审查前后SHA保持。165项远端门均通过，不以进程退出0替代数值证据。
+
+本轮现有MCP R2025b/PID22340只分析保存数组，44.7067s/127检查0失败，含MAT/CSV、独立保存角谱与梯度、16阶保存压力差分（最坏1.70e-8<1e-6）、粗糙几何配对/法向收缩、直接DFT/窗谱及平面波幅相误差分解，原6FIG60曲线一致。原图布局问题保留，另在 `results/visualization/d0_incident_depth/20261118_review_01/` 输出8张PNG/FIG/重开PNG，70曲线与轴标签核验，35.345s，均已目视检查。首次本地审查的空struct赋值失败保留，不改远端数值或门。两新.m Analyzer0。
+
+源条件保持0.10m二维无限均匀条带、峰值振速.001m/s、4kHz、c1500/rho1025、exp(-i omega t)/phase v2、向上理想背障板；Tx100/300/600/1000/1490m，平面±220m/dx.05、代表深度细.025。无海底/向下辐射/任何反射、SSP/吸收/流；1500m仅目标水深背景，不是完整真实深海环境。中心峰值压力25.1073→6.5044Pa；x200m幅降39.2106→.6514%，几何角63.4349→7.6450°、相对相位2071.0517→223.8975rad，轴上曲率.16755156→.01124507rad/m²。几何与有限孔径局部方向分别计算，本例最大差仅约3.21e-6°，不能一般性混为一谈。
+
+全线连续传播角谱模量随深度保持，固定440m Hann窗谱的95%绝对波数界12.3379→1.3423rad/m；窗谱变窄不代表源波束变窄，带外FFT功率不等于物理倏逝能量。1490m轴上1/5/10/40m局部切平面复相对误差.06904/1.60282/6.34597/89.64260%，由曲率相位主导；整线轴向平面替代误差138.816%，不能由幅度平坦认定全域平面波。离轴局部误差不必随深度严格单调。
+
+K0 U_PM6/N12/seed260001/L160/原C2/原系数与±50m5121样点在五深度完全相同，z_actual=-eta；深源相对粗糙面实际法线仍有最大约6.472°入射角，不能全部正入射。±200m粗糙支持仍不足，登记D1，不平铺外推。D0不能验证1490m PS/BIE/FullFK误差排序，R1/R2 Tx100m结论不得直接外推。见[研究报告](reports/d0_incident_depth_review_2026-11-18.md)与 `results/validation/d0_retrieval/`。本轮0新源/传播/反射求解、SSH/Git0，生产接口未改，无通信回归或vertical_comm_guide公式更新必要；不自动推进D1/K1/宽带。
+
+### D0不同发射深度入射复场：准备完成，正式数据未运行（2026-11-18，最新）
+
+用户本轮仅授权代码/静态检查/dry-run/远程包准备，不连接SSH、不启动远端或本地独立MATLAB、不计算正式声场。复用原活塞压力/解析梯度、P0独立角谱、phase contract v2与IO；不改生产接口、R1/R2/K0或其源条件。总宽0.10m、振速.001m/s、4kHz、c1500/rho1025，Tx100/300/600/1000/1490m顺序；均匀无吸收、向上理想障板。1500m仅背景水深，无海底或任何反射/镜像路径，不代表完整真实深海环境。
+
+冻结平面±220m/dx.05、100/1490m另.025细评价；保存绝对/复中心与正实空间RMS归一化场、梯度、相位曲率、几何/局部方向、连续传播/倏逝谱与窗FFT、平面波幅相误差分解。分段GL只适配原P0 Weyl被积函数，不新增源物理。K0正式U6/N12/260001原系数/L160/C2保持，粗糙辅助只用原abs(x)<=50m样点、z_actual=-eta；D1范围不足不平铺补齐。R1/R2 Tx100m反射误差不直接外推1490m。
+
+最终包 `results/experiments/d0_incident_depth/preparation_20261118_06/`，28项输入/代码manifest，tar SHA `a63dbbbd8f092fd8d85c04ceca8e3f8c65a23d21a6007f07aa5a9515cfd8c3dd`。用户PowerShell手动UploadAndStart/Status/Fetch；远端单R2025b -singleCompThread、无parpool、每深度独立检查点，30%初始可用RAM、总3600s/深度900s停止门，one-shot无重试/恢复。后台独立运行，Codex不持续轮询。
+
+本地既有MCP R2025b/PID22340最终准备56.3737486s、57项计数断言、0正式场调用；六类TEST_ONLY合成图60条FIG数据/轴标签一致，五个正式.m Analyzer 0消息；15基础设施/10传输mock通过。哨兵路径、mock参数、Bash默认路径和舍入显示的准备问题保留；深海角谱、梯度、真实采样及Ubuntu原生运行UNRUN。详见[D0测试](reports/d0_incident_depth_preparation_validation_2026-11-18.md)与[用户命令](reports/d0_incident_depth_manual_commands_2026-11-18.md)。无SSH/正式场/反射/宽带/通信/Bellhop/Git；生产方法未变，无通信回归或vertical_comm_guide公式更新必要。停止等待手动启动，Fetch后物理解读，不自动推进D1/K1。
+
+
+
+### K1资源评估与最终05手动包准备（2026-11-18，最新）
+
+**12:21补充：**补充2026-11-18 12:21原生诊断：11项锁/身份/真实信号通过，四个轻量子进程全部回收；资源快照可用约39GiB、PSI下降，当时只读准入通过。仍选1×1，正式Start和声学未运行。 旧10:41失败快照和native_06传输解析失败保留；新证据results/validation/k1_preparation/native_20261118_07/，35项回收SHA通过，归档SHA c826acdc8f15146e766f7dc0dd11069efdbe30e7181f31c3e3d26de852ea77a6。下段初次准备状态保持其时间边界。
+
+本轮获准只读SSH资源检查与有界非声学MATLAB诊断，实际28物理核/56线程、2NUMA、125.335GiB RAM、MemAvailable约45GiB，但Swap为0、memory/io full avg10约27.49%/38.24%；R2025b Update1基础MATLAB可启动，PCT未安装，license test true不能推断安装或额外并发席位。结合R1/R2 15阶段、BIE五层417–438s、整会话RSS峰3.606GiB，选择A：1进程×1线程顺序六面；估65–85min，12GiB/例和30%预留，1800s/例、10800s累计、压力与身份门。严格U6/N12源/系数/C2/相位/411坐标及资格SHA匹配（C2差1.11e-16m），只复用历史锚点；六新面各独立30次BIE层，原数值门/独立边界/PS和FullFK层级不改。
+
+最终包results/comparisons/pm_wind_cutoff_k1/preparation_20261118_05/，296项清单、15,535,616bytes，归档SHA ddc8abe83a30619852b4f0d6ab0a582dc5b2789ffbf4d29946092ddac57ecf60。24项MAT准备/7哨兵/六dry-run、32离线控制器和8传输mock通过；TEST_ONLY汇总14指标、5754逐点、56曲线及零像素重导通过，11文件Analyzer0。原始/C2谱差随输入/汇总保存，N40不称完整谱收敛。全程无新声学、未上传/启动K1、不改生产/数值门、不提交推送；当前资源快照未通过准入，包不自动排队/重试。用户手动上传/Start后独立完成并Status/Fetch，Codex不持续监控。原生Linux锁竞争/真实异常信号和K1声学资格尚未执行，准备PASS不代表数值PASS。
+
+### K0正式45组回收审查完成，K1矩阵选定但不执行（2026-11-18，最新）
+
+用户已手动运行并回传05包，来源`results/experiments/pm_wind_cutoff/pm_wind_cutoff_k0_20261117_05_retrieved_20261117_232303/`。原11-17远端唯一会话20261117T083430_196166、R2025b/Linux单计算线程，45组每组一次生成和独立审计，总122.424043s、实际MATLAB/监督器退出0/0；最低可用RAM43.853355GiB（基准95.47084%），owned PID峰RSS1.605824GiB。574项回收manifest、15项冻结代码/输入、全局/45组checkpoint与generated链通过，原文件前后SHA保持。tar远端指纹的独立文本未留存，本轮明确只报告内部manifest/冻结输入链与数值审查，不冒充再次取得远端tar来源认证。
+
+初次MCP无法attach，用户随后恢复已有会话；本轮临时单线程、本地复制保存数据，45组独立Fourier/C2/导数、Gaussian、MAT/CSV、功率/DFT/理论积分、8192/4096采样及额外曲率/极值指标全部通过，29.169903s、0失败。重建最大2.7478e-14，RMS采样相对最大6.7486e-7、最大坡度采样绝对差3.3535e-5，CSV/MAT汇总最大3.9790e-13；原FIG81+36条曲线独立匹配。6930项嵌套/720项跨U标准Gaussian比较一致，U6历史72项a/b精确一致，无RMS重归一化，继续称U_PM。
+
+新保存审查在`results/validation/pm_wind_cutoff_retrieval/numeric_20261118_01/`，初始文件审查在`20261118_01/`并保留当时MCP未运行快照。原图例遮挡数据，保留原图，另在`results/visualization/pm_wind_cutoff_review/20261118_01/`生成共用纵轴且图例外置的新PNG/FIG、54曲线重开通过并目视，8.714621s；保存108固定U、36固定N、18交互描述行和七条件K1表。N12→40高度/坡度/二阶导数响应倍率不同，全部九个Seed×U的N32→40二阶导数比1.19970–1.71139，不能把采样通过或高度覆盖高解释为物理谱截止收敛，更不能外推声学误差。
+
+利用Fourier幅度/导数界及C2 max|chi'|=1.875/8，给采样极值加dx/2的连续放宽，45组辅助平面z=-2m/接收z=3m连续净距分别≥1.158579/1.893890m；选定七组≥1.165773/1.902826m。这里只确认几何不相交，不认证传播或BIE收敛。K1保留预登记seed260001七条件：U6/N7/12/40及U5/U8×N12/40；原U6/N12为严格输入/资格匹配的历史控制，其余六面各独立BIE，PS/完整FullFK/411真实点、原全部层级和审计门。至少30次新BIE层的手动执行包、总/单例成本和RAM/异常/恢复门需另行明确，执行入口仍禁用。
+
+本轮无新海面生成、声学求解、SSH/远端启动、宽带/CIR/通信/Bellhop或Git提交推送。新增仅保存审查、清晰图件和文档，不改生产公式/API，故无通信回归或vertical_comm_guide实现更新必要。[完整审查与K1方案](reports/pm_wind_cutoff_k0_review_2026-11-18.md)是当前接续入口；不能因K0完成自动授权K1。
+
+### PM U_PM × 物理谱截止 K0/K1 设计与手动执行包准备（2026-11-17，最新）
+
+用户本轮只授权代码审查、设计、隔离K0执行包和本地测试；未授权SSH连接、远端MATLAB或正式声学计算。核PM两谱实现、固定系数与Gaussian helper及R1/R2/旧截止pilot，旧U6没有测量高度/平均时长证据，统一称U_PM。三Seed原12模的标准Gaussian可恢复，误差2.66e-15/5.33e-15/1.22e-14；U6原系数精确保留，扩展13–40模使用显式独立seed+1000000（固定28a再28b），命名legacy12_gaussian_extension_v1，不冒充旧N19扩展流。不同U重算Sk，共同随机数/嵌套N；不重归一化，不改变原系数、R1/R2或生产代码。
+
+K0=U_PM[5,6,8]×N[7,12,19,32,40]×Seed[260001..260003]、L160m、原42–50m C2；Kmax=N*2pi/L与8192/4096点几何采样及Nyquist分别保存和审计。新增仅研究入口/独立保存审计/绘图/PowerShell手动工具及顺序单线程远端启动器；不含声学求解调用。05包`results/experiments/pm_wind_cutoff/preparation_20261117_05/`，70656bytes，15项输入/代码manifest，归档SHA ac8e3845271f8c04662f76786010bfcc38f59aebab03a67d166a35e131b27970。23项原来源版本SHA保持，解包重定位通过。
+
+现有MCP R2025b Update6准备测试287断言、25.8638s；45种系数配对/嵌套和3个TEST_ONLY保存案例独立MAT/CSV/Fourier/C2/DFT/理论积分/采样审计通过，原型重建最大2.75e-14，RMS采样相对差最大4.83e-7。两类PNG/FIG重开27+12曲线一致，PNG已目视；7传输mock、13离线supervisor检查和Bash语法通过。7个Analyzer文件6个无消息，renderer1条性能info。显式日志修复MCP空diary，保留早期失败/准备候选。真实Linux锁/nohup/信号/许可和正式45组K0未运行，不能称远端数值PASS。
+
+K1只给待K0审查的seed260001七条件候选（U6/N12锚点、U6/N7/40、U5/8×N12/40）；每新海面独立BIE/PS/完整FullFK和411真实点，源拟固定0.10m/4kHz，禁止复用其他海面密度或旧pilot不同接收支持。需另定成本/资源门和明确授权，入口硬禁用，无自动后续Seed/宽带/CIR/通信/Bellhop。任务表/进度源已更新为准备完成；生产/相位/API未变，无需通信回归或改写vertical_comm_guide。交付[方案](reports/pm_wind_cutoff_k0_k1_plan_2026-11-17.md)、[测试](reports/pm_wind_cutoff_preparation_validation_2026-11-17.md)、[手动命令](reports/pm_wind_cutoff_manual_commands_2026-11-17.md)；本轮SSH/新声学求解/远端MATLAB/Git提交推送均0，停止等待用户手动K0。
+
+### R2两Seed保存审查与最终新封存完成（2026-11-17，最新）
+
+本轮用户明确授权复用两Seed原PS/FullFK和C0–C4保存解，在新独立工作区完成全面审查、稳定化图件及最终新封存。原R1/R2回收287/229/239项SHA前后核验不变。现有MCP R2025b Update6单线程、六求解/执行入口哨兵：两Seed五层密度/几何/rhs/接收/MAT-CSV及340/408/408/476/476平台支持+每层19 GL112独立点全部通过；综合PS Green、FullFK双项、源/梯度、411点误差与四敏感性/5倍分辨0失败，耗时59.700834/60.401083s。非单调上升12.02946%/15.77300%按原v2诊断保留，不改变任何数值门。
+
+新图采用显式坐标轴/刻度/画布；确认openfig可将1400高画布缩到1041，重开后恢复原1800×1400，避免画布裁切，并取消自动tiledlayout位置变化、将图例移到数据区外。两Seed原FIG24条、新FIG24条及汇总12条均与保存场一致。4张单Seed误差图和1张三Seed误差图，各两次独立重开PNG比较差0、布局一致，5图均目视查看。原260002 FAILED_STOPPED/退出1/144170像素失败及本轮失败候选原样保留，不降低像素门、不修改误差数据。
+
+正式新封存在`results/comparisons/piston_2d_pm/r2_saved_closeout_20261117_01/seed260002/`与`seed260003/`，分别125/84文件及独立closeout/numeric/figures/committed回执。R1既有正式审查按SHA复用；两R2完成本轮完整独立审计，三Seed正式六行指标与原保存六行快照资格分开。PS复L2为15.923498/15.705198/18.028300%，FullFK为0.0747208/0.0490634/0.0556842%，均高于经验分辨阈值；相位项约99.77%以上，PS/FullFK误差比213.1/320.1/323.8。排序保持但空间热点/分段能量明显变化；411点不作为独立重复，不能外推总体/其他频率/真实3-D孔径。
+
+交付最终报告[此处](reports/r2_saved_closeout_final_2026-11-17.md)，三Seed表/2466逐点/24分段能量/24共享端点范数/排序与图件在`results/comparisons/piston_2d_pm/r2_saved_closeout_20261117_01/three_seed_summary/`。新增仅研究保存审计、绘图与封存/资格汇总脚本，物理公式、生产/API、PM/接收坐标与原场未变；无需通信回归或修改vertical_comm_guide。新声学求解0、SSH0、远端MATLAB启动0、Git提交推送0。本限定R2已完成，停止；R3模型选择、W1/C1及Bellhop不自动授权。
+
+### R2回收诊断：260002图件门失败，保存数值复核通过（2026-11-17，最新）
+
+用户已手动运行并回收两Seed：260002/260003各229/239文件SHA通过，与03输入manifest、MODELS及独立C0–C4的签名/产物/审计链一致。260002原退出1，五次BIE均完成提交，失败在render_r2_pm_seed第70行F02 PNG零像素差断言；最终pointer/committed缺失。260003退出0、最终seal有效，本轮只核封存/保存回执，不代替其完整本地独立重审。两个进程重叠558s，RAM最低约90.95%共享基准，各组RSS峰3.490/3.606GiB，没有RAM停止。
+
+本轮恢复可用的现有MCP R2025b Update6，临时单线程保存审计36.28s：C3/C4各476平台中点支持及19 GL112独立点、源/梯度/rhs/BIE密度接收/PS直接Green/FullFK双项/MAT-CSV、四参考敏感性与5倍经验分辨均0失败。260002 PS/BIE复L2=15.7051975%、FullFK=0.0490634%，均可分辨、后者约小320倍；相位能量占99.9189404%/99.9591811%，411点相位均有效。非单调空间差上升12.02946%，按原获批v2作诊断，不是失败点。PS峰移到33.7890625m，Q4能量68.8164%，说明排序未反转但空间热点随Seed变化。证据只涵盖固定二维/单频/接收线，正式R2仍未关闭。
+
+原F02两PNG相同1800×1400却有144170像素差；12条原FIG误差曲线与保存场完全相同。本地图件探针观察导出期间布局更新，原冻结renderer在新工作区保存重放15.97s通过两组零像素差门；远端确切触发未完全定位，不以本地通过追改远端FAIL。新审查产物在`results/validation/r2_seed260002_review/20261117_01/`，报告[回收诊断](reports/r2_seed260002_retrieval_diagnosis_2026-11-17.md)。没有新密度/PS/FullFK求解、SSH、Resume、原件修改、数值门/生产变化或Git提交推送。下一候选仅保存数据图件稳定化/独立审计/新封存；本轮按用户“先核查分析”停止，不自动推进三Seed正式汇总或R3/宽带通信。
+
+### R2有限跨Seed执行准备完成，数值未执行（2026-11-17，最新）
+
+本轮明确仅准备0.10 m二维均匀条带、4 kHz、原PM谱/160 m/12模/C2和411真实接收点的seed260002/260003。冻结既有同Sk Gaussian Fourier系数及原坐标；每Seed未来新建C0–C4密度，C3为参考、C4只验窗，沿用获批v2单调性诊断和全部原门/5倍经验分辨规则。用户后续允许两Seed同时运行，因此支持两个独立单线程进程，无parpool；共享可用RAM基准，启动保守要求可用内存扣30%基准后仍有24GiB。这里未测远端当前容量或双进程峰值。
+
+最终执行包在`results/comparisons/piston_2d_pm/r2_preparation_20261117_03/seed260002/`及`seed260003/`，各300032 bytes，44项manifest和49项交付SHA绑定。每包28输入/篡改拒绝检查、29项原runtime、12状态、7 stdin、8无网络mock、10 RAM边界检查通过，归档重定位shell dry-run通过；R1指定回收287项SHA保持。所有科学模型/门及生产API未改，新增仅研究编排、独立最终指标、图件及三Seed保存分析。MCP无法attach，MATLAB dry-run/恢复政策测试/Code Analyzer未运行；Windows无flock，四项原生锁测试未运行。二者均设置为用户未来手动启动时、声学计算前的强制验收；不能当作当前PASS。
+
+本轮SSH/MATLAB/正式R2求解均0，不提交推送Git，保留准备失败与01/02候选。状态只升级为执行准备完成，R2数值结果、跨Seed排序和后续模型决策仍缺；不扩频率、Seed、CIR/通信/Bellhop。公共接口/生产公式未变，无需通信回归或修改vertical_comm_guide。证据及命令：[技术方案](reports/r2_pm_multiseed_plan_2026-11-17.md)、[本地验证](reports/r2_pm_preparation_validation_2026-11-17.md)、[手动操作](reports/r2_pm_manual_commands_2026-11-17.md)。完成准备后停止，等待用户手动启动；不持续监控或自动推进。
 
 ### R1回收审查完成：v2经验参考合格，单Seed边界保留（2026-11-16，最新）
 
