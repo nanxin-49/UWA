@@ -1,0 +1,12 @@
+{
+  "status": "PIPELINE_FINISHED",
+  "budget_s": 300.0,
+  "action_cutoff_s": 295.0,
+  "elapsed_s": 163.0787488,
+  "worker_exit_code": 0,
+  "expired": false,
+  "worker_pid": 2488,
+  "scope": "MATLAB startup/native solve/retrieval/local audits/figures/reports/navigation/seal all inside supervised worker",
+  "within_budget": true,
+  "new_jobs_after_deadline": 0
+}

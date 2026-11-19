@@ -1,0 +1,54 @@
+{
+  "status": "D_S_DS_NUMERICAL_PASS_FIG_PASS",
+  "native_jobs": 2,
+  "native_exit_codes": [
+    0,
+    0
+  ],
+  "native_elapsed_s": [
+    0.906151,
+    0.75481
+  ],
+  "figure": {
+    "status": "FIG_AND_PNG_FILE_CHECKS_PASS",
+    "curves": 6,
+    "legend_bounds_normalized": [
+      [
+        0.70927734375,
+        0.27053571428571427,
+        0.12148437499999998,
+        0.15089285714285711
+      ],
+      [
+        0.19755859375,
+        0.26964285714285713,
+        0.14492187500000003,
+        0.087499999999999967
+      ]
+    ],
+    "legend_auto_update": "off",
+    "png_size": [
+      2400,
+      1050
+    ]
+  },
+  "failed_gates": 0,
+  "matlab_release": "25.2.0.3042426 (R2025b) Update 1",
+  "axis": [
+    {
+      "frequency_hz": 4000,
+      "axis_numeric_magnitude_over_E": 0.004026814515661694,
+      "axis_analytic_magnitude_over_E": 0.0040268456375838532,
+      "axis_S_minus_D_phase_rad": -3.1415926154854303
+    },
+    {
+      "frequency_hz": 4062.5,
+      "axis_numeric_magnitude_over_E": 0.99999998764949416,
+      "axis_analytic_magnitude_over_E": 1,
+      "axis_S_minus_D_phase_rad": -7.0065087012121164E-10
+    }
+  ],
+  "surface_checks": 17,
+  "max_R_plus1": 6.9829626776862667E-15,
+  "max_reflection_x_error_m": 2.8109070626669563E-11
+}

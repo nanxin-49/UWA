@@ -1,0 +1,1 @@
+FAIL: both PNG legends have overlapping entries and labels outside their boxes; FIG checks passed

@@ -1,0 +1,14 @@
+{
+  "status": "SAVED_FIGURE_REPAIR_DATA_AUDIT_PASS",
+  "new_acoustic_solves": 0,
+  "original_files_checked": 6,
+  "original_files_changed": 0,
+  "repaired_figures": 3,
+  "exact_curve_checks": 24,
+  "legend_checks": 4,
+  "all_legends_inside_canvas": true,
+  "legend_AutoUpdate": "off",
+  "visual_review": "PENDING",
+  "elapsed_s": 14.3071086,
+  "matlab_version": "25.2.0.3312555 (R2025b) Update 6"
+}

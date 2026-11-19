@@ -1,0 +1,18 @@
+{
+  "legends_checked": 4,
+  "spurious_data_entries": false,
+  "new_acoustic_solves": 0,
+  "status": "PASS",
+  "local_MATLAB_license_warning": true,
+  "curves_reopened_exact": 24,
+  "date": "2026-11-19",
+  "original_figure_changes": 0,
+  "shared_session_terminated": false,
+  "legend_clipping": false,
+  "reviewed_pngs": [
+    "R01_D201_legend_fixed.png",
+    "R02_complex_error_legend_fixed.png",
+    "R03_angular_scaling_legend_fixed.png"
+  ],
+  "original_figure_SHA_checks": 6
+}

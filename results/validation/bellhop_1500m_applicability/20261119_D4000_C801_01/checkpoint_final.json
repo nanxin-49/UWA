@@ -1,0 +1,28 @@
+{
+  "status": "D801_DIRECT_CONTROL_GO_P1_INCOMPLETE",
+  "summary": "801复L2=0.000345831522480444，max复差/E=0.000411875302508324，相位=0.000411875291667816rad；冻结门失败0项。",
+  "problem": "",
+  "return_SHA_checks": 83,
+  "historical201_401_before": {
+    "protected401": 91,
+    "failed": 0,
+    "delivery201": 16,
+    "returned201": 49
+  },
+  "historical201_401_after": {
+    "protected401": 91,
+    "failed": 0,
+    "delivery201": 16,
+    "returned201": 49
+  },
+  "native_jobs": 1,
+  "old201_recomputed": false,
+  "other17_jobs": 0,
+  "old401_recomputed": false,
+  "beams1601_run": false,
+  "P2_run": false,
+  "visual_review": "UNRUN_PENDING_MANUAL_REVIEW",
+  "worker_elapsed_to_seal_s": 100.4347416,
+  "budget_final": "supervisor_receipt.json",
+  "next_allowed_step": "manual review only"
+}

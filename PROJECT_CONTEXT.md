@@ -9,6 +9,53 @@ superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-12）
 
+### P1 U0 D/S双频控制（2026-11-19）
+
+4000 Hz修复图审计通过，4062.5 Hz D、S及D+S数值门通过。远端导出的新PNG图例文字重叠，目视审计失败后停止。 [报告](reports/bellhop_1500m_p1_ds4062_2026-11-19.md)。原4000 Hz图件审计失败记录保留，整个P1待审。
+
+### S4000/C801最小海面验证（2026-11-19）
+
+- [S801报告](reports/bellhop_1500m_p1_surface_minimal_2026-11-19.md)：S与D+S冻结数值门及17项反射几何门通过；新增S图例审计失败，MATLAB外层exit1，35.20s内停止。原自动回执EXECUTION_STOPPED_NO_QUALIFICATION保留；不宣布本轮完整封存或整个P1通过。 全部物理/5点/原扇区/.5m步长/.625m Q/REAL8正式ELF/相位桥冻结，本轮仅新增S4000/C801；D801复用，S原201配置仅束数修订。
+- 返回SHA、375项历史SHA保护；完整预算由独立监督器覆盖至本地封存，见新结果目录supervisor_receipt.json。原201失败和383.24s历史超限保持，不因本轮801结果追改。
+- 不1601、其他P1任务、P2、FFP、Munk或生产修改；停止人工审查。
+
+### D4000/C801唯一最小复验（2026-11-19）
+
+- [801报告](reports/bellhop_1500m_d801_final_2026-11-19.md)：D801_DIRECT_CONTROL_GO_P1_INCOMPLETE。801复L2=0.000345831522480444，max复差/E=0.000411875302508324，相位=0.000411875291667816rad；冻结门失败0项。 全部物理/5点/原扇区/.5m步长/.625m Q/REAL8正式ELF/相位桥冻结，仅最后新增束数801；201/401结果只读复用。
+- 返回SHA、原201交付16及返回49、401保护清单91项SHA保护；完整预算由独立监督器覆盖至本地封存，见新结果目录supervisor_receipt.json。原201失败和383.24s历史超限保持，不因本轮801结果追改。
+- 不1601、其余17槽、P2、FFP、Munk或生产修改；停止人工审查。
+
+### D4000/C401唯一最小复验（2026-11-18）
+
+- [401报告](reports/bellhop_1500m_d401_minimal_2026-11-18.md)：D401_NUMERICAL_FAIL_STOPPED。401复L2=0.00107798645869841，max复差/E=0.00146902559577047，相位=0.00146902606424689rad；冻结门失败1项。 全部物理/5点/原扇区/.5m步长/.625m Q/REAL8正式ELF/相位桥冻结，仅束数201→401；201结果只读复用。
+- 返回SHA、原201交付16及返回49项SHA保护；完整预算由独立监督器覆盖至本地封存，见新结果目录supervisor_receipt.json。原201失败和383.24s历史超限保持，不因401结果追改。
+- 不801、其余17槽、P2、FFP、Munk或生产修改；停止人工审查。
+
+### D4000/C只读归因：原201束hat投影相位偏差（2026-11-18）
+
+- [归因报告](reports/bellhop_1500m_d4000_readonly_attribution_2026-11-18.md)：5点复比值/幅相分解，99.998920%残差平方来自相位，幅度单独L2仅1.447e-5。源码当前使用射线投影时延，横向曲率项未启用；以原201角度和hat权重无拟合代数重建，复L2差5.59e-8/max差E7.22e-8，解释随角单元分数位置起伏的负相位偏差。
+- 16交付/49返回/5执行源码SHA保持，SHD/MAT/CSV对齐；Q表4754声速值均1500，201终态J相对误差1.29e-13、轴上修正1，扇区有余量且实际接收坐标未变。单一束数支持主因归因，不证明加密收敛或401必过；离轴每束段内p/q/J贡献未全存。
+- 新增派生表/MAT/报告，代码/旧数据修改0，声学求解/新束/SSH0。未来仅提议D4000/C401一槽、估30–90s全流程且需统一300s硬截止，未授权未运行；P1原两门复场FAIL和预算FAIL保持，不进入P2。
+
+### D4000/C唯一重跑：输入修复，复场两门失败（2026-11-18）
+
+- 用户只授权保持首槽U0/1500/1490/6m、5位置、4000Hz/C/201束不变的重跑。补直达.iwcov，任务身份改为exec前保存；原ENV/SSP/R25D与cfg/meta保持，正式C ELF5d87293a…不变。
+- 唯一Bellhop真实exit0/native.2641s，SHD2460bytes；C模式不输出ARR/RAY，没有额外A/R。坐标逐位/旋转/201原生射线终态几何通过；轴束989.333333333281ms。复L2 .004403818185>.001及max复差/E .006606355464>.002失败，相位.006606rad<.01。停止不扩束，不进入P2。
+- [中文报告](reports/bellhop_1500m_d4000_c_retry_2026-11-18.md)；[独立保存审计](results/validation/bellhop_1500m_applicability/20261118_D4000_C_retry02/independent_audit.json)。49返回SHA/5历史保护SHA、独立SHD/MAT/CSV及FIG重开通过；PNG已查看。原首槽FATAL和此次2门数值失败均保留。P1仍NO_GO，17槽未运行；不提交推送。
+
+### P1 U0首槽FATAL，执行停止（2026-11-18，历史失败）
+
+- 用户本轮授权仅P1：1500/1490/6m、x0/10/50/100/200m，4000/4062.5Hz，等声速、底损耗0、全向3D点源宽N/A。18槽已冻结，C正式ELF SHA5d87293a…保持；新原REAL8基线SHA61158fd0…仅构建未验证。
+- 仅D4000/C第一槽启动，准备器漏直达无墙.iwcov，PRT FATAL缺旧.iwpm；旧Linux运行器/proc PID竞态另丢真实Bellhop退出码。外层MATLAB0不等于声学PASS。0槽通过、17未派发，无SHD/ARR/RAY，不自动修复重跑。
+- [中文停止报告](reports/bellhop_1500m_p1_stopped_2026-11-18.md)；[封存目录](results/validation/bellhop_1500m_applicability/20261118_P1_01/)。119返回SHA一致；运行RAM/全300s统一计时证据不完整，均不升级PASS。原ABC/源码/历史审计保持，P2–P5/FFP/Munk/H/CIR/BLACK无新作业；停止人工审查，不提交推送。
+
+### 新目标：1500 m近垂直Bellhop适用性，方案完成待审（2026-11-17，历史设计快照）
+
+- 用户不再以Liu Fig.12(b)视觉复现为目标，保留5000 m旋转A/B/C、FFP共点和声线为限定工况研究基础，当前不做旧D。新目标D1500/Tx1490/Rx6m、x0–200m、4–8kHz单水听器；本轮仅设计。
+- [中文技术方案](reports/bellhop_1500m_applicability_plan_2026-11-17.md)审查旧配置工厂5000/4950硬编码、可复用REAL8/点源/墙优化与FFP职责；新增35行闭式路径，强调BS约晚21.33ms、首长回声约晚2s，4/6/8kHz轴上表面相消。64ms周期只可用于标注的早期分量控制，不冒充完整CIR。BLACK为18kHz/8.7km测量算法测试，不能逐频拟合成1500m/4–8kHz模型。
+- [设计CP](results/validation/bellhop_1500m_applicability/20261117_design_01/checkpoint_design.json)、[待审成本表](results/validation/bellhop_1500m_applicability/20261117_design_01/stage_cost_plan.csv)。原C总场SHA仍d1931b85…；仅闭式算术0.646s，Bellhop/FFP/ABC重算0，无远程/编译/生产修改，不提交推送。
+- 下一步仅人工审查假设、指标和P1的18槽/300s新预算；P1–P5未授权，1500m传播/束数/FFP及完整H/CIR资格均未取得。原3720s账本保持余7.860s，不转用。以下旧目标结论按各自日期保留。
+
 ### Bellhop C代表声线远程补齐，停止待审（2026-11-16）
 
 - 6类各3条真实R轨迹、1299038原生节点，直达/首海面/首海底及3/4/13阶齐全；18映射和102重开FIG通过，最大往返4.55e-13m。298返回及4发布SHA一致，两套PNG目视检查；已有C/FFP相干TL直接复用。
@@ -5313,3 +5360,11 @@ conditions but was not run.
   S2C_B_K_HIGH_RESOURCE_REFERENCE_BLOCKED, Goal not marked complete. No
   PHI_PLUS90, S3-S6, Bellhop, communication work, production API edit,
   commit, push or cash access.
+
+预算补记（本次D4000/C重跑）：远端启动至保存审计/图件/文档封存取样383.242582s，超过300s，预算门FAIL。原生.2641s不等于完整预算通过；本地收尾未受统一硬截止监督，必须先审查修复。停止后仅补记该失败，不新增声学作业。
+
+### 2026-11-19 S任务停止后的保存证据澄清
+
+- 原生S801退出0/.824823s，原19检查及17独立几何检查全过；S和D+S六项复场门通过，D+S相位支持x50/100/200m，轴线及x10复压仍保留并按独立包络验收。
+- 失败为新增S图例布局/AutoUpdate边界审计，Matlab外层1、原comparison_receipt缺失；35.20s内按失败停止。历史图修复24曲线/4图例已完成，375历史SHA保持。[完整澄清报告](reports/bellhop_1500m_p1_surface_minimal_2026-11-19.md)。
+- 数值通过不掩盖图件审计失败：不标本轮完整封存PASS，不宣布整个P1通过。后续仅整理保存证据，未重算或修公式，等待人工审查。

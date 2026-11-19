@@ -1,0 +1,25 @@
+{
+  "status": "D401_NUMERICAL_FAIL_STOPPED",
+  "summary": "401复L2=0.00107798645869841，max复差/E=0.00146902559577047，相位=0.00146902606424689rad；冻结门失败1项。",
+  "problem": "",
+  "return_SHA_checks": 86,
+  "original201_before": {
+    "failed": 0,
+    "delivery": 16,
+    "returned": 49
+  },
+  "original201_after": {
+    "failed": 0,
+    "delivery": 16,
+    "returned": 49
+  },
+  "native_jobs": 1,
+  "old201_recomputed": false,
+  "other17_jobs": 0,
+  "beams801_run": false,
+  "P2_run": false,
+  "visual_review": "NOT_REQUIRED_ON_NUMERICAL_FAIL",
+  "worker_elapsed_to_seal_s": 162.3413582,
+  "budget_final": "supervisor_receipt.json",
+  "next_allowed_step": "manual review only"
+}

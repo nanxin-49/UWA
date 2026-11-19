@@ -33,3 +33,13 @@ results/validation/bellhop_rotated_fig12b/20261114_full_controller_03/** -text w
 # Unified diff context lines intentionally retain their leading space.
 results/validation/bellhop_rotated_fig12b/20261115_performance_review_01/*.patch -whitespace
 results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/returned/20261116_ray_remote_03/*.patch -whitespace
+
+# Preserve 1500 m P1 evidence and exact executed snapshots for SHA verification.
+results/validation/bellhop_1500m_applicability/** -text whitespace=cr-at-eol
+results/visualization/bellhop_D_control_legend_repair/** -text whitespace=cr-at-eol
+
+# Frozen SSP and receiver inputs retain the generator's trailing separators.
+results/validation/bellhop_1500m_applicability/20261119_DS4062p5_C801_01/payload/D/case_data/case.r25d -whitespace
+results/validation/bellhop_1500m_applicability/20261119_DS4062p5_C801_01/payload/D/case_data/case.ssp -whitespace
+results/validation/bellhop_1500m_applicability/20261119_DS4062p5_C801_01/payload/S/case_data/case.r25d -whitespace
+results/validation/bellhop_1500m_applicability/20261119_DS4062p5_C801_01/payload/S/case_data/case.ssp -whitespace

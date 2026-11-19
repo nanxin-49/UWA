@@ -1,0 +1,14 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),crypto=require('crypto');
+const root=process.argv[2],src=path.join(root,'reports','project_progress.json'),template=path.join(root,'scripts','reporting','templates','project_progress.html');
+const record=JSON.parse(fs.readFileSync(src,'utf8').replace(/^\uFEFF/,''));
+const checks=record.workstreams.flatMap(s=>s.evidence.map(e=>({workstream_id:s.id,path:e.path,exists:fs.existsSync(path.join(root,e.path)),expected_exists:!!e.expected_exists,kind:e.kind,revision:e.revision||''})));
+const generated_at=new Date().toLocaleString('sv-SE',{timeZone:'Asia/Shanghai'})+' +0800';
+const payload={record,file_checks:checks,root_href:'../../../',markdown_root_href:'../',generated_at};
+let html=fs.readFileSync(template,'utf8').replace('@@PROGRESS_JSON@@',JSON.stringify(payload).replace(/</g,'\\u003c')).replaceAll('@@ROOT_HREF@@','../../../').replaceAll('@@MARKDOWN_HREF@@','../../../reports/project_progress.md');
+if(html.includes('@@'))throw Error('Unexpanded template');
+const js=html.match(/<script id="progress-runtime">\s*([\s\S]*?)<\/script>/)[1],context={encodeURI}; vm.createContext(context);vm.runInContext(js,context,{timeout:1000});
+const md=context.progressMarkdown(record,checks,'../'),out=path.join(root,'results','visualization','project_progress');fs.mkdirSync(out,{recursive:true});
+fs.writeFileSync(path.join(out,'index.html'),html);fs.writeFileSync(path.join(root,'reports','project_progress.md'),md);
+const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),bad=checks.filter(c=>c.exists!==c.expected_exists);
+fs.writeFileSync(path.join(out,'render_receipt.json'),JSON.stringify({status:bad.length?'GENERATED_WITH_REFERENCE_WARNINGS':'GENERATED_FILE_CHECKS_PASS',generated_at,source_updated_at:record.updated_at,review_checked_at:record.checked_at,file_checks:checks,failed_checks:bad.length,unexpected_references:bad,source_sha256:sha(src),template_sha256:sha(template),html_sha256:sha(path.join(out,'index.html')),markdown_sha256:sha(path.join(root,'reports','project_progress.md')),new_acoustic_computations:0,audit_scope:'Documented text-only packaging inside bounded P1 pipeline; no MATLAB or physics in this packaging step'},null,2));
+console.log('TEXT_PACK refs='+checks.length+' warnings='+bad.length);

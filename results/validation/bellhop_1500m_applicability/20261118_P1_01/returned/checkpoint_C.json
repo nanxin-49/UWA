@@ -1,0 +1,14 @@
+{
+  "status": "P1_NO_GO_STOPPED",
+  "started_slots": 1,
+  "completed_slots": 0,
+  "elapsed_s": 13.447511,
+  "budget_remaining_before_this_call_s": 180,
+  "failed_checks": 0,
+  "error": "错误使用 fileread (第 10 行)\n无法打开文件 /proc/747759/stat。没有这样的文件或目录。\n\n出错 run_bellhop_rotated_local_case (第 12 行)\nstarted=tic; proc=builder.start(); pid_path=fullfile(case_dir,'pid.txt'); while ~isfile(pid_path) && proc.isAlive() && toc(started)<2, pause(.01); end; if ~isfile(pid_path), proc.destroyForcibly(); proc.waitFor(); error('Task PID receipt not created'); end; pid=str2double(strtrim(fileread(pid_path))); assert(isfinite(pid)&&pid>0); if isfile(sprintf('/proc/%d/stat',pid)), write('process_identity.txt',fileread(sprintf('/proc/%d/stat',pid))); end\n                                                                                                                                                                                                                                                                                                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n出错 run_bellhop_1500m_p1_c (第 16 行)\n  proc=run_bellhop_rotated_local_case(job.binary,root,min(120,remaining_s-toc(start)-15),allow_task_termination=true,minimum_runtime_available_bytes=256*2^20);\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+  "results": [],
+  "unrun_remaining_slots": 17,
+  "next_allowed_step": "manual review after any failure; no P2-P5",
+  "physical_config": "U0 point3D 1m, width N/A, D1500 Tx1490 Rx6, x=[0,10,50,100,200], c1500 rho1 bottom1600/rho1.8/loss0",
+  "matlab_version": "25.2.0.3042426 (R2025b) Update 1"
+}

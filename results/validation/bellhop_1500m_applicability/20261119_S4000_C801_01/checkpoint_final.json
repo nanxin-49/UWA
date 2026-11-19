@@ -1,0 +1,26 @@
+{
+  "status": "EXECUTION_STOPPED_NO_QUALIFICATION",
+  "summary": "执行或回收失败，不能宣布S及D+S资格。",
+  "problem": "Cannot find path 'C:\\Users\\ASUS\\.codex\\worktrees\\bellhop_rotated_fig12b\\Explain\\results\\validation\\bellhop_1500m_applicability\\20261119_S4000_C801_01\\returned\\comparison_receipt.json' because it does not exist.",
+  "return_SHA_checks": 79,
+  "historical_before": {
+    "files": 375,
+    "failed": 0
+  },
+  "historical_after": {
+    "files": 375,
+    "failed": 0
+  },
+  "native_jobs": "unknown; see remote logs",
+  "old201_recomputed": false,
+  "other_P1_jobs": 0,
+  "old401_recomputed": false,
+  "D801_recomputed": false,
+  "B_BS_run": false,
+  "beams1601_run": false,
+  "P2_run": false,
+  "visual_review": "NOT_REQUIRED_ON_NUMERICAL_FAIL",
+  "worker_elapsed_to_seal_s": 34.664157,
+  "budget_final": "supervisor_receipt.json",
+  "next_allowed_step": "manual review only"
+}

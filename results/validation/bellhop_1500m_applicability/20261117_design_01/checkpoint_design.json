@@ -1,0 +1,18 @@
+{
+  "status": "DESIGN_ONLY_COMPLETE",
+  "analytic_rows": 35,
+  "anchor_frequencies": 6,
+  "geometry_checks_failed": 0,
+  "Bellhop_jobs": 0,
+  "FFP_jobs": 0,
+  "ABC_recomputed": 0,
+  "production_code_modified": false,
+  "new_physical_qualification": false,
+  "future_stages_authorized": false,
+  "early_BS_axis_excess_ms": 21.333333333333332,
+  "first_late_SB_axis_excess_s": 2,
+  "max_early_excess_ms": 21.333333333333332,
+  "max_N8_uniform_relative_delay_s": 8,
+  "source_hashes": 14,
+  "matlab_version": "25.2.0.3312555 (R2025b) Update 6"
+}

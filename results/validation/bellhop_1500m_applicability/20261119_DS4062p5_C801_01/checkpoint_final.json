@@ -1,0 +1,44 @@
+{
+  "status": "STOPPED_AT_FAILED_GATE",
+  "failure": "PNG visual audit failed or absent",
+  "input_sha_count": 23,
+  "returned_sha_count": 102,
+  "historical_sha_verified": 7,
+  "native_receipts_found": 2,
+  "native": [
+    {
+      "pid": 1839334.0,
+      "exit_code": 0,
+      "elapsed_s": 0.906151,
+      "stdout": "",
+      "stderr": "",
+      "case_root": "/home/misc/cwx/bellhop_1500m_DS4062p5_C801_20261119_01/D/case_data/case",
+      "abort_reason": "",
+      "minimum_observed_available_bytes": 130118926336.0,
+      "runtime_reserve_bytes": 39036278784.0,
+      "launch_available_bytes": 130120929280.0,
+      "live_RAM_samples": 42,
+      "identity_before_exec": true,
+      "memory_scope": "MemAvailable before/20ms live/after; sampled, not continuous"
+    },
+    {
+      "pid": 1839431.0,
+      "exit_code": 0,
+      "elapsed_s": 0.75481,
+      "stdout": "",
+      "stderr": "",
+      "case_root": "/home/misc/cwx/bellhop_1500m_DS4062p5_C801_20261119_01/S/case_data/case",
+      "abort_reason": "",
+      "minimum_observed_available_bytes": 129975369728.0,
+      "runtime_reserve_bytes": 38993902387.2,
+      "launch_available_bytes": 129979674624.0,
+      "live_RAM_samples": 36,
+      "identity_before_exec": true,
+      "memory_scope": "MemAvailable before/20ms live/after; sampled, not continuous"
+    }
+  ],
+  "report": "reports/bellhop_1500m_p1_ds4062_2026-11-19.md",
+  "historical_4000_Hz_recomputed": false,
+  "next": "manual review only",
+  "supervisor": "supervisor_receipt.json"
+}

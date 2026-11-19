@@ -1279,3 +1279,16 @@ the 24->32 bootstrap half-width gate is narrowly above its engineering limit.
 
 
 - 2026-11-16 C工况远程声线：执行源码冻结于 results/validation/bellhop_rotated_fig12b/20261116_ray_remote_03/code/ 的 run_bellhop_rays_remote.m 与 run_bellhop_C_representative_rays_linux.m；只供已授权独立快照复现，须传显式project_root/run_dir与剩余预算，不是默认求解入口。冻结C配置和R-only专用ELF，6类各3束，18映射/102FIG检查；[报告](../reports/bellhop_C_rays_remote_complete_2026-11-16.md)。禁止据此恢复D或重算ABC/FFP。
+
+- validation/prepare_bellhop_1500m_design(project_root,output_dir)：纯设计/闭式几何准备，生成35行D/S/B/BS/长路径表、六频检查、模块SHA与未授权阶段清单；不调用Bellhop/FFP，不加载旧MAT，不启动远程。output_dir须为新目录；见[1500m方案](../reports/bellhop_1500m_applicability_plan_2026-11-17.md)。输出results/validation/bellhop_1500m_applicability/<unique_design>/不代表新物理资格。
+
+
+- 2026-11-18 P1失败候选：validation/prepare_bellhop_1500m_p1 与 run_bellhop_1500m_p1_c。18槽U0准备，首D4000因缺.iwcov触发PRT FATAL，并有旧运行器PID竞态；当前禁止直接复跑，不是合格默认入口。见[停止报告](../reports/bellhop_1500m_p1_stopped_2026-11-18.md)，未改变公共API或进入P2。
+
+- 2026-11-18 唯一D4000/C恢复：validation/rerun_bellhop_1500m_d4000_c只运行冻结首槽；validation/audit_bellhop_1500m_d4000_saved只审保存SHD/CSV/FIG，不启动求解。prepare_bellhop_1500m_p1已补直达.iwcov。新任务专属code适配器先保存身份、再exec并真实waitFor。直达复场两门失败，仍禁止默认重跑或进入P2；见[报告](../reports/bellhop_1500m_d4000_c_retry_2026-11-18.md)。
+
+- 2026-11-18 C401唯一复验：validation/execute_bellhop_1500m_d401(project_root,run_dir) 与 run_bellhop_1500m_d401_case，只供本次已授权独立快照；复用201保存数据，唯一改变束数为401。总监督/回收/导航由结果目录code/supervise_full_pipeline.ps1与pipeline_worker.ps1覆盖。结果及冻结门见[401报告](../reports/bellhop_1500m_d401_minimal_2026-11-18.md)；不授权801、其他P1槽或P2。
+
+- 2026-11-19 C801唯一验证：validation/execute_bellhop_1500m_d801(project_root,run_dir) 与 run_bellhop_1500m_d801_case，只供本次已授权独立快照；复用201/401保存数据，唯一新增束数为801。总监督/回收/导航由结果目录code/supervise_full_pipeline.ps1与pipeline_worker.ps1覆盖。结果及冻结门见[801报告](../reports/bellhop_1500m_d801_final_2026-11-19.md)；不授权1601、其他P1槽或P2。
+
+- 2026-11-19 S801最小海面验证：validation/execute_bellhop_1500m_s801(project_root,run_dir) 与 run_bellhop_1500m_s801_case，只供本次已授权独立快照；复用D801，原S201配置仅修订束数为801。总监督/回收/导航由结果目录code/supervise_full_pipeline.ps1与pipeline_worker.ps1覆盖。结果及冻结门见[S801报告](../reports/bellhop_1500m_p1_surface_minimal_2026-11-19.md)；不授权1601、其他P1槽或P2。

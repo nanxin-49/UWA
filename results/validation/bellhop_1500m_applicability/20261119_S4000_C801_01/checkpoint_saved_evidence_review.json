@@ -1,0 +1,28 @@
+{
+  "history_SHA_checks": 375,
+  "status": "S_DS_NUMERICAL_GATES_PASS_GRAPHIC_AUDIT_FAILED_STOPPED",
+  "next_allowed_step": "manual review only; no retry or formula changes",
+  "failed_new_graphic_audit": 1,
+  "native_jobs": 1,
+  "post_stop_new_acoustic_jobs": 0,
+  "MATLAB_exit": 1,
+  "S_maxDE": 0.000406380934202919,
+  "S_phase": 0.000406380934569085,
+  "DS_L2": 0.000392530117736466,
+  "native_elapsed_s": 0.824823,
+  "history_SHA_failed": 0,
+  "S_L2": 0.000343625497578114,
+  "return_SHA_checks": 79,
+  "DS_phase_support_x_m": [
+    50,
+    100,
+    200
+  ],
+  "failed_scientific_numeric_gates": 0,
+  "DS_phase": 0.000412921441989525,
+  "original_failed_checkpoint_preserved": true,
+  "return_SHA_failed": 0,
+  "historical_figure_repair": "PASS, 24 curves/4 legends/6 originalSHA",
+  "native_exit": 0,
+  "DS_maxDE": 0.000305833057279017
+}
