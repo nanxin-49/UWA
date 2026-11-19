@@ -1,5 +1,7 @@
 # 垂直水声 PE/WAPE 信道与通信项目
 
+**D1深度比较已完成（2026-11-18，限定范围）：**0.10m二维条带/4kHz、原PM/C2、Rx6m/±36m/411直接点，Tx100→1490m时PS/BIE复L2由16.1917%降为3.54362%，完整FullFK/BIE由0.0765349%降为0.0709202%。两深度各五层独立BIE、保存审计及80条FIG重开曲线/零像素检查通过，原失败保留，累计远端25.13min；不等于完整真实深海多途或0–200m目标资格。D1b仅完成长周期/支持与成本方案，未运行。见[最终研究报告与图表](reports/d1_depth_comparison_final_2026-11-18.md)和[实际执行记录](reports/d1_goal_execution_2026-11-18.md)。下方带日期的旧状态保留历史时点，当前许可仍以任务表及用户明确指令为准。
+
 **当前二维研究主线（2026-11-14）：**按 [AGENTS.md](AGENTS.md) 和[当前任务表](reports/active_task_tracker.md)，后续主声源为总宽 **10 cm**（半宽5 cm）的理想二维无限条带；20 cm P0/P1及Gaussian结果保留为历史对照。顺序为4 kHz配对PM比较 → 反射模型决策 → 相干4–8 kHz频响/CIR → 受控通信；R1 seed260001尚未授权，Bellhop独立并行。下方带日期的20 cm主源选择和旧接续步骤仅描述当时范围，不作为当前运行许可。远程操作才启用[SSH Skill](.agents/skills/remote-matlab-ssh/SKILL.md)；本次[配置同步](reports/agents_configuration_alignment_2026-11-14.md)不改变生产默认或数值资格。
 
 **10 cm孔径形状与远视野补图（2026-11-14）：**[报告与五组PNG/FIG](results/validation/piston_source_shape_comparison/20261114_shape_01/report.md)比较二维条带sinc与三维圆形Bessel方向图，并将二维自由场扩至±500/1000m。10cm两源在4/6/8kHz前向均无零点；8kHz圆形主瓣更宽。仅理论形状与自由场图示。

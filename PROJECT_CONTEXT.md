@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 
-D0五深度入射复场已正式回收并完成保存审查；1490m幅度更平坦但大范围相位仍弯曲，局部平面波适用性取决于patch尺度，R1/R2反射误差不可直接外推。见[D0研究报告](reports/d0_incident_depth_review_2026-11-18.md)。K1及其他工作线维持各自范围与状态。
+D1a双深度反射比较已正式限定完成：0.10m/4kHz/原PM/C2、Rx6m/±36m/411点，PS复L2由16.1917%降为3.54362%，完整FullFK由0.0765349%降为0.0709202%。两深度各五层独立BIE、保存审查和80条FIG曲线/零像素通过，542项SHA保持；原失败与预算保留。见[最终研究报告](reports/d1_depth_comparison_final_2026-11-18.md)。D1b只完成可行性，其他工作线许可不变。
 
 ## Purpose
 This file is the append-only project log and long-term model memory for the
@@ -9,7 +9,82 @@ Future coding models should read the current-state index first, then consult
 the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
-## Authoritative Current-State Index / 权威当前状态索引（2026-11-18）
+## Authoritative Current-State Index / 权威当前状态索引（2026-11-19）
+
+### K1七条件科学保存资格限定完成（2026-11-19，最新）
+
+按用户直接目标授权完成六新面各五层独立BIE（N7导入5、余五面新增25），严格R1锚点单列；0.10m二维条带、4kHz、U_PM、seed260001/L160/原C2/411真实点，生产及通信接口不改。最终4040SHA保持，五面本地逐层保存审查50–80s/0失败；六案例新72曲线＋汇总56=128、56FIG/112次独立重开零像素且已查看，14模型行/5754点全部经验分辨。PS10.25099–53.84515%、完整FullFK0.02083284–0.19553116%；固定U/固定Kmax及2×2交互分开，PS交互+3.53688、FullFK−0.00751157个百分点，均经验可分辨，非总体统计显著性；N40不是完整PM。
+
+先验证4个额外基础MATLAB实际并发许可/约100GiB可用，采用最多4独立单线程案例；每例C0–C4顺序。总RSS峰9.96GiB、最低可用88.08GiB，原12GiB/例、30%旧基准预留、1800s/例及10800s累计不变，最终2656s。原大画布跨会话FAIL保留，新v3固定整幅1000×550画布显式独立审计，未降低像素0或科学门。最后U8/N40在完整CASE_COMPLETE/最终AUDITED_PASS后约5秒原生Segmentation violation，真实−9，控制器KeyError/exit78保持；只读核seal并完整独立保存审查通过才接受结果，没有重启。此不证明原生退出环境稳定，后续作业仍须独立环境/退出审查。
+
+当前正式结果results/comparisons/pm_wind_cutoff_k1/final_summary_20261119_01/，科学封存results/validation/k1_target_execution/20261118_01/final_checkpoint.json；见reports/pm_wind_cutoff_k1_final_review_2026-11-19.md和reports/k1_target_closeout_validation_2026-11-19.md。旧05/04/目标会话及所有失败不追改，五个任务案例会话已退出。停止于K1本有限矩阵，不自动扩Seed、R3求解、宽带/CIR/通信/Bellhop或Git。D1a/D1b等既有独立边界保持。
+
+### K1切换Codex直接目标执行、最多四案例并行（2026-11-18，当时进行中；已由11-19保存收尾覆盖）
+
+用户最新明确要求Codex直接回收并完成K1，不再手动启动，满足条件尽量并行，覆盖旧manual-only边界但不改原科学/资源门。已直接Fetch04失败1575SHA、实查100GiB可用/28物理核及4个额外基础MATLAB实际同时许可运行；单计算线程、无PCT。K1绘图改为先保存FIG再独立重开生成PNG基准，两独立Ubuntu进程原12线/布局/零像素门通过，跨进程像素差0；PNG字节不同仅Creation Time/tIME元数据。目标隔离根k1_pm_goal_20261118_01，首CPU准入停止4s保留后负载回落按原门重新进入，会话20261118T152731_1592231。N40 MODELS已独立封存，四例C0已通过，当前后续层仍运行；N7不重算，余五面最多25新BIE，原R1锚点单列。累计939+初始停止4s后继续计入10800s，旧119021486080bytes基准/30%预留/12GiB每进程/1800s每例/N40 MODELS180s保持。由Codex跟进并回收独立审查，不等待用户操作，不自动扩Seed/频率/通信，不提交推送。执行记录reports/k1_target_execution_2026-11-18.md，完整矩阵尚未通过，不提前COMPLETE。
+
+### D1a目标模式正式限定完成；D1b仅可行性（2026-11-18，最新）
+
+用户授权目标模式后，实际完成剩余1490m五层并完整回收审计。最终04会话20261118T142529_1546441、R2025b Update1单进程单线程，650.819371013s/退出0/0，累计所有失败1507.536812409s，原5400s累计/2400s每深度/30%RAM/12GiB门保持；最低可用101499604992bytes、组RSS峰2456629248bytes。全D1只10次BIE（每深度5），不重解100m已保存密度/模型。
+
+固定0.10m二维条带、峰值振速.001m/s、4kHz、c1500/rho1025、exp(-i omega t)/phase v2、Tx100/1490m、Rx6m/±36m/411直接点；原U_PM6/N12/260001/L160/Fourier系数/42–50m C2保持。PS/BIE复L2=.1619172660→.03543617026，完整FullFK/BIE=.0007653488085→.0007092018027；深度变化均超过两个5倍经验分辨尺度之和。PS相对改善78.1146%，但深源仍约FullFK误差49.966倍；不能由入射幅度平坦认定模型等价。两深度网格非单调诊断约9–10%保留，原v2经验参考门不变，不称严格真值。
+
+回收results/comparisons/d1_depth/d1_goal_completed_retrieved_20261118_04/，外层tar SHA 1df580473f828875cf16c06a7de759d26260b47f6b316310376d214b0abba584，542项内部SHA前后保持。现有MCP R2025b Update6本地保存审查113.4973161s/0失败/0新BIE；100m按相同数学输入SHA复用已过独立审计，1490m五层保存密度、源/Green/双项/CSV/幅相/分辨全部新审通过。8单深度FIG48条+最终两对照FIG32条=80，独立重开PNG均零像素且已目视检查；当前对照图仅results/visualization/d1_depth_summary/20261118_04/。完整MAT/CSV/FIG/PNG/源/日志/退出/资源/检查点齐全。
+
+原CSV精度、导入生成输出冲突、Ubuntu图例序列化和对照图裁切/遮挡失败全部保留；修复仅研究编排/IO/绘图，物理数组和门不变。最终远端只标D1A_NUMERICS_COMPLETE_LOCAL_FIGURES_REQUIRED，本地图件为不可省略门；现已通过后才在本地总封存D1a COMPLETE，不追改原回执。无生产API/DSP/通信、R1/R2/K0/D0或Git提交变更，不需通信回归/vertical_comm_guide公式更新。
+
+D1a资格只对本有限C2面和±36m共同线，不是0–200m/无限PM/真实深海多途。1490m/200m镜面点约199.2m，D1b仍需新周期≥640m/平台±220/支持±240，禁止平铺，标准化随机系数及Delta-k方差配对、低频另控。稠密候选22400节点单矩阵7.477GiB，整工作内存90–300GiB仅启发式，无新面或大规模求解；后续须另定预算。K1/R3/W1/C1独立许可保持。见[最终报告](reports/d1_depth_comparison_final_2026-11-18.md)、[执行记录](reports/d1_goal_execution_2026-11-18.md)及results/validation/d1_goal_closeout/20261118_01/。
+
+
+### K1恢复04首跑在声学前图件门STOPPED（2026-11-18，最新）
+
+K1恢复04用户首跑在saved_graphics原PNG零像素门STOPPED：预检退出0，F02第一次重导399701通道值差、8条曲线数据一致；第二次/F04未审计。新worker和BIE均0，N40未开始，N7旧资格保持；累计账790s，原N40单例18.833s不变。仅只读日志/已有PNG诊断，无重画/重启/降门。 固定0.10m/4kHz/U_PM/seed260001/原C2/411点，原PM/PS/BIE/FullFK/生产接口不改。FIG重开记录1024×731，PNG可见图例与文字布局呈现差异，跨会话导出稳定性未闭合；本次没有abort或资源停止证据。前次Linux图件PASS保留当时资格，本次FAIL保留，不能用曲线一致替代原零像素门。证据results/validation/k1_recovery_failure_review/20261118_01/，见[诊断](reports/k1_recovery04_graphics_failure_2026-11-18.md)。用户先Fetch；具体修复、新包与额外MATLAB图件诊断尚未执行，无Git。
+
+### K1诊断执行与恢复04包准备完成（2026-11-18，最新）
+
+K1恢复04包准备完成：A1/A2非声学PASS，用户追加Ubuntu保存图12线/布局/零像素门PASS；四次Windows修图仍FAIL保留，候选代码不进恢复包。继承旧636s及新诊断88s=724s，1459SHA/原575及296链保持，37项MAT准备/25离线/8传输mock/重定位通过。N7原资格导入且不重算，N40一次带日志MODELS后其余五面最多25新BIE，正式恢复未上传/启动。原生崩溃具体组件仍未定位。 固定0.10m/4kHz/U_PM/seed260001/原C2/411点；原PM、PS、BIE、FullFK及公共接口/数值门不改，Windows失败代码仅作诊断候选。A1/A2顺序基本环境/40行输入/合成FFT和256阶线性代数，原生崩溃未复现但不称修复。用户先追加两次Windows再追加一次Ubuntu保存图核验；本地失败分支停止，执行平台Linux原门通过并在未来Start前再次强制重放，未降布局/像素要求。远端三项合计计费88s加原636s=724s，旧119021486080bytes RAM基准继续取最大。04包99,563,520bytes、SHA 77bce9c2b26806ea796758bcdb1662359ecf1f560d7dfa1f3cf3282223dc3f6e；完整lineage/failed_task和original_inputs保存两链，N7旧签名逐字导入，新五面单独新manifest，MODELS事件日志与原数学去日志后相同。实际04包37项9.951s、25离线控制器、8传输mock、14/5754 TEST_ONLY来源元数据表通过（renderer明确mock），30依赖全包内/仅MATLAB；Analyzer2格式info不影响语法。新任务k1_pm_recovery_20261118_04尚未上传/启动，预计余五面55–75min条件规划，单例/累计/压力门不变，25新BIE＋5导入=30。准备证据results/validation/k1_recovery_preparation/20261118_01/，见[报告](reports/k1_recovery_preparation_2026-11-18.md)和[命令](reports/k1_recovery_manual_commands_2026-11-18.md)。无新声学或Git，停止等待用户手动。
+
+### K1诊断/保留证据恢复方案，仅规划（2026-11-18，最新）
+
+K1诊断恢复方案已制定、尚未实施：先本地保存修图＋两次不同的有界非声学诊断，再由用户另行手动启动一次N40 MODELS尝试；通过后原层级顺序继续余五面，最多25次新BIE。N7数值不重算、原失败保留，新旧资格双链；继承两次旧会话636s/10800s和119021486080bytes RAM基准，原30%/12GiB/1×1/数值门不改。 固定0.10m/4kHz/U_PM/seed260001/原C2/411点。完整回收目录有两次旧会话：早次preflight压力STOP、0案例派发；后次N7完成/N40原生abort，原24s＋后次ceil612s=636s。修正前文“唯一会话”的完整性表述，不回写旧报告或失败。方案A0仅保存图件，A1/A2各≤120s；B一次带逐项事件日志的N40 MODELS≤180s，失败即停且不重试；C原独立25层及七条件汇总，预估55–75min但不增加硬预算。后续具体包必须支持N7旧签名导入与新执行双链，不能换manifest后伪造旧签名、删调用标记或复用R1密度。当前仅新增[方案](reports/k1_diagnosis_recovery_plan_2026-11-18.md)和计划checkpoint，SSH/新MATLAB诊断/声学/恢复/Git均0；A/B/C未运行，没有新恢复包可供启动。其他工作线范围保持。
+
+### D1精度修复、保存C0审计完成，恢复03包就绪（2026-11-18，最新）
+
+用户授权修复/审计并交付可手动启动恢复包。本轮仅Fetch原失败任务及现有MCP保存审计/准备测试，无新本地或远端MATLAB进程、无新BIE求解/Git。回收`results/comparisons/d1_depth/d1_failed_03_retrieved_20261118_01/`，外层归档及59项SHA在审计前后通过；原失败现场/旧CSV/原data.mat/common.mat保持。原用户首跑仍保留STOPPED，不追改为成功。
+
+D1新增`write_d1_csv`统一17位double输出，保留严格坐标isequal及所有科学门；生产及R1/R2/K0/D0不改。现有MCP R2025b Update6/PID22340临时单线程保存C0审计8.5348716s/0失败/0新BIE，结束恢复原线程。坐标/复场CSV重读差0，密度接收重建1.3834e-15、独立RHS1.8154e-14、340平台中点残差6.9712e-8、19点GL112残差8.2895e-8；这是C0保存审计资格，不是完整C0–C4或双深度误差资格。
+
+最终`results/comparisons/d1_depth/recovery_preparation_20261118_03/`：125项输入/代码/原证据/审计SHA，19169280bytes，tar SHA `5f79124e177bde005060786c41ed0fa62ff02756e0ac6efd21b96e1e640e194e`。23离线+12传输mock通过，最终真实包MATLAB dry-run/audit-import及坐标/复场/字符串/掩码往返准备1.1120996s通过，7个.m Analyzer消息0；Linux实际恢复和剩余声学未运行。新增研究入口/IO/导入核验/控制器与导航，不改物理实现或公共API，无通信回归必要。
+
+用户手动新任务`d1_depth_recovery_20261118_01`，原失败目录不写。导入同一D1源/面/接收几何的100m common及C0（不来自R1/R2），先核SHA/同源同网格/原模型门并重审C0，然后100m C1–C4和1490m全新五层，共9次新BIE；100m PS/FullFK不重算。保持0.10m/4kHz/U6/N12/260001/L160/C2、Rx6m、±36m/411真实点、绝对相位v2。继承原5400s累计/2400s每深度，原133.784137816s计入累计及100m预算；RAM基准取原47975735296bytes与新启动可用量较大值，30%预留/12GiB/1×1/压力门不改，无自动重试。当前仅待用户手动UploadAndStart，不持续监控、D1b或宽带不推进。详见[报告](reports/d1_recovery_preparation_2026-11-18.md)与[命令](reports/d1_recovery_manual_commands_2026-11-18.md)。
+
+### K1回收保存审查与原生崩溃诊断（2026-11-18，最新）
+
+K1回收575项SHA及296冻结输入通过；N7本地五层保存密度/独立边界/PS/FullFK/411点与原5倍分辨0数值失败，PS/FullFK复L2=10.251%/0.0208328%，N12锚点15.9235%/0.0747208%。N40确切PID转储为GTP_1线程abort/glibc栈，具体原生组件未定位；未进入BIE。本地候选图12条数据一致但导出缩画布触发原布局门，保留FAIL。整体仍STOPPED，不重启或删除未封存调用。 固定0.10m二维条带、4kHz、U_PM6/seed260001/原C2/411点；575项原件审查前后不变，原R1资格仅按严格SHA锚点复用。现有MCP R2025b Update6/PID22340临时单线程/7入口哨兵，数值与绘图整次59.664s；五层数值不重跑，另汇总已完成PASS回执。原FIG数据12条、远端PNG两图目视；新本地图件布局FAIL（1800×1400→1437×785）与远端N40 malloc/abort分开。原生dump SHA 6ae51c91f254d21d874b6364c22a7e20428fc72a1fa0409c4ab7d1034e8d94a1，原文在私有结果证据，公开摘要去除会话/许可证标识。N7/N12 PS相位能量主导、N7误差较低，但一个Seed/两个Kmax不支持单调/风速/交互结论；N40不称完整谱收敛。证据`results/validation/k1_retrieval_review/20261118_01/`及[报告](reports/k1_retrieval_review_2026-11-18.md)。未更换原生组件/版本、改线程/物理门、重启/新求解、改生产或提交推送。停止，恢复需保留失败并显式登记新尝试；不删除原调用标记。
+
+### K1首跑中断只读诊断（2026-11-18 17:48，最新）
+
+K1用户手动05包首跑STOPPED：U6/N7五层及封存SHA链复核通过；U6/N40在MODELS约18.833s报double free or corruption后-9退出，无BIE层，后四例未派发。资源记录未触发本包停止门；根因尚待原生栈定位。不重启、不删调用标记，先Fetch保留现场。 固定0.10m/4kHz/seed260001/原C2/411点。U6/N7远端AUDITED_CASE_PASS仅复核既有文件审计链，不冒充本地独立数值重审；U6/N40 stderr明确原生内存管理致命错误，stop_reason=null，采样RAM充足但具体根因未定位。证据`results/validation/k1_interruption_review/20261118_01/`和[报告](reports/k1_interruption_diagnosis_2026-11-18.md)。本轮仅只读SSH，无新MATLAB/求解/终止/远端改写/Git；其他工作线独立范围保持。
+
+### D1首跑在C0 CSV精度审计STOPPED，仅只读诊断（2026-11-18，最新）
+
+用户手动启动03包，唯一会话`20261118T090204_1101719`，R2025b Update1/PID1101739已退出。MATLAB/监督器1/1、总133.784137816s、MATLAB检查点89.618797s、stop_reason=null；最低可用46918635520bytes（43.70GiB）、owned组峰1786232832bytes（1.66GiB）。当前只读MemAvailable约111.66GiB，不能作为新作业准入。本轮两次有界只读SSH，首次受限别名解析失败后使用既有SSH配置，无远端文件修改、MATLAB启动/重启/求解、Git提交。
+
+0.10m/4kHz/原U6/N12/260001/L160/C2、Tx100/1490m、Rx6m/±36m/411直接点保持。100m源/几何和PS/FullFK阶段自身门通过、模型26.772825s；PS窗口1.565e-7、采样1.782e-9、步长3.668e-15，FullFK求积1.333e-11/范围1.305e-15，仅保存阶段门、不代表最终独立资格。BIE调用1次，100m C0 data.mat/points.csv已存但未封存，C1–C4与1490m未进入。completed_steps=[]表示无已封存BIE阶段，不等于未做计算。
+
+根因：`audit_r1_bie_manual_stage:26`要求CSV重读坐标与MAT严格isequal；D1循环小数坐标由writetable默认精度写出变短。两输入副本完全一致，411行中386个x有≤4.973799150320701e-14m差，z差0，例如-35.824390243902442→-35.8243902439024。无资源/终端断开停止证据。原共用审计/数值门和03包不改，失败现场保留；下一步候选为D1专用显式17位往返写出及独立目录内原C0保存审计恢复，须另定授权，不能自动重解/换TaskName绕过停止。见[首跑诊断](reports/d1_first_run_diagnosis_2026-11-18.md)与`results/validation/d1_diagnosis/20261118_01/`。生产/通信公式未改，D1b/R3/W1/C1不推进；任务表和看板只登记真实STOPPED，历史准备与其他资格保留。
+
+### D1a手动执行包准备，D1b仅可行性方案（2026-11-18，最新）
+
+本轮用户只授权代码审查、几何/成本估计、独立执行包与本地dry-run；SSH连接、MATLAB启动（含MCP执行）、正式声学和Git提交均0。生产代码、R1/R2/K0/D0及其数值资格不修改。D0是入射场证据，不提供深源反射模型误差。旧Rx3m的R1/R2也不充当本次Rx6m的100m锚点。
+
+D1a冻结总宽0.10m二维均匀条带、峰值振速.001m/s、4kHz、c1500/rho1025、exp(-i omega t)/phase v2/绝对峰值Pa；Tx100/1490m配对同一原U6/N12/260001/L160系数和42–50m C2。两深度共同候选接收线±36m、Rx6m、411个直接点；深源最外镜面点35.8556m，距平台6.1444m，仅作几何辅助，不提前认证非局域窗口。每深度各新算C0–C4，C3经验参考/C4窗口，禁止任何旧密度。独立D1副本修复PS与Green审计写死3m，保留原公式/数值门、完整FullFK双项、实际压力/梯度；深源独立Weyl审计复用D0分段求积。相位阈值.01×BIE全线RMS，复/幅/相差及5倍分辨，另审深度误差变化是否超过两个经验分辨阈值之和。
+
+最终包`results/comparisons/d1_depth/preparation_20261118_03/`，31输入/代码SHA、215040bytes，tar SHA dcb3197cab1717ba27528b9b1c65b20a4d7bf36fb4993efcac150b962f7dd42e。26离线基础设施+10传输mock通过，PowerShell解析/Git Bash语法通过。MATLAB解析/Analyzer/声学/FIG、Linux原生锁/信号/资源均未运行，不能以工具测试替代。提议远端R2025b、1×1、30%启动可用RAM预留、12GiB进程组RSS上限、启动≥18GiB可用、总5400s/每深度2400s；预估25–45min不是实测。后台一轮无自动重试，保存阶段检查点/SHA/完整日志/真实退出码，Status/Fetch手动，不持续轮询。等待用户审阅授权，未上传启动。
+
+D1b解析镜面点在1490m/200m偏移为199.1979m，原±50m不足；候选新周期≥640m/平台±220m/支持±240m，禁止平铺。保持PM谱密度、物理Kmax和标准化Gaussian系数公共波数配对；Delta-k改变须正确缩放，新增低频与覆盖扩展分别控制。同一长实现上检验嵌入边缘、非局域场和BIE窗口。候选C3约22400节点、单complex矩阵7.477GiB；整工作内存估计90–300GiB只是两种启发式外推，时间按组装/边界二次及LU三次分项估，当前无正式准入证据。D1a包硬禁D1b，待D1a结果后另定实现与预算。
+
+物理只含均匀无吸收水、向上理想障板源、声软海面/平面外域；无海底、向下辐射、海面海底多次反射或结构散射，不称真实深海完整多途。公共API/DSP/通信公式未改，不需通信回归或vertical_comm_guide实现更新。新增入口导航、任务表及看板登记准备状态，看板按禁止MATLAB的纯文本打包例外同步。详见[D1方案](reports/d1_depth_comparison_plan_2026-11-18.md)、[验证](reports/d1_depth_preparation_validation_2026-11-18.md)、[命令](reports/d1_depth_manual_commands_2026-11-18.md)。停止等待授权，不进入D1b/R3/W1/C1。
 
 ### D0五深度正式回收与保存数据分析完成（2026-11-18，最新）
 
