@@ -101,6 +101,12 @@ for panel=1:4
 end
 drawnow;
 savefig(f,fullfile(out,[stem '.fig']));
+clear guard;
+% Baseline PNG and subsequent audits use independent reads of the same FIG.
+% A live legend and its serialized form can have different initial geometry.
+f=openfig(fullfile(out,[stem '.fig']),'new','invisible');
+guard=onCleanup(@()close(f)); %#ok<NASGU>
+f.Units='pixels'; f.Position=[40 40 1800 1400]; f.Resize='off'; drawnow;
 exportgraphics(f,fullfile(out,[stem '.png']),'Resolution',160,'Width',1800,'Height',1400,'Units','pixels');
 end
 function name=local_method(m)

@@ -249,6 +249,47 @@
 !/scripts/validation/support/test_d0_infrastructure.py
 !/scripts/validation/support/test_d0_transport.ps1
 
+# D1 maintained workflow tools; isolated generated bundles remain local.
+!/scripts/validation/support/d1_package.py
+!/scripts/validation/support/d1_supervisor.py
+!/scripts/validation/support/launch_d1_depth.sh
+!/scripts/validation/support/manage_d1_depth.ps1
+!/scripts/validation/support/prepare_d1_depth_package.py
+!/scripts/validation/support/test_d1_infrastructure.py
+!/scripts/validation/support/test_d1_transport.ps1
+!/scripts/validation/support/test_d1_recovery_package.py
+!/scripts/validation/support/test_d1_recovery_transport.ps1
+!/scripts/validation/support/test_d1_figure_recovery_transport.ps1
+/results/comparisons/d1_depth/preparation_*/
+/results/comparisons/d1_depth/recovery_preparation_*/
+/results/comparisons/d1_depth/figure_recovery_preparation_*/
+/results/comparisons/d1_depth/*_retrieved_*/
+/results/validation/d1_preparation/
+/results/validation/d1_recovery/
+/results/validation/d1_diagnosis/
+/results/validation/d1_figure_recovery/
+/results/validation/d1_recovery_diagnosis/
+
+# K1 recovery infrastructure is maintained source; copied run payloads are not.
+!/scripts/validation/support/k1_pm_recovery_preflight.py
+!/scripts/validation/support/k1_pm_recovery_supervisor.py
+!/scripts/validation/support/launch_k1_pm_recovery.sh
+!/scripts/validation/support/manage_k1_pm_recovery.ps1
+!/scripts/validation/support/prepare_k1_recovery_package.py
+!/scripts/validation/support/review_k1_failed_retrieval.py
+!/scripts/validation/support/run_k1_recovery_diagnostics.py
+!/scripts/validation/support/run_k1_saved_graphics_probe.py
+!/scripts/validation/support/test_k1_recovery_infrastructure.py
+!/scripts/validation/support/test_k1_recovery_transport.ps1
+/results/comparisons/pm_wind_cutoff_k1/recovery_preparation_*/
+/results/comparisons/pm_wind_cutoff_k1/*_retrieved_*/
+/results/comparisons/pm_wind_cutoff_k1/target_execution_*/
+/results/validation/k1_recovery_preparation/
+/results/validation/k1_retrieval_review/
+/results/validation/k1_target_execution/
+/results/validation/d1_goal_closeout/
+/results/validation/git_publish/
+
 # Copied sources, tamper fixtures, sentinels and retrieved payloads stay local.
 /results/comparisons/piston_2d_pm/r2_preparation_*/
 /results/comparisons/piston_2d_pm/r2_seed*_retrieved_*/
