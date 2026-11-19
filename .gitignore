@@ -260,6 +260,14 @@
 !/scripts/validation/support/test_d1_recovery_package.py
 !/scripts/validation/support/test_d1_recovery_transport.ps1
 !/scripts/validation/support/test_d1_figure_recovery_transport.ps1
+!/scripts/validation/support/d1b_remote.py
+!/scripts/validation/support/prepare_d1b_package.py
+!/scripts/validation/support/manage_d1b_v2.ps1
+!/scripts/validation/support/d1b_scale_remote.py
+!/scripts/validation/support/prepare_d1b_scale_package.py
+!/scripts/validation/support/manage_d1b_scale.ps1
+/results/validation/d1b_v2/
+/results/validation/d1b_scale/
 /results/comparisons/d1_depth/preparation_*/
 /results/comparisons/d1_depth/recovery_preparation_*/
 /results/comparisons/d1_depth/figure_recovery_preparation_*/

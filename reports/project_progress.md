@@ -5,7 +5,7 @@
 
 记录更新：2026-11-19；本次核查：2026-11-19。
 
-K1七条件保存审查限定完成：30层BIE、风速/截止交互齐全；原生退出异常保留
+D1b-v2 4096/8192 节点试点审查通过，22400 暂不准入
 
 ## 现在在哪里
 
@@ -271,9 +271,9 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 
 ### 1500 m 目标深海几何与 PE 窗口
 
-状态：0–200m目标未验证 · D1a有限范围完成；结果日期：2026-11-01；本次核查：2026-11-18（D1a有限2D反射范围，D1b仅成本/设计）。
+状态：D1b-v2 中型试点审查通过 · 22400 待准入；结果日期：2026-11-01；本次核查：2026-11-19（D1b-v2 中型试点保存审查）。
 
-已经算清楚几条候选路径什么时候到；还没有验证生产 PE 在这个长距离、大偏移场景下能否算准。
+已独立审计 ±200 m 的 2,279 个接收坐标和四组长周期 PM 面。目标粗糙海面声场和生产 PE 仍待验证。
 
 **为什么做：**先明确目标场景里直达、海面和海底一次反射的距离与时延，再判断计算窗口够不够大，避免接收点已经落进吸收边缘却把结果当成物理变化。
 
@@ -281,9 +281,9 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 
 **说明什么：**后续传播验证有了独立的几何参照。Rx 深度 10 m 时，平面海面与平坦海底的一次反射几何到达重合；这只说明到达时间重合，声压强弱还不知道。
 
-**还差什么：**400 m 窗口下，200 m 接收位置落入吸收层；保持既有分辨率的更大窗口又受到当前窗口/网格保护限制。实际内存、运行时间与长程复声场收敛未测量。 D1b新周期/粗糙支持与稠密资源仍未认证，未模拟海底/多次反射/结构。
+**还差什么：**旧生产 PE 的 400 m 窗口在 200 m 处落入吸收层，更大窗口仍受原网格保护。D1b-v2 在有限窗口完成 4096/8192 两档，8192 档 400.01 s，任务峰 RSS 6.005 GiB。22400 核心时间筛查和 RSS 均超试点预算，C2 边缘、非局域散射与全域 BIE 窗口仍待证据。
 
-**下一步：**按用户2026-11-10要求暂不推进1500 m孔径及大偏移计算；原解析几何和限制保留，后续有需要再另立任务。
+**下一步：**保留 2 个 Process worker。待用户审查 22400 的单层及全序列预算、30% RAM 预留、C2 边缘、非局域散射与 C0–C4 科学门。
 
 **技术范围：**等声速 c=1500 m/s 的镜像法，603 行几何采样；没有计算路径复声压、海底反射系数、粗糙散射或通信。600/800 m 只是候选窗口，不是已通过的配置。
 
@@ -299,6 +299,12 @@ M0封存保持。M1已完成P4/P6和10组AS，限定数值对照通过；P8因RA
 - [海底一次反射几何补充](../reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md) · `reports/rc1_flat_bottom_single_reflection_geometry_2026-11-01.md`
 - [D/S/B 几何入口](../scripts/reporting/render_target_deepsea_dsb_geometry.m) · `scripts/reporting/render_target_deepsea_dsb_geometry.m`
 - [D1a限定结果与D1b可行性](../reports/d1_depth_comparison_final_2026-11-18.md) · `reports/d1_depth_comparison_final_2026-11-18.md` · 历史版本 `2026-11-18 D1 final`
+- [D1b-v2 完整接收线、长周期海面与 PCT 方案](../reports/d1b_v2_plan_2026-11-19.md) · `reports/d1b_v2_plan_2026-11-19.md` · 历史版本 `2026-11-19 D1b-v2 preparation`
+- [D1b-v2 原型手动命令](../reports/d1b_v2_manual_commands_2026-11-19.md) · `reports/d1b_v2_manual_commands_2026-11-19.md` · 历史版本 `2026-11-19 D1b-v2 preparation`
+- [D1b-v2 首跑失败与通信统计修复](../reports/d1b_v2_first_run_repair_2026-11-19.md) · `reports/d1b_v2_first_run_repair_2026-11-19.md` · 历史版本 `2026-11-19 01 failure, 02 preparation`
+- [D1b-v2 原型 02 实测与准入](../reports/d1b_v2_resource_review_2026-11-19.md) · `reports/d1b_v2_resource_review_2026-11-19.md` · 历史版本 `2026-11-19 02 saved resource review`
+- [D1b-v2 4096/8192 试点准备与手动命令](../reports/d1b_v2_scale_pilot_preparation_2026-11-19.md) · `reports/d1b_v2_scale_pilot_preparation_2026-11-19.md` · 历史版本 `2026-11-19 medium pilot preparation`
+- [D1b-v2 4096/8192 试点实测与准入审查](../reports/d1b_v2_scale_pilot_review_2026-11-19.md) · `reports/d1b_v2_scale_pilot_review_2026-11-19.md` · 历史版本 `2026-11-19 d1b_scale_20261119_01 saved review`
 
 ### Bellhop 代表案例与平面对照
 
@@ -592,15 +598,35 @@ K1按最新授权由Codex直接执行，4个基础MATLAB并发许可与100GiB资
 
 K1按用户直接目标授权完成六新面独立参考（原N7五层导入＋25新BIE），严格R1锚点单列。固定0.10m/4kHz/U_PM/seed260001/原C2/411点，4040SHA及本地完整保存审查0失败，新128图曲线/56FIG/112次零像素和实际预览通过，14模型行/5754点。PS10.251–53.845%、完整FullFK0.02083–0.19553%，风速/物理截止交互经验可分辨；N40不是完整PM。四并发实测峰9.96GiB、累计2656s/10800s，30%RAM保持。最后一例封存后原生退出−9和控制器78保留，独立保存审查通过后接受结果，不重算、不称退出环境稳定。任务案例进程已退出，停止于K1有限范围。
 
+### 2026-11-19 · D1b-v2 海面审计完毕；资源原型待手动运行
+
+0.10 m 二维条带、4 kHz、Tx1490/Rx6 m，±200 m 共 2,279 点。完成 L640、U_PM6/Seed260001 的 N48/N160 与低频开关四面审计、平面 Fresnel 几何和本地合成校验。SSH 别名在当前会话未解析，远端 PCT 资格、速度、RSS、C2 边缘和全域 BIE 仍待证据。用户审阅后手动启动资源原型，原型结束后复核。
+
+### 2026-11-19 · D1b-v2 首跑通信统计失败，02 修复包就绪
+
+远端 R2025b Update 1 PCT checkout、两轮串行和 2-worker 启动有实测。首个并行 BIE 后 tocBytes 返回矩阵被按 table 读取而退出 1/78，191.731 s、峰 RSS 3.51 GiB。4-worker 与加速比尚无结果。六份失败证据 SHA 已复核；02 本地通信输出回放、静态及 DryRun 通过。用户手动启动新包，完整声场仍待准入。
+
+### 2026-11-19 · D1b-v2 原型 02 完成保存审查
+
+用户手动 02 退出 0/0，305.882 s，任务峰 RSS 6.01 GiB。只读核对 88 SHA、26 个阶段及 24 个基准回执，逐 worker 误差记录均为零，三组保存串行方程残差最大 2.326e-15。1,536 节点 BIE 加独立审计为串行 24.27 s、2 worker 17.17 s、4 worker 13.90 s。全五层成本筛查中 4 worker 相比 2 worker 仅预计再省 10.1%，中型试点建议 2 worker，预算待批准。01 失败保留；完整声场未启动。
+
+### 2026-11-19 · D1b-v2 中型试点包通过本地验证
+
+固定 0.10m、4kHz、Tx1490/Rx6m、2279 点及原型 02 的 L640 U_PM6 Seed260001 N160 低频关闭。1536 串并行对照后顺序运行 4096/8192，4096 独立审计与 SHA 是放行条件。2 worker、30% RAM 保留、12 GiB RSS、1800 s。合成验证、离线停止和图形链及 DryRun 已通过。本次无 SSH 或远程求解，实测和完整 22400 准入待用户手动执行并回收。
+
+### 2026-11-19 · D1b-v2 4096/8192 试点完成保存审查
+
+用户手动完成两 worker 严格顺序试点，退出0/0，634.77 s。34 项回收 SHA、四组保存残差和资源图复核通过；8192 整档 400.01 s，直接解 38.08 s，峰总 RSS 6.005 GiB。保留两 worker。22400 的时间及 RSS 筛查超过当前试点限额，还需另审预算和科学准入。
+
 ## 重新开始先做什么
 
-### 1. D1a已完成：读取最终报告，另定D1b或R3范围
+### 1. D1b-v2：审查 22400 节点资源与科学准入
 
-深源PS约3.54%、FullFK约0.071%；只限当前有限C2面。D1b需要新周期/配对、低频和稠密成本方案。
+基于已回收的两档实测保留 2 worker，单列单层与全序列的 RAM、时间和磁盘预算。
 
-完成标志：D1现有任务已完成，无需用户执行脚本；后续工作以新的具体授权为准。
+完成标志：复核大规模 LU 峰值、现场资源、C2 边缘、非局域散射、全窗口与 C0–C4 资格。
 
-执行边界：不要再Start旧恢复包；不自动扩面/Seed/频率、生产替换、宽带或通信。
+执行边界：现有 12 GiB/1800 s 合同下暂不准入，等待用户审查。
 
 ### 2. K1最终05包：用户手动上传/启动
 
@@ -676,7 +702,7 @@ P4/P6及全部AS已通过限定审计，P8部分轨迹保留；步长与吸收�
 
 D1最终远端650.819s/0/0，累计所有尝试1507.537s；本地保存113.497s/0失败、80条重开FIG/零像素，542SHA保持。原图形失败保留并明确本地图件阶段，不降低门。 D1 C0补审8.535s/0失败/0新BIE；最终包MATLAB准备1.112s/7文件Analyzer0，23离线+12传输mock通过；恢复实际未运行。 D1用户首跑133.784s/退出1/1，RAM最低43.70GiB、owned组RSS峰1.66GiB，stop_reason=null；386个CSV坐标差≤4.974e-14m导致严格相等失败。本轮0新MATLAB/求解，文本模板刷新。 本轮D1：26离线+10传输mock、PowerShell解析/Bash语法通过；MATLAB/原生Linux/声学/FIG均UNRUN。看板按维护规范纯文本模式从同一JSON/模板生成，未调用MCP。历史运行记录：D0远端152.710s、退出0/0、最低可用36.114GiB（95.55%基准），本地保存44.707s/127检查、最终新图35.345s/70线；原150SHA保持。 远端非声学MATLAB诊断32.918s、退出0，未建pool；本地24项准备、32离线/8传输mock和TEST_ONLY汇总通过，无新声学。
 
-本次核查代码基线：`compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot; piston P0/P1 remote 20261112_remote_p0p1_01 audited; 2026-11-14 AGENTS navigation alignment only; no numerical re-audit; 2026-11-17 R2 uncommitted research preparation, final03 manifests bind code; no production changes; 2026-11-17 K0/K1 preparation05, manifest-bound sources; no production changes; 2026-11-18 K0 retrieved574 SHA and 45 local saved audits, no new generation/solves; 2026-11-18 D0 saved review, 150 SHA/165 remote gates/127 local checks, no new solve; 2026-11-18 D1a preparation03, 31 SHA/26 offline/10 transport mock; no MATLAB/SSH/solve; 2026-11-18 D1 failed session read-only diagnosis; coordinate CSV round-trip failure, no restart; 2026-11-18 D1 recovery03, saved C0 audit PASS (0 new solves), 125 SHA, MATLAB prep/7 Analyzer/23 offline/12 transport mocks; 2026-11-18 D1 goal complete, 542 retrieval SHA/80 FIG curves/zero pixels; 10 BIE total, no repeated Tx100 solve; 2026-11-19 K1 saved seven-condition closeout,30 BIE/4040 SHA/128 new curves/zero pixels; native shutdown failure preserved`。
+本次核查代码基线：`compare / c90d0ca; M0 identity rechecked; M1 execution attachment gate stopped; M1 resumed in attached R2025b Update 6/PID28836, then P8 RAM-reserve stop; piston free-field quicklook based on a37fd75, local source SHA snapshot; piston P0/P1 remote 20261112_remote_p0p1_01 audited; 2026-11-14 AGENTS navigation alignment only; no numerical re-audit; 2026-11-17 R2 uncommitted research preparation, final03 manifests bind code; no production changes; 2026-11-17 K0/K1 preparation05, manifest-bound sources; no production changes; 2026-11-18 K0 retrieved574 SHA and 45 local saved audits, no new generation/solves; 2026-11-18 D0 saved review, 150 SHA/165 remote gates/127 local checks, no new solve; 2026-11-18 D1a preparation03, 31 SHA/26 offline/10 transport mock; no MATLAB/SSH/solve; 2026-11-18 D1 failed session read-only diagnosis; coordinate CSV round-trip failure, no restart; 2026-11-18 D1 recovery03, saved C0 audit PASS (0 new solves), 125 SHA, MATLAB prep/7 Analyzer/23 offline/12 transport mocks; 2026-11-18 D1 goal complete, 542 retrieval SHA/80 FIG curves/zero pixels; 10 BIE total, no repeated Tx100 solve; 2026-11-19 K1 saved seven-condition closeout,30 BIE/4040 SHA/128 new curves/zero pixels; native shutdown failure preserved; 2026-11-19 D1b-v2 paired surface audit and manual prototype package`。
 
 唯一维护源：`reports/project_progress.json`。
 

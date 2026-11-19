@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT.md
 
-D1a双深度反射比较已正式限定完成：0.10m/4kHz/原PM/C2、Rx6m/±36m/411点，PS复L2由16.1917%降为3.54362%，完整FullFK由0.0765349%降为0.0709202%。两深度各五层独立BIE、保存审查和80条FIG曲线/零像素通过，542项SHA保持；原失败与预算保留。见[最终研究报告](reports/d1_depth_comparison_final_2026-11-18.md)。D1b只完成可行性，其他工作线许可不变。
+D1a双深度反射比较已正式限定完成：0.10m/4kHz/原PM/C2、Rx6m/±36m/411点，PS复L2由16.1917%降为3.54362%，完整FullFK由0.0765349%降为0.0709202%。两深度各五层独立BIE、保存审查和80条FIG曲线/零像素通过，542项SHA保持；原失败与预算保留。见[最终研究报告](reports/d1_depth_comparison_final_2026-11-18.md)。D1b-v2的长周期海面、目标线几何和资源原型02已审查，完整声场待准入。见[D1b-v2资源审查](reports/d1b_v2_resource_review_2026-11-19.md)。
 
 ## Purpose
 This file is the append-only project log and long-term model memory for the
@@ -10,6 +10,28 @@ the dated log for provenance. Historical entries are retained even when
 superseded; a newer explicitly marked entry is authoritative.
 
 ## Authoritative Current-State Index / 权威当前状态索引（2026-11-19）
+
+### D1b-v2 4096/8192 中型资源试点保存审查（2026-11-19）
+
+用户手动执行 `d1b_scale_20261119_01`，R2025b Update 1/PCT Processes，计算线程各1，1536串行/两worker对照后依次4096/8192，退出0/0，634.77s。0.10m/4kHz/Tx1490/Rx6m，L640 U_PM6 Seed260001 N160低频关闭，2,279点。34项回收SHA（含29项阶段封存）与4组本地保存系统/GL112残差门通过，远端串并行差为0。8192整档400.01s，直接解38.08s、占9.52%，任务峰RSS 6.005GiB。22400筛查核心单层31.3–33.8min，RSS拟合加余量32.35GiB，超试点1800s/12GiB限额。保留两worker，待审预算及C2/非局域/窗口和C0–C4科学准入，新增求解0次。 [实测审查](reports/d1b_v2_scale_pilot_review_2026-11-19.md)
+
+### D1b-v2 4096/8192 中型资源试点准备（2026-11-19）
+
+沿用原型 02 经封存的 L640 U_PM6/Seed260001 N160低频关闭、0.10m条带/4kHz/Tx1490/Rx6m/±200m及2,279点。已准备独立手动包，单 R2025b 主进程，1536串行与2 Process worker完整对照，随后2 worker顺序4096/8192，每计算线程1。4096必须通过保存系统、独立GL112、逐worker对照与SHA才放行8192。30%启动可用RAM预留、12GiB RSS、1800s限额。合成本地验证、离线门和DryRun通过。没有SSH、远程MATLAB或正式试点，实测和22400准入待回收。 [方案与手动命令](reports/d1b_v2_scale_pilot_preparation_2026-11-19.md)
+
+### D1b-v2 原型 02 实测保存审查（2026-11-19）
+
+R2025b Update 1，Tx1490/Rx6m、10cm条带、4kHz、L640 U_PM6/Seed260001 N160低频关闭，2,279点。用户手动02退出0/0，305.882s、峰6.01GiB、最低起始可用RAM的96.97%。只读回收88封存SHA/26阶段/24回执通过。逐worker回执差0，独立串行矩阵残差最大2.326e-15。1536节点BIE加审计串行/2/4 worker为24.27/17.17/13.90s；五层筛查外推3.76/2.97/2.67h，4相对2只省10.1%，2 worker为后续中型基线。完整C3单矩阵7.477GiB，整工作集与时间未取得准入，中型节点、预算和C2敏感性另审。01故障保留，无新任务启动。见[保存审查](reports/d1b_v2_resource_review_2026-11-19.md)。
+
+### D1b-v2 首跑通信统计停止，02 修复包就绪（2026-11-19）
+
+`d1b_v2_20261119_01` 在远端 R2025b Update 1 完成 PCT checkout、两轮串行和 2-worker 启动后，因将 `tocBytes` 返回的数值矩阵按 table 读取而退出 1/78。191.731 s，任务峰 RSS 3.51 GiB，4-worker 未到达。首跑证据 6 项 SHA 保留。02 只变原型入口的通信统计与启动时格式预检，保留数学、门槛与配置，已有本地 2×2/4×2 回放、Analyzer 和 DryRun。新任务待用户手动上传/启动，完整 D1b 声场待准入。 [故障与修复](reports/d1b_v2_first_run_repair_2026-11-19.md) · [02 命令](reports/d1b_v2_manual_commands_2026-11-19.md)
+
+### D1b-v2 海面审计与 PCT 资源原型准备（2026-11-19）
+
+Tx1490/Rx6 m、0.10 m 二维条带、4 kHz。±200 m 的 2,279 个直接坐标，间距 0.1755926251 m。L640、U_PM=6/Seed260001 的 N48/N160×低频开关四组已在本地生成并独立重建，C2 平台/支撑 ±220/±240 m，平面 Fresnel 至平台最小余量 19.2984 m。保留原 K0 标准化 Gaussian 配对，公共物理系数缩半，新增模态冻结独立流。C2 边缘与非局域声场仍待独立敏感性。
+
+Linux 手动包只接受单主进程、串行/2/4 Process worker 原型，至多 1,536 节点、1,800 s、12 GiB RSS 而且预留启动可用 RAM 的 30%。本地八文件 Analyzer、128 节点合成和归档 SHA 通过。只读 SSH 探测无法解析别名，真正 R2025b PCT checkout、worker、通信/RSS/加速及中等规模外推仍待证据。完整 BIE C0–C4 顺序方案和候选 N160/低频关闭待审，生产接口及既有模型资格沿用前述记录。参见[方案](reports/d1b_v2_plan_2026-11-19.md)与[手动命令](reports/d1b_v2_manual_commands_2026-11-19.md)。
 
 ### K1七条件科学保存资格限定完成（2026-11-19，最新）
 
